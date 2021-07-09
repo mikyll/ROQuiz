@@ -1,15 +1,12 @@
 package persistenece;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Answer;
 import model.Question;
-import model.Quiz;
 
 public class QuestionRepository implements IQuestionRepository {
 	public final static int ANSWER_NUMBER = 5;
@@ -79,13 +76,15 @@ public class QuestionRepository implements IQuestionRepository {
 		}
 	}
 	
-	public void duplicateCheck()
+	@Override
+	public List<Question> getQuestions() {return this.questions;}
+	public Question getQuestion(int id)
 	{
-		
+		return this.questions.get(id);
 	}
 	
 	// test
-	public static void main(String args[]) throws BadFileFormatException
+	/*public static void main(String args[]) throws BadFileFormatException
 	{
 		QuestionRepository qr = null;
 		try (Reader readerQuiz = new FileReader("Quiz.txt");) {
@@ -99,18 +98,7 @@ public class QuestionRepository implements IQuestionRepository {
 		Quiz q = new Quiz(qr.getQuestions(), 3);
 		for(Question question : q.getQuiz())
 			qr.printQuestion(question);
-		
-		/*System.out.println("culo");
-		qr.printEachQuestion();*/
 	}
-	
-	@Override
-	public List<Question> getQuestions() {return this.questions;}
-	public Question getQuestion(int id)
-	{
-		return this.questions.get(id);
-	}
-	
 	public void printEachQuestion()
 	{
 		int i = 0;
@@ -130,5 +118,5 @@ public class QuestionRepository implements IQuestionRepository {
 			System.out.println(a.toString() + ". " + q.getAnswers().get(a));
 		}
 		System.out.println("Correct answer: " + q.getCorrectAnswer());
-	}
+	}*/
 }

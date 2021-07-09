@@ -9,25 +9,6 @@ public class Question {
 	private HashMap<Answer, String> answers;
 	private Answer correctAnswer;
 	
-	/*public Question(String question, List<String> answers, int rightAnswer)
-	{
-		this.answers = new HashMap<Answer, String>(5);
-		this.question = question;
-		for(Answer a : )
-		this.correctAnswer = Answer.values()[rightAnswer];
-	}
-	public Question(String question, List<String> answers, Answer rightAnswer)
-	{
-		this.answers = new ArrayList<String>();
-		this.question = question;
-		this.answers = answers;
-		this.correctAnswer = rightAnswer;
-	}
-	public Question(String question)
-	{
-		this.answers = new ArrayList<String>();
-		this.question = question;
-	}*/
 	public Question(String question)
 	{
 		this.answers = new HashMap<Answer, String>(5);

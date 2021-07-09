@@ -96,7 +96,7 @@ public class Controller implements IController{
 			this.radioAnswers.get(a).setText(a.toString() + ". " + q.getAnswers().get(a));
 		}
 
-		// init timer (https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
+		// init timer
 		this.timeout = START_TIME;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
