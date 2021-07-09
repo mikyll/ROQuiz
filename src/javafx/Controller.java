@@ -4,16 +4,18 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import model.Answer;
 import model.Question;
 import model.Quiz;
@@ -44,7 +46,12 @@ public class Controller implements IController{
 	
 	@FXML private Button buttonPrev;
 	@FXML private Button buttonNext;
-	@FXML private Button buttonEnd;
+	@FXML private Button buttonEndReset;
+	
+	@FXML private VBox vboxResult;
+	@FXML private TextField textGivenAnswers;
+	@FXML private TextField textCorrectAnswers;
+	@FXML private TextField textWrongAnswers;
 	
 	/*public Controller(IQuestionRepository quizRepository)
 	{
@@ -65,7 +72,7 @@ public class Controller implements IController{
 		
 		try (Reader readerQuiz = new FileReader("Quiz.txt")){
 			this.qRepo = new QuestionRepository(readerQuiz);
-			this.quiz = new Quiz(this.qRepo.getQuestions(), 16);
+			this.quiz = new Quiz(this.qRepo.getQuestions(), QUESTION_NUMBER);
 			this.index = 0;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -109,7 +116,8 @@ public class Controller implements IController{
 	}
 	
 	@Override @FXML
-	public void previousQuestion(ActionEvent event) {
+	public void previousQuestion(ActionEvent event)
+	{
 		this.index--;
 		if(this.index == QUESTION_NUMBER - 2)
 			this.buttonNext.setDisable(false);
@@ -151,7 +159,8 @@ public class Controller implements IController{
 	}
 
 	@Override @FXML
-	public void nextQuestion(ActionEvent event) {
+	public void nextQuestion(ActionEvent event)
+	{
 		this.index++;
 		if(this.index == 1)
 			this.buttonPrev.setDisable(false);
@@ -193,28 +202,51 @@ public class Controller implements IController{
 	}
 	
 	@Override
-	public void endQuiz() {
-		this.buttonEnd.setText("Riavvia");
-		this.quizTerminated = true;
-		
-		if(this.quizTerminated)
+	public void endResetQuiz()
+	{
+		if(!this.quizTerminated)
 		{
-			Answer ua = this.quiz.getAnswers().get(this.index);
-			Answer ca = this.quiz.getQuiz().get(this.index).getCorrectAnswer();
+			// confirm prompt?
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Terminare il quiz?", ButtonType.YES, ButtonType.NO/*, ButtonType.CANCEL*/);
+			alert.showAndWait();
+
+			if (alert.getResult() == ButtonType.YES) {
+				Quiz q = this.quiz;
+				q.checkAnswers();
+				this.quizTerminated = true;
+				
+				this.vboxResult.setVisible(true);
+				this.textGivenAnswers.setText("" + q.getGivenAnswers());
+				this.textCorrectAnswers.setText("" + q.getCorrectAnswers());
+				this.textWrongAnswers.setText("" + (QUESTION_NUMBER-q.getCorrectAnswers()));
+				this.buttonEndReset.setText("Riavvia");
+				
+				for(RadioButton rb : this.radioAnswers.values())
+					rb.setDisable(true);
+				
+				if(this.quizTerminated)
+				{
+					Answer ua = q.getAnswers().get(this.index);
+					Answer ca = q.getQuiz().get(this.index).getCorrectAnswer();
+					
+					if(ua != null && ua != Answer.NONE)
+						this.radioAnswers.get(ua).setStyle("-fx-text-fill: red; -fx-font-weight: bold");
+					this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
+				}
+				
+				// test
+				for(Answer a : q.getAnswers())
+					System.out.println(a.toString());
+				
+				
+				// blocca timer, salva risposte (radio button non modificabili)
+			}
 			
-			if(ua != null && ua != Answer.NONE)
-				this.radioAnswers.get(ua).setStyle("-fx-text-fill: red; -fx-font-weight: bold");
-			this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
+			
+			
+
 		}
 		
-		// test
-		for(Answer a : this.quiz.getAnswers())
-			System.out.println(a.toString());
-		
-		this.quiz.checkAnswers();
-		// blocca timer, salva risposte (radio button non modificabili)
-		
-		// confirm prompt?
 	}
 
 	

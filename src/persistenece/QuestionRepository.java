@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import model.Answer;
@@ -25,8 +24,9 @@ public class QuestionRepository implements IQuestionRepository {
 		questions = new ArrayList<Question>();
 		
 		BufferedReader reader = new BufferedReader(baseReader);
+		
+		int nLine = 0;
 		String line = null;
-		int id = 0, nLine = 0;
 		while ((line = reader.readLine()) != null)
 		{
 			nLine++;
@@ -34,7 +34,6 @@ public class QuestionRepository implements IQuestionRepository {
 			
 			if(line.length() > 0) // next question
 			{
-				id++;
 				Question q = new Question(line);
 				nLine++;
 				//System.out.println(line); // test

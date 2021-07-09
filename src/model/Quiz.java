@@ -2,55 +2,52 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class Quiz {
 	private List<Question> quiz;
 	private List<Answer> answers; // user answers
+	private int givenAnswers;
 	private int correctAnswers;
-	
+		
 	public Quiz(List<Question> questions, int qNum)
 	{
-		this.quiz = new ArrayList<Question>(qNum);
-		this.answers = new ArrayList<Answer>(qNum);
+		this.givenAnswers = 0;
 		this.correctAnswers = 0;
 		
-		// init questions
-		Collections.shuffle(questions);
-		for(int i = 0; i < qNum; i++)
-			this.quiz.add(questions.get(i));
-		
-		// init answers
-		for(int i = 0; i < qNum; i++)
-			this.answers.add(Answer.NONE);
+		this.resetQuiz(questions, qNum);
 	}
 	
 	public Question getQuestionAt(int index) {return this.quiz.get(index);}
 	public List<Question> getQuiz() {return this.quiz;}
 	public List<Answer> getAnswers() {return this.answers;}
+	public int getGivenAnswers() {return givenAnswers;}
+	public int getCorrectAnswers() {return correctAnswers;}
 	
 	public void setAnswer(int index, int value)
 	{
 		/*if(value < 1 || value > 5)
 			throw new IllegalArgumentException();*/
+		
 		this.answers.set(index, Answer.values()[value]);
 	}
 	public void setAnswer(int index, Answer value)
 	{
 		/*if(value < 1 || value > 5)
 			throw new IllegalArgumentException();*/
+		
 		this.answers.set(index, value);
 	}
 	
 	public void resetQuiz(List<Question> questions, int qNum)
 	{
+		// reset questions
 		this.quiz = new ArrayList<Question>(qNum);
 		Collections.shuffle(questions);
 		for(int i = 0; i < qNum; i++)
-		{
 			this.quiz.add(questions.get(i));
-		}
+		
+		// reset user answers
 		answers = new ArrayList<Answer>(qNum);
 		for(int i = 0; i < qNum; i++)
 			this.answers.add(Answer.NONE);
@@ -62,7 +59,10 @@ public class Quiz {
 		{
 			Answer ca = this.quiz.get(i).getCorrectAnswer();
 			Answer a = this.answers.get(i);
-			if(ca.equals(a));
+			
+			if(!a.equals(Answer.NONE))
+				this.givenAnswers++;
+			if(ca.equals(a))
 				this.correctAnswers++;
 		}
 	}
