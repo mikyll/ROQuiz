@@ -7,42 +7,50 @@ import java.util.List;
 
 public class Quiz {
 	private List<Question> quiz;
-	private int[] answers;
+	private List<Answer> answers; // user answers
 	
 	public Quiz(List<Question> questions, int qNum)
 	{
-		this.quiz = new ArrayList<Question>();
+		this.quiz = new ArrayList<Question>(qNum);
+		this.answers = new ArrayList<Answer>(qNum);
 		
+		// init questions
 		Collections.shuffle(questions);
 		for(int i = 0; i < qNum; i++)
-		{
 			this.quiz.add(questions.get(i));
-		}
-		answers = new int[qNum];
-		for(int i : answers)
-			i = -1;
+		
+		// init answers
+		for(int i = 0; i < qNum; i++)
+			this.answers.add(Answer.NONE);
 	}
 	
+	public Question getQuestionAt(int index) {return this.quiz.get(index);}
 	public List<Question> getQuiz() {return this.quiz;}
-	public int[] getAnswers() {return this.answers;}
+	public List<Answer> getAnswers() {return this.answers;}
 	
 	public void setAnswer(int index, int value)
 	{
 		/*if(value < 1 || value > 5)
 			throw new IllegalArgumentException();*/
-		this.answers[index] = value;
+		this.answers.set(index, Answer.values()[value]);
+	}
+	public void setAnswer(int index, Answer value)
+	{
+		/*if(value < 1 || value > 5)
+			throw new IllegalArgumentException();*/
+		this.answers.set(index, value);
 	}
 	
 	public void resetQuiz(List<Question> questions, int qNum)
 	{
-		this.quiz = new ArrayList<Question>();
+		this.quiz = new ArrayList<Question>(qNum);
 		Collections.shuffle(questions);
 		for(int i = 0; i < qNum; i++)
 		{
 			this.quiz.add(questions.get(i));
 		}
-		answers = new int[qNum];
-		for(int i : answers)
-			i = -1;
+		answers = new ArrayList<Answer>(qNum);
+		for(int i = 0; i < qNum; i++)
+			this.answers.add(Answer.NONE);
 	}
 }

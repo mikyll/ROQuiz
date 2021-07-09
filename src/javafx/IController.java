@@ -1,13 +1,13 @@
-package controller;
+package javafx;
 
 import java.util.List;
 
+import javafx.event.ActionEvent;
 import model.Question;
 
 public interface IController {
-	void generateQuiz();
 	int checkQuestions(Question q, int answer);
-	void previousQuestion();
-	void nextQuestion();
+	void previousQuestion(ActionEvent event);
+	void nextQuestion(ActionEvent event);
 	void endQuiz();
 }

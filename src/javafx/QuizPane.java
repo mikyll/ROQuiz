@@ -2,7 +2,6 @@ package javafx;
 
 import java.util.List;
 
-import controller.Controller;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;

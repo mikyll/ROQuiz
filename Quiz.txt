@@ -8,14 +8,14 @@ A
 
 Nel Forward Step della strategia di esplorazione Depth-First rivisitata :
 A. Si generano tutti i figli di P0 e si prosegue.
-B. Si calcola L0,si rimuove dai nodi attivi il nodo con piÃ¹ basso lower bound, si generano i suoi figli e ne si calcolano i lower bound, aggiornando quello migliore.
-C. Si genera un figlio dell'ultimo nodo Pk generato finchÃ¨ si ottiene una soluzione immediatamente risolubile e si aggiorna eventualmente z.
+B. Si calcola L0,si rimuove dai nodi attivi il nodo con più basso lower bound, si generano i suoi figli e ne si calcolano i lower bound, aggiornando quello migliore.
+C. Si genera un figlio dell'ultimo nodo Pk generato finchè si ottiene una soluzione immediatamente risolubile e si aggiorna eventualmente z.
 D. Si generano tutti i figli del nodo attuale, si calcolano i loro lower bound, si prosegue l'esplorazione dal figlio con minimo lower bound.
 E. Nessuna di queste
 D
 
 Aggiungendo un taglio di Gomory al tableau finale di un LP con yi0 non intero
-A. Si elimina al piÃ¹ un punto intero ammissibile non ottimo
+A. Si elimina al più un punto intero ammissibile non ottimo
 B. Il nuovo tableau contiene una base ammissibile ma non ottima per il primale
 C. Il nuovo tableau contiene una base non ammissibile per il primale ma ammissibile per il duale
 D. Si elimina almeno una soluzione ammissibile intera
@@ -30,10 +30,122 @@ D. Azzerare i costi relativi originali.
 E. Nessuna di queste.
 C
 
-Quale tra queste affermazioni Ã¨ falsa rispetto ad una corrispondenza primale-duale?
+Quale tra queste affermazioni è falsa rispetto ad una corrispondenza primale-duale?
 A. Ai costi corrispondono condizioni su variabili e viceversa.
 B. I vincoli sono dati dalle righe di A per il primale, dalle colonne di A per il duale.
 C. Ai costi corrispondono i termini noti e viceversa.
 D. Ad un vincolo corrisponde una condizione su una variabile e viceversa.
 E. Nessuna di queste.
 A
+
+Cosa afferma la regola di Dantzig?
+A. Entra in base la colonna Aj con il costo Cj più negativo.
+B. Entra in base la colonna Aj di indice minimo con costo Cj negativo.
+C. Entra in base la prima colonna Aj con costo Cj negativo. In caso di parità, esce dalla base la colonna Aj di indice minimo.
+D. Esce dalla base la colonna Aj con il costo Cj più negativo.
+E. Nessuna di queste
+A
+
+Quale di queste non è un'assunzione che l'algoritmo del Simplesso deve verificare prima di poter operare?
+A. Si considera sempre la forma standard con m<n.
+B. La regione ammissibile F non è vuota.
+C. La matrice A contiene m colonne linearmente indipendenti, ha cioè rango m.
+D. La SBA iniziale non deve essere degenere.
+E. Nessuna di queste.
+D
+
+Una SBA si dice degenere se:
+A. Contiene più di m-n variabili con valore zero.
+B. Contiene più di n-m variabili con valore zero.
+C. Esistono fuori base variabili con valore zero.
+D. Non c'è nessuna variabile con valore zero.
+E. Nessuna di queste
+B
+
+Se un problema di programmazione lineare (primale) ha soluzione ottima finita, allora:
+A. Il suo duale non è detto che abbia soluzione ottima finita.
+B. Anche il suo duale ha soluzione ottima finita e i valori delle soluzioni coincidono.
+C. Anche il duale ha soluzione ottima finita, ma non è detto che i valori delle soluzioni coincidano.
+D. Anche il duale ha soluzione ottima finita, ma i valori delle due soluzioni non coincidono.
+E. Nessuna di queste
+B
+
+Quale può essere una possibile coppia di problemi primale-duale?
+A. Primale ottimo finito / Duale illimitato.
+B. Primale Illimitato / Duale Illimitato.
+C. Primale impossibile / Duale impossibile.
+D. Primale ottimo finito / Duale impossibile.
+E. Nessuna di queste.
+C
+
+In un tableau del simplesso duale, gli elementi della riga 0 (colonna da 1 a n):
+A. sono tutti positivi o nulli.
+B. sono tutti positivi.
+C. sono tutti negativi.
+D. sono tutti nulli.
+E. Nessuna di queste.
+A
+
+La programmazione lineare:
+A. è risolubile in tempo polinomiale, ma non dall'algoritmo del simplesso.
+B. non è risolubile in tempo polinomiale.
+C. è risolubile in tempo polinomiale dall'algoritmo del simplesso.
+D. è risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso.
+E. Nessuna di queste.
+A
+
+Cosa significa se la soluzione del problema artificiale ha valore positivo?
+A. Violata assunzione 0 (forma standard con m<n).
+B. Violata assunzione 1 (A di rango m).
+C. Violata assunzione 2 (F non vuota).
+D. Violata assunzione 3 (F limitata in direzione di decrescenza della funzione obiettivo).
+E. Nessuna di queste.
+C
+
+Cosa dice il criterio di ottimalità?
+A. Se il costo relativo j-esimo è maggiore o uguale a 0 per ogni j, allora la soluzione attuale è ottima.
+B. Se il costo relativo j-esimo è positivo per ogni j, allora la soluzione attuale è ottima.
+C. Se i valori delle variabili base sono tutti positivi o nulli, allora la soluzione attuale è ottima.
+D. Se il valore z0 è negativo, allora la soluzione attuale è ottima.
+E. Nessuna di queste.
+A
+
+Cosa contiene un tableau nella posizione di riga 0 e colonna 0?
+A. Costo relativo della colonna 0.
+B. Il valore z0 della soluzione base attuale.
+C. Il profitto della colonna 0.
+D. L'opposto di z0 della soluzione base attuale.
+E. Nessuna di queste.
+D
+
+Quale colonna conviene far entrare in base in un cambiamento di base?
+A. Colonna con tutti elementi positivi.
+B. Colonna con costo relativo positivo.
+C. Colonna con costo relativo negativo.
+D. Colonna con tutti elementi negativi.
+E. Nessuna di queste.
+C
+
+Se yij è minore o uguale a 0 per ogni i, in relazione a theta, cosa succede?
+A. Viene violata assunzione 0 (forma standard con m<n).
+B. Viene violata assunzione 1 (A di rango m).
+C. Viene violata assunzione 2 (F non vuota).
+D. Viene violata assunzione 3 (F limitata in direzione di decrescenza della funzione obiettivo).
+E. Nessuna di queste.
+D
+
+Dopo aver inserito i vincoli del procedimento Branch-and-Bound nel tableau:
+A. Si prosegue sempre con il simplesso primale.
+B. Si prosegue sempre con il simplesso duale.
+C. Si può proseguire sia con il simplesso primale che con il simplesso duale.
+D. Si prosegue con la Fase 1 del simplesso primale.
+E. Nessuna di queste.
+B
+
+Quale tra le seguenti è la definizione di politopo?
+A. Regione in cui la combinazione convessa di ciascun punto appartiene sempre alla regione.
+B. Intersezione di un numero finito di semispazi.
+C. Combinazione convessa di un numero finito di vertici.
+D. Regione ammissibile che ha come punti ottimi i vertici.
+E. Nessuna di queste.
+B
