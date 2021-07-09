@@ -29,7 +29,7 @@ import persistenece.QuestionRepository;
 
 public class Controller implements IController{
 	public final static int QUESTION_NUMBER = 16;
-	public final static int START_TIME = 301;
+	public final static int START_TIME = 1080;
 	
 	private IQuestionRepository qRepo;
 	private Quiz quiz;
