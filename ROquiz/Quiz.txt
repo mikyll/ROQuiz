@@ -1,0 +1,39 @@
+Relativamente ad un problema ILP e il suo rilassamento continuo LP
+A. z(ILP) >= z(LP)
+B. z(ILP) <= z(LP)
+C. z(ILP) < z(LP)
+D. z(ILP) > z(LP)
+E. z(ILP) = z(LP)
+A
+
+Nel Forward Step della strategia di esplorazione Depth-First rivisitata :
+A. Si generano tutti i figli di P0 e si prosegue.
+B. Si calcola L0,si rimuove dai nodi attivi il nodo con più basso lower bound, si generano i suoi figli e ne si calcolano i lower bound, aggiornando quello migliore.
+C. Si genera un figlio dell'ultimo nodo Pk generato finchè si ottiene una soluzione immediatamente risolubile e si aggiorna eventualmente z.
+D. Si generano tutti i figli del nodo attuale, si calcolano i loro lower bound, si prosegue l'esplorazione dal figlio con minimo lower bound.
+E. Nessuna di queste
+D
+
+Aggiungendo un taglio di Gomory al tableau finale di un LP con yi0 non intero
+A. Si elimina al più un punto intero ammissibile non ottimo
+B. Il nuovo tableau contiene una base ammissibile ma non ottima per il primale
+C. Il nuovo tableau contiene una base non ammissibile per il primale ma ammissibile per il duale
+D. Si elimina almeno una soluzione ammissibile intera
+E. Nessuna di queste
+C
+
+In cosa consiste la Fase 1 dell'algoritmo del Simplesso?
+A. Eliminare le variabili artificiali.
+B. Minimizzare la funzione obiettivo originale.
+C. Determinare una SBA iniziale.
+D. Azzerare i costi relativi originali.
+E. Nessuna di queste.
+C
+
+Quale tra queste affermazioni è falsa rispetto ad una corrispondenza primale-duale?
+A. Ai costi corrispondono condizioni su variabili e viceversa.
+B. I vincoli sono dati dalle righe di A per il primale, dalle colonne di A per il duale.
+C. Ai costi corrispondono i termini noti e viceversa.
+D. Ad un vincolo corrisponde una condizione su una variabile e viceversa.
+E. Nessuna di queste.
+A
