@@ -8,11 +8,13 @@ import java.util.List;
 public class Quiz {
 	private List<Question> quiz;
 	private List<Answer> answers; // user answers
+	private int correctAnswers;
 	
 	public Quiz(List<Question> questions, int qNum)
 	{
 		this.quiz = new ArrayList<Question>(qNum);
 		this.answers = new ArrayList<Answer>(qNum);
+		this.correctAnswers = 0;
 		
 		// init questions
 		Collections.shuffle(questions);
@@ -52,5 +54,16 @@ public class Quiz {
 		answers = new ArrayList<Answer>(qNum);
 		for(int i = 0; i < qNum; i++)
 			this.answers.add(Answer.NONE);
+	}
+	
+	public void checkAnswers()
+	{
+		for(int i = 0; i < this.quiz.size(); i++)
+		{
+			Answer ca = this.quiz.get(i).getCorrectAnswer();
+			Answer a = this.answers.get(i);
+			if(ca.equals(a));
+				this.correctAnswers++;
+		}
 	}
 }

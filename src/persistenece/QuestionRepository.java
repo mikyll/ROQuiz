@@ -79,6 +79,13 @@ public class QuestionRepository implements IQuestionRepository {
 			
 		}
 	}
+	
+	public void duplicateCheck()
+	{
+		
+	}
+	
+	// test
 	public static void main(String args[]) throws BadFileFormatException
 	{
 		QuestionRepository qr = null;

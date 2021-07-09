@@ -27,6 +27,7 @@ public class Controller implements IController{
 	private IQuestionRepository qRepo;
 	private Quiz quiz;
 	private int index;
+	private boolean quizTerminated;
 	
 	@FXML private TextField textQNumber;
 	
@@ -77,6 +78,7 @@ public class Controller implements IController{
 		for(Answer a : this.quiz.getAnswers())
 			System.out.println(a.toString());
 		
+		this.quizTerminated = false;
 		this.index = 0;
 				
 		// init first question
@@ -122,6 +124,7 @@ public class Controller implements IController{
 		for(Answer a : this.radioAnswers.keySet())
 		{
 			this.radioAnswers.get(a).setText(a.toString() + ". " + q.getAnswers().get(a));
+			this.radioAnswers.get(a).setStyle("-fx-text-fill: black; -fx-font-weight: normal");
 		}
 		if(this.quiz.getAnswers().get(this.index) != Answer.NONE)
 		{
@@ -134,6 +137,16 @@ public class Controller implements IController{
 			{
 				this.radioAnswers.get(a).setSelected(false);
 			}
+		}
+		
+		if(this.quizTerminated)
+		{
+			Answer ua = this.quiz.getAnswers().get(this.index);
+			Answer ca = this.quiz.getQuiz().get(this.index).getCorrectAnswer();
+			
+			if(ua != null && ua != Answer.NONE)
+				this.radioAnswers.get(ua).setStyle("-fx-text-fill: red; -fx-font-weight: bold");
+			this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
 		}
 	}
 
@@ -153,6 +166,7 @@ public class Controller implements IController{
 		for(Answer a : this.radioAnswers.keySet())
 		{
 			this.radioAnswers.get(a).setText(a.toString() + ". " + q.getAnswers().get(a));
+			this.radioAnswers.get(a).setStyle("-fx-text-fill: black; -fx-font-weight: normal");
 		}
 		if(this.quiz.getAnswers().get(this.index) != Answer.NONE)
 		{
@@ -166,18 +180,38 @@ public class Controller implements IController{
 				this.radioAnswers.get(a).setSelected(false);
 			}
 		}
-	}
-
-	@Override
-	public int checkQuestions(Question q, int answer) {
-		return 0; // return array of correct answers
+		
+		if(this.quizTerminated)
+		{
+			Answer ua = this.quiz.getAnswers().get(this.index);
+			Answer ca = this.quiz.getQuiz().get(this.index).getCorrectAnswer();
+			
+			if(ua != null && ua != Answer.NONE)
+				this.radioAnswers.get(ua).setStyle("-fx-text-fill: red; -fx-font-weight: bold");
+			this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
+		}
 	}
 	
 	@Override
 	public void endQuiz() {
+		this.buttonEnd.setText("Riavvia");
+		this.quizTerminated = true;
+		
+		if(this.quizTerminated)
+		{
+			Answer ua = this.quiz.getAnswers().get(this.index);
+			Answer ca = this.quiz.getQuiz().get(this.index).getCorrectAnswer();
+			
+			if(ua != null && ua != Answer.NONE)
+				this.radioAnswers.get(ua).setStyle("-fx-text-fill: red; -fx-font-weight: bold");
+			this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
+		}
+		
+		// test
 		for(Answer a : this.quiz.getAnswers())
 			System.out.println(a.toString());
 		
+		this.quiz.checkAnswers();
 		// blocca timer, salva risposte (radio button non modificabili)
 		
 		// confirm prompt?
