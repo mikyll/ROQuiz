@@ -1,6 +1,6 @@
 # ROQuiz
 Semplice applicazione grafica Java per esercitarsi con i quiz del corso Ricerca Operativa M.
-È possibile caricare un file con le varie domande, quindi si possono inserire eventuali domande nuove;
+È possibile caricare un file con le varie domande, quindi si possono inserire eventuali domande nuove o personalizzate;
 il timer è impostato a 18 minuti, per ora si può modificare solo via codice sorgente;
 mostra le risposte giuste e quelle sbagliate.
 
