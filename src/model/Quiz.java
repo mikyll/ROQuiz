@@ -27,6 +27,7 @@ public class Quiz {
 			throw new IllegalArgumentException();*/
 		
 		this.answers.set(index, Answer.values()[value]);
+		this.givenAnswers++;
 	}
 	public void setAnswer(int index, Answer value)
 	{
@@ -34,6 +35,7 @@ public class Quiz {
 			throw new IllegalArgumentException();*/
 		
 		this.answers.set(index, value);
+		this.givenAnswers++;
 	}
 	
 	public void resetQuiz(List<Question> questions, int qNum)
@@ -61,8 +63,8 @@ public class Quiz {
 			Answer ca = this.quiz.get(i).getCorrectAnswer();
 			Answer ua = this.answers.get(i);
 			
-			if(!ua.equals(Answer.NONE))
-				this.givenAnswers++;
+			/*if(!ua.equals(Answer.NONE))
+				this.givenAnswers++;*/
 			if(ca.equals(ua))
 				this.correctAnswers++;
 		}
