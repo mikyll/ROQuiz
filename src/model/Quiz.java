@@ -12,9 +12,6 @@ public class Quiz {
 		
 	public Quiz(List<Question> questions, int qNum)
 	{
-		this.givenAnswers = 0;
-		this.correctAnswers = 0;
-		
 		this.resetQuiz(questions, qNum);
 	}
 	
@@ -51,6 +48,10 @@ public class Quiz {
 		answers = new ArrayList<Answer>(qNum);
 		for(int i = 0; i < qNum; i++)
 			this.answers.add(Answer.NONE);
+		
+		// reset counters
+		this.givenAnswers = 0;
+		this.correctAnswers = 0;
 	}
 	
 	public void checkAnswers()
@@ -58,11 +59,11 @@ public class Quiz {
 		for(int i = 0; i < this.quiz.size(); i++)
 		{
 			Answer ca = this.quiz.get(i).getCorrectAnswer();
-			Answer a = this.answers.get(i);
+			Answer ua = this.answers.get(i);
 			
-			if(!a.equals(Answer.NONE))
+			if(!ua.equals(Answer.NONE))
 				this.givenAnswers++;
-			if(ca.equals(a))
+			if(ca.equals(ua))
 				this.correctAnswers++;
 		}
 	}

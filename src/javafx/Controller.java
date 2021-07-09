@@ -53,17 +53,10 @@ public class Controller implements IController{
 	@FXML private TextField textCorrectAnswers;
 	@FXML private TextField textWrongAnswers;
 	
-	/*public Controller(IQuestionRepository quizRepository)
-	{
-		this.qRepo = quizRepository;
-		this.quiz = new Quiz(this.qRepo.getQuestions(), 16);
-		this.index = 0;
-	}*/
+	// FXML loader call order: Constructor -> initialize(). Inside initialize(), all the fxml object have been already initialized.
 	
-	public Controller()
-	{
-		
-	}
+	public Controller()	{}
+	
 	@FXML public void initialize()
 	{		
 		// style? Example: remove focus glow on text area and textfields
@@ -81,9 +74,6 @@ public class Controller implements IController{
 		} catch (BadFileFormatException e) {
 			e.printStackTrace();
 		}
-		
-		for(Answer a : this.quiz.getAnswers())
-			System.out.println(a.toString());
 		
 		this.quizTerminated = false;
 		this.index = 0;
@@ -103,12 +93,9 @@ public class Controller implements IController{
 	}
 	
 	
-	
-	
 	@FXML
 	public void setAnswer(ActionEvent event)
 	{
-		
 		String answer = event.getSource().toString().substring(20, 21);
 		this.quiz.setAnswer(this.index, Answer.valueOf(answer));
 		
@@ -174,8 +161,9 @@ public class Controller implements IController{
 		this.textQuestion.setText(q.getQuestion());
 		for(Answer a : this.radioAnswers.keySet())
 		{
-			this.radioAnswers.get(a).setText(a.toString() + ". " + q.getAnswers().get(a));
-			this.radioAnswers.get(a).setStyle("-fx-text-fill: black; -fx-font-weight: normal");
+			RadioButton rb = this.radioAnswers.get(a);
+			rb.setText(a.toString() + ". " + q.getAnswers().get(a));
+			rb.setStyle("-fx-text-fill: black; -fx-font-weight: normal");
 		}
 		if(this.quiz.getAnswers().get(this.index) != Answer.NONE)
 		{
@@ -224,7 +212,7 @@ public class Controller implements IController{
 				for(RadioButton rb : this.radioAnswers.values())
 					rb.setDisable(true);
 				
-				if(this.quizTerminated)
+				if(this.quizTerminated) // rimuovere
 				{
 					Answer ua = q.getAnswers().get(this.index);
 					Answer ca = q.getQuiz().get(this.index).getCorrectAnswer();
@@ -234,19 +222,40 @@ public class Controller implements IController{
 					this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
 				}
 				
-				// test
-				for(Answer a : q.getAnswers())
-					System.out.println(a.toString());
+				// stop timer
+			}
+		}
+		else
+		{
+			// reset
+			this.quizTerminated = false;
+			
+			Quiz q = this.quiz;
+			
+			q.resetQuiz(this.qRepo.getQuestions(), QUESTION_NUMBER);
+			this.index = 0;
+			
+			this.vboxResult.setVisible(false);
+			this.buttonEndReset.setText("Termina");
+			this.buttonPrev.setDisable(true);
+			
+			// init first question
+			this.textQNumber.setText("" + (this.index + 1));
+			Question question = this.quiz.getQuestionAt(this.index);
+			this.textQuestion.setText(question.getQuestion());
 				
-				
-				// blocca timer, salva risposte (radio button non modificabili)
+			// init first 5 answers
+			for(Answer a : this.radioAnswers.keySet())
+			{
+				RadioButton rb = this.radioAnswers.get(a);
+				rb.setDisable(false);
+				rb.setSelected(false);
+				rb.setText(a.toString() + ". " + question.getAnswers().get(a));
+				rb.setStyle("-fx-text-fill: black; -fx-font-weight: normal");
 			}
 			
-			
-			
-
+			// start timer
 		}
-		
 	}
 
 	
@@ -258,11 +267,5 @@ public class Controller implements IController{
 		this.radioAnswers.put(Answer.C, this.radioC);
 		this.radioAnswers.put(Answer.D, this.radioD);
 		this.radioAnswers.put(Answer.E, this.radioE);
-	}
-	
-	@FXML
-	public void prova(ActionEvent event) 
-	{
-		System.out.println("ciao");
 	}
 }
