@@ -328,7 +328,7 @@ public class Controller implements IController{
 		{
 			Alert alert = new Alert(AlertType.INFORMATION, "Tempo scaduto", ButtonType.OK);
 			alert.setTitle("Finestra di dialogo");
-			alert.setHeaderText("Informazione");
+			alert.setHeaderText("Quiz terminato.");
 			alert.show();
 			
 			this.endQuiz();
