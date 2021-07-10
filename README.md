@@ -18,6 +18,16 @@ Ho problemi con le installazioni di Java e non riesco a compilare con una versio
 <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
 
 ### Demo
+<table style="border: none">
+  <tr>
+    <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/%5BGIF%5D%20EndQuiz.gif" alt="EndQuizGIF"/></td>
+    <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/%5BGIF%5D%20Timeout.gif" alt="TimeoutGIF"/></td>
+  </tr>
+  <tr>
+    <td>End quiz</td>
+    <td>Timeout expired</td>
+  </tr>
+</table>
 
 ### Formattazione domande
 Le domande sono caricate da un file Quiz.txt che ha il seguente formato:
