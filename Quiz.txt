@@ -220,7 +220,7 @@ B. diverso da v oppure coincidente con v, dipende dal tableau attuale.
 C. coincidente con v se il determinante di B è nullo.
 D. sempre coincidente con v.
 E. diverso da v purché il determinante di B sia positivo.
-D
+B
 
 Dati un vettore di parametri a ed un vettore di incognite x, una disequazione della forma a'x <= b è equivalente a
 A. a'x <= b, a'x + s = b, s >= 0.
