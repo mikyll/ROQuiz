@@ -16,7 +16,7 @@ public class Main extends Application {
 	public void start(Stage stage) throws IOException, BadFileFormatException
 	{
 		try {
-			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/javafx/ViewQuiz.fxml"));
+			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/gui/ViewQuiz.fxml"));
 			AnchorPane quiz = (AnchorPane) loader.load();			
 			Scene scene = new Scene(quiz);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

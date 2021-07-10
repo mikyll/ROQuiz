@@ -1,4 +1,4 @@
-package javafx;
+package gui;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
