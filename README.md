@@ -13,7 +13,6 @@ il timer è impostato a 18 minuti, per ora si può modificare solo via codice so
 mostra le risposte giuste e quelle sbagliate.
 
 Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e implementare feature nuove o sistemare parti del codice già esistente (perché fa schifo ma funziona).
-Ho problemi con le installazioni di Java e non riesco a compilare con una versione differente dalla 10.0.2, cercherò di risolvere ma non assicuro nulla.
 
 <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
 
@@ -28,6 +27,11 @@ Ho problemi con le installazioni di Java e non riesco a compilare con una versio
     <td>Timeout expired</td>
   </tr>
 </table>
+
+### Esecuzione
+Per utilizzare l'applicazione è necessario aver installato Java 11 e JavaFX SDK 11. Per installarlo e impostarlo seguire <a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">questa guida</a>.
+In /build/ è presente il jar, il file con le domande aggiornate e un launcher. Per eseguire l'applicazione su Windows, una volta modificato il percorso del modulo in Launcher, basta un doppioclick sul launcher.
+Il launcher è infatti un normale eseguibile .bat che chiama il jar dell'applicazione, passandogli dei parametri (i parametri servono perché è necessario passare al comando java i moduli JavaFX utilizzati).
 
 ### Formattazione domande
 Le domande sono caricate da un file Quiz.txt che ha il seguente formato:
