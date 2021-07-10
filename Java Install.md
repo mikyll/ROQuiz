@@ -1,7 +1,7 @@
 ### Windows
 1. Download JavaSE-11 (jdk 11.\*): https://www.oracle.com/java/technologies/javase-jdk11-downloads.html
-<img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Java%20Installation%20Guide/InstallJava%20(1).png" width="70%"/>
-2. Estrarne il contenuto in una directory a piacere (meglio se nella stessa con le altre installazioni Java, di default è "C:\Program Files\Java\")
+<img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Java%20Installation%20Guide/InstallJava%20(1).png" width="70%"/><br/><br/>
+2. Estrarne il contenuto in una directory a piacere (meglio se nella stessa con le altre installazioni Java, di default è "C:\Program Files\Java\")<br/>
 3. Impostare Path e JAVA_HOME nelle variabili di sistema:
 
   * Cerca > Variabili > Modifica le variabili di ambiente relative al sistema > Variabili d'ambiente...
