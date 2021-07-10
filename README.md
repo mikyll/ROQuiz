@@ -31,7 +31,7 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
 ### Esecuzione
 1. Scaricare l'<a href="https://github.com/mikyll/ROQuiz/releases/latest">ultima release</a> ed estrarre il contenuto:<br/><br/>
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Download%20Build.png" width="70%"/><br/><br/>
-2. Installare Java 11 e JavaFX SDK 11 o un versioni più recenti (<a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">guida</a>)
+2. Installare Java 11 e JavaFX 11 o un versioni più recenti (<a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">guida</a>)
 3. Aprire il file Launcher con un text editor e modificare il parametro --module-path="C:\Program Files\Java\javafx-sdk-11.0.2\lib" con il percorso in cui è stato installato JavaFX SDK.
 4. Eseguire Launcher con doppioclick.
 
@@ -71,9 +71,10 @@ Features da aggiungere e sviluppi futuri:
 * fare il porting su mobile (magari Android)
 
 ### Built With
-Per l'implementazione ho utilizzato JavaFX SDK e JavaSE-10 (jre-10.0.2), come IDE Eclipse (versione 2020-03 (4.15.0), Build id: 20200313-1211), e SceneBuilder per l'impostazione degli elementi grafici.
+Per l'implementazione ho utilizzato JavaFX 11 (javafx-sdk-11.0.2) e JavaSE-11 (jdk-11.0.11), come IDE Eclipse (versione 2020-03 (4.15.0), Build id: 20200313-1211), e SceneBuilder per la creazione della grafica (file FXML).
 
-Java version: 10.0.2
+Java version: JavaSE-11 (jdk-11.0.11)
+JavaFX version: JavaFX 11 (javafx-sdk-11.0.2)
 
 ### References
 Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
