@@ -25,6 +25,8 @@ public class Quiz {
 	{
 		/*if(value < 0 || value > Settings.ANSWER_NUMBER - 1)
 			throw new IllegalArgumentException();*/
+		if(this.answers.get(index).equals(Answer.NONE))
+			this.givenAnswers++;
 		
 		this.answers.set(index, Answer.values()[value]);
 	}
@@ -32,6 +34,8 @@ public class Quiz {
 	{
 		/*if(value < 0 || value > Settings.ANSWER_NUMBER - 1)
 			throw new IllegalArgumentException();*/
+		if(this.answers.get(index).equals(Answer.NONE))
+			this.givenAnswers++;
 		
 		this.answers.set(index, value);
 	}
@@ -61,8 +65,6 @@ public class Quiz {
 			Answer ca = this.quiz.get(i).getCorrectAnswer();
 			Answer ua = this.answers.get(i);
 			
-			if(!ua.equals(Answer.NONE)) // already updated in setAnswer()
-				this.givenAnswers++;
 			if(ca.equals(ua))
 				this.correctAnswers++;
 		}

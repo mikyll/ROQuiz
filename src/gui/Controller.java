@@ -209,16 +209,16 @@ public class Controller implements IController{
 			// confirm prompt
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO/*, ButtonType.CANCEL*/);
 			alert.setTitle("Finestra di dialogo");
+			alert.setHeaderText("Terminare il quiz?");
 			if(this.quiz.getGivenAnswers() < Settings.QUESTION_NUMBER)
 			{
-				alert.setHeaderText("Terminare il quiz?");
 				String notAnswered = "";
 				for(int i = 0; i < Settings.QUESTION_NUMBER; i++)
 				{
 					if(this.quiz.getAnswers().get(i).equals(Answer.NONE))
 						notAnswered += (notAnswered.length() == 0 ? (i+1) : ", " + (i+1));
 				}
-				alert.setContentText("Non hai risposto alle domande: " + notAnswered);
+				alert.setContentText("Non hai risposto alle domande:\n" + notAnswered);
 			}
 			alert.showAndWait();
 
