@@ -14,7 +14,7 @@
   * verificare che Java 11 sia installato correttamente: Cerca > cmd > "java -version" e "javac -version"
   <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Java%20Installation%20Guide/InstallJava%20(6).png" width="70%"/>
 <br/><br/>
-5. Download JavaFX SDK (javafx-sdk-11.\*): https://gluonhq.com/products/javafx/
+5. Download JavaFX SDK (javafx-sdk-11.*): https://gluonhq.com/products/javafx/
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Java%20Installation%20Guide/InstallJava%20(7).png" width="70%"/><br/>
 6. Estrarne il contenuto in una directory a piacere (meglio se nella stessa con le altre installazioni Java, di default è "C:\Program Files\Java\")<br/>
 7. Aprire il file Launcher con un editor di testo e sostituire --module-path="C:\Program Files\Java\javafx-sdk-11.0.2\lib" con il percorso in cui è stato scaricato il jdk
