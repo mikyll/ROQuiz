@@ -2,16 +2,14 @@ package model;
 
 import java.util.HashMap;
 
-public class Question {
-	public final static int ANSWER_NUMBER = 5;
-	
+public class Question {	
 	private String question;
 	private HashMap<Answer, String> answers;
 	private Answer correctAnswer;
 	
 	public Question(String question)
 	{
-		this.answers = new HashMap<Answer, String>(5);
+		this.answers = new HashMap<Answer, String>(Settings.ANSWER_NUMBER);
 		this.question = question;
 	}
 
@@ -21,7 +19,7 @@ public class Question {
 	public void setAnswers(HashMap<Answer, String> answers) {this.answers = answers;}
 	public void addAnswer(String answer)
 	{
-		if(this.answers.keySet().size() == ANSWER_NUMBER)
+		if(this.answers.keySet().size() == Settings.ANSWER_NUMBER)
 			throw new IllegalArgumentException("Answer number excedeed.");
 		
 		int index = this.answers.keySet().size();
@@ -31,7 +29,7 @@ public class Question {
 	public Answer getCorrectAnswer() {return this.correctAnswer;}
 	public void setCorrectAnswer(int correctAnswer)
 	{
-		if(correctAnswer > 5)
+		if(correctAnswer > Settings.ANSWER_NUMBER)
 			throw new IllegalArgumentException("Error: the correct answer must be one of answers.");
 		this.correctAnswer = Answer.values()[correctAnswer];
 	}

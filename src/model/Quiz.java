@@ -23,7 +23,7 @@ public class Quiz {
 	
 	public void setAnswer(int index, int value)
 	{
-		/*if(value < 1 || value > 5)
+		/*if(value < 0 || value > Settings.ANSWER_NUMBER - 1)
 			throw new IllegalArgumentException();*/
 		
 		this.answers.set(index, Answer.values()[value]);
@@ -31,7 +31,7 @@ public class Quiz {
 	}
 	public void setAnswer(int index, Answer value)
 	{
-		/*if(value < 1 || value > 5)
+		/*if(value < 0 || value > Settings.ANSWER_NUMBER - 1)
 			throw new IllegalArgumentException();*/
 		
 		this.answers.set(index, value);
@@ -63,7 +63,7 @@ public class Quiz {
 			Answer ca = this.quiz.get(i).getCorrectAnswer();
 			Answer ua = this.answers.get(i);
 			
-			/*if(!ua.equals(Answer.NONE))
+			/*if(!ua.equals(Answer.NONE)) // already updated in setAnswer()
 				this.givenAnswers++;*/
 			if(ca.equals(ua))
 				this.correctAnswers++;

@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Question;
+import model.Settings;
 
 public class QuestionRepository implements IQuestionRepository {
-	public final static int ANSWER_NUMBER = 5;
 	
 	private List<Question> questions;
 	
@@ -35,7 +35,7 @@ public class QuestionRepository implements IQuestionRepository {
 				nLine++;
 				//System.out.println(line); // test
 				
-				for(int i = 0; i < ANSWER_NUMBER; i++) // answers
+				for(int i = 0; i < Settings.ANSWER_NUMBER; i++) // answers
 				{
 					line = reader.readLine();
 					nLine++;
@@ -51,7 +51,7 @@ public class QuestionRepository implements IQuestionRepository {
 				
 				char ch = line.toCharArray()[0];
 				int value = ((int) ch) - 65;
-				if(value < 0 || value > 4) // ADD BETTER CHECK
+				if(value < 0 || value > Settings.ANSWER_NUMBER - 1) // ADD BETTER CHECK
 				{
 					System.out.println("ERRORE");
 					return;
@@ -83,7 +83,7 @@ public class QuestionRepository implements IQuestionRepository {
 		return this.questions.get(id);
 	}
 	
-	// test
+	// test main
 	/*public static void main(String args[]) throws BadFileFormatException
 	{
 		QuestionRepository qr = null;

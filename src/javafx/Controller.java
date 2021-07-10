@@ -23,14 +23,12 @@ import javafx.util.Duration;
 import model.Answer;
 import model.Question;
 import model.Quiz;
+import model.Settings;
 import persistenece.BadFileFormatException;
 import persistenece.IQuestionRepository;
 import persistenece.QuestionRepository;
 
 public class Controller implements IController{
-	public final static int QUESTION_NUMBER = 16;
-	public final static int START_TIME = 1080;
-	
 	private IQuestionRepository qRepo;
 	private Quiz quiz;
 	private int index;
@@ -65,7 +63,8 @@ public class Controller implements IController{
 	
 	public Controller()	{}
 	
-	@FXML public void initialize()
+	@FXML @Override 
+	public void initialize()
 	{		
 		// style? Example: remove focus glow on text area and textfields
 		
@@ -81,7 +80,7 @@ public class Controller implements IController{
 			e.printStackTrace();
 		}
 		
-		this.quiz = new Quiz(this.qRepo.getQuestions(), QUESTION_NUMBER);
+		this.quiz = new Quiz(this.qRepo.getQuestions(), Settings.QUESTION_NUMBER);
 		this.index = 0;
 		this.quizTerminated = false;
 		
@@ -97,11 +96,12 @@ public class Controller implements IController{
 		}
 
 		// init timer
-		this.timeout = START_TIME;
+		this.timeout = Settings.START_TIME;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		timeline.setCycleCount(START_TIME); // Animation.INDEFINITE for a never ending timer
-		timeline.play();
+		this.timeline.setCycleCount(Settings.START_TIME); // Animation.INDEFINITE for a never ending timer
+		this.timeline.play();
+		System.out.println("Timer: start");
 	}
 	
 	
@@ -114,11 +114,11 @@ public class Controller implements IController{
 		System.out.println("Question " + (this.index+1) + ": selected answer " + answer + ".");
 	}
 	
-	@Override @FXML
+	@FXML @Override 
 	public void previousQuestion(ActionEvent event)
 	{
 		this.index--;
-		if(this.index == QUESTION_NUMBER - 2)
+		if(this.index == Settings.QUESTION_NUMBER - 2)
 			this.buttonNext.setDisable(false);
 		if(this.index == 0)
 			this.buttonPrev.setDisable(true);
@@ -157,13 +157,13 @@ public class Controller implements IController{
 		}
 	}
 
-	@Override @FXML
+	@FXML @Override 
 	public void nextQuestion(ActionEvent event)
 	{
 		this.index++;
 		if(this.index == 1)
 			this.buttonPrev.setDisable(false);
-		if(this.index == QUESTION_NUMBER - 1)
+		if(this.index == Settings.QUESTION_NUMBER - 1)
 			this.buttonNext.setDisable(true);
 		
 		// update quiz
@@ -207,13 +207,13 @@ public class Controller implements IController{
 		if(!this.quizTerminated)
 		{
 			// confirm prompt
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Terminare il quiz?", ButtonType.YES, ButtonType.NO/*, ButtonType.CANCEL*/);
+			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO/*, ButtonType.CANCEL*/);
 			alert.setTitle("Finestra di dialogo");
-			if(this.quiz.getGivenAnswers() < QUESTION_NUMBER)
+			if(this.quiz.getGivenAnswers() < Settings.QUESTION_NUMBER)
 			{
 				alert.setHeaderText("Terminare il quiz?");
 				String notAnswered = "";
-				for(int i = 0; i < QUESTION_NUMBER; i++)
+				for(int i = 0; i < Settings.QUESTION_NUMBER; i++)
 				{
 					if(this.quiz.getAnswers().get(i).equals(Answer.NONE))
 						notAnswered += (notAnswered.length() == 0 ? (i+1) : ", " + (i+1));
@@ -243,13 +243,14 @@ public class Controller implements IController{
 		this.radioAnswers.put(Answer.E, this.radioE);
 	}
 	
-	private void resetQuiz()
+	@Override 
+	public void resetQuiz()
 	{
 		this.quizTerminated = false;
 		
 		Quiz q = this.quiz;
 		
-		q.resetQuiz(this.qRepo.getQuestions(), QUESTION_NUMBER);
+		q.resetQuiz(this.qRepo.getQuestions(), Settings.QUESTION_NUMBER);
 		this.index = 0;
 		
 		this.vboxResult.setVisible(false);
@@ -272,14 +273,16 @@ public class Controller implements IController{
 		}
 		
 		// start timer
-		this.timeout = START_TIME;
+		this.timeout = Settings.START_TIME;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		timeline.setCycleCount(START_TIME); // Animation.INDEFINITE for a never ending timer
-		timeline.play();
+		this.timeline.setCycleCount(Settings.START_TIME); // Animation.INDEFINITE for a never ending timer
+		this.timeline.play();
+		System.out.println("Timer: start");
 	}
 	
-	private void endQuiz()
+	@Override
+	public void endQuiz()
 	{
 		
 		Quiz q = this.quiz;
@@ -289,7 +292,7 @@ public class Controller implements IController{
 		this.vboxResult.setVisible(true);
 		this.labelGivenAnswers.setText("" + q.getGivenAnswers());
 		this.labelCorrectAnswers.setText("" + q.getCorrectAnswers());
-		this.labelWrongAnswers.setText("" + (QUESTION_NUMBER-q.getCorrectAnswers()));
+		this.labelWrongAnswers.setText("" + (Settings.QUESTION_NUMBER-q.getCorrectAnswers()));
 		this.buttonEndReset.setText("Riavvia");
 		
 		for(RadioButton rb : this.radioAnswers.values())
@@ -304,8 +307,9 @@ public class Controller implements IController{
 		
 		// stop timer
 		this.timeline.stop();
+		System.out.println("Timer: stop");
 		
-		System.out.println("Quiz terminato. Risposte corrette: " + q.getCorrectAnswers() + ", risposte errate: " + (QUESTION_NUMBER-q.getCorrectAnswers()));
+		System.out.println("Quiz terminato. Risposte corrette: " + q.getCorrectAnswers() + ", risposte errate: " + (Settings.QUESTION_NUMBER-q.getCorrectAnswers()));
 	}
 	
 	private void updateTimer()
@@ -313,20 +317,20 @@ public class Controller implements IController{
 		this.timeout--;
 		
 		// color change
-		if(this.timeout == 300)
+		if(this.timeout == 300) // 5 min
 			this.labelTimer.setStyle("-fx-text-fill: rgb(235,180,0)");
 		if(this.timeout < 300 && this.timeout > 120)
 		{
 			this.timeoutRGB_G = this.timeoutRGB_G - 1;
 			this.labelTimer.setStyle("-fx-text-fill: rgb(235," + this.timeoutRGB_G + ",0)");
 		}
-		if(this.timeout == 120)
+		if(this.timeout == 120) // 2 min
 			this.labelTimer.setStyle("-fx-text-fill: red");
 		
 		// timer stop
 		if(this.timeout == 0)
 		{
-			Alert alert = new Alert(AlertType.INFORMATION, "Tempo scaduto", ButtonType.OK);
+			Alert alert = new Alert(AlertType.INFORMATION, "Tempo scaduto.", ButtonType.OK);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Quiz terminato.");
 			alert.show();
