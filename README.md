@@ -37,10 +37,10 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
 
 ### Formattazione domande
 Le domande sono caricate da un file Quiz.txt che ha il seguente formato:
--una riga per la domanda;
--5 righe per le risposte (la riga inizia con una lettera maiuscola, seguita da un punto e dalla risposta);
--una riga per la risposta corretta (una lettera da A a E).
--una riga vuota se non è l'ultima domanda.
+* una riga per la domanda;
+* 5 righe per le risposte (la riga inizia con una lettera maiuscola, seguita da un punto e dalla risposta);
+* una riga per la risposta corretta (una lettera da A a E).
+* una riga vuota se non è l'ultima domanda.
 
 NB: non è importante la lettera con cui iniziano le risposte, basta che siano in ordine, altrimenti la risposta giusta e la lettera non corrispondono (sarà necessario aggiungere ulteriori controlli).
 
