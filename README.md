@@ -26,7 +26,7 @@ Features da aggiungere e sviluppi futuri:
 * fare il porting su mobile (magari Android)
 
 ### Built With
-Per l'implementazione ho utilizzato JavaFX SDK e JavaSE-10 (jre-10.0.2), mentre come IDE Eclipse (versione 2020-03 (4.15.0), Build id: 20200313-1211)
+Per l'implementazione ho utilizzato JavaFX SDK e JavaSE-10 (jre-10.0.2), come IDE Eclipse (versione 2020-03 (4.15.0), Build id: 20200313-1211), e SceneBuilder per l'impostazione degli elementi grafici.
 
 Java version: 10.0.2
 
