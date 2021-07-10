@@ -29,10 +29,11 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
 </table>
 
 ### Esecuzione
-Scaricare l'<a href="https://github.com/mikyll/ROQuiz/releases/latest">ultima release</a> ed estrarre il contenuto:<br/><br/>
+1. Scaricare l'<a href="https://github.com/mikyll/ROQuiz/releases/latest">ultima release</a> ed estrarre il contenuto:<br/><br/>
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Download%20Build.png" width="70%"/><br/><br/>
-Per utilizzare l'applicazione è necessario aver installato Java 11 e JavaFX SDK 11. Per installarlo e impostarlo seguire <a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">questa guida</a>.
-Una volta installati Java e JavaFX, e aver modificato il parametro del launcher, è possibile eseguire l'applicazione con un doppio click su Launcher.
+2. Installare Java 11 e JavaFX SDK 11 o un versioni più recenti (<a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">guida</a>)
+3. Aprire il file Launcher con un text editor e modificare il parametro --module-path="C:\Program Files\Java\javafx-sdk-11.0.2\lib" con il percorso in cui è stato installato JavaFX SDK.
+4. Eseguire Launcher con doppioclick.
 
 ### Formattazione domande
 Le domande sono caricate da un file Quiz.txt che ha il seguente formato:
