@@ -29,7 +29,7 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
 </table>
 
 ### Esecuzione
-Scaricare l'ultima release ed estrarre il contenuto:<br/><br/>
+Scaricare l'<a href="https://github.com/mikyll/ROQuiz/releases/latest">ultima release</a> ed estrarre il contenuto:<br/><br/>
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Download%20Build.png" width="70%"/><br/><br/>
 Per utilizzare l'applicazione è necessario aver installato Java 11 e JavaFX SDK 11. Per installarlo e impostarlo seguire <a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">questa guida</a>.
 Una volta installati Java e JavaFX, e aver modificato il parametro del launcher, è possibile eseguire l'applicazione con un doppio click su Launcher.
