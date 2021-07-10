@@ -19,6 +19,33 @@ Ho problemi con le installazioni di Java e non riesco a compilare con una versio
 
 ### Demo
 
+### Formattazione domande
+Le domande sono caricate da un file Quiz.txt che ha il seguente formato:
+-una riga per la domanda;
+-5 righe per le risposte (la riga inizia con una lettera maiuscola, seguita da un punto e dalla risposta);
+-una riga per la risposta corretta (una lettera da A a E).
+-una riga vuota se non è l'ultima domanda.
+
+NB: non è importante la lettera con cui iniziano le risposte, basta che siano in ordine, altrimenti la risposta giusta e la lettera non corrispondono (sarà necessario aggiungere ulteriori controlli).
+
+esempio (due domande nel file Quiz.txt):
+<pre>
+Quale può essere una possibile coppia di problemi primale-duale?
+A. Primale ottimo finito / Duale illimitato.
+B. Primale Illimitato / Duale Illimitato.
+C. Primale impossibile / Duale impossibile.
+D. Primale ottimo finito / Duale impossibile.
+E. Nessuna di queste.
+C
+
+In un tableau del simplesso duale, gli elementi della riga 0 (colonna da 1 a n):
+A. sono tutti positivi o nulli.
+B. sono tutti positivi.
+C. sono tutti negativi.
+D. sono tutti nulli.
+E. Nessuna di queste.
+A
+</pre>
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
 * aggiungere menu
