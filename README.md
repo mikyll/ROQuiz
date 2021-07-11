@@ -23,15 +23,15 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
     <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/%5BGIF%5D%20Timeout.gif" alt="TimeoutGIF"/></td>
   </tr>
   <tr>
-    <td>End quiz</td>
-    <td>Timeout expired</td>
+    <td>Terminazione quiz</td>
+    <td>Tempo scaduto</td>
   </tr>
 </table>
 
 ### Esecuzione
 1. Scaricare l'<a href="https://github.com/mikyll/ROQuiz/releases/latest">ultima release</a> ed estrarre il contenuto:<br/><br/>
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Download%20Build.png" width="70%"/><br/><br/>
-2. Installare Java 11 e JavaFX 11 o un versioni più recenti (<a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">guida</a>)
+2. Installare Java 11 e JavaFX 11 o versioni più recenti (<a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">guida</a>)
 3. Aprire il file Launcher con un text editor e modificare il parametro --module-path="C:\Program Files\Java\javafx-sdk-11.0.2\lib" con il percorso in cui è stato installato JavaFX SDK.
 4. Eseguire Launcher con doppioclick.
 
