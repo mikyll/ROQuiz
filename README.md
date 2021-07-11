@@ -64,6 +64,7 @@ A
 </pre>
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
+* Sostituire build.zip con un installer per l'applicazione o un fat jar (jlink, jpackage, gradle)
 * aggiungere menu
 * aggiungere test di formattazione del documento caricato (segnalare la riga errata)
 * aggiungere test duplicati
@@ -73,8 +74,8 @@ Features da aggiungere e sviluppi futuri:
 ### Built With
 Per l'implementazione ho utilizzato JavaFX 11 (javafx-sdk-11.0.2) e JavaSE-11 (jdk-11.0.11), come IDE Eclipse (versione 2020-03 (4.15.0), Build id: 20200313-1211), e SceneBuilder per la creazione della grafica (file FXML).
 
-Java version: JavaSE-11 (jdk-11.0.11)
-JavaFX version: JavaFX 11 (javafx-sdk-11.0.2)
+versione Java: JavaSE-11 (jdk-11.0.11)<br/>
+versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 
 ### References
 Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
