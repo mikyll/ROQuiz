@@ -64,7 +64,7 @@ A
 </pre>
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
-* Sostituire build.zip con un installer per l'applicazione o un fat jar (jlink, jpackage, gradle)
+* Sostituire build.zip con un installer per l'applicazione o un fat jar, così che non serva installare Java (vedere jlink, jpackage, gradle)
 * aggiungere menu
 * aggiungere test di formattazione del documento caricato (segnalare la riga errata)
 * aggiungere test duplicati
