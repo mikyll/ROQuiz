@@ -24,9 +24,9 @@ import model.Answer;
 import model.Question;
 import model.Quiz;
 import model.Settings;
-import persistenece.BadFileFormatException;
-import persistenece.IQuestionRepository;
-import persistenece.QuestionRepository;
+import persistence.BadFileFormatException;
+import persistence.IQuestionRepository;
+import persistence.QuestionRepository;
 
 public class Controller implements IController{
 	private IQuestionRepository qRepo;
