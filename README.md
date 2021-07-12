@@ -62,10 +62,13 @@ A
 
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
+* deploy su Linux e MacOs
 * aggiungere menu
+* aggiungere alla persistenza la specifica dell'argomento (con una keyword o un carattere speciale, tipo '@' a inizio riga). E magari aggiungere la lista dinamica degli argomenti caricati dal file, in cui si può mettere un tick su quelli da selezionare per il quiz.
 * aggiungere test di formattazione del documento caricato (segnalare la riga errata)
-* aggiungere test duplicati
 * aggiungere file di configurazione per timer e numero di domande
+* 
+* aggiungere test duplicati
 * fare il porting su mobile (magari Android)
 
 ### Built With
