@@ -29,11 +29,8 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
 </table>
 
 ### Esecuzione
-1. Scaricare l'<a href="https://github.com/mikyll/ROQuiz/releases/latest">ultima release</a> ed estrarre il contenuto:<br/><br/>
-<img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Download%20Build.png" width="70%"/><br/><br/>
-2. Installare Java 11 e JavaFX 11 o versioni più recenti (<a href="https://github.com/mikyll/ROQuiz/blob/main/Java%20Install.md">guida</a>)
-3. Aprire il file Launcher con un text editor e modificare il parametro --module-path="C:\Program Files\Java\javafx-sdk-11.0.2\lib" con il percorso in cui è stato installato JavaFX SDK.
-4. Eseguire Launcher con doppioclick.
+1. Scaricare l'<a href="https://github.com/mikyll/ROQuiz/releases/latest">ultima release</a> ed estrarre il contenuto.
+2. Eseguire Launcher con doppioclick.
 
 ### Formattazione domande
 Le domande sono caricate da un file Quiz.txt che ha il seguente formato:
@@ -62,9 +59,9 @@ D. sono tutti nulli.
 E. Nessuna di queste.
 A
 </pre>
+
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
-* Sostituire build.zip con un installer per l'applicazione o un fat jar, così che non serva installare Java (vedere jlink, jpackage, gradle)
 * aggiungere menu
 * aggiungere test di formattazione del documento caricato (segnalare la riga errata)
 * aggiungere test duplicati
@@ -72,13 +69,16 @@ Features da aggiungere e sviluppi futuri:
 * fare il porting su mobile (magari Android)
 
 ### Built With
-Per l'implementazione ho utilizzato JavaFX 11 (javafx-sdk-11.0.2) e JavaSE-11 (jdk-11.0.11), come IDE Eclipse (versione 2020-03 (4.15.0), Build id: 20200313-1211), e SceneBuilder per la creazione della grafica (file FXML).
+Per l'implementazione ho utilizzato JavaFX 11 (javafx-sdk-11.0.2) e JavaSE-11 (jdk-11.0.11), come IDE Eclipse (versione 2020-03 (4.15.0), Build id: 20200313-1211), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20setup.md).
 
 versione Java: JavaSE-11 (jdk-11.0.11)<br/>
 versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 
 ### References
-Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
+* Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
+* Lavorare coi moduli Java: [Java 9 Modules in Eclipse](https://blogs.oracle.com/java/post/how-to-develop-modules-with-eclipse-ide)
+* Creare jre custom con JavaFX: [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11)
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
