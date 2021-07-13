@@ -71,7 +71,7 @@ Features da aggiungere e sviluppi futuri:
 * fare il porting su mobile (magari Android)
 
 ### Built With
-Per l'implementazione ho utilizzato JavaFX 11 (javafx-sdk-11.0.2) e JavaSE-11 (jdk-11.0.11), come IDE Eclipse (versione 2020-03 (4.15.0), Build id: 20200313-1211), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20setup.md).
+Per l'implementazione ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20setup.md).
 
 versione Java: JavaSE-11 (jdk-11.0.11)<br/>
 versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
