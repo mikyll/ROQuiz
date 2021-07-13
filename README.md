@@ -85,7 +85,7 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[downloads-shield]: https://img.shields.io/github/downloads/mikyll/ROQuiz/total.svg
+[downloads-shield]: https://img.shields.io/github/downloads/mikyll/ROQuiz/total
 [downloads-url]: https://github.com/mikyll/ROQuiz/releases/latest
 [contributors-shield]: https://img.shields.io/github/contributors/mikyll/ROQuiz
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
