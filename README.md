@@ -1,3 +1,4 @@
+[![Downloads](https://img.shields.io/github/downloads/mikyll/ROQuiz/total.svg)]()
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -84,6 +85,7 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[downloads-url]: https://img.shields.io/github/downloads/mikyll/ROQuiz/total.svg
 [contributors-shield]: https://img.shields.io/github/contributors/mikyll/ROQuiz
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/mikyll/ROQuiz
