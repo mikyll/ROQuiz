@@ -444,7 +444,7 @@ B. significa che la soluzione ottima è illimitata.
 C. significa che il problema originale è impossibile.
 D. si è trovata la soluzione ottima del problema originale.
 E. Nessuna di queste.
-C
+E
 
 L'aggiunta al tableau del taglio di Gomory relativo ad una riga generatrice frazionaria produce una soluzione (un tableau) che:
 A. soddisfa il vincolo di interezza ma non è ottima.

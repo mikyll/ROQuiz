@@ -22,7 +22,7 @@ public class QuestionRepository implements IQuestionRepository {
 		
 		BufferedReader reader = new BufferedReader(baseReader);
 		
-		int nLine = 0;
+		int nLine = 0, nQuestion = 0;
 		String line = null;
 		while ((line = reader.readLine()) != null)
 		{
@@ -48,6 +48,7 @@ public class QuestionRepository implements IQuestionRepository {
 				
 				line = reader.readLine(); // correct answer
 				nLine++;
+				nQuestion++;
 				
 				char ch = line.toCharArray()[0];
 				int value = ((int) ch) - 65;
@@ -74,6 +75,7 @@ public class QuestionRepository implements IQuestionRepository {
 			else continue;
 			
 		}
+		System.out.println("Domande lette dal file: " + nQuestion);
 	}
 	
 	@Override
