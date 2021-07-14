@@ -98,6 +98,6 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 [license-shield]: https://img.shields.io/github/license/mikyll/ROQuiz
 [license-url]: https://github.com/mikyll/ROQuiz/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?logo=linkedin&colorB=0077B5
-[linkedin-url]: https://www.linkedin.com/in/michele-righi-095283195/?locale=it_IT
+[linkedin-url]: https://www.linkedin.com/in/michele-righi/?locale=it_IT
 [github-shield]: https://img.shields.io/github/followers/mikyll.svg?style=social&label=Follow
 [github-url]: https://github.com/mikyll
