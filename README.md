@@ -44,13 +44,13 @@ NB: non è importante la lettera con cui iniziano le risposte, basta che siano i
 
 esempio (due domande nel file Quiz.txt):
 <pre>
-In cosa consiste la Fase 1 dell'algoritmo del Simplesso?
-A. Eliminare le variabili artificiali.
-B. Minimizzare la funzione obiettivo originale.
-C. Determinare una SBA iniziale.
-D. Azzerare i costi relativi originali.
-E. Nessuna di queste.
-C
+Sia P il problema ILP e L(P) il suo rilassamento continuo. Se L(P) è illimitato, allora:
+A. P è sempre impossibile
+B. non si può dire nulla su P
+C. P è sempre illimitato
+D. P è illimitato salvo casi molto particolari
+E. nessuna di queste
+D
 
 In un tableau del simplesso duale, gli elementi della riga 0 (colonna da 1 a n):
 A. sono tutti positivi o nulli.
