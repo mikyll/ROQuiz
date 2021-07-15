@@ -73,11 +73,14 @@ public class Controller implements IController{
 		try (Reader readerQuiz = new FileReader("Quiz.txt")){
 			this.qRepo = new QuestionRepository(readerQuiz);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("File Quiz.txt mancante.");
+			System.exit(0);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Errore nella lettura del file Quiz.txt.");
+			System.exit(0);
 		} catch (BadFileFormatException e) {
-			e.printStackTrace();
+			System.out.println("Errore nella formattazione del file: " + e.getMessage() + " (linea " + e.getExceptionLine() + ")");
+			System.exit(0);
 		}
 		
 		this.quiz = new Quiz(this.qRepo.getQuestions(), Settings.QUESTION_NUMBER);

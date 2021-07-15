@@ -22,60 +22,52 @@ public class QuestionRepository implements IQuestionRepository {
 		
 		BufferedReader reader = new BufferedReader(baseReader);
 		
-		int nLine = 0, nQuestion = 0;
+		int lineNum = 0, questNum = 0;
 		String line = null;
 		while ((line = reader.readLine()) != null)
 		{
-			nLine++;
+			lineNum++;
 			line.trim();
 			
-			if(line.length() > 0) // next question
+			if(line.length() > 0 && !line.isBlank()) // next question
 			{
+				/*if(line.startsWith("@")) // add topic check ?
+					// add topic*/
+				
 				Question q = new Question(line);
-				nLine++;
-				//System.out.println(line); // test
 				
 				for(int i = 0; i < Settings.ANSWER_NUMBER; i++) // answers
 				{
 					line = reader.readLine();
-					nLine++;
-					line = line.split("\\. ")[1]; // ADD CHECK SPLIT
+					lineNum++;
 					
-					q.addAnswer(line); // ADD BAD FILE FORMAT EXCEPTION (+ LINE NUMBER)
-					
-					//System.out.println(line); // test
+					String splitted[] = line.split("\\. ");
+					if(splitted.length < 2 || splitted[1].isEmpty() || splitted[1].isBlank()) // answer missing or empty
+						throw new BadFileFormatException(lineNum, "risposta " + String.valueOf((char) (i+65)));
+										
+					q.addAnswer(splitted[1]);
 				}
 				
 				line = reader.readLine(); // correct answer
-				nLine++;
-				nQuestion++;
+				lineNum++;
+				questNum++;
+				
+				if(line.length() != 1 || line.isBlank())
+					throw new BadFileFormatException(lineNum, "risposta corretta");
 				
 				char ch = line.toCharArray()[0];
 				int value = ((int) ch) - 65;
-				if(value < 0 || value > Settings.ANSWER_NUMBER - 1) // ADD BETTER CHECK
-				{
-					System.out.println("ERRORE");
-					return;
-				}
+				if(value < 0 || value > Settings.ANSWER_NUMBER - 1)
+					throw new BadFileFormatException(lineNum, "risposta corretta");
 				
 				q.setCorrectAnswer(value);
-				
-				//System.out.println(line); // test
-				
-				try
-				{
-					
-				} catch(IllegalArgumentException e)
-				{
-					System.out.println("Errore in riga " + nLine);
-				}
 				
 				questions.add(q);
 			}
 			else continue;
 			
 		}
-		System.out.println("Domande lette dal file: " + nQuestion);
+		System.out.println("Domande lette dal file: " + questNum);
 	}
 	
 	@Override
