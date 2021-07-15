@@ -183,9 +183,9 @@ E. Nessuna di queste.
 D
 
 Relativamente ad un problema fortemente NP-Completo:
-A. Non può esistere nessun algoritmo pseudo-polinomiale, almeno che P=NP.
+A. Non può esistere nessun algoritmo pseudo-polinomiale, a meno che P=NP.
 B. Non può esistere nessun algoritmo pseudo-polinomiale.
-C. Può esistere un algoritmo pseudo-polinomiale, almeno che P=NP.
+C. Può esistere un algoritmo pseudo-polinomiale, a meno che P=NP.
 D. Può esistere un algoritmo pseudo-polinomiale.
 E. Nessuna di queste.
 A
@@ -414,7 +414,7 @@ D. gli elementi della riga 0, colonne da 1 a n, sono tutti non negativi.
 E. Nessuna di queste.
 D
 
-Nell'algoritmo del simplesso duale, sia a'i (i>0) una riga corrispondente ad un valore negativo in colonna 0. Se tutti i coefficienti della a'i sono positivi o nulli, ciò implica che:
+Nell'algoritmo del simplesso duale, sia a'i (i>0) una riga corrispondente ad un valore negativo in colonna 0. Se tutti i coefficienti di tale riga sono positivi o nulli, ciò implica che:
 A. Il sistema Ax = b è ridondante.
 B. il problema è impossibile.
 C. la soluzione attuale è ottima.
@@ -438,7 +438,7 @@ D. sono tutti positivi o nulli.
 E. Nessuna di queste.
 B
 
-Nel metodo delle due fasi, se al termina della fase 1 la soluzione ha valore negativo:
+Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore negativo:
 A. si è ottenuta una soluzione base ammissibile per il problema originale.
 B. significa che la soluzione ottima è illimitata.
 C. significa che il problema originale è impossibile.
@@ -510,7 +510,7 @@ D. è un intorno esatto
 E. è il complemento di S
 C
 
-Nel metodo delle due fasi, se al termina della fase 1 la soluzione ha valore positivo
+Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore positivo
 A. significa che la soluzione ottima è illimitata
 B. sotto determinate condizioni si è ottenuta una soluzione base ammissibile per il problema originale
 C. si è trovata la soluzione ottima del problema originale
@@ -598,3 +598,83 @@ C. contengono i valori attuali di tutte le variabili
 D. contengono i costi relativi
 E. contengono i valori ottimi delle sole variabili base
 A
+
+Un vincolo espresso come Ax = b in forma standard equivale, in forma canonica, a
+A. Ax <=b, Ax >=b
+B. Ax < b
+C. Ax > b
+D. Ax >= b, Ax < b
+E. Nessuna di queste
+A
+
+Dato un insieme F, un intorno è
+A. L'insieme di tutti i sottoinsiemi di F
+B. L'insieme dei punti di F a distanza minore di epsilon da un punto x di F
+C. Una funzione N: F -> 2^F
+D. Una combinazione convessa di due punti x e y di F
+E. Nessuna di queste
+C
+
+Se un problema appartiene alla classe NP
+A. è risolubile solo mediante un albero decisionale di altezza esponenziale
+B. è sempre risolubile mediante un algoritmo di programmazione dinamica
+C. è sempre risolubile in tempo polinomiale
+D. è sempre risolubile mediante un albero decisionale di altezza polinomiale
+E. è sempre risolubile in tempo pseudo-polinomiale
+B
+
+Scelta una riga generatrice, un taglio di Gomory impone che
+A. la somma delle parti frazionarie delle variabili fuori base sia non maggiore della parte frazionaria del termine noto
+B. la somma delle parti frazionarie delle variabili base sia non maggiore della parte frazionaria del termine noto
+C. la somma delle parti frazionarie delle variabili base sia non minore della parte frazionaria del termine noto
+D. la somma delle parti frazionarie delle variabili fuori base sia non minore della parte frazionaria del termine noto
+E. nessuna delle precedenti
+D
+
+Ad una variabile primale non negativa corrisponde
+A. nessuna di queste
+B. un vincolo duale della forma pi'a^ <= c
+C. un vincolo duale nella forma pi'a^ = c
+D. una variabile duale non negativa
+E. una variabile duale libera (non ristretta in segno)
+B
+
+Sia P un problema di programmazione lineare intera e L(P) il suo rilassamento continuo. Se L(P) è impossibile, allora
+A. P è impossibile salvo casi molto particolari
+B. non si può dire nulla su P
+C. P è sempre impossibile
+D. P è illimitato
+E. nessuna di queste
+C
+
+Si consideri un sistema di equazioni lineari della forma Ax = b, con A matrice m x n di rango m. Il sistema ha
+A. infinite soluzioni se m = n
+B. infinite soluzioni se m > n
+C. una sola soluzione se m = n
+D. una sola soluzione se m > n
+E. nessuna delle precedenti
+C
+
+Si consideri un problema di ottimizzazione (F,d) ed un intorno N. La proprietà che se un punto f di F è localmente ottimo rispetto ad N allora f è l'ottimo assoluto implica
+A. che N è un intorno esatto
+B. che N è un intorno euclideo
+C. che N è un intorno non euclideo
+D. nessuna di queste caratterizzazioni
+E. che N è un intorno convesso
+A
+
+Facendo variare lambda fra 0 e 1, la combinazione convessa di due punti x ed y descrive
+A. tutti i punti della semiretta che origina in x e passa per y
+B. tutti i punti della retta passante per x ed y
+C. tutti i punti del segmento [x,y]
+D. il punto centrale del segmento [x,y]
+E. tutti i punti della semiretta che origina in y e passa per x
+C
+
+Data una matrice intera A m x n, una sua base è costituita da
+A. un insieme di m colonne
+B. un insieme di m colonne linearmente indipendenti
+C. un insieme di m colonne la cui matrice quadrata corrispondente è singolare
+D. un insieme di m colonne linearmente dipendenti
+E. nessuna di queste
+B
