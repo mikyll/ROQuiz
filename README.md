@@ -44,11 +44,11 @@ NB: non è importante la lettera con cui iniziano le risposte, basta che siano i
 
 esempio (due domande nel file Quiz.txt):
 <pre>
-Quale può essere una possibile coppia di problemi primale-duale?
-A. Primale ottimo finito / Duale illimitato.
-B. Primale Illimitato / Duale Illimitato.
-C. Primale impossibile / Duale impossibile.
-D. Primale ottimo finito / Duale impossibile.
+In cosa consiste la Fase 1 dell'algoritmo del Simplesso?
+A. Eliminare le variabili artificiali.
+B. Minimizzare la funzione obiettivo originale.
+C. Determinare una SBA iniziale.
+D. Azzerare i costi relativi originali.
 E. Nessuna di queste.
 C
 
