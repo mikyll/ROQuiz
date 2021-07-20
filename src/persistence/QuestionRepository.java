@@ -39,7 +39,7 @@ public class QuestionRepository implements IQuestionRepository {
 				this.topics = new ArrayList<String>();
 				this.qNumPerTopics = new ArrayList<Integer>();
 				
-				this.topics.add(line.substring(1).replaceAll("=+", ""));
+				this.topics.add(line.substring(1).replaceAll("=+", "").trim());
 				
 				System.out.println("Topic: " + line); // test
 				
@@ -53,7 +53,7 @@ public class QuestionRepository implements IQuestionRepository {
 					this.qNumPerTopics.add(numPerTopic);
 					numPerTopic = 0;
 					
-					this.topics.add(line.substring(1).replaceAll("=+", ""));
+					this.topics.add(line.substring(1).replaceAll("=+", "").trim());
 					
 					System.out.println("Topic: " + line); // test
 					

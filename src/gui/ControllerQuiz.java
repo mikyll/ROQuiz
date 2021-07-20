@@ -68,7 +68,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	{		
 		// style? Example: remove focus glow on text area and textfields
 		
-		this.initializeRadioArray();
+		this.initRadioArray();
 		
 		try (Reader readerQuiz = new FileReader("Quiz.txt")){
 			this.qRepo = new QuestionRepository(readerQuiz);
@@ -236,7 +236,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	}
 
 	
-	private void initializeRadioArray()
+	private void initRadioArray()
 	{
 		this.radioAnswers = new HashMap<Answer, RadioButton>(5);
 		this.radioAnswers.put(Answer.A, this.radioA);
