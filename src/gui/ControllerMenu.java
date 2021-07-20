@@ -7,12 +7,14 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Alert.AlertType;
@@ -23,6 +25,7 @@ import persistence.BadFileFormatException;
 import persistence.IQuestionRepository;
 import persistence.QuestionRepository;
 public class ControllerMenu implements IControllerMenu {
+	private HostServices hostServies;
 	private Settings settings;
 	private IQuestionRepository qRepo;
 	
@@ -31,15 +34,15 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private VBox vboxMain;
 	@FXML private VBox vboxTopics;
 	@FXML private VBox vboxCheckBoxes;
-	@FXML private VBox vboxSettingsHelp;
+	@FXML private VBox vboxSettingsInfo;
 	@FXML private VBox vboxSettings;
-	@FXML private VBox vboxHelp;	
+	@FXML private VBox vboxInfo;	
 	@FXML private VBox vboxBack;
 	
 	@FXML private Button buttonTopics;
 	@FXML private Button buttonStart;
 	@FXML private Button buttonSettings;
-	@FXML private Button buttonHelp;
+	@FXML private Button buttonInfo;
 	
 	@FXML private Label labelTopics;
 	@FXML private Label labelQuizQNum;
@@ -82,11 +85,11 @@ public class ControllerMenu implements IControllerMenu {
 		
 		// setup vbox and panels
 		this.vboxMain.setVisible(true);
-		this.vboxSettingsHelp.setVisible(true);
+		this.vboxSettingsInfo.setVisible(true);
 		this.vboxBack.setVisible(false);
 		this.vboxTopics.setVisible(false);
 		this.vboxSettings.setVisible(false);
-		this.vboxHelp.setVisible(false);
+		this.vboxInfo.setVisible(false);
 		
 		int qNum = this.qRepo.getQuestions().size();
 		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(16, qNum, this.settings.getQuestionNumber()));
@@ -101,7 +104,7 @@ public class ControllerMenu implements IControllerMenu {
 		System.out.println("User selected topics");
 		
 		this.vboxMain.setVisible(false);
-		this.vboxSettingsHelp.setVisible(false);
+		this.vboxSettingsInfo.setVisible(false);
 		this.vboxTopics.setVisible(true);
 		this.vboxBack.setVisible(true);
 	}
@@ -132,11 +135,6 @@ public class ControllerMenu implements IControllerMenu {
 		}
 	}
 	
-	private void checkTopics()
-	{
-		
-	}
-	
 	@FXML
 	public void startQuiz(ActionEvent event)
 	{
@@ -151,19 +149,19 @@ public class ControllerMenu implements IControllerMenu {
 		System.out.println("User selected settings");
 		
 		this.vboxMain.setVisible(false);
-		this.vboxSettingsHelp.setVisible(false);
+		this.vboxSettingsInfo.setVisible(false);
 		this.vboxSettings.setVisible(true);
 		this.vboxBack.setVisible(true);
 	}
 	
 	@FXML
-	public void help(ActionEvent event)
+	public void info(ActionEvent event)
 	{
-		System.out.println("User selected help");
+		System.out.println("User selected Info");
 		
 		this.vboxMain.setVisible(false);
-		this.vboxSettingsHelp.setVisible(false);
-		this.vboxHelp.setVisible(true);
+		this.vboxSettingsInfo.setVisible(false);
+		this.vboxInfo.setVisible(true);
 		this.vboxBack.setVisible(true);
 	}
 	
@@ -210,13 +208,13 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxBack.setVisible(false);
 		this.vboxTopics.setVisible(false);
 		this.vboxSettings.setVisible(false);
-		this.vboxHelp.setVisible(false);
-		this.vboxSettingsHelp.setVisible(true);
+		this.vboxInfo.setVisible(false);
+		this.vboxSettingsInfo.setVisible(true);
 		this.vboxMain.setVisible(true);
 	}
 	
 	@FXML 
-	public void cancelSettings(ActionEvent event) // CHECK
+	public void cancelSettings(ActionEvent event)
 	{
 		System.out.println("Setting changes canceled");
 		
@@ -226,12 +224,12 @@ public class ControllerMenu implements IControllerMenu {
 		
 		this.vboxBack.setVisible(false);
 		this.vboxSettings.setVisible(false);
-		this.vboxSettingsHelp.setVisible(true);
+		this.vboxSettingsInfo.setVisible(true);
 		this.vboxMain.setVisible(true);
 	}
 	
 	@FXML 
-	public void saveSettings(ActionEvent event) // CHECK
+	public void saveSettings(ActionEvent event)
 	{
 		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
 				this.spinnerQuestionNumQuiz.getValue() + "\nNumero risposte: " + this.spinnerAnswerNumQuiz.getValue() +
@@ -243,8 +241,20 @@ public class ControllerMenu implements IControllerMenu {
 		
 		this.vboxBack.setVisible(false);
 		this.vboxSettings.setVisible(false);
-		this.vboxSettingsHelp.setVisible(true);
+		this.vboxSettingsInfo.setVisible(true);
 		this.vboxMain.setVisible(true);
+	}
+	
+	@FXML 
+	public void openURL(ActionEvent event)
+	{
+		Hyperlink hl = (Hyperlink) event.getSource();
+		if(hl.getText().equals("mikyll"))
+			this.hostServies.showDocument("https://github.com/mikyll");
+		if(hl.getText().equals("mikyll/ROQuiz"))
+			this.hostServies.showDocument("https://github.com/mikyll/ROQuiz");
+		if(hl.getText().equals("Icon8"))
+			this.hostServies.showDocument("https://icons8.com");
 	}
 	
 	// public void selectQuizFile() {}
@@ -285,5 +295,10 @@ public class ControllerMenu implements IControllerMenu {
 		{
 			System.out.println(this.checkBoxes.get(i).getText() + ": " + this.qRepo.getqNumPerTopics().get(i));
 		}
+	}
+	
+	public void setHostServices(HostServices hostServices)
+	{
+		this.hostServies = hostServices;
 	}
 }

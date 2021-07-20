@@ -2,6 +2,7 @@ package application;
 	
 import java.io.IOException;
 
+import gui.ControllerMenu;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -33,7 +34,9 @@ public class Main extends Application {
 	{
 		try {
 			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/gui/ViewMenu.fxml"));
-			AnchorPane quiz = (AnchorPane) loader.load();			
+			AnchorPane quiz = (AnchorPane) loader.load();
+			ControllerMenu controller = loader.getController();
+			controller.setHostServices(getHostServices());
 			Scene scene = new Scene(quiz);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			stage.setTitle("ROQuiz");
