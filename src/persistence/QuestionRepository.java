@@ -12,27 +12,56 @@ import model.Settings;
 public class QuestionRepository implements IQuestionRepository {
 	
 	private List<Question> questions;
+	private List<String> topics;
+	private List<Integer> qNumPerTopics;
+	private boolean topicsPresent;
 	
 	public QuestionRepository(Reader baseReader) throws IOException, BadFileFormatException
 	{
 		if(baseReader == null)
 			throw new IllegalArgumentException("Null Reader");
 		
-		questions = new ArrayList<Question>();
+		this.questions = new ArrayList<Question>();
 		
 		BufferedReader reader = new BufferedReader(baseReader);
 		
-		int lineNum = 0, questNum = 0;
+		int lineNum = 0, numPerTopic = 0, totQuest = 0;
 		String line = null;
 		while ((line = reader.readLine()) != null)
 		{
 			lineNum++;
 			line.trim();
 			
+			if(lineNum == 1 && line.startsWith("@")) // if the first line is a topic, we know the questions are divided by subject (the topics)
+			{
+				this.topicsPresent = true;
+				
+				this.topics = new ArrayList<String>();
+				this.qNumPerTopics = new ArrayList<Integer>();
+				
+				this.topics.add(line.substring(1).replaceAll("=+", ""));
+				
+				System.out.println("Topic: " + line); // test
+				
+				continue;
+			}
+			
 			if(line.length() > 0 && !line.isBlank()) // next question
 			{
-				/*if(line.startsWith("@")) // add topic check ?
-					// add topic*/
+				if(this.topicsPresent && line.startsWith("@")) // next topic
+				{
+					this.qNumPerTopics.add(numPerTopic);
+					numPerTopic = 0;
+					
+					this.topics.add(line.substring(1).replaceAll("=+", ""));
+					
+					System.out.println("Topic: " + line); // test
+					
+					line = reader.readLine();
+					lineNum++;
+				}
+				else if(line.startsWith("@"))
+					throw new BadFileFormatException(lineNum, "divisione per argomenti non rilevata (non è presente l'argomento per le prime domande), ma ne è stato trovato uno comunque");
 				
 				Question q = new Question(line);
 				
@@ -50,7 +79,7 @@ public class QuestionRepository implements IQuestionRepository {
 				
 				line = reader.readLine(); // correct answer
 				lineNum++;
-				questNum++;
+				totQuest++;
 				
 				if(line.length() != 1 || line.isBlank())
 					throw new BadFileFormatException(lineNum, "risposta corretta");
@@ -63,25 +92,38 @@ public class QuestionRepository implements IQuestionRepository {
 				q.setCorrectAnswer(value);
 				
 				questions.add(q);
+				
+				if(this.topicsPresent)
+					numPerTopic++;
 			}
 			else continue;
 			
 		}
-		System.out.println("Domande lette dal file: " + questNum);
+		System.out.println("Domande lette dal file: " + totQuest);
+		if(this.topicsPresent)
+		{
+			this.qNumPerTopics.add(numPerTopic);
+			
+			for(int i = 0; i < this.qNumPerTopics.size(); i++)
+			{
+				System.out.println("Topic: " + this.topics.get(i) + ", num: " + this.qNumPerTopics.get(i)); // test
+			}
+		}
 	}
 	
 	@Override
 	public List<Question> getQuestions() {return this.questions;}
-	public Question getQuestion(int id)
-	{
-		return this.questions.get(id);
-	}
+	public List<String> getTopics() {return topics;}
+	public List<Integer> getqNumPerTopics() {return qNumPerTopics;}
+	public boolean hasTopics() {return topicsPresent;}
+	
+	
 	
 	// test main
 	/*public static void main(String args[]) throws BadFileFormatException
 	{
 		QuestionRepository qr = null;
-		try (Reader readerQuiz = new FileReader("Quiz.txt");) {
+		try (Reader readerQuiz = new FileReader("QuizDivisiPerArgomento.txt");) {
 			qr = new QuestionRepository(readerQuiz);
 		} catch (IOException e) {
 			System.out.println("Errore");

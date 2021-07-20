@@ -28,7 +28,7 @@ import persistence.BadFileFormatException;
 import persistence.IQuestionRepository;
 import persistence.QuestionRepository;
 
-public class Controller implements IController{
+public class ControllerQuiz implements IControllerQuiz{
 	private IQuestionRepository qRepo;
 	private Quiz quiz;
 	private int index;
@@ -61,7 +61,7 @@ public class Controller implements IController{
 	
 	// FXML loader call order: Constructor -> initialize(). Inside initialize(), all the fxml object have been already initialized.
 	
-	public Controller()	{}
+	public ControllerQuiz()	{}
 	
 	@FXML @Override 
 	public void initialize()

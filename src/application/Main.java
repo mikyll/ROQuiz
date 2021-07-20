@@ -12,11 +12,27 @@ import javafx.scene.layout.AnchorPane;
 
 public class Main extends Application {
 	
-	@Override
+	/*@Override
 	public void start(Stage stage) throws IOException, BadFileFormatException
 	{
 		try {
 			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/gui/ViewQuiz.fxml"));
+			AnchorPane quiz = (AnchorPane) loader.load();			
+			Scene scene = new Scene(quiz);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			stage.setTitle("ROQuiz");
+			stage.setScene(scene);
+			stage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}*/
+	
+	@Override
+	public void start(Stage stage) throws IOException, BadFileFormatException
+	{
+		try {
+			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/gui/ViewMenu.fxml"));
 			AnchorPane quiz = (AnchorPane) loader.load();			
 			Scene scene = new Scene(quiz);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
