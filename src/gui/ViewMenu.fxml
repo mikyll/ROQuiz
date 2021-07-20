@@ -35,7 +35,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Button>
-            <Label fx:id="labelTopics" alignment="CENTER" prefHeight="25.0" prefWidth="400.0" text="*File domande non diviso per argomenti" textFill="RED">
+            <Label fx:id="labelTopicsWarning" alignment="CENTER" prefHeight="25.0" prefWidth="400.0" text="*File domande non diviso per argomenti" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
@@ -132,7 +132,7 @@
             </Button>
          </children>
       </VBox>
-      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" prefWidth="150.0" text="Impostazioni">
                <font>
@@ -140,12 +140,12 @@
                </font>
             </Label>
             <Separator prefHeight="50.0" prefWidth="400.0" visible="false" />
-            <VBox prefHeight="260.0" prefWidth="400.0" spacing="5.0">
+            <VBox prefHeight="260.0" prefWidth="400.0">
                <padding>
                   <Insets left="50.0" right="50.0" />
                </padding>
                <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="350.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
                         <Label prefHeight="27.0" prefWidth="240.0" text="Numero domande per quiz:">
                            <font>
@@ -155,7 +155,12 @@
                         <Spinner fx:id="spinnerQuestionNumQuiz" editable="true" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" disable="true" prefHeight="50.0" prefWidth="350.0">
+                  <Label alignment="TOP_LEFT" prefHeight="30.0" prefWidth="400.0" text="*Domande nel file insufficienti" textFill="RED" visible="false">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" disable="true" prefHeight="30.0" prefWidth="350.0">
                      <children>
                         <Label prefHeight="27.0" prefWidth="240.0" text="Numero risposte:">
                            <font>
@@ -165,7 +170,8 @@
                         <Spinner fx:id="spinnerAnswerNumQuiz" editable="true" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="350.0">
+                  <Separator prefHeight="30.0" prefWidth="300.0" visible="false" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
                         <Label prefHeight="27.0" prefWidth="240.0" text="Timer (minuti):">
                            <font>
@@ -186,7 +192,7 @@
             </VBox>
          </children>
       </VBox>
-      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="300.0" prefWidth="400.0">
+      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="300.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" prefWidth="150.0" text="Informazioni">
                <font>

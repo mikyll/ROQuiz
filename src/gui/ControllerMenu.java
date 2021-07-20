@@ -24,6 +24,7 @@ import model.Settings;
 import persistence.BadFileFormatException;
 import persistence.IQuestionRepository;
 import persistence.QuestionRepository;
+
 public class ControllerMenu implements IControllerMenu {
 	private HostServices hostServies;
 	private Settings settings;
@@ -44,7 +45,7 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Button buttonSettings;
 	@FXML private Button buttonInfo;
 	
-	@FXML private Label labelTopics;
+	@FXML private Label labelTopicsWarning;
 	@FXML private Label labelQuizQNum;
 	@FXML private Label labelSelectedQ;
 	
@@ -61,23 +62,32 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		this.settings = Settings.getInstance();
 		
-		try (Reader readerQuiz = new FileReader("QuizDivisiPerArgomentoTest.txt")){
+		String fileName = "QuizDivisiPerArgomento.txt";
+		try (Reader readerQuiz = new FileReader(fileName)){
 			this.qRepo = new QuestionRepository(readerQuiz);
 		} catch (FileNotFoundException e) {
-			System.out.println("File Quiz.txt mancante.");
+			System.out.println("File " + fileName + " mancante.");
 			System.exit(1);
 		} catch (IOException e) {
-			System.out.println("Errore nella lettura del file Quiz.txt.");
+			System.out.println("Errore nella lettura del file " + fileName);
 			System.exit(1);
 		} catch (BadFileFormatException e) {
-			System.out.println("Errore nella formattazione del file: " + e.getMessage() + " (linea " + e.getExceptionLine() + ")");
+			System.out.println("Errore nella formattazione del file " + fileName + ": " + e.getMessage() + " (linea " + e.getExceptionLine() + ")");
+			System.exit(1);
+		}
+		
+		int qNum = this.qRepo.getQuestions().size();
+		if(qNum < Settings.DEFAULT_QUESTION_NUMBER)
+		{
+			System.out.println("Errore: nel file " + fileName + " non sono presenti abbastanza domande.\nDomande presenti: " 
+					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + Settings.DEFAULT_QUESTION_NUMBER);
 			System.exit(1);
 		}
 		
 		if(this.qRepo.hasTopics())
 		{
 			this.buttonTopics.setDisable(false);
-			this.labelTopics.setVisible(false);
+			this.labelTopicsWarning.setVisible(false);
 			
 			// popolare mappa?
 			this.initCheckBoxes();
@@ -90,12 +100,11 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxTopics.setVisible(false);
 		this.vboxSettings.setVisible(false);
 		this.vboxInfo.setVisible(false);
-		
-		int qNum = this.qRepo.getQuestions().size();
+
 		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(16, qNum, this.settings.getQuestionNumber()));
 		this.spinnerAnswerNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(4, 10, this.settings.getAnswerNumber()));
 		this.spinnerAnswerNumQuiz.setDisable(true); // answer number is fixed
-		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(4, qNum * 2, this.settings.getStartTime()));
+		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(4, qNum * 2, this.settings.getTimer()));
 	}
 	
 	@FXML
@@ -127,7 +136,7 @@ public class ControllerMenu implements IControllerMenu {
 		{
 			boolean disableCheckBox = false;
 			if(this.checkBoxes.get(i).isSelected())
-				disableCheckBox = currentTotQuestNum - this.qRepo.getqNumPerTopics().get(i) < Settings.DEFAULT_QUESTION_NUMBER;
+				disableCheckBox = currentTotQuestNum - this.qRepo.getqNumPerTopics().get(i) < this.settings.getQuestionNumber();
 			
 			System.out.println("A" + i + ": " + this.qRepo.getqNumPerTopics().get(i) + " . " + this.checkBoxes.get(i).isSelected() + " . " + disableCheckBox); // test
 			
@@ -177,7 +186,7 @@ public class ControllerMenu implements IControllerMenu {
 			// confirmation
 		}
 		if(this.vboxSettings.isVisible() &&	(this.settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() ||
-				this.settings.getAnswerNumber() != this.spinnerAnswerNumQuiz.getValue() || this.settings.getStartTime() != this.spinnerTimerMin.getValue()))
+				this.settings.getAnswerNumber() != this.spinnerAnswerNumQuiz.getValue() || this.settings.getTimer() != this.spinnerTimerMin.getValue()))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
@@ -185,21 +194,11 @@ public class ControllerMenu implements IControllerMenu {
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES)
 			{
-				System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
-						this.spinnerQuestionNumQuiz.getValue() + "\nNumero risposte: " + this.spinnerAnswerNumQuiz.getValue() +
-						"\nTimer (minuti): " + this.spinnerTimerMin.getValue());
-				
-				this.settings.setQuestionNumber(this.spinnerQuestionNumQuiz.getValue());
-				this.settings.setAnswerNumber(this.spinnerAnswerNumQuiz.getValue());
-				this.settings.setStartTime(this.spinnerTimerMin.getValue());
+				this.saveSettingsChanges();
 			}
 			if(alert.getResult() == ButtonType.NO)
 			{
-				System.out.println("Setting changes canceled");
-				
-				this.spinnerQuestionNumQuiz.getValueFactory().setValue(this.settings.getQuestionNumber());
-				this.spinnerAnswerNumQuiz.getValueFactory().setValue(this.settings.getAnswerNumber());
-				this.spinnerTimerMin.getValueFactory().setValue(this.settings.getStartTime());
+				this.cancelSettingsChanges();
 			}
 			if(alert.getResult() == ButtonType.CANCEL)
 				return;
@@ -216,11 +215,7 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML 
 	public void cancelSettings(ActionEvent event)
 	{
-		System.out.println("Setting changes canceled");
-		
-		this.spinnerQuestionNumQuiz.getValueFactory().setValue(this.settings.getQuestionNumber());
-		this.spinnerAnswerNumQuiz.getValueFactory().setValue(this.settings.getAnswerNumber());
-		this.spinnerTimerMin.getValueFactory().setValue(this.settings.getStartTime());
+		this.cancelSettingsChanges();
 		
 		this.vboxBack.setVisible(false);
 		this.vboxSettings.setVisible(false);
@@ -231,18 +226,46 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML 
 	public void saveSettings(ActionEvent event)
 	{
-		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
-				this.spinnerQuestionNumQuiz.getValue() + "\nNumero risposte: " + this.spinnerAnswerNumQuiz.getValue() +
-				"\nTimer (minuti): " + this.spinnerTimerMin.getValue());
-		
-		this.settings.setQuestionNumber(this.spinnerQuestionNumQuiz.getValue());
-		this.settings.setAnswerNumber(this.spinnerAnswerNumQuiz.getValue());
-		this.settings.setStartTime(this.spinnerTimerMin.getValue());
+		this.saveSettingsChanges();
 		
 		this.vboxBack.setVisible(false);
 		this.vboxSettings.setVisible(false);
 		this.vboxSettingsInfo.setVisible(true);
 		this.vboxMain.setVisible(true);
+	}
+	
+	private void cancelSettingsChanges()
+	{
+		System.out.println("Setting changes canceled");
+		
+		this.spinnerQuestionNumQuiz.getValueFactory().setValue(this.settings.getQuestionNumber());
+		this.spinnerAnswerNumQuiz.getValueFactory().setValue(this.settings.getAnswerNumber());
+		this.spinnerTimerMin.getValueFactory().setValue(this.settings.getTimer());
+	}
+	
+	private void saveSettingsChanges()
+	{
+		int sqnq, sanq, stm;
+		sqnq = this.spinnerQuestionNumQuiz.getValue();
+		sanq = this.spinnerAnswerNumQuiz.getValue();
+		stm = this.spinnerTimerMin.getValue();
+		
+		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
+				sqnq + "\nNumero risposte: " + sanq + "\nTimer (minuti): " + stm);
+		
+		this.settings.setQuestionNumber(sqnq);
+		this.settings.setAnswerNumber(sanq);
+		this.settings.setTimer(stm);
+		
+		this.labelQuizQNum.setText("" + sqnq);
+		
+		if(this.qRepo.hasTopics())
+		{
+			for(CheckBox cb : this.checkBoxes)
+				cb.setSelected(true);
+			this.setDisableCheckBoxes();
+		}
+		
 	}
 	
 	@FXML 
@@ -266,8 +289,8 @@ public class ControllerMenu implements IControllerMenu {
 		// check if there are enough questions. In case there aren't, the checkbox are disabled
 		int qNum = this.qRepo.getQuestions().size();
 		this.labelSelectedQ.setText("" + qNum);
-		this.labelQuizQNum.setText("" + Settings.DEFAULT_QUESTION_NUMBER);
-		boolean enoughQuestions = qNum >= Settings.DEFAULT_QUESTION_NUMBER;
+		this.labelQuizQNum.setText("" + this.settings.getQuestionNumber());
+		boolean enoughQuestions = qNum >= this.settings.getQuestionNumber();
 		if(!enoughQuestions)
 		{
 			// exception ?
@@ -282,18 +305,29 @@ public class ControllerMenu implements IControllerMenu {
 			cb.setPrefHeight(20);
 			cb.setText(this.qRepo.getTopics().get(i));
 			cb.setOnAction(this::setTopics);
-			
-			boolean disableCheckBox = qNum - this.qRepo.getqNumPerTopics().get(i) < Settings.DEFAULT_QUESTION_NUMBER;
 			cb.setSelected(true);
-			cb.setDisable(disableCheckBox);
+			
+			/*boolean disableCheckBox = qNum - this.qRepo.getqNumPerTopics().get(i) < this.settings.getQuestionNumber(); // disable checkboxes: they won't be deselectable if that would make the question number to be less than the quiz one.
+			cb.setDisable(disableCheckBox);*/
 			
 			this.checkBoxes.add(cb);
 			this.vboxCheckBoxes.getChildren().add(cb);
 		}
+		this.setDisableCheckBoxes();
 		
 		for(int i = 0; i < this.checkBoxes.size(); i++) // test
 		{
 			System.out.println(this.checkBoxes.get(i).getText() + ": " + this.qRepo.getqNumPerTopics().get(i));
+		}
+	}
+	
+	private void setDisableCheckBoxes()
+	{
+		int qNum = this.qRepo.getQuestions().size();
+		for(int i = 0; i < this.checkBoxes.size(); i++)
+		{
+			boolean disableCheckBox = qNum - this.qRepo.getqNumPerTopics().get(i) < this.settings.getQuestionNumber(); // disable checkboxes: they won't be deselectable if that would make the question number to be less than the quiz one.
+			this.checkBoxes.get(i).setDisable(disableCheckBox);
 		}
 	}
 	

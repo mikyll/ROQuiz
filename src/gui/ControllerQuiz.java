@@ -99,10 +99,10 @@ public class ControllerQuiz implements IControllerQuiz{
 		}
 
 		// init timer
-		this.timeout = Settings.DEFAULT_START_TIME;
+		this.timeout = Settings.DEFAULT_TIMER;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		this.timeline.setCycleCount(Settings.DEFAULT_START_TIME); // Animation.INDEFINITE for a never ending timer
+		this.timeline.setCycleCount(Settings.DEFAULT_TIMER); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
 		System.out.println("Timer: start");
 	}
@@ -276,10 +276,10 @@ public class ControllerQuiz implements IControllerQuiz{
 		}
 		
 		// start timer
-		this.timeout = Settings.DEFAULT_START_TIME;
+		this.timeout = Settings.DEFAULT_TIMER;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		this.timeline.setCycleCount(Settings.DEFAULT_START_TIME); // Animation.INDEFINITE for a never ending timer
+		this.timeline.setCycleCount(Settings.DEFAULT_TIMER); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
 		System.out.println("Timer: start");
 	}
