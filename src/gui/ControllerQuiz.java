@@ -83,7 +83,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			System.exit(0);
 		}
 		
-		this.quiz = new Quiz(this.qRepo.getQuestions(), Settings.QUESTION_NUMBER);
+		this.quiz = new Quiz(this.qRepo.getQuestions(), Settings.DEFAULT_QUESTION_NUMBER);
 		this.index = 0;
 		this.quizTerminated = false;
 		
@@ -99,10 +99,10 @@ public class ControllerQuiz implements IControllerQuiz{
 		}
 
 		// init timer
-		this.timeout = Settings.START_TIME;
+		this.timeout = Settings.DEFAULT_START_TIME;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		this.timeline.setCycleCount(Settings.START_TIME); // Animation.INDEFINITE for a never ending timer
+		this.timeline.setCycleCount(Settings.DEFAULT_START_TIME); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
 		System.out.println("Timer: start");
 	}
@@ -121,7 +121,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	public void previousQuestion(ActionEvent event)
 	{
 		this.index--;
-		if(this.index == Settings.QUESTION_NUMBER - 2)
+		if(this.index == Settings.DEFAULT_QUESTION_NUMBER - 2)
 			this.buttonNext.setDisable(false);
 		if(this.index == 0)
 			this.buttonPrev.setDisable(true);
@@ -166,7 +166,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.index++;
 		if(this.index == 1)
 			this.buttonPrev.setDisable(false);
-		if(this.index == Settings.QUESTION_NUMBER - 1)
+		if(this.index == Settings.DEFAULT_QUESTION_NUMBER - 1)
 			this.buttonNext.setDisable(true);
 		
 		// update quiz
@@ -213,10 +213,10 @@ public class ControllerQuiz implements IControllerQuiz{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO/*, ButtonType.CANCEL*/);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Terminare il quiz?");
-			if(this.quiz.getGivenAnswers() < Settings.QUESTION_NUMBER)
+			if(this.quiz.getGivenAnswers() < Settings.DEFAULT_QUESTION_NUMBER)
 			{
 				String notAnswered = "";
-				for(int i = 0; i < Settings.QUESTION_NUMBER; i++)
+				for(int i = 0; i < Settings.DEFAULT_QUESTION_NUMBER; i++)
 				{
 					if(this.quiz.getAnswers().get(i).equals(Answer.NONE))
 						notAnswered += (notAnswered.length() == 0 ? (i+1) : ", " + (i+1));
@@ -253,7 +253,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		
 		Quiz q = this.quiz;
 		
-		q.resetQuiz(this.qRepo.getQuestions(), Settings.QUESTION_NUMBER);
+		q.resetQuiz(this.qRepo.getQuestions(), Settings.DEFAULT_QUESTION_NUMBER);
 		this.index = 0;
 		
 		this.vboxResult.setVisible(false);
@@ -276,10 +276,10 @@ public class ControllerQuiz implements IControllerQuiz{
 		}
 		
 		// start timer
-		this.timeout = Settings.START_TIME;
+		this.timeout = Settings.DEFAULT_START_TIME;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		this.timeline.setCycleCount(Settings.START_TIME); // Animation.INDEFINITE for a never ending timer
+		this.timeline.setCycleCount(Settings.DEFAULT_START_TIME); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
 		System.out.println("Timer: start");
 	}
@@ -295,7 +295,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.vboxResult.setVisible(true);
 		this.labelGivenAnswers.setText("" + q.getGivenAnswers());
 		this.labelCorrectAnswers.setText("" + q.getCorrectAnswers());
-		this.labelWrongAnswers.setText("" + (Settings.QUESTION_NUMBER-q.getCorrectAnswers()));
+		this.labelWrongAnswers.setText("" + (Settings.DEFAULT_QUESTION_NUMBER-q.getCorrectAnswers()));
 		this.buttonEndReset.setText("Riavvia");
 		
 		for(RadioButton rb : this.radioAnswers.values())
@@ -312,7 +312,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.timeline.stop();
 		System.out.println("Timer: stop");
 		
-		System.out.println("Quiz terminato. Risposte corrette: " + q.getCorrectAnswers() + ", risposte errate: " + (Settings.QUESTION_NUMBER-q.getCorrectAnswers()));
+		System.out.println("Quiz terminato. Risposte corrette: " + q.getCorrectAnswers() + ", risposte errate: " + (Settings.DEFAULT_QUESTION_NUMBER-q.getCorrectAnswers()));
 	}
 	
 	private void updateTimer()
