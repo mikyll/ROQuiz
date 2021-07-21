@@ -20,7 +20,7 @@ Con quest'ultimo metodo potremo poi utilizzare jlink per creare una JRE custom p
 
 ### Creazione JRE Custom
 jlink per creare la jre (da CMD):
-jlink --module-path "<path\to\javafx-jmod>\lib";mods --add-modules=roquiz --output fxjre
+jlink --module-path "<path\to\javafx-jmod>";mods --add-modules=roquiz --output fxjre
 
 ### Creazione JAR ed esecuzione con la JRE appena creata
 Eclipse > File > Export > Java > Runnable JAR file (controllare che il main sia quello giusto).
