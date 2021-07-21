@@ -26,3 +26,6 @@ hs_err_pid*
 deploy
 
 /extra
+
+# scriptino per creare la jre per fx
+Create fxjre.bat

@@ -72,7 +72,7 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		this.settings = Settings.getInstance();
 		
-		String fileName = "QuizDivisiPerArgomento.txt";
+		String fileName = "Domande.txt";
 		try (Reader readerQuiz = new FileReader(fileName)){
 			this.qRepo = new QuestionRepository(readerQuiz);
 		} catch (FileNotFoundException e) {
