@@ -8,12 +8,11 @@
 [![GitHub followers][github-shield]][github-url]
 
 <h1 align="center">ROQuiz</h1>
-Semplice applicazione grafica Java per esercitarsi con i <b>quiz del corso Ricerca Operativa M</b>.
-È possibile caricare un file con le varie domande, quindi si possono inserire eventuali domande nuove o personalizzate;
-il timer è impostato a 18 minuti, per ora si può modificare solo via codice sorgente;
-mostra le risposte giuste e quelle sbagliate.
+Applicazione grafica Java per esercitarsi con i <b>quiz del corso Ricerca Operativa M</b>.
+È possibile caricare un file con le varie domande (aggiornate al <i>15 luglio 2021</i>) divise per argomento, quindi si possono inserire eventuali domande nuove o personalizzate, ed è possibile selezionare gli argomenti di interesse; terminato il quiz vengono mostrate le risposte corrette e quelle sbagliate.
+il numero di domande di default è 16, così come il timer è impostato a 18 minuti in quanto l'esame è in questa forma, ma è possibile modificare questi parametri nelle impostazioni dell'applicazione.
 
-Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e implementare feature nuove o sistemare parti del codice già esistente (perché fa schifo ma funziona).
+Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e implementare feature nuove o sistemare parti del codice già esistente.
 
 <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
 
@@ -34,29 +33,42 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
 2. Eseguire Launcher con doppioclick.
 
 ### Formattazione domande
-Le domande sono caricate da un file Quiz.txt che ha il seguente formato:
-* una riga per la domanda;
-* 5 righe per le risposte (la riga inizia con una lettera maiuscola, seguita da un punto e dalla risposta);
-* una riga per la risposta corretta (una lettera da A a E).
-* una riga vuota se non è l'ultima domanda.
+Le domande sono caricate da un file "<a href="https://github.com/mikyll/ROQuiz/blob/main/Domande.txt">Domande.txt</a>" che ha il seguente formato:
+* (opzionale) Argomenti:
+  - la riga di un argomento inizia col carattere speciale '@', seguito dal nome dell'argomento. Ogni riga di argomento è seguita dalle domande relative a quell'argomento, fino all'argomento successivo. Alla fine della riga dell'argomento possono essere usati caratteri non numerici (ad esempio '=') per separare visivamente le domande di argomenti differenti (verranno ignorati).
+* Domande: 
+  - una riga per la domanda;
+  - 5 righe per le risposte (la riga inizia con una lettera maiuscola, seguita da un punto e dalla risposta);
+  - una riga per la risposta corretta (una lettera da A a E);
+  - una riga vuota se non è l'ultima domanda (questa riga separa la domanda da quella successiva, o dall'argomento successivo).
 
 NB: non è importante la lettera con cui iniziano le risposte, basta che siano in ordine, altrimenti la risposta giusta e la lettera non corrispondono (sarà necessario aggiungere ulteriori controlli).
 
-esempio (due domande nel file Quiz.txt):
+esempio (tre domande di due argomenti diversi nel file Domande.txt):
 <pre>
-Sia P il problema ILP e L(P) il suo rilassamento continuo. Se L(P) è illimitato, allora:
-A. P è sempre impossibile
-B. non si può dire nulla su P
-C. P è sempre illimitato
-D. P è illimitato salvo casi molto particolari
-E. nessuna di queste
-D
+@Programmazione Matematica =============================================================================
+Dato un insieme F, un intorno è
+A. L'insieme di tutti i sottoinsiemi di F
+B. L'insieme dei punti di F a distanza minore di epsilon da un punto x di F
+C. Una funzione N: F -> 2^F
+D. Una combinazione convessa di due punti x e y di F
+E. Nessuna di queste
+C
 
-In un tableau del simplesso duale, gli elementi della riga 0 (colonna da 1 a n):
-A. sono tutti positivi o nulli.
-B. sono tutti positivi.
-C. sono tutti negativi.
-D. sono tutti nulli.
+@Dualità ===============================================================================================
+Se un problema di programmazione lineare (primale) ha soluzione ottima finita, allora:
+A. Il suo duale non è detto che abbia soluzione ottima finita.
+B. Anche il suo duale ha soluzione ottima finita e i valori delle soluzioni coincidono.
+C. Anche il duale ha soluzione ottima finita, ma non è detto che i valori delle soluzioni coincidano.
+D. Anche il duale ha soluzione ottima finita, ma i valori delle due soluzioni non coincidono.
+E. Nessuna di queste
+B
+
+Quale tra queste affermazioni è falsa rispetto ad una corrispondenza primale-duale?
+A. Ai costi corrispondono condizioni su variabili e viceversa.
+B. I vincoli sono dati dalle righe di A per il primale, dalle colonne di A per il duale.
+C. Ai costi corrispondono i termini noti e viceversa.
+D. Ad un vincolo corrisponde una condizione su una variabile e viceversa.
 E. Nessuna di queste.
 A
 </pre>
@@ -64,9 +76,6 @@ A
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
 * deploy su Linux e MacOs
-* aggiungere menu
-* aggiungere alla persistenza la specifica dell'argomento (con una keyword o un carattere speciale, tipo '@' a inizio riga). E magari aggiungere la lista dinamica degli argomenti caricati dal file, in cui si può mettere un tick su quelli da selezionare per il quiz.
-* aggiungere test di formattazione del documento caricato (segnalare la riga errata)
 * aggiungere file di configurazione per timer e numero di domande
 * aggiungere test duplicati
 * fare il porting su mobile (magari Android)
