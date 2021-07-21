@@ -23,6 +23,7 @@ src/*.jar
 hs_err_pid*
 
 *.mkv
+*.mp4
 deploy
 
 /extra
