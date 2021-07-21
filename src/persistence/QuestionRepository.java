@@ -40,6 +40,7 @@ public class QuestionRepository implements IQuestionRepository {
 				this.topics = new ArrayList<String>();
 				this.qNumPerTopics = new ArrayList<Integer>();
 				
+				System.out.println(line); // test
 				this.topics.add(line.substring(1).replaceAll(regexTopic, "").trim());
 				
 				continue;
@@ -52,6 +53,7 @@ public class QuestionRepository implements IQuestionRepository {
 					this.qNumPerTopics.add(numPerTopic);
 					numPerTopic = 0;
 					
+					System.out.println(line); // test
 					this.topics.add(line.substring(1).replaceAll(regexTopic, "").trim());
 					
 					line = reader.readLine();
