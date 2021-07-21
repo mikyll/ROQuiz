@@ -88,7 +88,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.timeout = this.settings.getTimer() * 60;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		this.timeline.setCycleCount(this.settings.getTimer()); // Animation.INDEFINITE for a never ending timer
+		this.timeline.setCycleCount(this.settings.getTimer() * 60); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
 		System.out.println("Timer: avviato");
 	}
@@ -236,6 +236,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	public void resetQuiz()
 	{
 		this.labelTimer.setText("" + this.settings.getTimer() + ":00");
+		this.labelTimer.setStyle("-fx-text-fill: black");
 		this.quizTerminated = false;
 		
 		Quiz q = this.quiz;
@@ -266,7 +267,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.timeout = this.settings.getTimer() * 60;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		this.timeline.setCycleCount(this.settings.getTimer()); // Animation.INDEFINITE for a never ending timer
+		this.timeline.setCycleCount(this.settings.getTimer() * 60); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
 		System.out.println("Timer: start");
 	}

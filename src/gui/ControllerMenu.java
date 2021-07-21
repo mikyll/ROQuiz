@@ -113,7 +113,7 @@ public class ControllerMenu implements IControllerMenu {
 		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(16, qNum, this.settings.getQuestionNumber()));
 		this.spinnerAnswerNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(4, 10, this.settings.getAnswerNumber()));
 		this.spinnerAnswerNumQuiz.setDisable(true); // answer number is fixed
-		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(4, qNum * 2, this.settings.getTimer()));
+		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(5, qNum * 2, this.settings.getTimer()));
 		
 		this.textVersion.setText("ROQuiz v" + Settings.VERSION_NUMBER);
 	}

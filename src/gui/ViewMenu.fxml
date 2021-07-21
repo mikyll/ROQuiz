@@ -22,7 +22,7 @@
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="105.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="105.0" prefHeight="330.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" prefHeight="40.0" prefWidth="200.0" text="Menu Principale">
                <font>
@@ -152,7 +152,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Spinner fx:id="spinnerQuestionNumQuiz" editable="true" prefHeight="26.0" prefWidth="60.0" />
+                        <Spinner fx:id="spinnerQuestionNumQuiz" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
                   <Label alignment="TOP_LEFT" prefHeight="30.0" prefWidth="400.0" text="*Domande nel file insufficienti" textFill="RED" visible="false">
@@ -167,7 +167,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Spinner fx:id="spinnerAnswerNumQuiz" editable="true" prefHeight="26.0" prefWidth="60.0" />
+                        <Spinner fx:id="spinnerAnswerNumQuiz" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
                   <Separator prefHeight="30.0" prefWidth="300.0" visible="false" />
@@ -178,7 +178,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Spinner fx:id="spinnerTimerMin" editable="true" prefHeight="26.0" prefWidth="60.0" />
+                        <Spinner fx:id="spinnerTimerMin" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
                   <Separator prefHeight="40.0" prefWidth="300.0" visible="false" />
@@ -193,7 +193,7 @@
             </VBox>
          </children>
       </VBox>
-      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="300.0" prefWidth="400.0">
+      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="300.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" prefWidth="150.0" text="Informazioni">
                <font>
