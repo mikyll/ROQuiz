@@ -41,8 +41,6 @@ public class QuestionRepository implements IQuestionRepository {
 				
 				this.topics.add(line.substring(1).replaceAll("=+", "").trim());
 				
-				System.out.println("Topic: " + line); // test
-				
 				continue;
 			}
 			
@@ -54,8 +52,6 @@ public class QuestionRepository implements IQuestionRepository {
 					numPerTopic = 0;
 					
 					this.topics.add(line.substring(1).replaceAll("=+", "").trim());
-					
-					System.out.println("Topic: " + line); // test
 					
 					line = reader.readLine();
 					lineNum++;
@@ -102,11 +98,12 @@ public class QuestionRepository implements IQuestionRepository {
 		System.out.println("Domande lette dal file: " + totQuest);
 		if(this.topicsPresent)
 		{
+			System.out.println("Argomenti:");
 			this.qNumPerTopics.add(numPerTopic);
 			
 			for(int i = 0; i < this.qNumPerTopics.size(); i++)
 			{
-				System.out.println("Topic: " + this.topics.get(i) + ", num: " + this.qNumPerTopics.get(i)); // test
+				System.out.println(this.topics.get(i) + " (num domande: " + this.qNumPerTopics.get(i) + ")");
 			}
 		}
 	}
