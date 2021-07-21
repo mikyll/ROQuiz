@@ -23,6 +23,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Question;
 import model.Settings;
@@ -60,6 +61,8 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Button buttonSettingsSave;
 	@FXML private Button buttonSettingsCancel;
 	@FXML private Button buttonSettingsRestore;
+	
+	@FXML private Text textVersion;
 	
 	// FXML loader call order: Constructor -> initialize(). Inside initialize(), all the fxml object have been already initialized.
 	public ControllerMenu() {}
@@ -111,6 +114,8 @@ public class ControllerMenu implements IControllerMenu {
 		this.spinnerAnswerNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(4, 10, this.settings.getAnswerNumber()));
 		this.spinnerAnswerNumQuiz.setDisable(true); // answer number is fixed
 		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(4, qNum * 2, this.settings.getTimer()));
+		
+		this.textVersion.setText("ROQuiz v" + Settings.VERSION_NUMBER);
 	}
 	
 	@FXML

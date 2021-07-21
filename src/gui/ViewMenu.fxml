@@ -51,7 +51,7 @@
             <Insets bottom="40.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vboxSettingsInfo" alignment="TOP_CENTER" layoutX="703.0" layoutY="375.0" prefHeight="90.0" prefWidth="50.0">
+      <VBox fx:id="vboxSettingsInfo" alignment="TOP_CENTER" layoutX="703.0" layoutY="375.0" prefHeight="90.0" prefWidth="50.0" visible="false">
          <children>
             <Button fx:id="buttonSettings" mnemonicParsing="false" onAction="#settings" prefHeight="40.0" prefWidth="40.0">
                <graphic>
@@ -132,7 +132,7 @@
             </Button>
          </children>
       </VBox>
-      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0">
+      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" prefWidth="150.0" text="Impostazioni">
                <font>
@@ -193,7 +193,7 @@
             </VBox>
          </children>
       </VBox>
-      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="300.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="300.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" prefWidth="150.0" text="Informazioni">
                <font>
@@ -210,7 +210,7 @@
                               <Font size="14.0" />
                            </font>
                         </Hyperlink>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ROQuiz v1.2" wrappingWidth="137.721923828125">
+                        <Text fx:id="textVersion" strokeType="OUTSIDE" strokeWidth="0.0" text="ROQuiz v1.2" wrappingWidth="137.721923828125">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
