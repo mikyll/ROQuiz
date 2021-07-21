@@ -184,8 +184,9 @@
                   <Separator prefHeight="40.0" prefWidth="300.0" visible="false" />
                   <HBox alignment="CENTER" prefHeight="40.0" prefWidth="350.0" spacing="20.0">
                      <children>
-                        <Button fx:id="buttonSettingsCancel" mnemonicParsing="false" onAction="#cancelSettings" prefHeight="30.0" prefWidth="80.0" text="Cancella" />
                         <Button fx:id="buttonSettingsSave" mnemonicParsing="false" onAction="#saveSettings" prefHeight="30.0" prefWidth="80.0" text="Salva" />
+                        <Button fx:id="buttonSettingsCancel" mnemonicParsing="false" onAction="#cancelSettings" prefHeight="30.0" prefWidth="80.0" text="Annulla" />
+                        <Button fx:id="buttonSettingsRestore" mnemonicParsing="false" onAction="#restoreSettings" prefHeight="30.0" prefWidth="80.0" text="Ripristina" />
                      </children>
                   </HBox>
                </children>

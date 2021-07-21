@@ -104,7 +104,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
 		this.timeline.setCycleCount(Settings.DEFAULT_TIMER); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
-		System.out.println("Timer: start");
+		System.out.println("Timer: avviato");
 	}
 	
 	
@@ -114,7 +114,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		String answer = event.getSource().toString().substring(20, 21);
 		this.quiz.setAnswer(this.index, Answer.valueOf(answer));
 		
-		System.out.println("Question " + (this.index+1) + ": selected answer " + answer + ".");
+		System.out.println("Domanda " + (this.index+1) + ": selezionata la risposta " + answer + ".");
 	}
 	
 	@FXML @Override 
