@@ -1,4 +1,5 @@
-/application/
 /gui/
-/model/
+/application/
 /persistence/
+/model/
+/gfx/

@@ -2,7 +2,7 @@ package gui;
 
 import javafx.event.ActionEvent;
 
-public interface IController {
+public interface IControllerQuiz {
 	void initialize();
 	void previousQuestion(ActionEvent event);
 	void nextQuestion(ActionEvent event);

@@ -1,10 +1,7 @@
 package gui;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.HashMap;
+import java.util.List;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -24,12 +21,10 @@ import model.Answer;
 import model.Question;
 import model.Quiz;
 import model.Settings;
-import persistence.BadFileFormatException;
-import persistence.IQuestionRepository;
-import persistence.QuestionRepository;
 
-public class Controller implements IController{
-	private IQuestionRepository qRepo;
+public class ControllerQuiz implements IControllerQuiz{
+	private List<Question> questions;
+	private Settings settings;
 	private Quiz quiz;
 	private int index;
 	private boolean quizTerminated;
@@ -60,27 +55,20 @@ public class Controller implements IController{
 	private Timeline timeline;
 	
 	// FXML loader call order: Constructor -> initialize(). Inside initialize(), all the fxml object have been already initialized.
-	
-	public Controller()	{}
+	public ControllerQuiz(List<Question> questions)
+	{
+		this.questions = questions;
+	}
 	
 	@FXML @Override 
 	public void initialize()
-	{		
+	{
 		// style? Example: remove focus glow on text area and textfields
 		
-		this.initializeRadioArray();
+		this.settings = Settings.getInstance();
+		this.initRadioArray();
 		
-		try (Reader readerQuiz = new FileReader("Quiz.txt")){
-			this.qRepo = new QuestionRepository(readerQuiz);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (BadFileFormatException e) {
-			e.printStackTrace();
-		}
-		
-		this.quiz = new Quiz(this.qRepo.getQuestions(), Settings.QUESTION_NUMBER);
+		this.quiz = new Quiz(this.questions, this.settings.getQuestionNumber());
 		this.index = 0;
 		this.quizTerminated = false;
 		
@@ -88,6 +76,7 @@ public class Controller implements IController{
 		this.textQNumber.setText("" + (this.index + 1));
 		Question q = this.quiz.getQuestionAt(this.index);
 		this.textQuestion.setText(q.getQuestion());
+		this.labelTimer.setText("" + this.settings.getTimer() + ":00");
 			
 		// init first 5 answers
 		for(Answer a : this.radioAnswers.keySet())
@@ -96,12 +85,12 @@ public class Controller implements IController{
 		}
 
 		// init timer
-		this.timeout = Settings.START_TIME;
+		this.timeout = this.settings.getTimer() * 60;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		this.timeline.setCycleCount(Settings.START_TIME); // Animation.INDEFINITE for a never ending timer
+		this.timeline.setCycleCount(this.settings.getTimer() * 60); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
-		System.out.println("Timer: start");
+		System.out.println("Timer: avviato");
 	}
 	
 	
@@ -111,14 +100,14 @@ public class Controller implements IController{
 		String answer = event.getSource().toString().substring(20, 21);
 		this.quiz.setAnswer(this.index, Answer.valueOf(answer));
 		
-		System.out.println("Question " + (this.index+1) + ": selected answer " + answer + ".");
+		System.out.println("Domanda " + (this.index+1) + ": selezionata la risposta " + answer + ".");
 	}
 	
 	@FXML @Override 
 	public void previousQuestion(ActionEvent event)
 	{
 		this.index--;
-		if(this.index == Settings.QUESTION_NUMBER - 2)
+		if(this.index == this.settings.getQuestionNumber() - 2)
 			this.buttonNext.setDisable(false);
 		if(this.index == 0)
 			this.buttonPrev.setDisable(true);
@@ -163,7 +152,7 @@ public class Controller implements IController{
 		this.index++;
 		if(this.index == 1)
 			this.buttonPrev.setDisable(false);
-		if(this.index == Settings.QUESTION_NUMBER - 1)
+		if(this.index == this.settings.getQuestionNumber() - 1)
 			this.buttonNext.setDisable(true);
 		
 		// update quiz
@@ -210,10 +199,10 @@ public class Controller implements IController{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO/*, ButtonType.CANCEL*/);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Terminare il quiz?");
-			if(this.quiz.getGivenAnswers() < Settings.QUESTION_NUMBER)
+			if(this.quiz.getGivenAnswers() < this.settings.getQuestionNumber())
 			{
 				String notAnswered = "";
-				for(int i = 0; i < Settings.QUESTION_NUMBER; i++)
+				for(int i = 0; i < this.settings.getQuestionNumber(); i++)
 				{
 					if(this.quiz.getAnswers().get(i).equals(Answer.NONE))
 						notAnswered += (notAnswered.length() == 0 ? (i+1) : ", " + (i+1));
@@ -233,7 +222,7 @@ public class Controller implements IController{
 	}
 
 	
-	private void initializeRadioArray()
+	private void initRadioArray()
 	{
 		this.radioAnswers = new HashMap<Answer, RadioButton>(5);
 		this.radioAnswers.put(Answer.A, this.radioA);
@@ -246,11 +235,13 @@ public class Controller implements IController{
 	@Override 
 	public void resetQuiz()
 	{
+		this.labelTimer.setText("" + this.settings.getTimer() + ":00");
+		this.labelTimer.setStyle("-fx-text-fill: black");
 		this.quizTerminated = false;
 		
 		Quiz q = this.quiz;
 		
-		q.resetQuiz(this.qRepo.getQuestions(), Settings.QUESTION_NUMBER);
+		q.resetQuiz(this.questions, this.settings.getQuestionNumber());
 		this.index = 0;
 		
 		this.vboxResult.setVisible(false);
@@ -273,10 +264,10 @@ public class Controller implements IController{
 		}
 		
 		// start timer
-		this.timeout = Settings.START_TIME;
+		this.timeout = this.settings.getTimer() * 60;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
-		this.timeline.setCycleCount(Settings.START_TIME); // Animation.INDEFINITE for a never ending timer
+		this.timeline.setCycleCount(this.settings.getTimer() * 60); // Animation.INDEFINITE for a never ending timer
 		this.timeline.play();
 		System.out.println("Timer: start");
 	}
@@ -292,7 +283,7 @@ public class Controller implements IController{
 		this.vboxResult.setVisible(true);
 		this.labelGivenAnswers.setText("" + q.getGivenAnswers());
 		this.labelCorrectAnswers.setText("" + q.getCorrectAnswers());
-		this.labelWrongAnswers.setText("" + (Settings.QUESTION_NUMBER-q.getCorrectAnswers()));
+		this.labelWrongAnswers.setText("" + (this.settings.getQuestionNumber()-q.getCorrectAnswers()));
 		this.buttonEndReset.setText("Riavvia");
 		
 		for(RadioButton rb : this.radioAnswers.values())
@@ -309,7 +300,7 @@ public class Controller implements IController{
 		this.timeline.stop();
 		System.out.println("Timer: stop");
 		
-		System.out.println("Quiz terminato. Risposte corrette: " + q.getCorrectAnswers() + ", risposte errate: " + (Settings.QUESTION_NUMBER-q.getCorrectAnswers()));
+		System.out.println("Quiz terminato. Risposte corrette: " + q.getCorrectAnswers() + ", risposte errate: " + (this.settings.getQuestionNumber()-q.getCorrectAnswers()));
 	}
 	
 	private void updateTimer()
