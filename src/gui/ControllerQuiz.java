@@ -68,23 +68,6 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.settings = Settings.getInstance();
 		this.initRadioArray();
 		
-		/*
-		// To load directly the quiz
-		IQuestionRepository qRepo = null;
-		try (Reader readerQuiz = new FileReader("Quiz.txt")){
-			qRepo = new QuestionRepository(readerQuiz);
-		} catch (FileNotFoundException e) {
-			System.out.println("File Quiz.txt mancante.");
-			System.exit(0);
-		} catch (IOException e) {
-			System.out.println("Errore nella lettura del file Quiz.txt.");
-			System.exit(0);
-		} catch (BadFileFormatException e) {
-			System.out.println("Errore nella formattazione del file: " + e.getMessage() + " (linea " + e.getExceptionLine() + ")");
-			System.exit(0);
-		}
-		this.questions = qRepo.getQuestions();*/
-		
 		this.quiz = new Quiz(this.questions, this.settings.getQuestionNumber());
 		this.index = 0;
 		this.quizTerminated = false;
@@ -93,6 +76,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.textQNumber.setText("" + (this.index + 1));
 		Question q = this.quiz.getQuestionAt(this.index);
 		this.textQuestion.setText(q.getQuestion());
+		this.labelTimer.setText("" + this.settings.getTimer() + ":00");
 			
 		// init first 5 answers
 		for(Answer a : this.radioAnswers.keySet())
@@ -251,6 +235,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	@Override 
 	public void resetQuiz()
 	{
+		this.labelTimer.setText("" + this.settings.getTimer() + ":00");
 		this.quizTerminated = false;
 		
 		Quiz q = this.quiz;
@@ -278,7 +263,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		}
 		
 		// start timer
-		this.timeout = this.settings.getTimer();
+		this.timeout = this.settings.getTimer() * 60;
 		this.timeoutRGB_G = 200;
 		this.timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> updateTimer()));
 		this.timeline.setCycleCount(this.settings.getTimer()); // Animation.INDEFINITE for a never ending timer
@@ -348,15 +333,5 @@ public class ControllerQuiz implements IControllerQuiz{
 		int sec = this.timeout % 60;
 		String seconds = sec < 10 ? ("0" + sec) : ("" + sec);
 		this.labelTimer.setText("" + min + ":" + seconds);
-	}
-	
-	public void setQuestions(List<Question> questions)
-	{
-		this.questions = questions;
-	}
-	
-	public void setSettings(Settings settings)
-	{
-		this.settings = settings;
 	}
 }

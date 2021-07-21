@@ -69,7 +69,7 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		this.settings = Settings.getInstance();
 		
-		String fileName = "QuizDivisiPerArgomentoTest.txt";
+		String fileName = "QuizDivisiPerArgomento.txt";
 		try (Reader readerQuiz = new FileReader(fileName)){
 			this.qRepo = new QuestionRepository(readerQuiz);
 		} catch (FileNotFoundException e) {
@@ -143,8 +143,6 @@ public class ControllerMenu implements IControllerMenu {
 			if(this.checkBoxes.get(i).isSelected())
 				disableCheckBox = currentTotQuestNum - this.qRepo.getqNumPerTopics().get(i) < this.settings.getQuestionNumber();
 			
-			//System.out.println("A" + i + ": " + this.qRepo.getqNumPerTopics().get(i) + " . " + this.checkBoxes.get(i).isSelected() + " . " + disableCheckBox); // test
-			
 			this.checkBoxes.get(i).setDisable(disableCheckBox);
 		}
 	}
@@ -177,7 +175,7 @@ public class ControllerMenu implements IControllerMenu {
 			Stage stage = (Stage) this.vboxMain.getScene().getWindow();
 			loader.setController(new ControllerQuiz(questions));
 			AnchorPane quiz = (AnchorPane) loader.load();
-			/*ControllerQuiz controller = loader.getController();
+			/*ControllerQuiz controller = loader.getController(); // throws NullPointerException because initialize() will be called before 'List<Question> questions' is set
 			controller.setQuestions(questions);*/
 		
 			Scene scene = new Scene(quiz);
@@ -291,10 +289,11 @@ public class ControllerMenu implements IControllerMenu {
 		this.settings.setAnswerNumber(sanq);
 		this.settings.setTimer(stm);
 		
-		this.labelQuizQNum.setText("" + sqnq);
-		
 		if(this.qRepo.hasTopics())
 		{
+			this.labelSelectedQ.setText("" + this.qRepo.getQuestions().size());
+			this.labelQuizQNum.setText("" + sqnq);
+			
 			for(CheckBox cb : this.checkBoxes)
 				cb.setSelected(true);
 			this.setDisableCheckBoxes();
