@@ -39,7 +39,7 @@ public class QuestionRepository implements IQuestionRepository {
 				this.topics = new ArrayList<String>();
 				this.qNumPerTopics = new ArrayList<Integer>();
 				
-				this.topics.add(line.substring(1).replaceAll("=+", "").trim());
+				this.topics.add(line.substring(1).replaceAll("[^a-zA-Z\\s]+", "").trim());
 				
 				continue;
 			}
@@ -51,7 +51,7 @@ public class QuestionRepository implements IQuestionRepository {
 					this.qNumPerTopics.add(numPerTopic);
 					numPerTopic = 0;
 					
-					this.topics.add(line.substring(1).replaceAll("=+", "").trim());
+					this.topics.add(line.substring(1).replaceAll("[^a-zA-Z\\s]+", "").trim());
 					
 					line = reader.readLine();
 					lineNum++;
@@ -103,7 +103,7 @@ public class QuestionRepository implements IQuestionRepository {
 			
 			for(int i = 0; i < this.qNumPerTopics.size(); i++)
 			{
-				System.out.println(this.topics.get(i) + " (num domande: " + this.qNumPerTopics.get(i) + ")");
+				System.out.println("-" + this.topics.get(i) + " (num domande: " + this.qNumPerTopics.get(i) + ")");
 			}
 		}
 	}

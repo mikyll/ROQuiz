@@ -350,11 +350,6 @@ public class ControllerMenu implements IControllerMenu {
 			this.vboxCheckBoxes.getChildren().add(cb);
 		}
 		this.setDisableCheckBoxes();
-		
-		for(int i = 0; i < this.checkBoxes.size(); i++) // test
-		{
-			System.out.println(this.checkBoxes.get(i).getText() + ": " + this.qRepo.getqNumPerTopics().get(i));
-		}
 	}
 	
 	private void setDisableCheckBoxes()
