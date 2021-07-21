@@ -10,6 +10,8 @@ import java.util.List;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -19,7 +21,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.Question;
 import model.Settings;
 import persistence.BadFileFormatException;
@@ -57,6 +61,7 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Button buttonSettingsCancel;
 	@FXML private Button buttonSettingsRestore;
 	
+	// FXML loader call order: Constructor -> initialize(). Inside initialize(), all the fxml object have been already initialized.
 	public ControllerMenu() {}
 	
 	@FXML @Override 
@@ -147,13 +152,15 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML
 	public void startQuiz(ActionEvent event)
 	{
-		System.out.println("Selezione: avvia quiz.");
+		System.out.println("Selezione: avvia quiz.\nArgomenti impostati:");
 		
 		List<Question> questions = new ArrayList<Question>();
 		for(int i = 0, j = 0, k; i < this.checkBoxes.size(); i++) // creates a list with questions from just the selected topics
 		{
 			if(this.checkBoxes.get(i).isSelected())
 			{
+				System.out.println("-" + this.qRepo.getTopics().get(i));
+				
 				for(k = 0; k < this.qRepo.getqNumPerTopics().get(i); j++, k++)
 				{
 					questions.add(this.qRepo.getQuestions().get(j));
@@ -162,9 +169,26 @@ public class ControllerMenu implements IControllerMenu {
 			else j += this.qRepo.getqNumPerTopics().get(i);
 		}
 		
-		System.out.println("Numero domande quiz: " + questions.size());
+		System.out.println("Pool domande quiz: " + questions.size());
 		
 		// load
+		try {
+			FXMLLoader loader = new FXMLLoader(ControllerMenu.class.getResource("/gui/ViewQuiz.fxml"));
+			Stage stage = (Stage) this.vboxMain.getScene().getWindow();
+			loader.setController(new ControllerQuiz(questions));
+			AnchorPane quiz = (AnchorPane) loader.load();
+			/*ControllerQuiz controller = loader.getController();
+			controller.setQuestions(questions);*/
+		
+			Scene scene = new Scene(quiz);
+			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/application.css").toExternalForm());
+			stage.setScene(scene);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("ERRORE: " + e.getMessage());
+			System.exit(1);
+		}
 	}
 	
 	@FXML

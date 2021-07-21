@@ -1,20 +1,19 @@
 package application;
-	
-import java.io.IOException;
 
 import gui.ControllerMenu;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import persistence.BadFileFormatException;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
 
 public class Main extends Application {
 	
-	/*@Override
-	public void start(Stage stage) throws IOException, BadFileFormatException
+	/*
+	// To load directly the quiz
+	@Override
+	public void start(Stage stage)
 	{
 		try {
 			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/gui/ViewQuiz.fxml"));
@@ -30,14 +29,14 @@ public class Main extends Application {
 	}*/
 	
 	@Override
-	public void start(Stage stage) throws IOException, BadFileFormatException
+	public void start(Stage stage)
 	{
 		try {
 			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/gui/ViewMenu.fxml"));
-			AnchorPane quiz = (AnchorPane) loader.load();
+			AnchorPane menu = (AnchorPane) loader.load();
 			ControllerMenu controller = loader.getController();
 			controller.setHostServices(getHostServices());
-			Scene scene = new Scene(quiz);
+			Scene scene = new Scene(menu);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			stage.setTitle("ROQuiz");
 			stage.setScene(scene);
