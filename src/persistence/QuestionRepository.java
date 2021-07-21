@@ -10,6 +10,7 @@ import model.Question;
 import model.Settings;
 
 public class QuestionRepository implements IQuestionRepository {
+	private static final String regexTopic = "[^a-zA-ZÀ-ÿ\\s]+";
 	
 	private List<Question> questions;
 	private List<String> topics;
@@ -39,7 +40,7 @@ public class QuestionRepository implements IQuestionRepository {
 				this.topics = new ArrayList<String>();
 				this.qNumPerTopics = new ArrayList<Integer>();
 				
-				this.topics.add(line.substring(1).replaceAll("[^a-zA-Z\\s]+", "").trim());
+				this.topics.add(line.substring(1).replaceAll(regexTopic, "").trim());
 				
 				continue;
 			}
@@ -51,7 +52,7 @@ public class QuestionRepository implements IQuestionRepository {
 					this.qNumPerTopics.add(numPerTopic);
 					numPerTopic = 0;
 					
-					this.topics.add(line.substring(1).replaceAll("[^a-zA-Z\\s]+", "").trim());
+					this.topics.add(line.substring(1).replaceAll(regexTopic, "").trim());
 					
 					line = reader.readLine();
 					lineNum++;
