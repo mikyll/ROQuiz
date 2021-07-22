@@ -76,8 +76,9 @@ A
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
 * deploy su Linux e MacOs
-* aggiungere file di configurazione per timer e numero di domande
-* aggiungere test duplicati
+* aggiungere file di configurazione (xml?) per rendere le modifiche alle impostazioni persistenti
+* aggiungere test domande duplicate
+* creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
 * fare il porting su mobile (magari Android)
 
 ### Built With
