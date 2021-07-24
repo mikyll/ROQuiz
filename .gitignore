@@ -29,4 +29,4 @@ deploy
 /extra
 
 # scriptino per creare la jre per fx
-Create fxjre.bat
+createFXJRE*
