@@ -35,14 +35,14 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
 ### Formattazione domande
 Le domande sono caricate da un file "<a href="https://github.com/mikyll/ROQuiz/blob/main/Domande.txt">Domande.txt</a>" che ha il seguente formato:
 * (opzionale) Argomenti:
-  - la riga di un argomento inizia col carattere speciale '@', seguito dal nome dell'argomento. Ogni riga di argomento è seguita dalle domande relative a quell'argomento, fino all'argomento successivo. Alla fine della riga dell'argomento possono essere usati caratteri non numerici (ad esempio '=') per separare visivamente le domande di argomenti differenti (verranno ignorati).
+  - la riga di un argomento inizia col carattere speciale '@', seguito dal nome dell'argomento. Ogni riga di argomento è seguita dalle domande relative a quell'argomento, fino all'argomento successivo. Alla fine della riga dell'argomento possono essere usati caratteri non alfabetici (ad esempio '=') per separare visivamente le domande di argomenti differenti (tali caratteri verranno ignorati).
 * Domande: 
   - una riga per la domanda;
   - 5 righe per le risposte (la riga inizia con una lettera maiuscola, seguita da un punto e dalla risposta);
   - una riga per la risposta corretta (una lettera da A a E);
   - una riga vuota se non è l'ultima domanda (questa riga separa la domanda da quella successiva, o dall'argomento successivo).
 
-NB: non è importante la lettera con cui iniziano le risposte, basta che siano in ordine, altrimenti la risposta giusta e la lettera non corrispondono (sarà necessario aggiungere ulteriori controlli).
+NB: non è importante la lettera con cui iniziano le risposte, basta che siano in ordine, altrimenti la risposta giusta e la lettera non corrispondono.
 
 esempio (tre domande di due argomenti diversi nel file Domande.txt):
 <pre>
@@ -91,7 +91,7 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 * Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
 * Lavorare coi moduli Java: [Java 9 Modules in Eclipse](https://blogs.oracle.com/java/post/how-to-develop-modules-with-eclipse-ide)
 * Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
-* JavaFX ottenere HostService senza riferimento alla classe Application: [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
+* JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
