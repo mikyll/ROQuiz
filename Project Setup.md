@@ -53,7 +53,7 @@ In caso contrario aggiungerla: Add > Standard VM > Directory... (selezionare la 
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Project%20Setup/Project%20Setup%20(1).png" width="60%"/> <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Project%20Setup/Project%20Setup%20(2).png" width="30%"/><br/><br/>
 7. Aggiungere la User Library appena creata al Modulepath: tasto destro sul progetto > Build Path > Configure Build Path... > Libraries > Modulepath > Add Library... > User Library > JavaFX (es. JavaFX11).<br/>
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Project%20Setup/Project%20Setup%20(3).png" width="40%"/> <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Project%20Setup/Project%20Setup%20(4).png" width="59%"/><br/>
-<img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Project%20Setup/Project%20Setup%20(5).png" width="60%"/><br/><br/>
+<img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Project%20Setup/Project%20Setup%20(5).png" width="40%"/><br/><br/>
 8. Aggiungere i moduli necessari come argomenti nella Run Configuration:
 Windows: Tasto destro sulla classe application.Main > Run > Run Configurations > Arguments > aggiungere in VM arguments: --module-path "mods;<path/to/javafx-sdk>\lib" -m roquiz/application.Main > Apply.
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Project%20Setup/Project%20Setup%20(6).png" width="60%"/>
