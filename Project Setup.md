@@ -69,6 +69,7 @@ jlink --module-path "path/to/jaavafx-jmods";mods --add-modules=roquiz --output f
 </pre>
 
 #### Linux
+NB: controllare con java -version che sia installato Java 11 o una versione più recente.
 <pre>
 jlink --module-path "path/to/jaavafx-jmods":mods --add-modules=roquiz --output fxjreLin --compress=2 --strip-debug --no-header-files --no-man-pages
 </pre>
