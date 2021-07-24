@@ -15,16 +15,16 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="768.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
    <children>
-      <Label alignment="CENTER" layoutX="309.0" layoutY="48.0" prefHeight="50.0" prefWidth="150.0" text="ROQuiz">
+      <Label alignment="CENTER" layoutX="309.0" layoutY="48.0" minHeight="50.0" minWidth="150.0" text="ROQuiz">
          <font>
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
       <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="105.0" prefHeight="330.0" prefWidth="400.0">
          <children>
-            <Label alignment="CENTER" minHeight="40.0" prefHeight="40.0" prefWidth="200.0" text="Menu Principale">
+            <Label alignment="CENTER" minHeight="40.0" minWidth="200.0" text="Menu Principale">
                <font>
                   <Font size="24.0" />
                </font>
@@ -51,7 +51,7 @@
             <Insets bottom="40.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vboxSettingsInfo" alignment="TOP_CENTER" layoutX="703.0" layoutY="375.0" prefHeight="90.0" prefWidth="50.0" visible="false">
+      <VBox fx:id="vboxSettingsInfo" alignment="TOP_CENTER" layoutX="700.0" layoutY="370.0" prefHeight="90.0" prefWidth="50.0">
          <children>
             <Button fx:id="buttonSettings" mnemonicParsing="false" onAction="#settings" prefHeight="40.0" prefWidth="40.0">
                <graphic>
@@ -78,7 +78,7 @@
          <children>
             <HBox prefHeight="40.0" prefWidth="400.0">
                <children>
-                  <Label alignment="CENTER" minHeight="40.0" prefWidth="150.0" text="Argomenti">
+                  <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Argomenti">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -91,7 +91,7 @@
             <Separator prefHeight="20.0" prefWidth="200.0" visible="false" />
             <HBox alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="400.0" spacing="2.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="140.0" text="Domande selezionate:">
+                  <Label alignment="CENTER_RIGHT" minHeight="40.0" minWidth="140.0" text="Domande selezionate:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -101,7 +101,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="180.0" text="Numero domande per quiz:">
+                  <Label alignment="CENTER_RIGHT" minHeight="40.0" minWidth="180.0" text="Numero domande per quiz:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -134,25 +134,25 @@
       </VBox>
       <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0" visible="false">
          <children>
-            <Label alignment="CENTER" minHeight="40.0" prefWidth="150.0" text="Impostazioni">
+            <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Impostazioni">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
             <Separator prefHeight="50.0" prefWidth="400.0" visible="false" />
-            <VBox prefHeight="260.0" prefWidth="400.0">
+            <VBox prefHeight="180.0" prefWidth="400.0">
                <padding>
-                  <Insets left="50.0" right="50.0" />
+                  <Insets left="50.0" right="25.0" />
                </padding>
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <Label prefHeight="27.0" prefWidth="240.0" text="Numero domande per quiz:">
+                        <Label minHeight="27.0" minWidth="240.0" text="Numero domande per quiz:">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Spinner fx:id="spinnerQuestionNumQuiz" prefHeight="26.0" prefWidth="60.0" />
+                        <Spinner fx:id="spinnerQuestionNumQuiz" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
                   <Label alignment="TOP_LEFT" prefHeight="30.0" prefWidth="400.0" text="*Domande nel file insufficienti" textFill="RED" visible="false">
@@ -162,40 +162,40 @@
                   </Label>
                   <HBox alignment="CENTER_LEFT" disable="true" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <Label prefHeight="27.0" prefWidth="240.0" text="Numero risposte:">
+                        <Label minHeight="27.0" minWidth="240.0" text="Numero risposte:">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Spinner fx:id="spinnerAnswerNumQuiz" prefHeight="26.0" prefWidth="60.0" />
+                        <Spinner fx:id="spinnerAnswerNumQuiz" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
                   <Separator prefHeight="30.0" prefWidth="300.0" visible="false" />
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <Label prefHeight="27.0" prefWidth="240.0" text="Timer (minuti):">
+                        <Label minHeight="27.0" minWidth="240.0" text="Timer (minuti):">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Spinner fx:id="spinnerTimerMin" prefHeight="26.0" prefWidth="60.0" />
+                        <Spinner fx:id="spinnerTimerMin" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
                   <Separator prefHeight="40.0" prefWidth="300.0" visible="false" />
-                  <HBox alignment="CENTER" prefHeight="40.0" prefWidth="350.0" spacing="20.0">
-                     <children>
-                        <Button fx:id="buttonSettingsSave" mnemonicParsing="false" onAction="#saveSettings" prefHeight="30.0" prefWidth="80.0" text="Salva" />
-                        <Button fx:id="buttonSettingsCancel" mnemonicParsing="false" onAction="#cancelSettings" prefHeight="30.0" prefWidth="80.0" text="Annulla" />
-                        <Button fx:id="buttonSettingsRestore" mnemonicParsing="false" onAction="#restoreSettings" prefHeight="30.0" prefWidth="80.0" text="Ripristina" />
-                     </children>
-                  </HBox>
                </children>
             </VBox>
+            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="350.0" spacing="20.0">
+               <children>
+                  <Button fx:id="buttonSettingsSave" mnemonicParsing="false" onAction="#saveSettings" prefHeight="30.0" prefWidth="80.0" text="Salva" />
+                  <Button fx:id="buttonSettingsCancel" mnemonicParsing="false" onAction="#cancelSettings" prefHeight="30.0" prefWidth="80.0" text="Annulla" />
+                  <Button fx:id="buttonSettingsRestore" mnemonicParsing="false" onAction="#restoreSettings" prefHeight="30.0" prefWidth="80.0" text="Ripristina" />
+               </children>
+            </HBox>
          </children>
       </VBox>
       <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="300.0" prefWidth="400.0" visible="false">
          <children>
-            <Label alignment="CENTER" minHeight="40.0" prefWidth="150.0" text="Informazioni">
+            <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Informazioni">
                <font>
                   <Font size="24.0" />
                </font>
@@ -229,7 +229,7 @@
                               <Font size="14.0" />
                            </font>
                         </Text>
-                        <Hyperlink onAction="#openURL" prefHeight="26.0" prefWidth="50.0" text="mikyll" underline="true">
+                        <Hyperlink minHeight="26.0" minWidth="50.0" onAction="#openURL" text="mikyll" underline="true">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -243,7 +243,7 @@
                               <Font size="14.0" />
                            </font>
                         </Text>
-                        <Hyperlink onAction="#openURL" prefHeight="26.0" prefWidth="105.0" text="mikyll/ROQuiz" underline="true">
+                        <Hyperlink minHeight="26.0" minWidth="105.0" onAction="#openURL" text="mikyll/ROQuiz" underline="true">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -257,7 +257,7 @@
                               <Font size="14.0" />
                            </font>
                         </Text>
-                        <Hyperlink onAction="#openURL" prefHeight="26.0" prefWidth="50.0" text="Icon8" underline="true">
+                        <Hyperlink minHeight="26.0" minWidth="50.0" onAction="#openURL" text="Icon8" underline="true">
                            <font>
                               <Font size="14.0" />
                            </font>
