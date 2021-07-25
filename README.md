@@ -17,6 +17,8 @@ Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e imple
 <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
 
 ### Demo
+https://user-images.githubusercontent.com/56556806/126906966-b0d8e7be-4dde-4757-b299-8b079797255d.mp4
+  
 <table style="border: none">
   <tr>
     <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/%5BGIF%5D%20EndQuiz.gif" alt="EndQuizGIF"/></td>
