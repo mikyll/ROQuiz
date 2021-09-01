@@ -22,14 +22,13 @@ src/*.jar
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# file video
 *.mkv
 *.mp4
-deploy
 
-/extra
+# directory
+deploy
+extra
 
 # scriptino per creare la jre per fx
 createFXJRE*
-
-# vecchio file domande Quiz.txt
-Quiz.txt
