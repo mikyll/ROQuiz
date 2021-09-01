@@ -30,3 +30,6 @@ deploy
 
 # scriptino per creare la jre per fx
 createFXJRE*
+
+# vecchio file domande Quiz.txt
+Quiz.txt
