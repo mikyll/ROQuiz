@@ -74,10 +74,14 @@ E. Nessuna di queste.
 A
 </pre>
 
-<!--### Contribuire
-Aggiungendo 
-1. Fare una fork della repository
-2. Clonare la repository in locale-->
+### Contribuire
+Per aggiungere nuove domande al progetto:
+1. Fare una fork della repository.
+2. Clonare la repository in locale.
+3. (Opzionale) Creare un nuovo branch.
+4. Modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi, fare commit e push.
+5. Creare una pull request.
+6. In caso non si sappia sotto quale argomento inserire una domanda, scrivere un commento nella descrizione della pull request.
 
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
