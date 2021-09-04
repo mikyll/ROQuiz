@@ -12,12 +12,12 @@ Applicazione grafica Java per esercitarsi con i <b>quiz del corso Ricerca Operat
 È possibile caricare un file con le varie domande (aggiornate al <i>15 luglio 2021</i>) divise per argomento, quindi si possono inserire eventuali domande nuove o personalizzate, ed è possibile selezionare gli argomenti di interesse; terminato il quiz vengono mostrate le risposte corrette e quelle sbagliate.
 il numero di domande di default è 16, così come il timer è impostato a 18 minuti in quanto l'esame è in questa forma, ma è possibile modificare questi parametri nelle impostazioni dell'applicazione.
 
-Chiunque voglia contribuire è liberissimo di fare una fork e aggiungere e implementare feature nuove o sistemare parti del codice già esistente.
+Chiunque voglia <a href="#contribuire">contribuire</a> è liberissimo di fare una fork e aggiungere e implementare feature nuove o sistemare parti del codice già esistente.
 
 <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
 
 ### Demo
-  
+
 <table style="border: none">
   <tr>
     <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/%5BGIF%5D%20EndQuiz.gif" alt="EndQuizGIF"/></td>
@@ -73,6 +73,11 @@ D. Ad un vincolo corrisponde una condizione su una variabile e viceversa.
 E. Nessuna di queste.
 A
 </pre>
+
+<!--### Contribuire
+Aggiungendo 
+1. Fare una fork della repository
+2. Clonare la repository in locale-->
 
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
