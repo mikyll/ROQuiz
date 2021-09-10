@@ -14,7 +14,7 @@ il numero di domande di default è 16, così come il timer è impostato a 18 min
 
 Chiunque voglia <a href="#contribuire">contribuire</a> è liberissimo di fare una fork e aggiungere e implementare feature nuove o sistemare parti del codice già esistente.
 
-<b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
+L'obbiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teoria. <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
 
 ### Demo
 
