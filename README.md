@@ -30,7 +30,7 @@ L'obbiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teo
 </table>
 
 ### Esecuzione
-1. Scaricare l'<a href="https://github.com/mikyll/ROQuiz/releases/latest">ultima release</a> ed estrarre il contenuto.
+1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.2/ROQuizDeployWindows.zip) o [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.2/ROQuizDeployLinux.tar.gz)) ed estrarre il contenuto.
 2. Eseguire Launcher con doppioclick.
 
 ### Formattazione domande
