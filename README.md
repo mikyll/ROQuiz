@@ -91,11 +91,11 @@ Proposta feature:
 
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
-* deploy su MacOS
-* aggiungere file di configurazione (xml o JSON) per rendere le modifiche alle impostazioni persistenti
-* aggiungere test domande duplicate
-* creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
-* fare il porting su mobile (magari Android)
+- [ ] deploy su MacOS
+- [ ] aggiungere file di configurazione (xml o JSON) per rendere le modifiche alle impostazioni persistenti
+- [ ] aggiungere test domande duplicate
+- [ ] creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
+- [ ] fare il porting su mobile (magari Android)
 
 ### Built With
 Per l'implementazione ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20Setup.md).
