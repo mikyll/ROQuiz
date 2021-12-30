@@ -78,10 +78,8 @@ class ViewMenu extends StatelessWidget {
               const SizedBox(height: 10),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ViewTopics()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ViewTopics()));
                 },
                 child: Container(
                   alignment: Alignment.center,
