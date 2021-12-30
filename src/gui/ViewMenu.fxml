@@ -257,7 +257,7 @@
                               <Font size="14.0" />
                            </font>
                         </Text>
-                        <Hyperlink minHeight="26.0" minWidth="50.0" onAction="#openURL" text="Icon8" underline="true">
+                        <Hyperlink minHeight="26.0" minWidth="50.0" onAction="#openURL" text="Icons8" underline="true">
                            <font>
                               <Font size="14.0" />
                            </font>
