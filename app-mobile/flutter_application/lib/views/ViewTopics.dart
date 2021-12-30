@@ -22,7 +22,7 @@ class ViewTopics extends StatelessWidget {
         ),
       ),
       body: Container(
-        child: const Icon(Icons.arrow_back),
+        child: const Icon(Icons.list),
       ),
     );
   }

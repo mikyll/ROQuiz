@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/constants.dart';
+import 'package:roquiz/views/ViewQuiz.dart';
 import 'package:roquiz/views/ViewTopics.dart';
 import 'package:websafe_svg/websafe_svg.dart';
 
@@ -36,32 +37,28 @@ class ViewMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Spacer(flex: 1),
-              WebsafeSvg.asset("assets/icons/test-svgrepo-com.svg"),
-              /*CircleAvatar(
-                radius: 100,
-                backgroundColor: Colors.blue[900],
-                child: const Icon(
-                  Icons.quiz,
-                  size: 100,
-                  color: Colors.black,
-                ),
-              ),*/
+              WebsafeSvg.asset("icons/icon-test.svg", width: 300, height: 300),
               const Text("ROquiz",
                   style: TextStyle(
-                    fontSize: 80,
+                    fontSize: 70,
                     fontWeight: FontWeight.bold, /*fontStyle: FontStyle.italic*/
                   )),
               Text(
                 "v1.2",
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 25,
                   color: Colors.grey[500],
                 ),
               ),
               const Spacer(),
               // Buttons
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ViewQuiz()));
+                },
                 child: Container(
                   alignment: Alignment.center,
                   width: 400, // fix: fit <->
@@ -80,28 +77,25 @@ class ViewMenu extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               InkWell(
-                onTap: () {},
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ViewTopics()));
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 400, // fix: fit <->
-                    height: 60,
-                    decoration: const BoxDecoration(
-                        gradient: kPrimaryGradient,
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: const Text(
-                      "Argomenti",
-                      style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ViewTopics()));
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 400, // fix: fit <->
+                  height: 60,
+                  decoration: const BoxDecoration(
+                      gradient: kPrimaryGradient,
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  child: const Text(
+                    "Argomenti",
+                    style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
                   ),
                 ),
               ),
