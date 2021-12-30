@@ -57,7 +57,7 @@ class ViewMenu extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ViewQuiz()));
+                          builder: (context) => const ViewQuizWidget()));
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -103,12 +103,18 @@ class ViewMenu extends StatelessWidget {
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("Domande: "),
-                    Text("16 su 85"),
+                  children: const [
+                    Icon(
+                      Icons.format_list_numbered_rounded,
+                      color: Colors.grey,
+                    ),
+                    Text("Domande: 16 su 85"),
                     SizedBox(width: 20),
-                    Text("Tempo: "),
-                    Text("18 min"),
+                    Icon(
+                      Icons.timer_rounded,
+                      color: Colors.grey,
+                    ),
+                    Text("Tempo: 18 min"),
                   ]),
               const Spacer(flex: 1),
               Row(
