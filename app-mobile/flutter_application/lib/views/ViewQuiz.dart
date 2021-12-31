@@ -70,14 +70,14 @@ class _ViewQuizState extends State<ViewQuiz> {
                 "Question: ${qIndex + 1}",
                 maxLines: 1,
                 style: const TextStyle(
-                  fontSize: 60,
+                  fontSize: 50,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 10),
               // QUESTION
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                //margin: const EdgeInsets.symmetric(horizontal: 10.0),
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -88,15 +88,15 @@ class _ViewQuizState extends State<ViewQuiz> {
                     Container(
                       alignment: Alignment.center,
                       width: double.infinity,
-                      height: 320,
+                      height: 150,
                       decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(30))),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("${currentQuestion}",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 20)),
+                        child: Text(currentQuestion,
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 20)),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -128,66 +128,76 @@ class _ViewQuizState extends State<ViewQuiz> {
               ),
               const SizedBox(height: 10),
               // CONTROLS
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      previousQuestion();
-                      loadQuestion();
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 60, // fix: fit <->
-                      height: 60,
-                      decoration: const BoxDecoration(
-                          gradient: kPrimaryGradient,
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      child: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        size: 40,
-                        color: Colors.black,
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          previousQuestion();
+                          loadQuestion();
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 60, // fix: fit <->
+                          height: 60,
+                          decoration: const BoxDecoration(
+                              gradient: kPrimaryGradient,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          child: const Icon(
+                            Icons.arrow_back_ios_rounded,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  InkWell(
-                    onTap: () {
-                      nextQuestion();
-                      loadQuestion();
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 60, // fix: fit <->
-                      height: 60,
-                      decoration: const BoxDecoration(
-                          gradient: kPrimaryGradient,
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      child: const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 40,
-                        color: Colors.black,
+                      const SizedBox(width: 20),
+                      InkWell(
+                        onTap: () {
+                          nextQuestion();
+                          loadQuestion();
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 60, // fix: fit <->
+                          height: 60,
+                          decoration: const BoxDecoration(
+                              gradient: kPrimaryGradient,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          child: const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 50),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {},
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 250, // fix: fit <->
+                            height: 60,
+                            decoration: const BoxDecoration(
+                                gradient: kPrimaryGradient,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                            child: const Text("Termina",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 100),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 250, // fix: fit <->
-                      height: 60,
-                      decoration: const BoxDecoration(
-                          gradient: kPrimaryGradient,
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      child: const Text("Termina",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
+                ),
               )
             ],
           ),
