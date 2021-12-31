@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:roquiz/constants.dart';
+import 'package:roquiz/model/QuestionRepository.dart';
+import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/views/ViewMenu.dart';
 
 class ViewQuiz extends StatefulWidget {
-  const ViewQuiz({Key? key}) : super(key: key);
+  const ViewQuiz({Key? key, required this.qRepo}) : super(key: key);
+
+  final QuestionRepository qRepo;
 
   @override
   State<StatefulWidget> createState() => _ViewQuizState();
@@ -23,6 +27,11 @@ class _ViewQuizState extends State<ViewQuiz> {
     "E. Nessuna di queste"
   ];
 
+  List<String> _questions = [];
+  List<List<String>> _ansers = [];
+  List<String> correctAnswers = [];
+  List<Answer> userAnswers = [];
+
   void previousQuestion() {
     setState(() {
       if (qIndex > 0) qIndex--;
@@ -37,9 +46,20 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   void loadQuestion() {
     setState(() {
-      currentQuestion = questions[qIndex];
-      currentAnswers = answers[qIndex];
+      currentQuestion = questionsTest[qIndex];
+      currentAnswers = answersTest[qIndex];
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.qRepo.loadFile();
+    /*widget.qRepo.getQuestions().then((List<String> questions) {
+      setState(() {
+        _questions = questions;
+      });
+    });*/
   }
 
   @override
@@ -67,7 +87,7 @@ class _ViewQuizState extends State<ViewQuiz> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AutoSizeText(
-                "Question: ${qIndex + 1}/${questions.length}",
+                "Question: ${qIndex + 1}/${questionsTest.length}",
                 maxLines: 1,
                 style: const TextStyle(
                   fontSize: 50,
@@ -206,13 +226,13 @@ class _ViewQuizState extends State<ViewQuiz> {
     );
   }
 
-  final questions = const [
+  final questionsTest = const [
     "Sia P un politopo, H un generico iperpiano, HS uno dei due semispazi generati da H. Insieme dei punti f = intersezione tra P e HS è detta:",
     "In un tableau del simplesso primale, gli elementi della colonna 0 righe da 1 a m:",
     "Ad una variabile primale non negativa corrisponde",
     "Dato un insieme F, un intorno è",
   ];
-  final answers = const [
+  final answersTest = const [
     [
       "A. Politopo convesso ammissibile",
       "B. Regione ammissibile",
@@ -242,5 +262,5 @@ class _ViewQuizState extends State<ViewQuiz> {
       "E. Nessuna di queste",
     ]
   ];
-  final correctAnswers = ["C", "A", "D", "C"];
+  final correctAnswersTest = ["C", "A", "D", "C"];
 }

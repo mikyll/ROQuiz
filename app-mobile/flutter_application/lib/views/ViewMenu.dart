@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/constants.dart';
+import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/views/ViewQuiz.dart';
 import 'package:roquiz/views/ViewTopics.dart';
 import 'package:websafe_svg/websafe_svg.dart';
@@ -37,7 +38,7 @@ class ViewMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Spacer(flex: 1),
-              WebsafeSvg.asset("icons/icon-test.svg", width: 300, height: 300),
+              //WebsafeSvg.asset("icons/icon-test.svg", width: 300, height: 300),
               const Text("ROquiz",
                   style: TextStyle(
                     fontSize: 70,
@@ -57,7 +58,8 @@ class ViewMenu extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ViewQuiz()));
+                          builder: (context) =>
+                              ViewQuiz(qRepo: QuestionRepository())));
                 },
                 child: Container(
                   alignment: Alignment.center,
