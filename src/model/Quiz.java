@@ -42,16 +42,15 @@ public class Quiz {
 	
 	public void resetQuiz(List<Question> questions, int qNum)
 	{
-		// reset questions
+		// reset questions & user answers
 		this.quiz = new ArrayList<Question>(qNum);
+		this.answers = new ArrayList<Answer>(qNum);
 		Collections.shuffle(questions);
 		for(int i = 0; i < qNum; i++)
+		{
 			this.quiz.add(questions.get(i));
-		
-		// reset user answers
-		answers = new ArrayList<Answer>(qNum);
-		for(int i = 0; i < qNum; i++)
 			this.answers.add(Answer.NONE);
+		}
 		
 		// reset counters
 		this.givenAnswers = 0;
