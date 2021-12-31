@@ -57,7 +57,7 @@ class ViewMenu extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ViewQuizWidget()));
+                          builder: (context) => const ViewQuiz()));
                 },
                 child: Container(
                   alignment: Alignment.center,
