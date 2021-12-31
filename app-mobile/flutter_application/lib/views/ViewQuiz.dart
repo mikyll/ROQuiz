@@ -67,7 +67,7 @@ class _ViewQuizState extends State<ViewQuiz> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AutoSizeText(
-                "Question: ${qIndex + 1}",
+                "Question: ${qIndex + 1}/${questions.length}",
                 maxLines: 1,
                 style: const TextStyle(
                   fontSize: 50,
@@ -101,7 +101,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                     ),
                     const SizedBox(height: 10),
                     ...List.generate(
-                      answers.length,
+                      currentAnswers.length,
                       (index) => InkWell(
                         onTap: () {},
                         child: Column(children: [
@@ -115,8 +115,8 @@ class _ViewQuizState extends State<ViewQuiz> {
                                     BorderRadius.all(Radius.circular(20))),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("${currentAnswers[index]}",
-                                  style: TextStyle(fontSize: 18)),
+                              child: Text(currentAnswers[index],
+                                  style: const TextStyle(fontSize: 18)),
                             ),
                           ),
                           const SizedBox(height: 10)
@@ -211,12 +211,6 @@ class _ViewQuizState extends State<ViewQuiz> {
     "In un tableau del simplesso primale, gli elementi della colonna 0 righe da 1 a m:",
     "Ad una variabile primale non negativa corrisponde",
     "Dato un insieme F, un intorno è",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
   ];
   final answers = const [
     [
