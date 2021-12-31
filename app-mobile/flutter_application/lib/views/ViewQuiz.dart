@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/constants.dart';
+import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Quiz.dart';
 import 'package:websafe_svg/websafe_svg.dart';
 import 'package:flutter_svg/svg.dart';
@@ -62,7 +63,12 @@ class ViewQuizWidget extends StatefulWidget {
 }
 
 class _ViewQuizWidgetState extends State<ViewQuizWidget> {
-  Quiz quiz = Quiz();
+  // test
+  /*final List<Question> questions = const [
+
+  ]
+
+  Quiz quiz = Quiz(questions, 5);*/
   int _qIndex = 0;
 
   @override

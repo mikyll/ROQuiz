@@ -1,15 +1,23 @@
 import 'package:roquiz/model/Question.dart';
 
 class QuestionRepository {
-  List<Question> questions;
-  List<String> topics;
-  List<int> questionsPerTopic;
+  late List<Question> questions;
+  late List<String> topics;
+  late List<int> questionsPerTopic; // how many questions are in a topic
 
-  List<Question> get questions {
-    return questions;
+  QuestionRepository(String filename) {
+    /*final file = File(filename);
+    Stream<String> lines =
+        file.openRead().transform(utf8.decoder).transform(LineSplitter());
+      try {
+        await for (String l in lines) {
+          
+        }
+      }
+      catch (e) {
+        print("Error: $e");
+      }*/
   }
-
-  QuestionRepository() {}
 
   _loadQuestions() {}
 }

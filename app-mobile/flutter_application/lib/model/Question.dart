@@ -2,9 +2,16 @@ import 'dart:collection';
 import 'package:roquiz/model/Answer.dart';
 
 class Question {
-  String question;
-  HashMap<Answer, String> answers;
-  Answer correctAnswer;
+  late String question;
+  late HashMap<Answer, String> answers;
+  late Answer correctAnswer;
 
-  Question({required this.question /*, this.answers, this.correctAnswer*/});
+  Question(String question) {
+    question = question;
+  }
+
+  void _addAnser(String answer) {}
+
+  void _setCorrectAnswerFromInt(int correctAnswer) {}
+  void _setCorrectAnswerFromEnum(Answer correctAnswer) {}
 }
