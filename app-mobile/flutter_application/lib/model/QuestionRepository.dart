@@ -6,9 +6,10 @@ import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 
 class QuestionRepository {
-  late List<String> questions;
-  late List<List<String>> answers;
-  late List<Answer> correctAnswers;
+  List<String> questions = [];
+  List<List<String>> answers = [];
+  List<Answer> correctAnswers = [];
+  List<String> topics = [];
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -24,7 +25,18 @@ class QuestionRepository {
   Future<void> loadFile() async {
     try {
       String fileText = await rootBundle.loadString("assets/domande.txt");
-      print(fileText);
+      // print(fileText); // test
+
+      LineSplitter ls = LineSplitter();
+      List<String> lines = ls.convert(fileText);
+
+      for (int i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith("@")) {
+          questions.add(lines[i].substring(1).replaceAll("=", ""));
+          print(questions[i]);
+        }
+      }
+
       /*final file = await _localFile;
       final lines = await file
           .openRead()
