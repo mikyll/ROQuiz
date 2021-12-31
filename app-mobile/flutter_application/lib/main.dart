@@ -1,12 +1,38 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/views/ViewMenu.dart';
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
+}
+
+class ROquizApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _ROquizAppState();
+  }
+}
+
+class _ROquizAppState extends State<ROquizApp> {
+  QuestionRepository qRepo;
+  List<bool> selectedTopics;
+
+  _ROquizAppState() {
+    final file = File("assets/domande.txt");
+    Stream<String> lines =
+        file.openRead().transform(utf8.decoder).transform(LineSplitter());
+      try {
+        await for (String l in lines) {
+          
+        }
+      }
+      catch (e) {
+        print("Error: $e");
+      }
+  }
 }
 
 class MyApp extends StatelessWidget {
