@@ -9,14 +9,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class ROquizApp extends StatefulWidget {
+/*class ROquizApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _ROquizAppState();
   }
-}
+}*/
 
-class _ROquizAppState extends State<ROquizApp> {
+/*lass _ROquizAppState extends State<ROquizApp> {
   QuestionRepository qRepo;
   List<bool> selectedTopics;
 
@@ -33,7 +33,15 @@ class _ROquizAppState extends State<ROquizApp> {
         print("Error: $e");
       }
   }
-}
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+
+  
+}*/
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

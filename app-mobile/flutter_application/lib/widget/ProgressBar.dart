@@ -9,13 +9,14 @@ class ProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: 35,
-      decoration: BoxDecoration(
-        border: Border.all(color: Color(0xFF3F4768), width: 3),
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: GetBuilder<QuestionController>(
+        width: double.infinity,
+        height: 35,
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xFF3F4768), width: 3),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: const Text(
+            "ciao") /*GetBuilder<QuestionController>(
         init: QuestionController(),
         builder: (controller) {
           return Stack(
@@ -47,7 +48,7 @@ class ProgressBar extends StatelessWidget {
             ],
           );
         },
-      ),
-    );
+      )*/
+        );
   }
 }
