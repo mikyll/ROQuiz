@@ -5,26 +5,6 @@ import 'package:roquiz/views/ViewQuiz.dart';
 import 'package:roquiz/views/ViewTopics.dart';
 import 'package:websafe_svg/websafe_svg.dart';
 
-/*class ViewMenu extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blue[900],
-      body: 
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Column(children: [
-              
-            ],)
-          ],
-        ),
-      ),
-    );
-  }
-}*/
-
 class ViewMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -45,7 +25,7 @@ class ViewMenu extends StatelessWidget {
                     fontWeight: FontWeight.bold, /*fontStyle: FontStyle.italic*/
                   )),
               Text(
-                "v1.3-mobile",
+                "v1.3-mobile_beta",
                 style: TextStyle(
                   fontSize: 25,
                   color: Colors.grey[500],

@@ -14,15 +14,19 @@ class ViewQuiz extends StatefulWidget {
   State<StatefulWidget> createState() => _ViewQuizState();
 }
 
+const int maxQuestion = 16;
+
 class _ViewQuizState extends State<ViewQuiz> {
-  final int maxQuestion = 16;
+  bool isOver = false;
+
   int qIndex = 0;
+  int correctAnswers = 0; // TMP
 
   String currentQuestion = "";
   List<String> currentAnswers = [];
-  Answer currentUserAnswer = Answer.NONE;
 
-  List<Answer> userAnswers = [];
+  List<Answer> userAnswers =
+      List<Answer>.filled(maxQuestion, Answer.NONE, growable: true);
 
   void previousQuestion() {
     setState(() {
@@ -40,12 +44,26 @@ class _ViewQuizState extends State<ViewQuiz> {
     setState(() {
       currentQuestion = widget.qRepo.questions[qIndex].question;
       currentAnswers = widget.qRepo.questions[qIndex].answers;
+      print("Question $qIndex: ${userAnswers[qIndex]}");
     });
   }
 
   void setUserAnswer(int answer) {
     setState(() {
       userAnswers[qIndex] = Answer.values[answer];
+      if (Answer.values[answer] ==
+          widget.qRepo.questions[qIndex].correctAnswer) {
+        correctAnswers++;
+        print("risposta corretta!");
+      }
+
+      print("Question $qIndex: ${userAnswers[qIndex]}");
+    });
+  }
+
+  void endQuiz() {
+    setState(() {
+      isOver = true;
     });
   }
 
@@ -54,10 +72,9 @@ class _ViewQuizState extends State<ViewQuiz> {
     super.initState();
     widget.qRepo.loadFile().then((value) {
       setState(() {
-        widget.qRepo.questions.shuffle();
+        //widget.qRepo.questions.shuffle();
         currentQuestion = widget.qRepo.questions[0].question;
         currentAnswers = widget.qRepo.questions[0].answers;
-        currentUserAnswer = Answer.NONE;
       });
     });
   }
@@ -124,13 +141,30 @@ class _ViewQuizState extends State<ViewQuiz> {
                     ...List.generate(
                       currentAnswers.length,
                       (index) => InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          if (!isOver) {
+                            setUserAnswer(index);
+                          }
+                        },
                         child: Column(children: [
                           Container(
                             alignment: Alignment.centerLeft,
                             width: double.infinity,
-                            decoration: const BoxDecoration(
-                                color: Colors.cyan,
+                            decoration: BoxDecoration(
+                                color: !isOver &&
+                                        userAnswers[qIndex] ==
+                                            Answer.values[index]
+                                    ? Colors.cyan[700]
+                                    : (!isOver
+                                        ? Colors.cyan
+                                        : (widget.qRepo.questions[qIndex]
+                                                    .correctAnswer ==
+                                                Answer.values[index]
+                                            ? Colors.green
+                                            : (userAnswers[qIndex] ==
+                                                    Answer.values[index]
+                                                ? Colors.red
+                                                : Colors.cyan))),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             child: Padding(
@@ -211,7 +245,11 @@ class _ViewQuizState extends State<ViewQuiz> {
                       const SizedBox(width: 50),
                       Expanded(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            if (!isOver) {
+                              endQuiz();
+                            }
+                          },
                           child: Container(
                             alignment: Alignment.center,
                             width: 250, // fix: fit <->
