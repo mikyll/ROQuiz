@@ -20,7 +20,7 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   String currentQuestion = "";
   List<String> currentAnswers = [];
-  Answer currentCorrectAnswer = Answer.NONE;
+  Answer currentUserAnswer = Answer.NONE;
 
   List<Answer> userAnswers = [];
 
@@ -57,7 +57,7 @@ class _ViewQuizState extends State<ViewQuiz> {
         widget.qRepo.questions.shuffle();
         currentQuestion = widget.qRepo.questions[0].question;
         currentAnswers = widget.qRepo.questions[0].answers;
-        currentCorrectAnswer = widget.qRepo.questions[0].correctAnswer;
+        currentUserAnswer = Answer.NONE;
       });
     });
   }
@@ -129,7 +129,6 @@ class _ViewQuizState extends State<ViewQuiz> {
                           Container(
                             alignment: Alignment.centerLeft,
                             width: double.infinity,
-                            height: 70,
                             decoration: const BoxDecoration(
                                 color: Colors.cyan,
                                 borderRadius:

@@ -10,9 +10,7 @@ class Question {
     return answers;
   }
 
-  Question(String question) {
-    question = question;
-  }
+  Question(this.question);
 
   void addAnswer(String answer) {
     if (answers.length == 5) {

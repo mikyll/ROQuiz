@@ -94,10 +94,18 @@ class QuestionRepository {
           if (topicsPresent) numPerTopic++;
         }
       }
+
+      /*
+      // test
+      for (int i = 0; i < questions.length; i++) {
+        print(questions[i].question);
+        print(questions[i].answers);
+      }*/
       if (topicsPresent) {
         qNumPerTopic.add(numPerTopic);
 
         // test
+        print("Tot domande: $totQuest");
         print("Argomenti: ");
         for (int i = 0; i < qNumPerTopic.length; i++) {
           print("- ${topics[i]} (num domande: ${qNumPerTopic[i].toString()})");
