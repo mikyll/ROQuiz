@@ -1,4 +1,7 @@
+import 'dart:collection';
+
 import 'package:flutter/services.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'dart:io';
@@ -8,14 +11,10 @@ import 'package:path_provider/path_provider.dart';
 class QuestionRepository {
   static const int DEFAULT_ANSWER_NUMBER = 5;
 
-  List<String> questions = [];
-  List<List<String>> answers = [];
-  List<Answer> correctAnswers = [];
+  List<Question> questions = [];
   List<String> topics = [];
   List<int> qNumPerTopic = [];
   bool topicsPresent = false;
-  int numPerTopic = 0;
-  int lineNum = 0;
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -30,14 +29,16 @@ class QuestionRepository {
 
   Future<void> loadFile() async {
     try {
+      int numPerTopic = 0, totQuest = 0;
       String fileText = await rootBundle.loadString("assets/domande.txt");
       // print(fileText); // test
 
-      LineSplitter ls = LineSplitter();
+      LineSplitter ls = const LineSplitter();
       List<String> lines = ls.convert(fileText);
 
-      // the question file is subdivided by topics
+      // the question file can be subdivided by topics (i == line #)
       for (int i = 0; i < lines.length; i++) {
+        // if the first line starts with '@', then the file has topics
         if (i == 0 && lines[i].startsWith("@")) {
           topicsPresent = true;
 
@@ -46,8 +47,8 @@ class QuestionRepository {
           continue;
         }
 
-        // next questions
-        if (i > 0 && !lines[i].isEmpty) {
+        // next question
+        if (lines[i].isNotEmpty) {
           // next topic
           if (topicsPresent && lines[i].startsWith("@")) {
             qNumPerTopic.add(numPerTopic);
@@ -57,44 +58,67 @@ class QuestionRepository {
             i++;
           } else if (lines[i].startsWith("@")) {
             throw FileSystemException(
-                "$i divisione per argomenti non rilevata (non è presente l'argomento per le prime domande), ma ne è stato trovato uno comunque");
+                "Riga ${i + 1}: divisione per argomenti non rilevata (non è presente l'argomento per le prime domande), ma ne è stato trovato uno comunque");
           }
 
-          questions.add(lines[i]);
+          Question q = Question(lines[i]);
 
-          for(int j = 0; j < DEFAULT_ANSWER_NUMBER; j++, lineNum++) {
-            answers[i][j] = lines[i]
+          for (int j = 0; j < DEFAULT_ANSWER_NUMBER; j++) {
+            i++;
+            List<String> splitted = lines[i].split(". ");
+            if (splitted.length < 2 || splitted[1].isEmpty) {
+              throw FileSystemException(
+                  "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} formata male");
+            }
+
+            q.addAnswer(splitted[1]);
           }
+          i++;
+
+          if (lines[i].length != 1) {
+            throw FileSystemException(
+                "Riga ${i + 1}: risposta corretta assente");
+          }
+
+          int asciiValue = lines[i].codeUnitAt(0);
+          int value = asciiValue - 65;
+          if (value < 0 || value > DEFAULT_ANSWER_NUMBER - 1) {
+            throw FileSystemException(
+                "Riga ${i + 1}: risposta corretta non valida");
+          }
+
+          questions.add(q);
+          q.setCorrectAnswerFromInt(value);
+          totQuest++;
+
+          if (topicsPresent) numPerTopic++;
         }
-
-
-        lineNum++;
       }
+      if (topicsPresent) {
+        qNumPerTopic.add(numPerTopic);
 
-      /*final file = await _localFile;
-      final lines = await file
-          .openRead()
-          .map(utf8.decode)
-          .transform(LineSplitter())
-          .forEach((l) {
-        print(l);
-      });*/
+        // test
+        print("Argomenti: ");
+        for (int i = 0; i < qNumPerTopic.length; i++) {
+          print("- ${topics[i]} (num domande: ${qNumPerTopic[i].toString()})");
+        }
+      }
     } catch (e) {
       print("Exception: $e");
       return;
     }
   }
 
-  Future<List<String>> getQuestions() async {
+  Future<List<Question>> getQuestions() async {
     return questions;
   }
 
-  Future<List<List<String>>> getAnswers() async {
-    return answers;
+  Future<List<String>> getTopics() async {
+    return topics;
   }
 
-  Future<List<Answer>> getCorrectAnswers() async {
-    return correctAnswers;
+  Future<List<int>> getQuestionNumPerTopic() async {
+    return qNumPerTopic;
   }
 
   /*late List<Question> questions;

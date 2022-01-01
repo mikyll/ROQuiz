@@ -2,16 +2,19 @@ import 'dart:collection';
 import 'package:roquiz/model/Answer.dart';
 
 class Question {
-  late String question;
-  late HashMap<Answer, String> answers;
-  late Answer correctAnswer;
+  String question = "";
+  HashMap<Answer, String> answers = HashMap();
+  Answer correctAnswer = Answer.NONE;
+
+  Future<HashMap<Answer, String>> get getAnswers async {
+    return answers;
+  }
 
   Question(String question) {
     question = question;
-    answers = new HashMap<Answer, String>();
   }
 
-  void _addAnswer(String answer) {
+  void addAnswer(String answer) {
     if (answers.keys.length == 5) {
       throw Exception("Too many answers");
     }
@@ -20,11 +23,11 @@ class Question {
     answers.putIfAbsent(a, () => answer);
   }
 
-  void _setCorrectAnswerFromInt(int correctAnswer) {
+  void setCorrectAnswerFromInt(int correctAnswer) {
     this.correctAnswer = Answer.values[correctAnswer];
   }
 
-  void _setCorrectAnswerFromEnum(Answer correctAnswer) {
+  void setCorrectAnswerFromEnum(Answer correctAnswer) {
     this.correctAnswer = correctAnswer;
   }
 }
