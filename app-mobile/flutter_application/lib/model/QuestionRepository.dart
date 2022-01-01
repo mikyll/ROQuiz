@@ -6,10 +6,16 @@ import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 
 class QuestionRepository {
+  static const int DEFAULT_ANSWER_NUMBER = 5;
+
   List<String> questions = [];
   List<List<String>> answers = [];
   List<Answer> correctAnswers = [];
   List<String> topics = [];
+  List<int> qNumPerTopic = [];
+  bool topicsPresent = false;
+  int numPerTopic = 0;
+  int lineNum = 0;
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -30,11 +36,39 @@ class QuestionRepository {
       LineSplitter ls = LineSplitter();
       List<String> lines = ls.convert(fileText);
 
+      // the question file is subdivided by topics
       for (int i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith("@")) {
-          questions.add(lines[i].substring(1).replaceAll("=", ""));
-          print(questions[i]);
+        if (i == 0 && lines[i].startsWith("@")) {
+          topicsPresent = true;
+
+          topics.add(lines[i].substring(1).replaceAll("=", ""));
+
+          continue;
         }
+
+        // next questions
+        if (i > 0 && !lines[i].isEmpty) {
+          // next topic
+          if (topicsPresent && lines[i].startsWith("@")) {
+            qNumPerTopic.add(numPerTopic);
+            numPerTopic = 0;
+
+            topics.add(lines[i].substring(1).replaceAll("=", ""));
+            i++;
+          } else if (lines[i].startsWith("@")) {
+            throw FileSystemException(
+                "$i divisione per argomenti non rilevata (non è presente l'argomento per le prime domande), ma ne è stato trovato uno comunque");
+          }
+
+          questions.add(lines[i]);
+
+          for(int j = 0; j < DEFAULT_ANSWER_NUMBER; j++, lineNum++) {
+            answers[i][j] = lines[i]
+          }
+        }
+
+
+        lineNum++;
       }
 
       /*final file = await _localFile;

@@ -39,13 +39,13 @@ class ViewMenu extends StatelessWidget {
             children: [
               const Spacer(flex: 1),
               //WebsafeSvg.asset("icons/icon-test.svg", width: 300, height: 300),
-              const Text("ROquiz",
+              const Text("ROQuiz",
                   style: TextStyle(
                     fontSize: 70,
                     fontWeight: FontWeight.bold, /*fontStyle: FontStyle.italic*/
                   )),
               Text(
-                "v1.2",
+                "v1.3-mobile",
                 style: TextStyle(
                   fontSize: 25,
                   color: Colors.grey[500],
