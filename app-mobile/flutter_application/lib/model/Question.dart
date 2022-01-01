@@ -3,10 +3,10 @@ import 'package:roquiz/model/Answer.dart';
 
 class Question {
   String question = "";
-  HashMap<Answer, String> answers = HashMap();
+  List<String> answers = [];
   Answer correctAnswer = Answer.NONE;
 
-  Future<HashMap<Answer, String>> get getAnswers async {
+  Future<List<String>> get getAnswers async {
     return answers;
   }
 
@@ -15,12 +15,12 @@ class Question {
   }
 
   void addAnswer(String answer) {
-    if (answers.keys.length == 5) {
+    if (answers.length == 5) {
       throw Exception("Too many answers");
     }
-    int index = answers.keys.length;
+    int index = answers.length;
     Answer a = Answer.values[index];
-    answers.putIfAbsent(a, () => answer);
+    answers.add(answer);
   }
 
   void setCorrectAnswerFromInt(int correctAnswer) {

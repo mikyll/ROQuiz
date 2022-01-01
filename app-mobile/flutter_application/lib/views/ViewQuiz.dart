@@ -15,21 +15,13 @@ class ViewQuiz extends StatefulWidget {
 }
 
 class _ViewQuizState extends State<ViewQuiz> {
-  final int maxQuestion = 4;
+  final int maxQuestion = 16;
   int qIndex = 0;
-  String currentQuestion =
-      "Sia P un politopo, H un generico iperpiano, HS uno dei due semispazi generati da H. Insieme dei punti f = intersezione tra P e HS è detta:";
-  List<String> currentAnswers = [
-    "A. Politopo convesso ammissibile",
-    "B. Regione ammissibile",
-    "C. Faccia del politopo se f non vuoto e contenuto in H",
-    "D. Insieme di punti ottimi contenuti in H",
-    "E. Nessuna di queste"
-  ];
 
-  List<String> _questions = [];
-  List<List<String>> _ansers = [];
-  List<String> correctAnswers = [];
+  String currentQuestion = "";
+  List<String> currentAnswers = [];
+  Answer currentCorrectAnswer = Answer.NONE;
+
   List<Answer> userAnswers = [];
 
   void previousQuestion() {
@@ -46,20 +38,28 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   void loadQuestion() {
     setState(() {
-      currentQuestion = questionsTest[qIndex];
-      currentAnswers = answersTest[qIndex];
+      currentQuestion = widget.qRepo.questions[qIndex].question;
+      currentAnswers = widget.qRepo.questions[qIndex].answers;
+    });
+  }
+
+  void setUserAnswer(int answer) {
+    setState(() {
+      userAnswers[qIndex] = Answer.values[answer];
     });
   }
 
   @override
   void initState() {
     super.initState();
-    widget.qRepo.loadFile();
-    /*widget.qRepo.getQuestions().then((List<String> questions) {
+    widget.qRepo.loadFile().then((value) {
       setState(() {
-        _questions = questions;
+        widget.qRepo.questions.shuffle();
+        currentQuestion = widget.qRepo.questions[0].question;
+        currentAnswers = widget.qRepo.questions[0].answers;
+        currentCorrectAnswer = widget.qRepo.questions[0].correctAnswer;
       });
-    });*/
+    });
   }
 
   @override
@@ -87,7 +87,7 @@ class _ViewQuizState extends State<ViewQuiz> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AutoSizeText(
-                "Question: ${qIndex + 1}/${questionsTest.length}",
+                "Question: ${qIndex + 1}/$maxQuestion",
                 maxLines: 1,
                 style: const TextStyle(
                   fontSize: 50,
@@ -114,6 +114,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                           borderRadius: BorderRadius.all(Radius.circular(30))),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
+                        // current question
                         child: Text(currentQuestion,
                             style: const TextStyle(
                                 color: Colors.black, fontSize: 20)),
@@ -135,8 +136,21 @@ class _ViewQuizState extends State<ViewQuiz> {
                                     BorderRadius.all(Radius.circular(20))),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(currentAnswers[index],
-                                  style: const TextStyle(fontSize: 18)),
+                              child: Row(children: [
+                                // current answers
+                                Text(
+                                    Answer.values[index].toString().substring(
+                                            Answer.values[index]
+                                                    .toString()
+                                                    .indexOf('.') +
+                                                1) +
+                                        ". ",
+                                    style: const TextStyle(fontSize: 18)),
+                                Flexible(
+                                  child: Text(currentAnswers[index],
+                                      style: const TextStyle(fontSize: 18)),
+                                ),
+                              ]),
                             ),
                           ),
                           const SizedBox(height: 10)
