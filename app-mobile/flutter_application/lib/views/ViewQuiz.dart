@@ -68,14 +68,14 @@ class _ViewQuizState extends State<ViewQuiz> {
       isOver = true;
       _timer.cancel();
     });
-    print("Risposte Corrette: $correctAnswers/$maxQuestion\n");
+    //print("Risposte Corrette: $correctAnswers/$maxQuestion\n");
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_timerCounter > 0) {
-          print("tick: $_timerCounter"); // test
+          //print("tick: $_timerCounter"); // test
           _timerCounter--;
         } else {
           _timer.cancel();
@@ -179,7 +179,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                           }
                         },
                         child: Column(children: [
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 5),
                           Container(
                             alignment: Alignment.centerLeft,
                             width: double.infinity,
@@ -218,11 +218,11 @@ class _ViewQuizState extends State<ViewQuiz> {
                                                 1) +
                                         ") ",
                                     style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold)),
                                 Flexible(
                                   child: Text(currentAnswers[index],
-                                      style: const TextStyle(fontSize: 18)),
+                                      style: const TextStyle(fontSize: 16)),
                                 ),
                               ]),
                             ),
@@ -239,7 +239,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                       "Risposte corrette: $correctAnswers/$maxQuestion, Risposte errate: ${maxQuestion - correctAnswers}.\nRange di voto finale, in base allo scritto: [${(11.33 + correctAnswers ~/ 3).toInt().toString()}, ${22 + correctAnswers * 2 ~/ 3}]")
                   : const Text(""),
               // CONTROLS
-              Expanded(
+              /*Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Row(
@@ -313,11 +313,79 @@ class _ViewQuizState extends State<ViewQuiz> {
                     ],
                   ),
                 ),
-              )
+              )*/
             ],
           ),
         ),
       ),
+      persistentFooterButtons: [
+        Row(
+          children: [
+            InkWell(
+              onTap: () {
+                previousQuestion();
+                loadQuestion();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                width: 60, // fix: fit <->
+                height: 60,
+                decoration: const BoxDecoration(
+                    gradient: kPrimaryGradient,
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                child: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  size: 40,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(width: 20),
+            InkWell(
+              onTap: () {
+                nextQuestion();
+                loadQuestion();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                width: 60, // fix: fit <->
+                height: 60,
+                decoration: const BoxDecoration(
+                    gradient: kPrimaryGradient,
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                child: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 40,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const Spacer(flex: 5),
+            InkWell(
+              onTap: () {
+                if (!isOver) {
+                  endQuiz();
+                }
+              },
+              child: Container(
+                alignment: Alignment.center,
+                height: 60,
+                decoration: const BoxDecoration(
+                    gradient: kPrimaryGradient,
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("   Termina   ",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

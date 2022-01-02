@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_application">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="flutter_application"
+        android:label="ROquiz"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

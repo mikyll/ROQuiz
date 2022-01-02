@@ -6,7 +6,6 @@ import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'package:path_provider/path_provider.dart';
 
 class QuestionRepository {
   static const int DEFAULT_ANSWER_NUMBER = 5;
@@ -15,17 +14,6 @@ class QuestionRepository {
   List<String> topics = [];
   List<int> qNumPerTopic = [];
   bool topicsPresent = false;
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/assets/domande.txt');
-  }
 
   Future<void> loadFile() async {
     try {

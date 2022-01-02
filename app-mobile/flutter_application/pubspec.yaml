@@ -34,7 +34,7 @@ dependencies:
   # path:
   websafe_svg:
   # state management
-  provider: ^4.3.2+3
+  provider: ^6.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,7 +43,7 @@ dependencies:
   # state management, intelligent dependency injection, and route management
   get: ^4.1.4
   auto_size_text: ^3.0.0
-  path_provider: ^2.0.8
+  url_launcher: ^6.0.17
 
 dev_dependencies:
   flutter_test:

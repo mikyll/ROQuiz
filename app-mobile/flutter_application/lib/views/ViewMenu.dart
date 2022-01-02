@@ -3,9 +3,27 @@ import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/views/ViewQuiz.dart';
 import 'package:roquiz/views/ViewTopics.dart';
+import 'package:roquiz/views/ViewInfo.dart';
 import 'package:websafe_svg/websafe_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ViewMenu extends StatelessWidget {
+class ViewMenu extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => ViewMenuState();
+}
+
+class ViewMenuState extends State<ViewMenu> {
+  Future<void> _launchInBrowser(String url) async {
+    if (!await launch(
+      url,
+      forceSafariVC: false,
+      forceWebView: false,
+      headers: <String, String>{'my_header_key': 'my_header_value'},
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +35,7 @@ class ViewMenu extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Spacer(flex: 1),
+              const Spacer(flex: 2),
               //WebsafeSvg.asset("icons/icon-test.svg", width: 300, height: 300),
               const Text("ROQuiz",
                   style: TextStyle(
@@ -31,7 +49,7 @@ class ViewMenu extends StatelessWidget {
                   color: Colors.grey[500],
                 ),
               ),
-              const Spacer(),
+              const Spacer(flex: 2),
               // Buttons
               InkWell(
                 onTap: () {
@@ -104,6 +122,22 @@ class ViewMenu extends StatelessWidget {
                     ),
                     Text("Tempo: 18 min"),
                   ]),
+              const SizedBox(height: 20),
+              InkWell(
+                  onTap: () {
+                    _launchInBrowser("https://github.com/mikyll/ROQuiz");
+                  },
+                  child: Container(
+                    color: Colors.indigo[700],
+                    height: 120,
+                    alignment: Alignment.center,
+                    child: const Text(
+                        "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui: https://github.com/mikyll/ROQuiz",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                        )),
+                  )),
               const Spacer(flex: 1),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
