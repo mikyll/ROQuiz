@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/views/ViewQuiz.dart';
@@ -172,13 +173,26 @@ class ViewMenuState extends State<ViewMenu> {
                       ),
                       const SizedBox(height: 20),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          /*Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewInfo()));*/
+                        },
+                        // remove those to enable splash effects
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         child: Container(
                           alignment: Alignment.center,
                           width: 60, // fix: fit <->
                           height: 60,
                           decoration: const BoxDecoration(
-                              gradient: kPrimaryGradient,
+                              gradient: LinearGradient(
+                                colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30))),
                           child: const Icon(
