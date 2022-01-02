@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:roquiz/constants.dart';
@@ -15,6 +17,7 @@ class ViewQuiz extends StatefulWidget {
 }
 
 const int maxQuestion = 16;
+const int minTimer = 18;
 
 class _ViewQuizState extends State<ViewQuiz> {
   bool isOver = false;
@@ -27,6 +30,9 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   List<Answer> userAnswers =
       List<Answer>.filled(maxQuestion, Answer.NONE, growable: true);
+
+  late Timer _timer;
+  int _timerCounter = minTimer * 60;
 
   void previousQuestion() {
     setState(() {
@@ -44,7 +50,6 @@ class _ViewQuizState extends State<ViewQuiz> {
     setState(() {
       currentQuestion = widget.qRepo.questions[qIndex].question;
       currentAnswers = widget.qRepo.questions[qIndex].answers;
-      print("Question $qIndex: ${userAnswers[qIndex]}");
     });
   }
 
@@ -54,16 +59,29 @@ class _ViewQuizState extends State<ViewQuiz> {
       if (Answer.values[answer] ==
           widget.qRepo.questions[qIndex].correctAnswer) {
         correctAnswers++;
-        print("risposta corretta!");
       }
-
-      print("Question $qIndex: ${userAnswers[qIndex]}");
     });
   }
 
   void endQuiz() {
     setState(() {
       isOver = true;
+      _timer.cancel();
+    });
+    print("Risposte Corrette: $correctAnswers/$maxQuestion\n");
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_timerCounter > 0) {
+          print("tick: $_timerCounter"); // test
+          _timerCounter--;
+        } else {
+          _timer.cancel();
+          endQuiz();
+        }
+      });
     });
   }
 
@@ -72,9 +90,11 @@ class _ViewQuizState extends State<ViewQuiz> {
     super.initState();
     widget.qRepo.loadFile().then((value) {
       setState(() {
-        //widget.qRepo.questions.shuffle();
+        widget.qRepo.questions.shuffle();
         currentQuestion = widget.qRepo.questions[0].question;
         currentAnswers = widget.qRepo.questions[0].answers;
+
+        _startTimer();
       });
     });
   }
@@ -93,6 +113,7 @@ class _ViewQuizState extends State<ViewQuiz> {
           onPressed: () {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => ViewMenu()));
+            endQuiz();
           },
         ),
       ),
@@ -101,15 +122,28 @@ class _ViewQuizState extends State<ViewQuiz> {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AutoSizeText(
-                "Question: ${qIndex + 1}/$maxQuestion",
-                maxLines: 1,
-                style: const TextStyle(
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  AutoSizeText(
+                    "Question: ${qIndex + 1}/$maxQuestion",
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Spacer(),
+                  AutoSizeText(
+                    "Timer: ${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0" + (_timerCounter % 60).toInt().toString() : (_timerCounter % 60).toInt().toString()}",
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 10),
               // QUESTION
@@ -125,7 +159,6 @@ class _ViewQuizState extends State<ViewQuiz> {
                     Container(
                       alignment: Alignment.center,
                       width: double.infinity,
-                      height: 150,
                       decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -137,7 +170,6 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 color: Colors.black, fontSize: 20)),
                       ),
                     ),
-                    const SizedBox(height: 10),
                     ...List.generate(
                       currentAnswers.length,
                       (index) => InkWell(
@@ -147,6 +179,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                           }
                         },
                         child: Column(children: [
+                          const SizedBox(height: 10),
                           Container(
                             alignment: Alignment.centerLeft,
                             width: double.infinity,
@@ -154,19 +187,25 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 color: !isOver &&
                                         userAnswers[qIndex] ==
                                             Answer.values[index]
-                                    ? Colors.cyan[700]
+                                    ? Colors.cyan[900]
                                     : (!isOver
                                         ? Colors.cyan
                                         : (widget.qRepo.questions[qIndex]
-                                                    .correctAnswer ==
-                                                Answer.values[index]
-                                            ? Colors.green
-                                            : (userAnswers[qIndex] ==
+                                                        .correctAnswer ==
+                                                    Answer.values[index] &&
+                                                userAnswers[qIndex] ==
+                                                    Answer.NONE
+                                            ? Colors.green[900]
+                                            : (widget.qRepo.questions[qIndex]
+                                                        .correctAnswer ==
                                                     Answer.values[index]
-                                                ? Colors.red
-                                                : Colors.cyan))),
+                                                ? Colors.green
+                                                : (userAnswers[qIndex] ==
+                                                        Answer.values[index]
+                                                    ? Colors.red
+                                                    : Colors.cyan)))),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
+                                    BorderRadius.all(Radius.circular(15))),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(children: [
@@ -177,8 +216,10 @@ class _ViewQuizState extends State<ViewQuiz> {
                                                     .toString()
                                                     .indexOf('.') +
                                                 1) +
-                                        ". ",
-                                    style: const TextStyle(fontSize: 18)),
+                                        ") ",
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
                                 Flexible(
                                   child: Text(currentAnswers[index],
                                       style: const TextStyle(fontSize: 18)),
@@ -186,7 +227,6 @@ class _ViewQuizState extends State<ViewQuiz> {
                               ]),
                             ),
                           ),
-                          const SizedBox(height: 10)
                         ]),
                       ),
                     ),
@@ -194,6 +234,10 @@ class _ViewQuizState extends State<ViewQuiz> {
                 ),
               ),
               const SizedBox(height: 10),
+              isOver
+                  ? Text(
+                      "Risposte corrette: $correctAnswers/$maxQuestion, Risposte errate: ${maxQuestion - correctAnswers}.\nRange di voto finale, in base allo scritto: [${(11.33 + correctAnswers ~/ 3).toInt().toString()}, ${22 + correctAnswers * 2 ~/ 3}]")
+                  : const Text(""),
               // CONTROLS
               Expanded(
                 child: Align(
@@ -276,42 +320,4 @@ class _ViewQuizState extends State<ViewQuiz> {
       ),
     );
   }
-
-  final questionsTest = const [
-    "Sia P un politopo, H un generico iperpiano, HS uno dei due semispazi generati da H. Insieme dei punti f = intersezione tra P e HS è detta:",
-    "In un tableau del simplesso primale, gli elementi della colonna 0 righe da 1 a m:",
-    "Ad una variabile primale non negativa corrisponde",
-    "Dato un insieme F, un intorno è",
-  ];
-  final answersTest = const [
-    [
-      "A. Politopo convesso ammissibile",
-      "B. Regione ammissibile",
-      "C. Faccia del politopo se f non vuoto e contenuto in H",
-      "D. Insieme di punti ottimi contenuti in H",
-      "E. Nessuna di queste"
-    ],
-    [
-      "A. contengono i valori attuali delle sole variabili base",
-      "B. sono tutti nulli",
-      "C. contengono i valori attuali di tutte le variabili",
-      "D. contengono i costi relativi",
-      "E. contengono i valori ottimi delle sole variabili base"
-    ],
-    [
-      "A. nessuna di queste",
-      "B. un vincolo duale della forma pi'a^ <= c",
-      "C. un vincolo duale nella forma pi'a^ = c",
-      "D. una variabile duale non negativa",
-      "E. una variabile duale libera (non ristretta in segno)",
-    ],
-    [
-      "A. L'insieme di tutti i sottoinsiemi di F",
-      "B. L'insieme dei punti di F a distanza minore di epsilon da un punto x di F",
-      "C. Una funzione N: F -> 2^F",
-      "D. Una combinazione convessa di due punti x e y di F",
-      "E. Nessuna di queste",
-    ]
-  ];
-  final correctAnswersTest = ["C", "A", "D", "C"];
 }

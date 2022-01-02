@@ -21,7 +21,7 @@ class ViewMenu extends StatelessWidget {
               //WebsafeSvg.asset("icons/icon-test.svg", width: 300, height: 300),
               const Text("ROQuiz",
                   style: TextStyle(
-                    fontSize: 70,
+                    fontSize: 54,
                     fontWeight: FontWeight.bold, /*fontStyle: FontStyle.italic*/
                   )),
               Text(
@@ -60,15 +60,23 @@ class ViewMenu extends StatelessWidget {
               const SizedBox(height: 10),
               InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ViewTopics()));
+                  /*Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ViewTopics()));*/
                 },
+                // remove those to enable splash effects
+                splashColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
                 child: Container(
                   alignment: Alignment.center,
                   width: 400, // fix: fit <->
                   height: 60,
                   decoration: const BoxDecoration(
-                      gradient: kPrimaryGradient,
+                      gradient: LinearGradient(
+                        colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   child: const Text(
                     "Argomenti",
@@ -104,13 +112,21 @@ class ViewMenu extends StatelessWidget {
                   Column(
                     children: [
                       InkWell(
+                        // remove those to enable splash effects
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         onTap: () {},
                         child: Container(
                           alignment: Alignment.center,
                           width: 60, // fix: fit <->
                           height: 60,
                           decoration: const BoxDecoration(
-                              gradient: kPrimaryGradient,
+                              gradient: LinearGradient(
+                                colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30))),
                           child: const Icon(
@@ -138,10 +154,8 @@ class ViewMenu extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
                     ],
                   ),
-                  const SizedBox(width: 20),
                 ],
               )
             ],
