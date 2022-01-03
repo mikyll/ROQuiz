@@ -57,9 +57,7 @@ class _ViewQuizState extends State<ViewQuiz> {
     setState(() {
       userAnswers[qIndex] = Answer.values[answer];
       if (Answer.values[answer] ==
-          widget.qRepo.questions[qIndex].correctAnswer) {
-        correctAnswers++;
-      }
+          widget.qRepo.questions[qIndex].correctAnswer) {}
     });
   }
 
@@ -68,7 +66,11 @@ class _ViewQuizState extends State<ViewQuiz> {
       isOver = true;
       _timer.cancel();
     });
-    //print("Risposte Corrette: $correctAnswers/$maxQuestion\n");
+    for (int i = 0; i < maxQuestion; i++) {
+      if (userAnswers[i] == widget.qRepo.questions[i].correctAnswer) {
+        correctAnswers++;
+      }
+    }
   }
 
   void _startTimer() {
