@@ -18,14 +18,27 @@ L'obbiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teo
 
 ### Demo
 
+#### Desktop
 <table style="border: none">
   <tr>
-    <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/%5BGIF%5D%20EndQuiz.gif" alt="EndQuizGIF"/></td>
-    <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/%5BGIF%5D%20Timeout.gif" alt="TimeoutGIF"/></td>
+    <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
+    <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
   </tr>
   <tr>
-    <td>Terminazione quiz</td>
-    <td>Tempo scaduto</td>
+    <td align="center">Terminazione quiz</td>
+    <td align="center">Tempo scaduto</td>
+  </tr>
+</table>
+
+#### Mobile
+<table style="border: none">
+  <tr>
+    <td width="49.9%"><img width=50% src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] MobileInstall.gif" alt="InstallMobileGIF"/></td>
+    <td width="49.9%"><img width=50% src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] MobileUsage.gif" alt="MobileUsageGIF"/></td>
+  </tr>
+  <tr>
+    <td align="center">Installazione versione mobile</td>
+    <td align="center">Terminazione quiz</td>
   </tr>
 </table>
 
