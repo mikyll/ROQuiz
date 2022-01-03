@@ -5,7 +5,7 @@ Applicazione mobile di ROQuiz, per esercitarsi con i quiz del corso Ricerca Oper
 ### Demo
 
 ### Esecuzione
-1. Scaricare [roquiz.apk](https://github.com/mikyll/ROQuiz/releases/download/v1.3-mobile_beta/roquiz.apk).
+1. Scaricare l'[apk](https://github.com/mikyll/ROQuiz/releases/download/v1.3-mobile_beta/roquiz_v1.3-mobile_beta.apk).
 2. Selezionare ```INSTALLA``` e ```INSTALLA COMUNQUE```.
 
 ### Roadmap
@@ -23,5 +23,5 @@ Features da aggiungere e sviluppi futuri:
 ### Built With
 Per l'implementazione ho utilizzato dell'app mobile ho utilizzato Flutter e come IDE Visual Studio Code (versione 1.63.2) + estensioni Flutter e Dart.
 
-versione Flutter: 2.8.1
+versione Flutter: 2.8.1<br/>
 versione Dart: 2.15.1
