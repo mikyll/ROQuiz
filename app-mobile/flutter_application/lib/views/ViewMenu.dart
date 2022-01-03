@@ -78,6 +78,7 @@ class ViewMenuState extends State<ViewMenu> {
               ),
               const SizedBox(height: 10),
               InkWell(
+                enableFeedback: true,
                 onTap: () {
                   /*Navigator.push(context,
                       MaterialPageRoute(builder: (context) => ViewTopics()));*/

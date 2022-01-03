@@ -402,7 +402,7 @@ D. Primale ottimo finito / Duale impossibile.
 E. Nessuna di queste.
 C
 
-La situazione primale illimitato e corrispondente duale illimitato:
+La situazione "primale illimitato" e corrispondente "duale illimitato":
 A. dipende dal gradiente della funzione obiettivo del primale.
 B. non può mai verificarsi.
 C. può verificarsi sotto determinate condizioni.

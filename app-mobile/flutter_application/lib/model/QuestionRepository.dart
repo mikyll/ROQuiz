@@ -18,7 +18,7 @@ class QuestionRepository {
   Future<void> loadFile() async {
     try {
       int numPerTopic = 0, totQuest = 0;
-      String fileText = await rootBundle.loadString("assets/domande.txt");
+      String fileText = await rootBundle.loadString("assets/Domande.txt");
       // print(fileText); // test
 
       LineSplitter ls = const LineSplitter();

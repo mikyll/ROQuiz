@@ -173,6 +173,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                     ...List.generate(
                       currentAnswers.length,
                       (index) => InkWell(
+                        enableFeedback: true,
                         onTap: () {
                           if (!isOver) {
                             setUserAnswer(index);
@@ -193,8 +194,13 @@ class _ViewQuizState extends State<ViewQuiz> {
                                         : (widget.qRepo.questions[qIndex]
                                                         .correctAnswer ==
                                                     Answer.values[index] &&
-                                                userAnswers[qIndex] ==
-                                                    Answer.NONE
+                                                (userAnswers[qIndex] ==
+                                                        Answer.NONE ||
+                                                    userAnswers[qIndex] !=
+                                                        widget
+                                                            .qRepo
+                                                            .questions[qIndex]
+                                                            .correctAnswer)
                                             ? Colors.green[900]
                                             : (widget.qRepo.questions[qIndex]
                                                         .correctAnswer ==
@@ -238,82 +244,6 @@ class _ViewQuizState extends State<ViewQuiz> {
                   ? Text(
                       "Risposte corrette: $correctAnswers/$maxQuestion, Risposte errate: ${maxQuestion - correctAnswers}.\nRange di voto finale, in base allo scritto: [${(11.33 + correctAnswers ~/ 3).toInt().toString()}, ${22 + correctAnswers * 2 ~/ 3}]")
                   : const Text(""),
-              // CONTROLS
-              /*Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          previousQuestion();
-                          loadQuestion();
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 60, // fix: fit <->
-                          height: 60,
-                          decoration: const BoxDecoration(
-                              gradient: kPrimaryGradient,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          child: const Icon(
-                            Icons.arrow_back_ios_rounded,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      InkWell(
-                        onTap: () {
-                          nextQuestion();
-                          loadQuestion();
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 60, // fix: fit <->
-                          height: 60,
-                          decoration: const BoxDecoration(
-                              gradient: kPrimaryGradient,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          child: const Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 50),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            if (!isOver) {
-                              endQuiz();
-                            }
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: 250, // fix: fit <->
-                            height: 60,
-                            decoration: const BoxDecoration(
-                                gradient: kPrimaryGradient,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30))),
-                            child: const Text("Termina",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )*/
             ],
           ),
         ),
@@ -322,13 +252,14 @@ class _ViewQuizState extends State<ViewQuiz> {
         Row(
           children: [
             InkWell(
+              enableFeedback: true,
               onTap: () {
                 previousQuestion();
                 loadQuestion();
               },
               child: Container(
                 alignment: Alignment.center,
-                width: 60, // fix: fit <->
+                width: 60,
                 height: 60,
                 decoration: const BoxDecoration(
                     gradient: kPrimaryGradient,
@@ -342,6 +273,7 @@ class _ViewQuizState extends State<ViewQuiz> {
             ),
             const SizedBox(width: 20),
             InkWell(
+              enableFeedback: true,
               onTap: () {
                 nextQuestion();
                 loadQuestion();
@@ -362,6 +294,7 @@ class _ViewQuizState extends State<ViewQuiz> {
             ),
             const Spacer(flex: 5),
             InkWell(
+              enableFeedback: true,
               onTap: () {
                 if (!isOver) {
                   endQuiz();
