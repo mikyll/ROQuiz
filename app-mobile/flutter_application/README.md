@@ -1,16 +1,27 @@
-# flutter_application
+# ROQuiz
 
-A new Flutter project.
+Applicazione mobile di ROQuiz, per esercitarsi con i quiz del corso Ricerca Operativa M. 
 
-## Getting Started
+### Demo
 
-This project is a starting point for a Flutter application.
+### Esecuzione
+1. Scaricare [roquiz.apk](https://github.com/mikyll/ROQuiz/releases/download/v1.3-mobile_beta/roquiz.apk).
+2. Selezionare ```INSTALLA``` e ```INSTALLA COMUNQUE```.
 
-A few resources to get you started if this is your first Flutter project:
+### Roadmap
+Features da aggiungere e sviluppi futuri:
+- [x] pubblicare una prima versione con le funzionalità base (BETA)
+- [ ] pulire il codice
+- [ ] aggiungere ViewSettings
+- [ ] aggiungere ViewInfo
+- [ ] aggiungere ViewTopics
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### Compilazione APK
+- default: ```flutter build apk --split-per-abi```
+- obfuscated: ```flutter build apk --obfuscate --split-debug-info=flutter_application/debug```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Built With
+Per l'implementazione ho utilizzato dell'app mobile ho utilizzato Flutter e come IDE Visual Studio Code (versione 1.63.2) + estensioni Flutter e Dart.
+
+versione Flutter: 2.8.1
+versione Dart: 2.15.1
