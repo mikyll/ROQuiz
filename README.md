@@ -30,8 +30,14 @@ L'obbiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teo
 </table>
 
 ### Esecuzione
+
+#### Versione Desktop (Windows e Linux)
 1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.2/ROQuizDeployWindows.zip) o [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.2/ROQuizDeployLinux.tar.gz)) ed estrarre il contenuto.
 2. Eseguire Launcher con doppioclick.
+
+#### Versione Mobile (Android)
+1. Scaricare [roquiz.apk](https://github.com/mikyll/ROQuiz/releases/download/v1.3-mobile_beta/roquiz.apk).
+2. Selezionare ```INSTALLA``` e ```INSTALLA COMUNQUE```.
 
 ### Formattazione domande
 Le domande sono caricate da un file "<a href="https://github.com/mikyll/ROQuiz/blob/main/Domande.txt">Domande.txt</a>" che ha il seguente formato:
@@ -76,14 +82,14 @@ A
 
 ### Contribuire
 Aggiunta domande o feature al progetto:
-1. Fare una fork della repository.
+1. Fare una **fork** della repository.
 2. Clonare la repository in locale.
 3. (Opzionale) Creare un nuovo branch.
 4. Aggiungere le modifiche:
   * Per aggiungere nuove domande: modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi. NB: in caso non si sappia sotto quale argomento inserire una somanda, scriverlo successivamente in un commento nella pull request.<br/>
   * Per aggiungere delle feature, basta implementarle e integrarle col resto dell'applicazione (in caso di dubbi o domande sul funzionamento di alcune parti di codice, basta aprire un issue e cercherò di rispondere il prima possibile).
 5. Fare commit e push.
-6. Creare una pull request aggiungendo informazioni se necessario.
+6. Creare una **pull request** aggiungendo informazioni se necessario.
 
 Proposta feature:
 1. Aprire un issue spiegando in cosa consiste la feature da aggiungere.
@@ -91,11 +97,14 @@ Proposta feature:
 
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
+- [x] aggiungere la scelta degli argomenti
+- [ ] fare il porting su mobile
+  - [x] [Android](https://github.com/mikyll/ROQuiz/releases/tag/v1.3-mobile_beta)
+  - [ ] iOS
 - [ ] deploy su MacOS
 - [ ] aggiungere file di configurazione (xml o JSON) per rendere le modifiche alle impostazioni persistenti
 - [ ] aggiungere test domande duplicate
 - [ ] creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
-- [ ] fare il porting su mobile (magari Android)
 
 ### Built With
 Per l'implementazione ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20Setup.md).
@@ -103,7 +112,7 @@ Per l'implementazione ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versi
 versione Java: JavaSE-11 (jdk-11.0.11)<br/>
 versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 
-### References
+### Riferimenti
 * Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
 * Lavorare coi moduli Java: [Java 9 Modules in Eclipse](https://blogs.oracle.com/java/post/how-to-develop-modules-with-eclipse-ide)
 * Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
