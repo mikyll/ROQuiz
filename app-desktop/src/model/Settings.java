@@ -1,7 +1,7 @@
 package model;
 
 public class Settings {
-	public final static double VERSION_NUMBER = 1.2;
+	public final static double VERSION_NUMBER = 1.3;
 	public final static int DEFAULT_QUESTION_NUMBER = 16;
 	public final static int DEFAULT_ANSWER_NUMBER = 5;
 	public final static int DEFAULT_TIMER = 18;
