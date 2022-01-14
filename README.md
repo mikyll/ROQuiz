@@ -33,8 +33,8 @@ L'obbiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teo
 #### Mobile
 <table style="border: none">
   <tr>
-    <td width="49.9%"><img width=50% src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] MobileInstall.gif" alt="InstallMobileGIF"/></td>
-    <td width="49.9%"><img width=50% src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] MobileUsage.gif" alt="MobileUsageGIF"/></td>
+    <td align="center"><img width=50% src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] MobileInstall.gif" alt="InstallMobileGIF"/></td>
+    <td align="center"><img width=50% src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] MobileUsage.gif" alt="MobileUsageGIF"/></td>
   </tr>
   <tr>
     <td align="center">Installazione versione mobile</td>
