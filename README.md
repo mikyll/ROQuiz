@@ -119,7 +119,7 @@ Features da aggiungere e sviluppi futuri:
 - [ ] aggiungere test domande duplicate
 - [ ] verifica aggiornamenti(?)
 - [ ] creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
-- [ ] desktop: aggiungere impostazione dark mode
+- [ ] desktop: aggiungere impostazione dark mode ([riferimento utile](https://stackoverflow.com/questions/49159286/make-a-dark-mode-with-javafx))
 - [ ] mobile: fare refactor e sistemare le classi (usare classe Quiz)
 - [ ] mobile: aggiungere scelta argomenti
 - [ ] mobile: aggiungere possibilità di caricare un file domande personalizzato
