@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" layoutX="50.0" layoutY="50.0" prefHeight="350.0" prefWidth="500.0">
          <children>
@@ -51,7 +51,7 @@
             </HBox>
          </children>
       </VBox>
-      <HBox layoutX="180.0" layoutY="426.0" prefHeight="40.0" prefWidth="240.0" spacing="20.0">
+      <HBox layoutX="180.0" layoutY="426.0" prefHeight="40.0" prefWidth="340.0" spacing="20.0">
          <children>
             <Button fx:id="buttonPrev" disable="true" mnemonicParsing="false" onAction="#previousQuestion" prefHeight="40.0" prefWidth="40.0">
                <graphic>
@@ -71,6 +71,7 @@
             </Button>
             <Separator orientation="VERTICAL" prefHeight="40.0" prefWidth="20.0" visible="false" />
             <Button fx:id="buttonEndReset" mnemonicParsing="false" onAction="#endResetQuiz" prefHeight="40.0" prefWidth="80.0" text="Termina" />
+            <Button fx:id="buttonMenu" mnemonicParsing="false" onAction="#selectMenu" prefHeight="40.0" prefWidth="80.0" text="Menu" visible="false" />
          </children>
       </HBox>
       <ComboBox layoutX="50.0" layoutY="100.0" prefHeight="25.0" prefWidth="100.0" promptText="Questions" visible="false" />

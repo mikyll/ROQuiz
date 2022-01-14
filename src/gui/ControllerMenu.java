@@ -153,7 +153,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void startQuiz(ActionEvent event)
+	public void selectQuiz(ActionEvent event)
 	{
 		System.out.println("Selezione: avvia quiz.\nArgomenti impostati:");
 		

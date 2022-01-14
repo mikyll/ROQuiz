@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -15,7 +18,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Answer;
 import model.Question;
@@ -44,6 +49,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	@FXML private Button buttonPrev;
 	@FXML private Button buttonNext;
 	@FXML private Button buttonEndReset;
+	@FXML private Button buttonMenu;
 	
 	@FXML private Label labelTimer;
 	
@@ -64,6 +70,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	public void initialize()
 	{
 		// style? Example: remove focus glow on text area and textfields
+		this.buttonMenu.setVisible(false);
 		
 		this.settings = Settings.getInstance();
 		this.initRadioArray();
@@ -275,12 +282,12 @@ public class ControllerQuiz implements IControllerQuiz{
 	@Override
 	public void endQuiz()
 	{
-		
 		Quiz q = this.quiz;
 		q.checkAnswers();
 		this.quizTerminated = true;
 		
 		this.vboxResult.setVisible(true);
+		this.buttonMenu.setVisible(true);
 		this.labelGivenAnswers.setText("" + q.getGivenAnswers());
 		this.labelCorrectAnswers.setText("" + q.getCorrectAnswers());
 		this.labelWrongAnswers.setText("" + (this.settings.getQuestionNumber()-q.getCorrectAnswers()));
@@ -334,5 +341,27 @@ public class ControllerQuiz implements IControllerQuiz{
 		int sec = this.timeout % 60;
 		String seconds = sec < 10 ? ("0" + sec) : ("" + sec);
 		this.labelTimer.setText("" + min + ":" + seconds);
+	}
+	
+	@FXML
+	public void selectMenu(ActionEvent event) {
+		System.out.println("Selezione: menu principale.");
+		
+		// load
+		try {
+			FXMLLoader loader = new FXMLLoader(ControllerMenu.class.getResource("/gui/ViewMenu.fxml"));
+			Stage stage = (Stage) this.vboxResult.getScene().getWindow();
+			//loader.setController(new ControllerMenu());
+			AnchorPane menu = (AnchorPane) loader.load();
+		
+			Scene scene = new Scene(menu);
+			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/application.css").toExternalForm());
+			stage.setScene(scene);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("ERRORE: " + e.getMessage());
+			System.exit(1);
+		}
 	}
 }

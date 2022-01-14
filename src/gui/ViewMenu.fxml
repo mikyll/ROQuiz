@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
    <children>
       <Label alignment="CENTER" layoutX="309.0" layoutY="48.0" minHeight="50.0" minWidth="150.0" text="ROQuiz">
          <font>
@@ -41,7 +41,7 @@
                </font>
             </Label>
             <Separator prefHeight="10.0" prefWidth="400.0" visible="false" />
-            <Button fx:id="buttonStart" mnemonicParsing="false" onAction="#startQuiz" prefHeight="50.0" prefWidth="260.0" text="Avvia">
+            <Button fx:id="buttonStart" mnemonicParsing="false" onAction="#selectQuiz" prefHeight="50.0" prefWidth="260.0" text="Avvia">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
