@@ -17,7 +17,7 @@
 ### Versioni disponibili
 - Desktop
 - Android
-- iOs
+- iOS
 
 ### Funzionalità
 - 85 domande a scelta multipla a tempo divise per argomento (elenco aggiornato al _15 luglio 2021_)
@@ -55,7 +55,7 @@
 ### Esecuzione
 
 #### Versione Desktop (Windows e Linux)
-1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.2/ROQuizDeployWindows.zip) o [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.2/ROQuizDeployLinux.tar.gz)) ed estrarre il contenuto.
+1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.3/ROQuizDeployWindows.zip) o [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.3/ROQuizDeployLinux.tar.gz)) ed estrarre il contenuto.
 2. Eseguire Launcher con doppioclick.
 
 #### Versione Mobile (Android)
