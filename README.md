@@ -17,7 +17,7 @@
 ### Versioni disponibili
 - Desktop
 - Android
-- iOs
+- iOS
 
 ### Funzionalità
 - 85 domande a scelta multipla a tempo divise per argomento (elenco aggiornato al _15 luglio 2021_)
