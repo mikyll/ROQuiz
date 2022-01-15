@@ -1,3 +1,5 @@
+<div align="center">
+
 [![Downloads][downloads-shield]][downloads-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -7,14 +9,22 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![GitHub followers][github-shield]][github-url]
 
-<h1 align="center">ROQuiz</h1>
-Applicazione grafica Java per esercitarsi con i <b>quiz del corso Ricerca Operativa M</b>.
-È possibile caricare un file con le varie domande (aggiornate al <i>15 luglio 2021</i>) divise per argomento, quindi si possono inserire eventuali domande nuove o personalizzate, ed è possibile selezionare gli argomenti di interesse; terminato il quiz vengono mostrate le risposte corrette e quelle sbagliate.
-il numero di domande di default è 16, così come il timer è impostato a 18 minuti in quanto l'esame è in questa forma, ma è possibile modificare questi parametri nelle impostazioni dell'applicazione.
+<h1> ROQuiz</h1>
+<h3> Applicazione multipiattaforma per esercitarsi con i quiz del corso Ricerca Operativa M.</h3>
+<hr class="rounded">
+</div>
 
-Chiunque voglia <a href="#contribuire">contribuire</a> è liberissimo di fare una fork e aggiungere e implementare feature nuove o sistemare parti del codice già esistente.
+### Versioni disponibili
+- Desktop
+- Android
+- iOs
 
-L'obbiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teoria (molto meglio se dal libro, in quanto è completo ed esaustivo). <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
+### Funzionalità
+- 85 domande a scelta multipla a tempo divise per argomento (elenco aggiornato al _15 luglio 2021_)
+- Possibilità di scelta di specifici argomenti
+- Possibilità di scelta di un numero specifico di domande (default: 16, selezionate casualmente)
+- Possibilità di modificare il tempo a disposizione per le domande (default: 18 minuti)
+- Possibilità di inserimento di nuove domande
 
 ### Demo
 
@@ -129,6 +139,9 @@ Per l'implementazione ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versi
 
 versione Java: JavaSE-11 (jdk-11.0.11)<br/>
 versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
+
+### Disclaimer
+L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teoria (molto meglio se dal libro, in quanto è completo ed esaustivo). <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
 
 ### Riferimenti
 * Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
