@@ -1,9 +1,11 @@
 package gui;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class ControllerMenu implements IControllerMenu {
 		this.settings = Settings.getInstance();
 		
 		String fileName = "Domande.txt";
-		try (Reader readerQuiz = new FileReader(fileName)){
+		try (BufferedReader readerQuiz = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.ISO_8859_1))){
 			this.qRepo = new QuestionRepository(readerQuiz);
 		} catch (FileNotFoundException e) {
 			System.out.println("File " + fileName + " mancante.");

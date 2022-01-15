@@ -75,7 +75,7 @@
          </children>
       </HBox>
       <ComboBox layoutX="50.0" layoutY="100.0" prefHeight="25.0" prefWidth="100.0" promptText="Questions" visible="false" />
-      <VBox fx:id="vboxResult" layoutX="584.0" layoutY="140.0" prefHeight="200.0" prefWidth="180.0" visible="false">
+      <VBox fx:id="vboxResult" layoutX="550.0" layoutY="140.0" prefHeight="200.0" prefWidth="220.0" visible="false">
          <children>
             <Label alignment="CENTER" prefHeight="30.0" prefWidth="200.0" text="Risultato:">
                <font>
@@ -84,7 +84,7 @@
             </Label>
             <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="100.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="110.0" text="Risposte Date:">
+                  <Label prefHeight="30.0" prefWidth="130.0" text="Risposte Date:">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -98,7 +98,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="100.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="110.0" style="-fx-text-fill: rgb(0,200,0);" text="Risposte Esatte:">
+                  <Label prefHeight="30.0" prefWidth="130.0" style="-fx-text-fill: rgb(0,200,0);" text="Risposte Esatte:">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -112,7 +112,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="100.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="110.0" style="-fx-text-fill: red;" text="Risposte Errate:">
+                  <Label prefHeight="30.0" prefWidth="130.0" style="-fx-text-fill: red;" text="Risposte Errate:">
                      <font>
                         <Font size="16.0" />
                      </font>

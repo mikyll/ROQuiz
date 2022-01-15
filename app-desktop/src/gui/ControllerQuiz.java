@@ -71,6 +71,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	{
 		// style? Example: remove focus glow on text area and textfields
 		this.buttonMenu.setVisible(false);
+		this.vboxResult.setVisible(false);
 		
 		this.settings = Settings.getInstance();
 		this.initRadioArray();
