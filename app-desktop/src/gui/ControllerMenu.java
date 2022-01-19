@@ -58,7 +58,6 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Label labelSelectedQ;
 	
 	@FXML private Spinner<Integer> spinnerQuestionNumQuiz;
-	@FXML private Spinner<Integer> spinnerAnswerNumQuiz;
 	@FXML private Spinner<Integer> spinnerTimerMin;
 	@FXML private Button buttonSettingsSave;
 	@FXML private Button buttonSettingsCancel;
@@ -113,8 +112,6 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxInfo.setVisible(false);
 
 		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(16, qNum, this.settings.getQuestionNumber()));
-		this.spinnerAnswerNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(4, 10, this.settings.getAnswerNumber()));
-		this.spinnerAnswerNumQuiz.setDisable(true); // answer number is fixed
 		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(5, qNum * 2, this.settings.getTimer()));
 		
 		this.textVersion.setText("ROQuiz v" + Settings.VERSION_NUMBER);
@@ -224,7 +221,7 @@ public class ControllerMenu implements IControllerMenu {
 		System.out.println("Selezione: indietro.");
 		
 		if(this.vboxSettings.isVisible() &&	(this.settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() ||
-				this.settings.getAnswerNumber() != this.spinnerAnswerNumQuiz.getValue() || this.settings.getTimer() != this.spinnerTimerMin.getValue()))
+				this.settings.getAnswerNumber() != Settings.DEFAULT_ANSWER_NUMBER || this.settings.getTimer() != this.spinnerTimerMin.getValue()))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
@@ -278,22 +275,19 @@ public class ControllerMenu implements IControllerMenu {
 		System.out.println("Impostazioni di default.");
 		
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(Settings.DEFAULT_QUESTION_NUMBER);
-		this.spinnerAnswerNumQuiz.getValueFactory().setValue(Settings.DEFAULT_ANSWER_NUMBER);
 		this.spinnerTimerMin.getValueFactory().setValue(Settings.DEFAULT_TIMER);
 	}
 	
 	private void saveSettingsChanges()
 	{
-		int sqnq, sanq, stm;
+		int sqnq, stm;
 		sqnq = this.spinnerQuestionNumQuiz.getValue();
-		sanq = this.spinnerAnswerNumQuiz.getValue();
 		stm = this.spinnerTimerMin.getValue();
 		
 		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
-				sqnq + "\nNumero risposte: " + sanq + "\nTimer (minuti): " + stm);
+				sqnq + "\nTimer (minuti): " + stm);
 		
 		this.settings.setQuestionNumber(sqnq);
-		this.settings.setAnswerNumber(sanq);
 		this.settings.setTimer(stm);
 		
 		if(this.qRepo.hasTopics())
@@ -312,7 +306,6 @@ public class ControllerMenu implements IControllerMenu {
 		System.out.println("Modifiche alle impostazioni annullate.");
 		
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(this.settings.getQuestionNumber());
-		this.spinnerAnswerNumQuiz.getValueFactory().setValue(this.settings.getAnswerNumber());
 		this.spinnerTimerMin.getValueFactory().setValue(this.settings.getTimer());
 	}
 	
