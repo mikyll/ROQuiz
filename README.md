@@ -131,7 +131,8 @@ Features da aggiungere e sviluppi futuri:
 - [ ] deploy su MacOS
 - [ ] aggiungere file di configurazione (xml o JSON) per rendere le modifiche alle impostazioni persistenti
 - [ ] aggiungere test domande duplicate
-- [ ] verifica aggiornamenti(?)
+- [ ] verifica aggiornamenti app
+- [ ] download domande aggiornate ([riferimento utile](https://stackoverflow.com/questions/24748331/java-api-to-get-a-file-content-for-enterprise-github))
 - [ ] creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
 - [ ] desktop: aggiungere impostazione dark mode ([riferimento utile](https://stackoverflow.com/questions/49159286/make-a-dark-mode-with-javafx))
 - [ ] mobile: fare refactor e sistemare le classi (usare classe Quiz)
