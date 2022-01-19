@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
    <children>
       <Label alignment="CENTER" layoutX="309.0" layoutY="48.0" minHeight="50.0" minWidth="150.0" text="ROQuiz">
          <font>
@@ -76,49 +76,64 @@
             </Button>
          </children>
       </VBox>
-      <VBox fx:id="vboxTopics" alignment="TOP_CENTER" layoutX="184.0" layoutY="98.0" prefHeight="350.0" prefWidth="500.0" visible="false">
+      <VBox fx:id="vboxTopics" alignment="TOP_CENTER" layoutX="100.0" layoutY="95.0" prefHeight="350.0" prefWidth="568.0" visible="false">
          <children>
-            <HBox prefHeight="40.0" prefWidth="400.0">
+            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="400.0">
                <children>
-                  <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Argomenti">
+                  <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" prefHeight="40.0" prefWidth="200.0" text="Argomenti" textAlignment="CENTER">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
                </children>
-               <padding>
-                  <Insets left="125.0" />
-               </padding>
             </HBox>
             <Separator prefHeight="20.0" prefWidth="200.0" visible="false" />
-            <HBox alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="400.0" spacing="2.0">
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="400.0" spacing="2.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" minHeight="40.0" minWidth="140.0" text="Domande selezionate:">
+                  <Label alignment="CENTER_RIGHT" minHeight="30.0" minWidth="140.0" text="Domande totali caricate:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelSelectedQ" prefHeight="40.0" prefWidth="30.0" text="20">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label alignment="CENTER_RIGHT" minHeight="40.0" minWidth="180.0" text="Numero domande per quiz:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="labelQuizQNum" prefHeight="40.0" prefWidth="30.0" text="16">
+                  <Label fx:id="labelSelectedQ11" prefHeight="30.0" prefWidth="30.0" text="85">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <VBox fx:id="vboxCheckBoxes" prefHeight="250.0" prefWidth="400.0" spacing="5.0">
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="400.0" spacing="2.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" minHeight="30.0" minWidth="140.0" text="Domande selezionate:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelSelectedQ" minHeight="30.0" prefHeight="30.0" prefWidth="30.0" text="20">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" minHeight="30.0" minWidth="180.0" text="Numero domande per quiz:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelQuizQNum" minHeight="30.0" prefHeight="30.0" prefWidth="30.0" text="16">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Separator prefHeight="10.0" prefWidth="200.0" visible="false" />
+            <VBox fx:id="vboxCheckBoxes" prefHeight="220.0" prefWidth="368.0" spacing="5.0">
                <padding>
                   <Insets left="50.0" />
                </padding>
+               <VBox.margin>
+                  <Insets left="100.0" right="100.0" />
+               </VBox.margin>
             </VBox>
          </children></VBox>
       <VBox fx:id="vboxBack" alignment="CENTER" layoutX="133.0" layoutY="375.0" prefHeight="90.0" prefWidth="50.0" visible="false">
@@ -195,7 +210,7 @@
                   <Separator prefHeight="15.0" prefWidth="300.0" visible="false" />
                   <HBox alignment="CENTER_LEFT" disable="true" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <Label minHeight="27.0" minWidth="240.0" text="Modalità Scura:">
+                        <Label minHeight="27.0" minWidth="240.0" text="Tema Scuro:">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -226,7 +241,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Separator prefHeight="50.0" prefWidth="400.0" visible="false" />
+            <Separator prefHeight="30.0" prefWidth="400.0" visible="false" />
             <VBox alignment="TOP_CENTER" prefHeight="260.0" prefWidth="400.0">
                <children>
                   <TextFlow prefHeight="27.0" prefWidth="250.0" textAlignment="CENTER">
@@ -264,7 +279,7 @@
                   </TextFlow>
                   <TextFlow prefHeight="27.0" prefWidth="400.0" textAlignment="CENTER">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Repository GitHub:" wrappingWidth="145.3115234375">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Repository GitHub:" wrappingWidth="291.2578125">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -303,6 +318,34 @@
                            </font>
                         </Hyperlink>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="su GitHub!" wrappingWidth="145.3115234375">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </TextFlow>
+                  <Separator prefHeight="50.0" prefWidth="400.0" visible="false" />
+                  <TextFlow prefHeight="46.0" prefWidth="342.0" textAlignment="CENTER">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Se l'app ti è stata utile, considera di lasciare una stellina" wrappingWidth="145.3115234375">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Hyperlink>
+                           <graphic>
+                              <Label prefHeight="20.0" prefWidth="18.0">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../gfx/icon_star.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                           </graphic>
+                        </Hyperlink>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="alla repository su GitHub, basta un click e sono molto apprezzate! :-)" wrappingWidth="145.3115234375">
                            <font>
                               <Font size="14.0" />
                            </font>
