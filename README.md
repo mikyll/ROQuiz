@@ -6,6 +6,9 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+<br/>
+[![java][java-shield]][java-url]
+[![flutter][flutter-shield]][flutter-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![GitHub followers][github-shield]][github-url]
 
@@ -163,6 +166,10 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 [issues-url]: https://github.com/mikyll/ROQuiz/issues
 [license-shield]: https://img.shields.io/github/license/mikyll/ROQuiz
 [license-url]: https://github.com/mikyll/ROQuiz/blob/master/LICENSE
+[java-shield]: https://img.shields.io/badge/Java-ED8B00?logo=java&logoColor=white
+[java-url]: https://www.java.com
+[flutter-shield]: https://img.shields.io/badge/Flutter-%2302569B.svg?logo=Flutter&logoColor=white
+[flutter-url]: https://flutter.dev/
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?logo=linkedin&colorB=0077B5
 [linkedin-url]: https://www.linkedin.com/in/michele-righi/?locale=it_IT
 [github-shield]: https://img.shields.io/github/followers/mikyll.svg?style=social&label=Follow
