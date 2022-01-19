@@ -352,7 +352,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		try {
 			FXMLLoader loader = new FXMLLoader(ControllerMenu.class.getResource("/gui/ViewMenu.fxml"));
 			Stage stage = (Stage) this.vboxResult.getScene().getWindow();
-			//loader.setController(new ControllerMenu());
+			// loader.setController(new ControllerMenu());
 			AnchorPane menu = (AnchorPane) loader.load();
 		
 			Scene scene = new Scene(menu);
