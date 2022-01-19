@@ -148,6 +148,7 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * Lavorare coi moduli Java: [Java 9 Modules in Eclipse](https://blogs.oracle.com/java/post/how-to-develop-modules-with-eclipse-ide)
 * Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
 * JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
+<!--* [Doc LaTeX con definizioni per la teoria](https://github.com/kmfrick/College_Notes/tree/main/RO-M), realizzato da [kmfrick](https://github.com/kmfrick), Corinna Marchili, Sofia Montebugnoli-->
 
 
 [downloads-shield]: https://img.shields.io/github/downloads/mikyll/ROQuiz/total
