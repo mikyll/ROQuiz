@@ -1,8 +1,16 @@
 package persistence;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,7 +123,45 @@ public class QuestionRepository implements IQuestionRepository {
 	public List<Integer> getqNumPerTopics() {return qNumPerTopics;}
 	public boolean hasTopics() {return topicsPresent;}
 	
-	
+	public static void downloadFile(String url, String filename) {
+		try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
+				FileOutputStream fileOutputStream = new FileOutputStream(filename)) {
+			byte dataBuffer[] = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+				fileOutputStream.write(dataBuffer, 0, bytesRead);
+		    }
+		} catch (IOException e) {
+			if(e instanceof UnknownHostException) {
+				System.out.println("An error occurred while trying to reach URL '" + e.getMessage() + "'");
+			}
+			else e.printStackTrace();
+		}
+	}
+	public static long compareFiles(String filename1, String filename2) {
+		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(filename1), StandardCharsets.ISO_8859_1));
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), StandardCharsets.ISO_8859_1))) {
+	        
+	        long lineNumber = 1;
+	        String line1 = "", line2 = "";
+	        while ((line1 = br1.readLine()) != null) {
+	            line2 = br2.readLine();
+	            if (line2 == null || !line1.equals(line2)) {
+	                return lineNumber;
+	            }
+	            lineNumber++;
+	        }
+	        if (br2.readLine() == null) {
+	            return -1;
+	        }
+	        else {
+	            return lineNumber;
+	        }
+	    } catch (IOException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
 	
 	// test main
 	/*public static void main(String args[]) throws BadFileFormatException
