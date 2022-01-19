@@ -324,8 +324,10 @@ public class ControllerMenu implements IControllerMenu {
 			this.hostServies.showDocument("https://github.com/mikyll");
 		if(hl.getText().equals("mikyll/ROQuiz"))
 			this.hostServies.showDocument("https://github.com/mikyll/ROQuiz");
-		if(hl.getText().equals("Icon8"))
+		if(hl.getText().equals("Icons8"))
 			this.hostServies.showDocument("https://icons8.com");
+		if(hl.getText().equals("Apri una issue"))
+			this.hostServies.showDocument("https://github.com/mikyll/ROQuiz/issues");
 	}
 	
 	// public void selectQuizFile() {}

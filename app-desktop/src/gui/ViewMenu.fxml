@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
    <children>
       <Label alignment="CENTER" layoutX="309.0" layoutY="48.0" minHeight="50.0" minWidth="150.0" text="ROQuiz">
          <font>
@@ -210,7 +210,7 @@
                               <Font size="14.0" />
                            </font>
                         </Hyperlink>
-                        <Text fx:id="textVersion" strokeType="OUTSIDE" strokeWidth="0.0" text="ROQuiz v1.2" wrappingWidth="137.721923828125">
+                        <Text fx:id="textVersion" strokeType="OUTSIDE" strokeWidth="0.0" text="ROQuiz v" wrappingWidth="137.721923828125">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -224,7 +224,7 @@
                   </TextFlow>
                   <TextFlow prefHeight="27.0" prefWidth="250.0" textAlignment="CENTER">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Progetto sviluppato da:" wrappingWidth="137.721923828125">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Applicazione sviluppata da:" wrappingWidth="163.90428161621094">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -262,6 +262,25 @@
                               <Font size="14.0" />
                            </font>
                         </Hyperlink>
+                     </children>
+                  </TextFlow>
+                  <TextFlow prefHeight="27.0" prefWidth="400.0" textAlignment="CENTER">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Problemi con l'app?" wrappingWidth="145.3115234375">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Hyperlink minHeight="26.0" minWidth="50.0" onAction="#openURL" text="Apri una issue" underline="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Hyperlink>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="su GitHub!" wrappingWidth="145.3115234375">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
                      </children>
                   </TextFlow>
                </children>
