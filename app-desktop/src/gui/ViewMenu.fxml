@@ -2,10 +2,12 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -22,7 +24,7 @@
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="105.0" prefHeight="330.0" prefWidth="400.0">
+      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="105.0" prefHeight="330.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="200.0" text="Menu Principale">
                <font>
@@ -132,7 +134,7 @@
             </Button>
          </children>
       </VBox>
-      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Impostazioni">
                <font>
@@ -151,39 +153,63 @@
                            <font>
                               <Font size="18.0" />
                            </font>
+                           <tooltip>
+                              <Tooltip prefWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati." wrapText="true" />
+                           </tooltip>
                         </Label>
                         <Spinner fx:id="spinnerQuestionNumQuiz" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
-                  <Label alignment="TOP_LEFT" prefHeight="30.0" prefWidth="400.0" text="*Domande nel file insufficienti" textFill="RED" visible="false">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <HBox alignment="CENTER_LEFT" disable="true" prefHeight="30.0" prefWidth="350.0">
-                     <children>
-                        <Label minHeight="27.0" minWidth="240.0" text="Numero risposte:">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <Spinner fx:id="spinnerAnswerNumQuiz" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0" />
-                     </children>
-                  </HBox>
-                  <Separator prefHeight="30.0" prefWidth="300.0" visible="false" />
+                  <Separator prefHeight="15.0" prefWidth="300.0" visible="false" />
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
                         <Label minHeight="27.0" minWidth="240.0" text="Timer (minuti):">
                            <font>
                               <Font size="18.0" />
                            </font>
+                           <tooltip>
+                              <Tooltip prefWidth="400.0" text="Modifica il tempo di durata complessivo del quiz." wrapText="true" />
+                           </tooltip>
                         </Label>
                         <Spinner fx:id="spinnerTimerMin" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0" />
                      </children>
                   </HBox>
-                  <Separator prefHeight="40.0" prefWidth="300.0" visible="false" />
+                  <Separator prefHeight="15.0" prefWidth="300.0" visible="false" />
+                  <HBox alignment="CENTER_LEFT" disable="true" prefHeight="30.0" prefWidth="350.0">
+                     <children>
+                        <Label minHeight="27.0" minWidth="240.0" text="Aggiornamento domande:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <tooltip>
+                              <Tooltip prefWidth="400.0" text="Abilita/Disabilita l'aggiornamento automatico delle domande. Se abilitato, all'avvio l'app scaricherà automaticamente la versione più recente del file contenente le domande." wrapText="true" />
+                           </tooltip>
+                        </Label>
+                        <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                           <children>
+                              <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Separator prefHeight="15.0" prefWidth="300.0" visible="false" />
+                  <HBox alignment="CENTER_LEFT" disable="true" prefHeight="30.0" prefWidth="350.0">
+                     <children>
+                        <Label minHeight="27.0" minWidth="240.0" text="Modalità Scura:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                           <children>
+                              <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                </children>
             </VBox>
+            <Separator prefHeight="15.0" prefWidth="300.0" visible="false" />
             <HBox alignment="CENTER" prefHeight="40.0" prefWidth="350.0" spacing="20.0">
                <children>
                   <Button fx:id="buttonSettingsSave" mnemonicParsing="false" onAction="#saveSettings" prefHeight="30.0" prefWidth="80.0" text="Salva" />
