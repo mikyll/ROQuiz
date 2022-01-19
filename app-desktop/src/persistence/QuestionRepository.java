@@ -139,30 +139,32 @@ public class QuestionRepository implements IQuestionRepository {
 			else e.printStackTrace();
 		}
 	}
-	public static long compareFiles(String oldFile, String newFile)
+	
+	// check which file is longer. -1 file1 is longer, 0 they're equal, 1 file2 is longer.
+	public static int compareFilesLength(String filename1, String filename2)
 	{
-		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(oldFile), StandardCharsets.ISO_8859_1));
-				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(newFile), StandardCharsets.ISO_8859_1))) {
-			long lineNumber = 1;
+		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(filename1), StandardCharsets.ISO_8859_1));
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), StandardCharsets.ISO_8859_1))) {
+			int lineNumber = 0;
 			String line1 = "", line2 = "";
 			while ((line1 = br1.readLine()) != null)
 			{
 				line2 = br2.readLine();
-				if (line2 == null || !line1.equals(line2))
+				if (line2 == null)
 				{
-					return lineNumber;
+					return -1;
 				}
 				lineNumber++;
 			}
 			if (br2.readLine() == null) {
-				return -1;
+				return 0;
 			}
 			else {
-				return lineNumber;
+				return 1;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			return -1;
+			return 1;
 		}
 	}
 	
