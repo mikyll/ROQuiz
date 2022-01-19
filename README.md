@@ -8,6 +8,7 @@
 [![MIT License][license-shield]][license-url]
 <br/>
 [![java][java-shield]][java-url]
+[![dart][dart-shield]][dart-url]
 [![flutter][flutter-shield]][flutter-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 [![GitHub followers][github-shield]][github-url]
@@ -168,6 +169,8 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 [license-url]: https://github.com/mikyll/ROQuiz/blob/master/LICENSE
 [java-shield]: https://img.shields.io/badge/Java-ED8B00?logo=java&logoColor=white
 [java-url]: https://www.java.com
+[dart-shield]: https://img.shields.io/badge/dart-%230175C2.svg?logo=dart&logoColor=white
+[dart-url]: https://dart.dev/
 [flutter-shield]: https://img.shields.io/badge/Flutter-%2302569B.svg?logo=Flutter&logoColor=white
 [flutter-url]: https://flutter.dev/
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?logo=linkedin&colorB=0077B5
