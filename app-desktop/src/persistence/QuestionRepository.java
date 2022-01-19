@@ -123,7 +123,8 @@ public class QuestionRepository implements IQuestionRepository {
 	public List<Integer> getqNumPerTopics() {return qNumPerTopics;}
 	public boolean hasTopics() {return topicsPresent;}
 	
-	public static void downloadFile(String url, String filename) {
+	public static void downloadFile(String url, String filename)
+	{
 		try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
 				FileOutputStream fileOutputStream = new FileOutputStream(filename)) {
 			byte dataBuffer[] = new byte[1024];
@@ -138,26 +139,28 @@ public class QuestionRepository implements IQuestionRepository {
 			else e.printStackTrace();
 		}
 	}
-	public static long compareFiles(String filename1, String filename2) {
-		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(filename1), StandardCharsets.ISO_8859_1));
-				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), StandardCharsets.ISO_8859_1))) {
-	        
-	        long lineNumber = 1;
-	        String line1 = "", line2 = "";
-	        while ((line1 = br1.readLine()) != null) {
-	            line2 = br2.readLine();
-	            if (line2 == null || !line1.equals(line2)) {
-	                return lineNumber;
-	            }
-	            lineNumber++;
-	        }
-	        if (br2.readLine() == null) {
-	            return -1;
-	        }
-	        else {
-	            return lineNumber;
-	        }
-	    } catch (IOException e) {
+	public static long compareFiles(String oldFile, String newFile)
+	{
+		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(oldFile), StandardCharsets.ISO_8859_1));
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(newFile), StandardCharsets.ISO_8859_1))) {
+			long lineNumber = 1;
+			String line1 = "", line2 = "";
+			while ((line1 = br1.readLine()) != null)
+			{
+				line2 = br2.readLine();
+				if (line2 == null || !line1.equals(line2))
+				{
+					return lineNumber;
+				}
+				lineNumber++;
+			}
+			if (br2.readLine() == null) {
+				return -1;
+			}
+			else {
+				return lineNumber;
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 			return -1;
 		}
