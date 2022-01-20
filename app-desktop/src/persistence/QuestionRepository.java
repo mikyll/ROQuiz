@@ -3,11 +3,13 @@ package persistence;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Question;
-import model.Settings;
+import model.SettingsSingleton;
 
 public class QuestionRepository implements IQuestionRepository {
 	private static final String regexTopic = "[^a-zA-ZÀ-ÿ\\s]+";
@@ -70,7 +72,7 @@ public class QuestionRepository implements IQuestionRepository {
 				
 				Question q = new Question(line);
 				
-				for(int i = 0; i < Settings.DEFAULT_ANSWER_NUMBER; i++) // answers
+				for(int i = 0; i < SettingsSingleton.DEFAULT_ANSWER_NUMBER; i++) // answers
 				{
 					line = reader.readLine();
 					lineNum++;
@@ -91,7 +93,7 @@ public class QuestionRepository implements IQuestionRepository {
 				
 				char ch = line.toCharArray()[0];
 				int value = ((int) ch) - 65;
-				if(value < 0 || value > Settings.DEFAULT_ANSWER_NUMBER - 1)
+				if(value < 0 || value > SettingsSingleton.DEFAULT_ANSWER_NUMBER - 1)
 					throw new BadFileFormatException(lineNum, "risposta corretta");
 				
 				q.setCorrectAnswer(value);
@@ -123,20 +125,22 @@ public class QuestionRepository implements IQuestionRepository {
 	public List<Integer> getqNumPerTopics() {return qNumPerTopics;}
 	public boolean hasTopics() {return topicsPresent;}
 	
-	public static void downloadFile(String url, String filename)
+	public static boolean downloadFile(String url, String filename)
 	{
 		try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-				FileOutputStream fileOutputStream = new FileOutputStream(filename)) {
+				FileOutputStream fileOutputStream = new FileOutputStream(filename)){
 			byte dataBuffer[] = new byte[1024];
+			
 			int bytesRead;
-			while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+			while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1)
+			{
 				fileOutputStream.write(dataBuffer, 0, bytesRead);
-		    }
-		} catch (IOException e) {
-			if(e instanceof UnknownHostException) {
-				System.out.println("An error occurred while trying to reach URL '" + e.getMessage() + "'");
 			}
-			else e.printStackTrace();
+			
+			return true;
+		} catch (IOException e) {
+			System.out.println("Errore durante il controllo delle domande aggiornate: " + e.getMessage());
+			return false;
 		}
 	}
 	
@@ -144,26 +148,21 @@ public class QuestionRepository implements IQuestionRepository {
 	public static int compareFilesLength(String filename1, String filename2)
 	{
 		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(filename1), StandardCharsets.ISO_8859_1));
-				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), StandardCharsets.ISO_8859_1))) {
-			int lineNumber = 0;
-			String line1 = "", line2 = "";
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), StandardCharsets.ISO_8859_1))){
+			
+			String line1, line2;
 			while ((line1 = br1.readLine()) != null)
 			{
 				line2 = br2.readLine();
 				if (line2 == null)
-				{
 					return -1;
-				}
-				lineNumber++;
 			}
 			if (br2.readLine() == null) {
 				return 0;
 			}
-			else {
-				return 1;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			else return 1;
+		} catch(IOException e) {
+			System.out.println("Errore: " + e.getMessage());
 			return 1;
 		}
 	}
