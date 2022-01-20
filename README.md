@@ -125,14 +125,14 @@ Proposta feature:
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
 - [x] aggiungere la scelta degli argomenti
+- [x] impostazioni persistenti
+- [x] download domande aggiornate
 - [ ] fare il porting su mobile
   - [x] [Android](https://github.com/mikyll/ROQuiz/releases/tag/v1.3-mobile_beta)
   - [ ] iOS
 - [ ] deploy su MacOS
-- [x] impostazioni persistenti
 - [ ] aggiungere test domande duplicate
 - [ ] verifica aggiornamenti app
-- [ ] download domande aggiornate ([riferimento utile](https://stackoverflow.com/questions/24748331/java-api-to-get-a-file-content-for-enterprise-github))
 - [ ] impostazione per abilitare/disabilitare aggiornamento automatico file Domande
 - [ ] creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
 - [ ] desktop: aggiungere impostazione dark mode ([riferimento utile](https://stackoverflow.com/questions/49159286/make-a-dark-mode-with-javafx))
@@ -155,6 +155,7 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
 * JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
 * Fatal error in jlinked JRE [SSLHandshakeException: Received fatal alert: handshake_failure](https://stackoverflow.com/questions/54770538/received-fatal-alert-handshake-failure-in-jlinked-jre)
+* Gson [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}") on Java 9?](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
 <!--* [Doc LaTeX con definizioni per la teoria](https://github.com/kmfrick/College_Notes/tree/main/RO-M), realizzato da [kmfrick](https://github.com/kmfrick), Corinna Marchili, Sofia Montebugnoli-->
 
 
