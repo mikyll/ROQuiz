@@ -29,6 +29,7 @@
 - Possibilità di scelta di un numero specifico di domande (default: 16, selezionate casualmente)
 - Possibilità di modificare il tempo a disposizione per le domande (default: 18 minuti)
 - Possibilità di inserimento di nuove domande
+- Possibilità di scaricare le domande aggiornate direttamente dall'app
 
 ### Demo
 
@@ -59,7 +60,7 @@
 ### Esecuzione
 
 #### Versione Desktop (Windows e Linux)
-1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.3/ROQuizDeployWindows.zip) o [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.3/ROQuizDeployLinux.tar.gz)) ed estrarre il contenuto.
+1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployWindows.zip) o [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployLinux.tar.gz)) ed estrarre il contenuto.
 2. Eseguire Launcher con doppioclick.
 
 #### Versione Mobile (Android)
