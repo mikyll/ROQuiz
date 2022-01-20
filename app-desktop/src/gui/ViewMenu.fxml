@@ -24,7 +24,7 @@
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="105.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="105.0" prefHeight="330.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="200.0" text="Menu Principale">
                <font>
@@ -149,7 +149,7 @@
             </Button>
          </children>
       </VBox>
-      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0">
+      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="102.0" prefHeight="330.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Impostazioni">
                <font>
@@ -190,19 +190,19 @@
                      </children>
                   </HBox>
                   <Separator prefHeight="15.0" prefWidth="300.0" visible="false" />
-                  <HBox alignment="CENTER_LEFT" disable="true" prefHeight="30.0" prefWidth="350.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <Label minHeight="27.0" minWidth="240.0" text="Aggiornamento domande:">
+                        <Label minHeight="27.0" minWidth="240.0" text="Controllo nuove domande:">
                            <font>
                               <Font size="18.0" />
                            </font>
                            <tooltip>
-                              <Tooltip prefWidth="400.0" text="Abilita/Disabilita l'aggiornamento automatico delle domande. Se abilitato, all'avvio l'app scaricherà automaticamente la versione più recente del file contenente le domande." wrapText="true" />
+                              <Tooltip prefWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se vi sono nuove domande e, in caso affermativo, chiede all'utente se vuole scaricarle." wrapText="true" />
                            </tooltip>
                         </Label>
                         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
                            <children>
-                              <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0" />
+                              <CheckBox fx:id="checkBoxCheckQuestionsUpdate" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0" />
                            </children>
                         </VBox>
                      </children>

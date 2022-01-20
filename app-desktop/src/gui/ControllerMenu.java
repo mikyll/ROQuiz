@@ -35,6 +35,8 @@ import persistence.IQuestionRepository;
 import persistence.QuestionRepository;
 
 public class ControllerMenu implements IControllerMenu {
+	private final static String QUESTIONS_FILENAME = "Domande.txt";
+	
 	private HostServices hostServies;
 	private SettingsSingleton settings;
 	private IQuestionRepository qRepo;
@@ -60,6 +62,7 @@ public class ControllerMenu implements IControllerMenu {
 	
 	@FXML private Spinner<Integer> spinnerQuestionNumQuiz;
 	@FXML private Spinner<Integer> spinnerTimerMin;
+	@FXML private CheckBox checkBoxCheckQuestionsUpdate;
 	@FXML private Button buttonSettingsSave;
 	@FXML private Button buttonSettingsCancel;
 	@FXML private Button buttonSettingsRestore;
@@ -82,10 +85,9 @@ public class ControllerMenu implements IControllerMenu {
 			if(this.settings.isCheckQuestionsUpdate())
 			{
 				System.out.println("Controllo domande aggiornate...");
-				QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "DomandeNuove.txt");
+				boolean res = QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "DomandeNuove.txt");
 				
-				File f = new File("Domande.txt");
-				if(f.exists())
+				if(new File(QUESTIONS_FILENAME).exists() && res)
 				{
 					// the new "Domande.txt" file is longer, so that means it's been updated
 					if(QuestionRepository.compareFilesLength("Domande.txt", "DomandeNuove.txt") > 0)
@@ -98,46 +100,64 @@ public class ControllerMenu implements IControllerMenu {
 						if (alert.getResult() == ButtonType.YES)
 						{
 							// update Domande.txt with DomandeNew.txt
-							File f1 = new File("Domande.txt");
+							File f1 = new File(QUESTIONS_FILENAME);
 							f1.renameTo(new File("DomandeVecchie.txt"));
 							
 							File f2 = new File("DomandeNuove.txt");
-							f2.renameTo(new File("Domande.txt"));
+							f2.renameTo(new File(QUESTIONS_FILENAME));
 						}
 						if (alert.getResult() == ButtonType.NO)
-						{
-							File f1 = new File("DomandeNuove.txt");
-							f1.delete();
-						}
+							new File("DomandeNuove.txt").delete();
 					}
 					else {
-						File f1 = new File("DomandeNuove.txt");
-						f1.delete();
+						System.out.println("Non sono state trovate nuove domande.\n");
+						new File("DomandeNuove.txt").delete();
 					}
 				}
 			}
 		}
 		
+		if(!new File("Domande.txt").exists())
+		{
+			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+			alert.setTitle("Finestra di dialogo");
+			alert.setHeaderText("File domande non presente, scaricarlo?");
+			alert.showAndWait();
+			if (alert.getResult() == ButtonType.YES)
+			{
+				if(!QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", QUESTIONS_FILENAME))
+				{
+					System.out.println("Download file domande fallito");
+					System.exit(1);
+				}
+			}
+			if (alert.getResult() == ButtonType.NO)
+			{
+				System.out.println("File " + QUESTIONS_FILENAME + " mancante.");
+				System.exit(1);
+			}
+		}
+		
+		
 		// load question repository from file
 		this.qRepo = null;
-		String fileName = "Domande.txt";
-		try (BufferedReader readerQuiz = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.ISO_8859_1))){
+		try (BufferedReader readerQuiz = new BufferedReader(new InputStreamReader(new FileInputStream(QUESTIONS_FILENAME), StandardCharsets.ISO_8859_1))){
 			this.qRepo = new QuestionRepository(readerQuiz);
 		} catch (FileNotFoundException e) {
-			System.out.println("File " + fileName + " mancante.");
+			System.out.println("File " + QUESTIONS_FILENAME + " mancante.");
 			System.exit(1);
 		} catch (IOException e) {
-			System.out.println("Errore nella lettura del file " + fileName);
+			System.out.println("Errore nella lettura del file " + QUESTIONS_FILENAME);
 			System.exit(1);
 		} catch (BadFileFormatException e) {
-			System.out.println("Errore nella formattazione del file " + fileName + ": " + e.getMessage() + " (linea " + e.getExceptionLine() + ")");
+			System.out.println("Errore nella formattazione del file " + QUESTIONS_FILENAME + ": " + e.getMessage() + " (linea " + e.getExceptionLine() + ")");
 			System.exit(1);
 		}
 		
 		int qNum = this.qRepo.getQuestions().size();
 		if(qNum < this.settings.getQuestionNumber())
 		{
-			System.out.println("Errore: nel file " + fileName + " non sono presenti abbastanza domande.\nDomande presenti: " 
+			System.out.println("Errore: nel file " + QUESTIONS_FILENAME + " non sono presenti abbastanza domande.\nDomande presenti: " 
 					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + SettingsSingleton.DEFAULT_QUESTION_NUMBER);
 			System.exit(1);
 		}
@@ -158,8 +178,12 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxSettings.setVisible(false);
 		this.vboxInfo.setVisible(false);
 
-		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(16, qNum, this.settings.getQuestionNumber()));
-		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(5, qNum * 2, this.settings.getTimer()));
+		// updating settings components
+		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(
+				SettingsSingleton.DEFAULT_QUESTION_NUMBER / 2, qNum, this.settings.getQuestionNumber()));
+		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(
+				SettingsSingleton.DEFAULT_TIMER / 2, qNum * 2, this.settings.getTimer()));
+		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
 		
 		this.textVersion.setText("ROQuiz v" + SettingsSingleton.VERSION_NUMBER);
 	}
@@ -327,19 +351,23 @@ public class ControllerMenu implements IControllerMenu {
 		
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(SettingsSingleton.DEFAULT_QUESTION_NUMBER);
 		this.spinnerTimerMin.getValueFactory().setValue(SettingsSingleton.DEFAULT_TIMER);
+		this.checkBoxCheckQuestionsUpdate.setSelected(SettingsSingleton.DEFAULT_CHECK_QUESTIONS_UPDATE);
 	}
 	
 	private void saveSettingsChanges()
 	{
 		int sqnq, stm;
+		boolean cqu;
 		sqnq = this.spinnerQuestionNumQuiz.getValue();
 		stm = this.spinnerTimerMin.getValue();
+		cqu = this.checkBoxCheckQuestionsUpdate.isSelected();
 		
 		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
-				sqnq + "\nTimer (minuti): " + stm);
+				sqnq + "\nTimer (minuti): " + stm + "\nControllo aggiornamento domande: " + cqu);
 		
 		this.settings.setQuestionNumber(sqnq);
 		this.settings.setTimer(stm);
+		this.settings.setCheckQuestionsUpdate(cqu);
 		
 		if(this.qRepo.hasTopics())
 		{
@@ -360,6 +388,7 @@ public class ControllerMenu implements IControllerMenu {
 		
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(this.settings.getQuestionNumber());
 		this.spinnerTimerMin.getValueFactory().setValue(this.settings.getTimer());
+		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
 	}
 	
 	@FXML 

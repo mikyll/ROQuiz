@@ -66,9 +66,9 @@ public class SettingsSingleton {
 			this.settings = new Settings();
 			this.settings = gson.fromJson(reader, Settings.class);
 			
-			System.out.println("Impostazioni caricate\nNumero domande per quiz: " + this.settings.getQuestionNumber() + 
+			/*System.out.println("Impostazioni caricate\nNumero domande per quiz: " + this.settings.getQuestionNumber() + 
 					"\nTimer per quiz (Minuti): " + this.settings.getTimer() + "\nControllo domande aggiornate: " + this.settings.isCheckQuestionsUpdate() +
-					"\nTema scuro: " + this.settings.isDarkMode());
+					"\nTema scuro: " + this.settings.isDarkMode());*/
 			
 			return this.settings;
 		} catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
@@ -83,9 +83,9 @@ public class SettingsSingleton {
 			Gson gson = new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setPrettyPrinting().create();
 			gson.toJson(s, writer);
 	        
-	        System.out.println("Impostazioni salvate\nNumero domande per quiz: " + settings.getQuestionNumber() + 
+	        /*System.out.println("Impostazioni salvate\nNumero domande per quiz: " + settings.getQuestionNumber() + 
 					"\nTimer per quiz (Minuti): " + settings.getTimer() + "\nControllo domande aggiornate: " + settings.isCheckQuestionsUpdate() +
-					"\nTema scuro: " + settings.isDarkMode());
+					"\nTema scuro: " + settings.isDarkMode());*/
 		} catch (JsonIOException | IOException e) {
 			System.out.println("Errore nel salvataggio del file delle impostazioni. Verrà ripristinato.");
 			this.resetSettings(filename);
@@ -103,9 +103,9 @@ public class SettingsSingleton {
 			Gson gson = new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setPrettyPrinting().create();
 			gson.toJson(s, writer);
 			
-			System.out.println("Impostazioni predefinite ripristinate\nNumero domande per quiz: " + DEFAULT_QUESTION_NUMBER + 
+			/*System.out.println("Impostazioni predefinite ripristinate\nNumero domande per quiz: " + DEFAULT_QUESTION_NUMBER + 
 					"\nTimer per quiz (Minuti): " + DEFAULT_TIMER + "\nControllo domande aggiornate: " + DEFAULT_CHECK_QUESTIONS_UPDATE +
-					"\nTema scuro: " + DEFAULT_DARK_MODE);
+					"\nTema scuro: " + DEFAULT_DARK_MODE);*/
 		} catch (JsonIOException | IOException e) {
 			System.out.println("Errore durante il ripristino del file delle impostazioni.");
 			System.exit(1);
