@@ -31,13 +31,6 @@ public class SettingsSingleton {
 		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE);
 		
 		settings = this.loadSettings(".settings.json");
-		
-		/*settings = new Settings();
-		settings.setQuestionNumber(DEFAULT_QUESTION_NUMBER);
-		settings.setAnswerNumber(DEFAULT_ANSWER_NUMBER);
-		settings.setTimer(DEFAULT_TIMER);
-		settings.setCheckQuestionsUpdate(DEFAULT_CHECK_QUESTIONS_UPDATE);
-		settings.setDarkMode(DEFAULT_DARK_MODE);*/
 	}
 
 	public static synchronized SettingsSingleton getInstance()

@@ -230,7 +230,7 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML
 	public void selectQuiz(ActionEvent event)
 	{
-		System.out.println("Selezione: avvia quiz.\nArgomenti impostati:");
+		System.out.println("\nSelezione: avvia quiz.\nArgomenti impostati:");
 		
 		List<Question> questions = new ArrayList<Question>();
 		for(int i = 0, j = 0, k; i < this.checkBoxes.size(); i++) // creates a list with questions from just the selected topics

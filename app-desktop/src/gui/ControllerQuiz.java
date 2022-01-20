@@ -346,7 +346,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	
 	@FXML
 	public void selectMenu(ActionEvent event) {
-		System.out.println("Selezione: menu principale.");
+		System.out.println("\nSelezione: menu principale.");
 		
 		// load
 		try {
