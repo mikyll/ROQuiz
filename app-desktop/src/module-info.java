@@ -6,6 +6,7 @@ module roquiz {
 	requires com.google.gson;
 	
 	opens gui;
+	opens model to com.google.gson;
 	
 	exports application;
 	exports gui;

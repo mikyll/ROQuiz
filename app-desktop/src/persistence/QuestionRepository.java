@@ -136,6 +136,7 @@ public class QuestionRepository implements IQuestionRepository {
 			return true;
 		} catch (IOException e) {
 			System.out.println("Errore durante il controllo delle domande aggiornate: " + e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 	}

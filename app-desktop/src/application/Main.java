@@ -29,7 +29,7 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage stage)
-	{	
+	{
 		try {
 			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/gui/ViewMenu.fxml"));
 			AnchorPane menu = (AnchorPane) loader.load();

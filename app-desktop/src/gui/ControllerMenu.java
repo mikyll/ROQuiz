@@ -80,7 +80,9 @@ public class ControllerMenu implements IControllerMenu {
 		// check for downloads only when the app is launched
 		if(this.settings.isJustLaunched())
 		{
+			this.settings.loadSettings(".settings.json");
 			this.settings.setJustLaunched(false);
+			
 			// download "Domande.txt" from the GitHub repository
 			if(this.settings.isCheckQuestionsUpdate())
 			{
@@ -403,6 +405,8 @@ public class ControllerMenu implements IControllerMenu {
 			this.hostServies.showDocument("https://icons8.com");
 		if(hl.getText().equals("Apri una issue"))
 			this.hostServies.showDocument("https://github.com/mikyll/ROQuiz/issues");
+		if(hl.getChildrenUnmodifiable().get(0) instanceof Label)
+			this.hostServies.showDocument("https://github.com/mikyll/ROQuiz");
 	}
 	
 	// public void selectQuizFile() {}
