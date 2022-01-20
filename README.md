@@ -24,12 +24,15 @@
 <!-- - iOS -->
 
 ### Funzionalità
-- 85 domande a scelta multipla a tempo divise per argomento (elenco aggiornato al _15 luglio 2021_)
-- Possibilità di scelta di specifici argomenti
-- Possibilità di scelta di un numero specifico di domande (default: 16, selezionate casualmente)
-- Possibilità di modificare il tempo a disposizione per le domande (default: 18 minuti)
-- Possibilità di inserimento di nuove domande (modificando il file Domande.txt)
-- Possibilità di scaricare le domande aggiornate direttamente dall'app
+- L'app **simula un quiz d'esame**, pescando in modo casuale delle domande a risposta multipla a cui l'utente deve rispondere entro il tempo limite definito da un timer.
+- Pool di 85 domande differenti, divise per argomento (elenco aggiornato al _15 luglio 2021_).
+- Possibilità di scelta di argomenti specifici per le domande da includere nel quiz.
+- Possibilità di personalizzare le impostazioni dell'app in modo persistente:
+  - Scelta di un numero specifico di domande (default: 16, selezionate casualmente).
+  - Modifica del tempo a disposizione per il quiz (default: 18 minuti).
+  - Controllo all'avvio dell'app se sono presenti nuove domande.
+- Possibilità di inserimento di domande personalizzate (modificando il file Domande.txt).
+
 
 ### Demo
 
