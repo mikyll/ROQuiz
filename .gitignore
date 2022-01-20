@@ -26,6 +26,9 @@ hs_err_pid*
 *.mkv
 *.mp4
 
+# link
+*.url
+
 # directory
 deploy
 extra
