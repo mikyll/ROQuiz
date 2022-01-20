@@ -18,10 +18,10 @@
 <hr class="rounded">
 </div>
 
-### Versioni disponibili
-- Desktop
-- Android
-- iOS
+### Versioni Disponibili
+- Desktop (Windows e Linux)
+- Mobile (Android)
+<!-- - iOS -->
 
 ### Funzionalità
 - 85 domande a scelta multipla a tempo divise per argomento (elenco aggiornato al _15 luglio 2021_)
