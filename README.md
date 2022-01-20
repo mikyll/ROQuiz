@@ -129,7 +129,7 @@ Features da aggiungere e sviluppi futuri:
   - [x] [Android](https://github.com/mikyll/ROQuiz/releases/tag/v1.3-mobile_beta)
   - [ ] iOS
 - [ ] deploy su MacOS
-- [ ] aggiungere file di configurazione (xml o JSON) per rendere le modifiche alle impostazioni persistenti
+- [x] impostazioni persistenti
 - [ ] aggiungere test domande duplicate
 - [ ] verifica aggiornamenti app
 - [ ] download domande aggiornate ([riferimento utile](https://stackoverflow.com/questions/24748331/java-api-to-get-a-file-content-for-enterprise-github))
