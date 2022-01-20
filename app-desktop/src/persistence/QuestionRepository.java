@@ -159,7 +159,7 @@ public class QuestionRepository implements IQuestionRepository {
 			else return 1;
 		} catch(IOException e) {
 			System.out.println("Errore: " + e.getMessage());
-			return 1;
+			return -1;
 		}
 	}
 	
