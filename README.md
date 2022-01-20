@@ -128,13 +128,13 @@ Features da aggiungere e sviluppi futuri:
 - [x] aggiungere la scelta degli argomenti
 - [x] impostazioni persistenti
 - [x] download domande aggiornate
+- [x] impostazione per abilitare/disabilitare il controllo delle domande aggiornate
 - [ ] fare il porting su mobile
   - [x] [Android](https://github.com/mikyll/ROQuiz/releases/tag/v1.3-mobile_beta)
   - [ ] iOS
 - [ ] deploy su MacOS
 - [ ] aggiungere test domande duplicate
 - [ ] verifica aggiornamenti app
-- [ ] impostazione per abilitare/disabilitare aggiornamento automatico file Domande
 - [ ] creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
 - [ ] desktop: aggiungere impostazione dark mode ([riferimento utile](https://stackoverflow.com/questions/49159286/make-a-dark-mode-with-javafx))
 - [ ] mobile: fare refactor e sistemare le classi (usare classe Quiz)
