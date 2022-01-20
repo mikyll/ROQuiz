@@ -66,22 +66,21 @@ public class SettingsSingleton {
 	public void setDarkMode(boolean dMode) {this.settings.setDarkMode(dMode);}
 
 	public Settings loadSettings(String filename) {
-		try {
+		try (JsonReader reader = new JsonReader(new FileReader(filename))) {
 			Gson gson = new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).create(); // need this since we use a static class
-			JsonReader reader = new JsonReader(new FileReader(filename));
 			
-			Settings res = new Settings();
-			res = gson.fromJson(reader, Settings.class);
+			this.settings = new Settings();
+			this.settings = gson.fromJson(reader, Settings.class);
 			
-			System.out.println("Impostazioni caricate\nNumero domande per quiz: " + res.getQuestionNumber() + 
-					"\nTimer per quiz (Minuti): " + res.getTimer() + "\nControllo domande aggiornate: " + res.isCheckQuestionsUpdate() +
-					"\nTema scuro: " + res.isDarkMode());
+			System.out.println("Impostazioni caricate\nNumero domande per quiz: " + this.settings.getQuestionNumber() + 
+					"\nTimer per quiz (Minuti): " + this.settings.getTimer() + "\nControllo domande aggiornate: " + this.settings.isCheckQuestionsUpdate() +
+					"\nTema scuro: " + this.settings.isDarkMode());
 			
-			return res;
-		} catch (NullPointerException | JsonIOException | JsonSyntaxException | FileNotFoundException e) {
+			return this.settings;
+		} catch (NullPointerException | IOException | JsonIOException | JsonSyntaxException e) {
 			System.out.println("File delle impostazioni corrotto o assente, verrà ricreato con le impostazioni predefinite.");
 			this.resetSettings(filename);
-			return null;
+			return this.settings;
 		}
 	}
 	
@@ -118,74 +117,4 @@ public class SettingsSingleton {
 			System.exit(1);
 		}
 	}
-	
-	public static void main(String[] args)
-	{
-		
-		SettingsSingleton ss = SettingsSingleton.getInstance();
-		Settings s = ss.loadSettings(".settings.json");
-		//System.out.println(s.getQuestionNumber());
-		
-		//ss.resetSettings(".settings.json");
-		
-		
-		
-		/*
-		System.out.println("ciao");
-		Gson gson = new Gson();
-		try {
-			JsonReader reader = new JsonReader(new FileReader(".settings.json"));
-			
-			Settings res = new Settings();
-			res = gson.fromJson(reader, Settings.class);
-			System.out.println(res + ": " + res.getQuestionNumber() + ", " + res.getTimer() + ", " + res.isCheckQuestionsUpdate() + ", " + res.isDarkMode());
-			
-			Settings prova = new Settings(1, 2, 3, true, true);
-			
-			gson.toJson(prova, new FileWriter("prova.json"));
-			System.out.println("ciao" + gson.toJson(prova).toString());
-			
-			System.out.println(res + ": " + res.getQuestionNumber() + ", " + res.getTimer() + ", " + res.isCheckQuestionsUpdate() + ", " + res.isDarkMode());
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonIOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		
-	}
 }
-
-/*class Settings {
-	private static int questionNumber;
-	private static int answerNumber;
-	private static int timer;
-	private static boolean checkQuestionsUpdate;
-	private static boolean darkMode;
-	
-	public Settings() {}
-	public Settings(int qNum, int aNum, int sTime, boolean qUpdate, boolean dMode)
-	{
-		questionNumber = qNum;
-		answerNumber = aNum;
-		timer = sTime;
-		checkQuestionsUpdate = qUpdate;
-		darkMode = dMode;
-	}
-	
-	public int getQuestionNumber() {return questionNumber;}
-	public void setQuestionNumber(int qNum) {questionNumber = qNum;}
-	public int getAnswerNumber() {return answerNumber;}
-	public void setAnswerNumber(int aNum) {answerNumber = aNum;}
-	public int getTimer() {return timer;}
-	public void setTimer(int sTime) {timer = sTime;}
-	public boolean isCheckQuestionsUpdate() {return checkQuestionsUpdate;}
-	public void setCheckQuestionsUpdate(boolean qUpdate) {checkQuestionsUpdate = qUpdate;}
-	public boolean isDarkMode() {return darkMode;}
-	public void setDarkMode(boolean dMode) {darkMode = dMode;}
-}*/
