@@ -18,10 +18,10 @@
 <hr class="rounded">
 </div>
 
-### Versioni disponibili
-- Desktop
-- Android
-- iOS
+### Versioni Disponibili
+- Desktop (Windows e Linux)
+- Mobile (Android)
+<!-- - iOS -->
 
 ### Funzionalità
 - 85 domande a scelta multipla a tempo divise per argomento (elenco aggiornato al _15 luglio 2021_)
@@ -156,7 +156,7 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
 * JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
 * Fatal error in jlinked JRE [SSLHandshakeException: Received fatal alert: handshake_failure](https://stackoverflow.com/questions/54770538/received-fatal-alert-handshake-failure-in-jlinked-jre)
-* Gson [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}") on Java 9?](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
+* Gson [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}")](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
 <!--* [Doc LaTeX con definizioni per la teoria](https://github.com/kmfrick/College_Notes/tree/main/RO-M), realizzato da [kmfrick](https://github.com/kmfrick), Corinna Marchili, Sofia Montebugnoli-->
 
 
