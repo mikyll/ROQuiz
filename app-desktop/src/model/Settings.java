@@ -1,35 +1,26 @@
 package model;
 
 public class Settings {
-	public final static double VERSION_NUMBER = 1.3;
-	public final static int DEFAULT_QUESTION_NUMBER = 16;
-	public final static int DEFAULT_ANSWER_NUMBER = 5;
-	public final static int DEFAULT_TIMER = 18;
-	
-	private static Settings instance = null;
-	
 	private static int questionNumber;
-	private static int answerNumber;
 	private static int timer;
+	private static boolean checkQuestionsUpdate;
+	private static boolean darkMode;
 	
-	private Settings()
+	public Settings() {}
+	public Settings(int qNum, int sTime, boolean qUpdate, boolean dMode)
 	{
-		questionNumber = DEFAULT_QUESTION_NUMBER;
-		answerNumber = DEFAULT_ANSWER_NUMBER;
-		timer = DEFAULT_TIMER;
+		questionNumber = qNum;
+		timer = sTime;
+		checkQuestionsUpdate = qUpdate;
+		darkMode = dMode;
 	}
 	
-	public static synchronized Settings getInstance()
-	{
-		if(instance == null)
-			instance = new Settings();
-		return instance;
-	}
-
 	public int getQuestionNumber() {return questionNumber;}
 	public void setQuestionNumber(int qNum) {questionNumber = qNum;}
-	public int getAnswerNumber() {return answerNumber;}
-	public void setAnswerNumber(int aNum) {answerNumber = aNum;}
 	public int getTimer() {return timer;}
 	public void setTimer(int sTime) {timer = sTime;}
+	public boolean isCheckQuestionsUpdate() {return checkQuestionsUpdate;}
+	public void setCheckQuestionsUpdate(boolean qUpdate) {checkQuestionsUpdate = qUpdate;}
+	public boolean isDarkMode() {return darkMode;}
+	public void setDarkMode(boolean dMode) {darkMode = dMode;}
 }

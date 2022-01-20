@@ -25,11 +25,11 @@ import javafx.util.Duration;
 import model.Answer;
 import model.Question;
 import model.Quiz;
-import model.Settings;
+import model.SettingsSingleton;
 
 public class ControllerQuiz implements IControllerQuiz{
 	private List<Question> questions;
-	private Settings settings;
+	private SettingsSingleton settings;
 	private Quiz quiz;
 	private int index;
 	private boolean quizTerminated;
@@ -73,7 +73,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.buttonMenu.setVisible(false);
 		this.vboxResult.setVisible(false);
 		
-		this.settings = Settings.getInstance();
+		this.settings = SettingsSingleton.getInstance();
 		this.initRadioArray();
 		
 		this.quiz = new Quiz(this.questions, this.settings.getQuestionNumber());

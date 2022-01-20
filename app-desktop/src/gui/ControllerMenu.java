@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +29,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Question;
-import model.Settings;
+import model.SettingsSingleton;
 import persistence.BadFileFormatException;
 import persistence.IQuestionRepository;
 import persistence.QuestionRepository;
 
 public class ControllerMenu implements IControllerMenu {
 	private HostServices hostServies;
-	private Settings settings;
+	private SettingsSingleton settings;
 	private IQuestionRepository qRepo;
 	
 	private List<CheckBox> checkBoxes;
@@ -66,13 +67,17 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Text textVersion;
 	
 	// FXML loader call order: Constructor -> initialize(). Inside initialize(), all the fxml object have been already initialized.
-	public ControllerMenu() {}
+	public ControllerMenu()	{}
 	
 	@FXML @Override 
 	public void initialize()
 	{
-		this.settings = Settings.getInstance();
+		this.settings = SettingsSingleton.getInstance();
 		
+		
+		
+		// load question repository from file
+		this.qRepo = null;
 		String fileName = "Domande.txt";
 		try (BufferedReader readerQuiz = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.ISO_8859_1))){
 			this.qRepo = new QuestionRepository(readerQuiz);
@@ -91,7 +96,7 @@ public class ControllerMenu implements IControllerMenu {
 		if(qNum < this.settings.getQuestionNumber())
 		{
 			System.out.println("Errore: nel file " + fileName + " non sono presenti abbastanza domande.\nDomande presenti: " 
-					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + Settings.DEFAULT_QUESTION_NUMBER);
+					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + SettingsSingleton.DEFAULT_QUESTION_NUMBER);
 			System.exit(1);
 		}
 		
@@ -114,7 +119,12 @@ public class ControllerMenu implements IControllerMenu {
 		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(16, qNum, this.settings.getQuestionNumber()));
 		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(5, qNum * 2, this.settings.getTimer()));
 		
-		this.textVersion.setText("ROQuiz v" + Settings.VERSION_NUMBER);
+		this.textVersion.setText("ROQuiz v" + SettingsSingleton.VERSION_NUMBER);
+	}
+	
+	public void setQuestionRepository(IQuestionRepository qRepo)
+	{
+		this.qRepo = qRepo;
 	}
 	
 	@FXML
@@ -220,8 +230,7 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		System.out.println("Selezione: indietro.");
 		
-		if(this.vboxSettings.isVisible() &&	(this.settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() ||
-				this.settings.getAnswerNumber() != Settings.DEFAULT_ANSWER_NUMBER || this.settings.getTimer() != this.spinnerTimerMin.getValue()))
+		if(this.vboxSettings.isVisible() &&	(this.settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || this.settings.getTimer() != this.spinnerTimerMin.getValue()))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
@@ -274,8 +283,8 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		System.out.println("Impostazioni di default.");
 		
-		this.spinnerQuestionNumQuiz.getValueFactory().setValue(Settings.DEFAULT_QUESTION_NUMBER);
-		this.spinnerTimerMin.getValueFactory().setValue(Settings.DEFAULT_TIMER);
+		this.spinnerQuestionNumQuiz.getValueFactory().setValue(SettingsSingleton.DEFAULT_QUESTION_NUMBER);
+		this.spinnerTimerMin.getValueFactory().setValue(SettingsSingleton.DEFAULT_TIMER);
 	}
 	
 	private void saveSettingsChanges()
@@ -299,6 +308,8 @@ public class ControllerMenu implements IControllerMenu {
 				cb.setSelected(true);
 			this.setDisableCheckBoxes();
 		}
+		
+		this.settings.saveSettings(".settings.json");
 	}
 	
 	private void cancelSettingsChanges()
