@@ -28,7 +28,7 @@
 - Possibilità di scelta di specifici argomenti
 - Possibilità di scelta di un numero specifico di domande (default: 16, selezionate casualmente)
 - Possibilità di modificare il tempo a disposizione per le domande (default: 18 minuti)
-- Possibilità di inserimento di nuove domande
+- Possibilità di inserimento di nuove domande (modificando il file Domande.txt)
 - Possibilità di scaricare le domande aggiornate direttamente dall'app
 
 ### Demo
