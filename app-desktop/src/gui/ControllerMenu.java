@@ -1,6 +1,7 @@
 package gui;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -74,7 +75,49 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		this.settings = SettingsSingleton.getInstance();
 		
-		
+		// check for downloads only when the app is launched
+		if(this.settings.isJustLaunched())
+		{
+			this.settings.setJustLaunched(false);
+			// download "Domande.txt" from the GitHub repository
+			if(this.settings.isCheckQuestionsUpdate())
+			{
+				System.out.println("Controllo domande aggiornate...");
+				QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "DomandeNuove.txt");
+				
+				File f = new File("Domande.txt");
+				if(f.exists())
+				{
+					// the new "Domande.txt" file is longer, so that means it's been updated
+					if(QuestionRepository.compareFilesLength("Domande.txt", "DomandeNuove.txt") > 0)
+					{
+						System.out.println("È stata trovata una versione più recente del file contenente le domande.");
+						Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+						alert.setTitle("Finestra di dialogo");
+						alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
+						alert.showAndWait();
+						if (alert.getResult() == ButtonType.YES)
+						{
+							// update Domande.txt with DomandeNew.txt
+							File f1 = new File("Domande.txt");
+							f1.renameTo(new File("DomandeVecchie.txt"));
+							
+							File f2 = new File("DomandeNuove.txt");
+							f2.renameTo(new File("Domande.txt"));
+						}
+						if (alert.getResult() == ButtonType.NO)
+						{
+							File f1 = new File("DomandeNuove.txt");
+							f1.delete();
+						}
+					}
+					else {
+						File f1 = new File("DomandeNuove.txt");
+						f1.delete();
+					}
+				}
+			}
+		}
 		
 		// load question repository from file
 		this.qRepo = null;
