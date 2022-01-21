@@ -30,12 +30,10 @@
 - Possibilità di personalizzare le impostazioni dell'app in modo persistente:
   - Scelta di un numero specifico di domande (default: 16, selezionate casualmente).
   - Modifica del tempo a disposizione per il quiz (default: 18 minuti).
-  - Controllo all'avvio dell'app se sono presenti nuove domande.
+  - Controllo all'avvio dell'app se nella repository sono presenti nuove domande.
 - Possibilità di inserimento di domande personalizzate (modificando il file Domande.txt).
 
-
 ### Demo
-
 #### Desktop
 <table style="border: none">
   <tr>
@@ -61,7 +59,6 @@
 </table>
 
 ### Esecuzione
-
 #### Versione Desktop (Windows e Linux)
 1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployWindows.zip) o [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployLinux.tar.gz)) ed estrarre il contenuto.
 2. Eseguire Launcher con doppioclick.
