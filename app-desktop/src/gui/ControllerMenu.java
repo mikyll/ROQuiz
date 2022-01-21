@@ -87,34 +87,38 @@ public class ControllerMenu implements IControllerMenu {
 			if(this.settings.isCheckQuestionsUpdate())
 			{
 				System.out.println("Controllo domande aggiornate...");
-				boolean res = QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "DomandeNuove.txt");
+				boolean res = QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "tmp.txt");
 				
 				if(new File(QUESTIONS_FILENAME).exists() && res)
 				{
-					// the new "Domande.txt" file is longer, so that means it's been updated
-					if(QuestionRepository.compareFilesLength("Domande.txt", "DomandeNuove.txt") > 0)
+					// a new file has been found.
+					if(QuestionRepository.compareFilesLength("Domande.txt", "tmp.txt") > 0)
 					{
 						System.out.println("È stata trovata una versione più recente del file contenente le domande.");
 						Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
 						alert.setTitle("Finestra di dialogo");
 						alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
+						alert.setContentText("Questa azione sovrascriverà il file " + QUESTIONS_FILENAME + " attualmente presente.");
 						alert.showAndWait();
 						if (alert.getResult() == ButtonType.YES)
 						{
 							// update Domande.txt with DomandeNew.txt
-							File f1 = new File(QUESTIONS_FILENAME);
-							f1.renameTo(new File("DomandeVecchie.txt"));
+							new File(QUESTIONS_FILENAME).delete();
 							
-							File f2 = new File("DomandeNuove.txt");
-							f2.renameTo(new File(QUESTIONS_FILENAME));
+							new File("tmp.txt").renameTo(new File(QUESTIONS_FILENAME));
 						}
 						if (alert.getResult() == ButtonType.NO)
-							new File("DomandeNuove.txt").delete();
+						{
+							new File("tmp.txt").delete();
+						}
 					}
 					else {
 						System.out.println("Non sono state trovate nuove domande.\n");
-						new File("DomandeNuove.txt").delete();
+						new File("tmp.txt").delete();
 					}
+				}
+				else {
+					new File("DomandeNuove.txt").delete();
 				}
 			}
 		}
@@ -135,6 +139,7 @@ public class ControllerMenu implements IControllerMenu {
 			}
 			if (alert.getResult() == ButtonType.NO)
 			{
+				new File("tmp.txt").delete();
 				System.out.println("File " + QUESTIONS_FILENAME + " mancante.");
 				System.exit(1);
 			}
@@ -188,6 +193,8 @@ public class ControllerMenu implements IControllerMenu {
 		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
 		
 		this.textVersion.setText("ROQuiz v" + SettingsSingleton.VERSION_NUMBER);
+		
+		new File("tmp.txt").delete();
 	}
 	
 	public void setQuestionRepository(IQuestionRepository qRepo)
