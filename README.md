@@ -19,9 +19,8 @@
 </div>
 
 ### Versioni Disponibili
-- Desktop (Windows e Linux)
+- Desktop (Windows, Linux e MacOS)
 - Mobile (Android)
-<!-- - iOS -->
 
 ### Funzionalità
 - L'app **simula un quiz d'esame**, pescando in modo casuale delle domande a risposta multipla a cui l'utente deve rispondere entro il tempo limite definito da un timer.
@@ -60,7 +59,7 @@
 
 ### Esecuzione
 #### Versione Desktop (Windows e Linux)
-1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployWindows.zip) o [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployLinux.tar.gz)) ed estrarre il contenuto.
+1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployWindows.zip), [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployLinux.tar.gz) o [MacOS]()) ed estrarre il contenuto.
 2. Eseguire Launcher con doppioclick.
 
 #### Versione Mobile (Android)
@@ -129,10 +128,10 @@ Features da aggiungere e sviluppi futuri:
 - [x] impostazioni persistenti
 - [x] download domande aggiornate
 - [x] impostazione per abilitare/disabilitare il controllo delle domande aggiornate
+- [x] deploy su MacOS
 - [ ] fare il porting su mobile
   - [x] [Android](https://github.com/mikyll/ROQuiz/releases/tag/v1.3-mobile_beta)
   - [ ] iOS
-- [ ] deploy su MacOS
 - [ ] aggiungere test domande duplicate
 - [ ] verifica aggiornamenti app
 - [ ] creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
