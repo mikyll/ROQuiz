@@ -139,6 +139,7 @@ Features da aggiungere e sviluppi futuri:
 - [ ] mobile: fare refactor e sistemare le classi (usare classe Quiz)
 - [ ] mobile: aggiungere scelta argomenti
 - [ ] mobile: aggiungere possibilità di caricare un file domande personalizzato
+- [ ] cambiare il controllo per le domande nuove e farlo in base alla data di modifica o ad un numero di versione
 
 ### Built With
 Per l'implementazione ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20Setup.md).
