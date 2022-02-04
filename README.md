@@ -167,6 +167,12 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/mikyll/ROQuiz
 [forks-url]: https://github.com/mikyll/ROQuiz/network/members
+[repo-size-shield]: https://img.shields.io/github/repo-size/mikyll/ROQuiz
+[repo-size-url]: https://img.shields.io/github/repo-size/mikyll/ROQuiz
+[total-lines-shield]: https://img.shields.io/tokei/lines/github/mikyll/ROQuiz
+[total-lines-url]: https://img.shields.io/tokei/lines/github/mikyll/ROQuiz
+[pull-request-shield]: https://img.shields.io/github/issues-pr/mikyll/ROQuiz
+[pull-request-url]: https://img.shields.io/github/issues-pr/mikyll/ROQuiz
 [stars-shield]: https://img.shields.io/github/stars/mikyll/ROQuiz
 [stars-url]: https://github.com/mikyll/ROQuiz/stargazers
 [issues-shield]: https://img.shields.io/github/issues/mikyll/ROQuiz
