@@ -136,7 +136,7 @@ public class QuestionRepository implements IQuestionRepository {
 			return true;
 		} catch (IOException e) {
 			System.out.println("Errore durante il controllo delle domande aggiornate: " + e.getMessage());
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 	}
@@ -163,41 +163,4 @@ public class QuestionRepository implements IQuestionRepository {
 			return -1;
 		}
 	}
-	
-	// test main
-	/*public static void main(String args[]) throws BadFileFormatException
-	{
-		QuestionRepository qr = null;
-		try (Reader readerQuiz = new FileReader("QuizDivisiPerArgomento.txt");) {
-			qr = new QuestionRepository(readerQuiz);
-		} catch (IOException e) {
-			System.out.println("Errore");
-		}
-		
-		System.out.println("Num Question: " + qr.getQuestions().size());
-		
-		Quiz q = new Quiz(qr.getQuestions(), 3);
-		for(Question question : q.getQuiz())
-			qr.printQuestion(question);
-	}
-	public void printEachQuestion()
-	{
-		int i = 0;
-		for(Question q : this.questions)
-		{
-			System.out.print("\n" + i + ") ");
-			printQuestion(q);
-			
-			i++;
-		}
-	}
-	public void printQuestion(Question q)
-	{
-		System.out.println(q.getQuestion());
-		for(Answer a : q.getAnswers().keySet())
-		{
-			System.out.println(a.toString() + ". " + q.getAnswers().get(a));
-		}
-		System.out.println("Correct answer: " + q.getCorrectAnswer());
-	}*/
 }
