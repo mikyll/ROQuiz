@@ -1,7 +1,7 @@
 <div align="center">
 
 [![Downloads][downloads-shield]][downloads-url]
-[![Total-lines][total-lines-shield]][total-lines-url]
+[![Repo-size][repo-size-shield]][repo-size-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
