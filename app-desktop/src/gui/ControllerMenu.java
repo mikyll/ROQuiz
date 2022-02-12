@@ -57,8 +57,9 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Button buttonInfo;
 	
 	@FXML private Label labelTopicsWarning;
-	@FXML private Label labelQuizQNum;
+	@FXML private Label labelLoadedQ;
 	@FXML private Label labelSelectedQ;
+	@FXML private Label labelQuizQNum;
 	
 	@FXML private Spinner<Integer> spinnerQuestionNumQuiz;
 	@FXML private Spinner<Integer> spinnerTimerMin;
@@ -145,9 +146,7 @@ public class ControllerMenu implements IControllerMenu {
 			}
 		}
 		
-		
 		// load question repository from file
-		this.qRepo = null;
 		try (BufferedReader readerQuiz = new BufferedReader(new InputStreamReader(new FileInputStream(QUESTIONS_FILENAME), StandardCharsets.ISO_8859_1))){
 			this.qRepo = new QuestionRepository(readerQuiz);
 		} catch (FileNotFoundException e) {
@@ -168,6 +167,7 @@ public class ControllerMenu implements IControllerMenu {
 					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + SettingsSingleton.DEFAULT_QUESTION_NUMBER);
 			System.exit(1);
 		}
+		this.labelLoadedQ.setText("" + qNum);
 		
 		if(this.qRepo.hasTopics())
 		{

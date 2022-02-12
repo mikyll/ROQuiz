@@ -95,7 +95,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelSelectedQ11" prefHeight="30.0" prefWidth="30.0" text="85">
+                  <Label fx:id="labelLoadedQ" prefHeight="30.0" prefWidth="30.0" text="85">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
