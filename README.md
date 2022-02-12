@@ -25,7 +25,7 @@
 
 ### Funzionalità
 - L'app **simula un quiz d'esame**, pescando in modo casuale delle domande a risposta multipla a cui l'utente deve rispondere entro il tempo limite definito da un timer.
-- Pool di 85 domande differenti, divise per argomento (elenco aggiornato al _15 luglio 2021_).
+- Pool di 86 domande differenti, divise per argomento (elenco aggiornato al _25 gennaio 2022_).
 - Possibilità di scelta di argomenti specifici per le domande da includere nel quiz.
 - Possibilità di personalizzare le impostazioni dell'app in modo persistente:
   - Scelta di un numero specifico di domande (default: 16, selezionate casualmente).
