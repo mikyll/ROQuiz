@@ -1,5 +1,5 @@
 @Programmazione Matematica =============================================================================
-Dato un insieme F, un intorno Ã¨
+Dato un insieme F, un intorno è
 A. L'insieme di tutti i sottoinsiemi di F
 B. L'insieme dei punti di F a distanza minore di epsilon da un punto x di F
 C. Una funzione N: F -> 2^F
@@ -7,12 +7,12 @@ D. Una combinazione convessa di due punti x e y di F
 E. Nessuna di queste
 C
 
-Si consideri un problema di ottimizzazione (F,d) ed un intorno N. La proprietÃ  che se un punto f di F Ã¨ localmente ottimo rispetto ad N allora f Ã¨ l'ottimo assoluto implica
-A. che N Ã¨ un intorno esatto
-B. che N Ã¨ un intorno euclideo
-C. che N Ã¨ un intorno non euclideo
+Si consideri un problema di ottimizzazione (F,d) ed un intorno N. La proprietà che se un punto f di F è localmente ottimo rispetto ad N allora f è l'ottimo assoluto implica
+A. che N è un intorno esatto
+B. che N è un intorno euclideo
+C. che N è un intorno non euclideo
 D. nessuna di queste caratterizzazioni
-E. che N Ã¨ un intorno convesso
+E. che N è un intorno convesso
 A
 
 Facendo variare lambda fra 0 e 1, la combinazione convessa di due punti x ed y descrive
@@ -27,44 +27,44 @@ Data una funzione f convessa su un insieme S convesso, la corda che unisce due p
 A. coincide con un flesso della funzione.
 B. sta al di sotto della funzione ma non coincide mai con essa.
 C. sta al di sopra della funzione ma non coincide mai con essa.
-D. sta al di sopra della funzione o Ã¨ con essa coincidente.
-E. sta al di sotto della funzione o Ã¨ con essa coincidente.
+D. sta al di sopra della funzione o è con essa coincidente.
+E. sta al di sotto della funzione o è con essa coincidente.
 D
 
 Dati una funzione convessa definita su un insieme S convesso ed una soglia t, il sottoinsieme di punti x di S in cui f(x) <= t :
-A. Ã¨ concavo
-B. Ã¨ un intorno euclideo
-C. Ã¨ convesso
-D. Ã¨ un intorno esatto
-E. Ã¨ il complemento di S
+A. è concavo
+B. è un intorno euclideo
+C. è convesso
+D. è un intorno esatto
+E. è il complemento di S
 C
 
 @Programmazione Lineare ================================================================================
-Un insieme di colonne di una matrice intera A m x n non Ã¨ linearmente indipendente se:
+Un insieme di colonne di una matrice intera A m x n non è linearmente indipendente se:
 A. la loro combinazione lineare che produce il vettore nullo ha tutti i coefficienti nulli
-B. ogni colonna puÃ² essere espressa come combinazione lineare delle altre
-C. la sottomatrice corrispondente non Ã¨ singolare
-D. il determinante della matrice corrispondente Ã¨ diverso da zero
-E. nessuna colonna puÃ² essere espressa come combinazione lineare delle altre
+B. ogni colonna può essere espressa come combinazione lineare delle altre
+C. la sottomatrice corrispondente non è singolare
+D. il determinante della matrice corrispondente è diverso da zero
+E. nessuna colonna può essere espressa come combinazione lineare delle altre
 B
 
-Un insieme di m colonne di una matrice intera A m x n Ã¨ linearmente indipendente se:
-A. la sottomatrice corrispondente Ã¨ singolare.
-B. il determinante della matrice corrispondente Ã¨ nullo.
-C. al massimo una colonna puÃ² essere espressa come combinazione lineare delle altre.
-D. una loro combinazione lineare con coefficienti non tutti nulli puÃ² produrre il vettore nullo.
-E. nessuna colonna puÃ² essere espressa come combinazione lineare delle altre.
+Un insieme di m colonne di una matrice intera A m x n è linearmente indipendente se:
+A. la sottomatrice corrispondente è singolare.
+B. il determinante della matrice corrispondente è nullo.
+C. al massimo una colonna può essere espressa come combinazione lineare delle altre.
+D. una loro combinazione lineare con coefficienti non tutti nulli può produrre il vettore nullo.
+E. nessuna colonna può essere espressa come combinazione lineare delle altre.
 E
 
-Quale di queste non Ã¨ un'assunzione che l'algoritmo del Simplesso deve verificare prima di poter operare?
+Quale di queste non è un'assunzione che l'algoritmo del Simplesso deve verificare prima di poter operare?
 A. Si considera sempre la forma standard con m<n.
-B. La regione ammissibile F non Ã¨ vuota.
-C. La matrice A contiene m colonne linearmente indipendenti, ha cioÃ¨ rango m.
+B. La regione ammissibile F non è vuota.
+C. La matrice A contiene m colonne linearmente indipendenti, ha cioè rango m.
 D. La SBA iniziale non deve essere degenere.
 E. Nessuna di queste.
 D
 
-Una variabile libera in segno puÃ² essere sostituita equivalentemente da:
+Una variabile libera in segno può essere sostituita equivalentemente da:
 A. la differenza fra una variabile non positiva ed una non negativa.
 B. la differenza fra due variabili non negative.
 C. la somma di due variabili non positive.
@@ -80,7 +80,7 @@ D. Ax >= b, Ax < b
 E. Nessuna di queste
 A
 
-Dati un vettore di parametri a ed un vettore di incognite x, una disequazione della forma a'x <= b Ã¨ equivalente a
+Dati un vettore di parametri a ed un vettore di incognite x, una disequazione della forma a'x <= b è equivalente a
 A. a'x <= b, a'x + s = b, s >= 0.
 B. a'x - s = b, s >= 0. 
 C. a'x + s = b, s <= 0.
@@ -96,7 +96,7 @@ D. una sola soluzione se m > n
 E. nessuna delle precedenti
 C
 
-Cosa Ã¨ una base di una matrice A?
+Cosa è una base di una matrice A?
 A. Un sottoinsieme di colonne di A.
 B. Un sottoinsieme di colonne di A linearmente indipendenti.
 C. Un sottoinsieme di m colonne di A (m rango di A).
@@ -104,10 +104,10 @@ D. Un sottoinsieme di m colonne di A linearmente indipendenti (m rango di A).
 E. Nessuna di queste.
 D
 
-Data una matrice intera A m x n, una sua base Ã¨ costituita da
+Data una matrice intera A m x n, una sua base è costituita da
 A. un insieme di m colonne
 B. un insieme di m colonne linearmente indipendenti
-C. un insieme di m colonne la cui matrice quadrata corrispondente Ã¨ singolare
+C. un insieme di m colonne la cui matrice quadrata corrispondente è singolare
 D. un insieme di m colonne linearmente dipendenti
 E. nessuna di queste
 B
@@ -120,7 +120,7 @@ D. dando un valore non nullo alle variabili fuori base e risolvendo il sistema r
 E. nessuna di queste
 C
 
-Quale tra le seguenti Ã¨ la definizione di politopo?
+Quale tra le seguenti è la definizione di politopo?
 A. Regione in cui la combinazione convessa di ciascun punto appartiene sempre alla regione.
 B. Intersezione di un numero finito di semispazi.
 C. Combinazione convessa di un numero finito di vertici.
@@ -128,7 +128,7 @@ D. Regione ammissibile che ha come punti ottimi i vertici.
 E. Nessuna di queste.
 B
 
-Sia P un politopo, H un generico iperpiano, HS uno dei due semispazi generati da H. Insieme dei punti f = intersezione tra P e HS Ã¨ detta:
+Sia P un politopo, H un generico iperpiano, HS uno dei due semispazi generati da H. Insieme dei punti f = intersezione tra P e HS è detta:
 A. Politopo convesso ammissibile
 B. Regione ammissibile
 C. Faccia del politopo se f non vuoto e contenuto in H
@@ -136,15 +136,15 @@ D. Insieme di punti ottimi contenuti in H
 E. Nessuna di queste
 C
 
-Relativamente all'affermazione 'ogni punto di un politopo Ã¨ combinazione convessa dei vertici':
+Relativamente all'affermazione 'ogni punto di un politopo è combinazione convessa dei vertici':
 A. Vale solo in caso di vertici ottimi.
 B. E' corretta.
-C. Vale solo se la combinazione Ã¨ stretta.
+C. Vale solo se la combinazione è stretta.
 D. E' errata.
 E. Nessuna di queste.
 B
 
-La combinazione convessa stretta di due punti distinti x ed y di un politopo convesso Ã¨:
+La combinazione convessa stretta di due punti distinti x ed y di un politopo convesso è:
 A. un vertice del politopo.
 B. un punto del politopo non coincidente con un vertice.
 C. il punto centrale del politopo.
@@ -152,7 +152,7 @@ D. un punto esterno al politopo.
 E. Nessuna di queste.
 B
 
-Dato un politopo P definito dai vincoli di un LP, condizione necessaria e sufficiente perchÃ© un punto sia un vertice Ã¨ che:
+Dato un politopo P definito dai vincoli di un LP, condizione necessaria e sufficiente perché un punto sia un vertice è che:
 A. La sua combinazione convessa con un qualunque altro punto del politopo appartenga ancora al politopo.
 B. La relativa soluzione x abbia componenti positivi.
 C. Il politopo sia limitato e non vuoto.
@@ -160,24 +160,24 @@ D. La corrispondente soluzione x sia una soluzione base ammissibile.
 E. Nessuna di queste.
 D
 
-Quale tra queste affermazioni Ã¨ errata?
-A. Ogni punto del politopo Ã¨ combinazione convessa dei vertici.
-B. Ogni combinazione convessa dei vertici Ã¨ un punto del politopo.
-C. Un vertice Ã¨ combinazione convessa stretta di due punti distinti del politopo.
-D. Un vertice non Ã¨ combinazione convessa stretta di due punti distinti del politopo.
+Quale tra queste affermazioni è errata?
+A. Ogni punto del politopo è combinazione convessa dei vertici.
+B. Ogni combinazione convessa dei vertici è un punto del politopo.
+C. Un vertice è combinazione convessa stretta di due punti distinti del politopo.
+D. Un vertice non è combinazione convessa stretta di due punti distinti del politopo.
 E. Nessuna di queste.
 C
 
-Quale tra queste affermazioni Ã¨ errata?
-A. L'intersezione di un numero finito di iperpiani Ã¨ un politopo (convesso).
-B. La dimensione di un politopo Ã¨ la minima dimensione di uno spazio che lo puÃ² contenere.
+Quale tra queste affermazioni è errata?
+A. L'intersezione di un numero finito di iperpiani è un politopo (convesso).
+B. La dimensione di un politopo è la minima dimensione di uno spazio che lo può contenere.
 C. Una faccia di dimensione 1 viene detta spigolo.
-D. Un vertice non Ã¨ combinazione convessa stretta di due punti distinti del politopo.
+D. Un vertice non è combinazione convessa stretta di due punti distinti del politopo.
 E. Nessuna di queste.
 A
 
-Dato il politopo definito dai vincoli di un LP, una combinazione convessa di vertici ottimi Ã¨:
-A. ottima solo se la combinazione convessa Ã¨ stretta
+Dato il politopo definito dai vincoli di un LP, una combinazione convessa di vertici ottimi è:
+A. ottima solo se la combinazione convessa è stretta
 B. non ottima
 C. ottima sotto particolari condizioni
 D. sempre ottima
@@ -185,10 +185,10 @@ E. nessuna di queste
 D
 
 Una SBA si dice degenere se:
-A. Contiene piÃ¹ di m-n variabili con valore zero.
-B. Contiene piÃ¹ di n-m variabili con valore zero.
+A. Contiene più di m-n variabili con valore zero.
+B. Contiene più di n-m variabili con valore zero.
 C. Esistono fuori base variabili con valore zero.
-D. Non c'Ã¨ nessuna variabile con valore zero.
+D. Non c'è nessuna variabile con valore zero.
 E. Nessuna di queste
 B
 
@@ -196,28 +196,28 @@ Se due basi producono la stessa soluzione base ammissibile x, allora x contiene:
 A. meno di n zeri.
 B. n-m zeri.
 C. meno di n-m zeri.
-D. piÃ¹ di m zeri.
-E. piÃ¹ di n-m zeri.
+D. più di m zeri.
+E. più di n-m zeri.
 E
 
-Quale di queste affermazioni Ã¨ errata?
+Quale di queste affermazioni è errata?
 A. Un insieme S si dice convesso se dati due qualunque punti di S, la combinazione convessa di questi appartiene ancora ad S.
-B. Una funzione c si dice convessa su un insieme convesso S se il valore della funzione nella combinazione convessa di due qualunque punti di S Ã¨ maggiore o uguale alla combinazione convessa del valore della funzione nei due punti.
+B. Una funzione c si dice convessa su un insieme convesso S se il valore della funzione nella combinazione convessa di due qualunque punti di S è maggiore o uguale alla combinazione convessa del valore della funzione nei due punti.
 C. Dato un qualunque problema LP, esiste sempre un vertice ottimo.
-D. Se due basi distinte producono la stessa SBA x, allora x Ã¨ degenere.
+D. Se due basi distinte producono la stessa SBA x, allora x è degenere.
 E. Nessuna di queste.
 B
 
-Quale tra queste affermazioni Ã¨ errata?
-A. Ogni combinazione convessa di vertici ottimi Ã¨ ottima.
-B. Dato un LP non Ã¨ detto che esista un punto ottimo; se esiste allora questo Ã¨ un vertice.
-C. L'insieme dei vincoli di un LP Ã¨ un politopo.
-D. La regione ammissibile di un LP Ã¨ un politopo.
+Quale tra queste affermazioni è errata?
+A. Ogni combinazione convessa di vertici ottimi è ottima.
+B. Dato un LP non è detto che esista un punto ottimo; se esiste allora questo è un vertice.
+C. L'insieme dei vincoli di un LP è un politopo.
+D. La regione ammissibile di un LP è un politopo.
 E. Nessuna di queste.
 B
 
 @Algoritmo del Simplesso ===============================================================================
-Se yij Ã¨ minore o uguale a 0 per ogni i, in relazione a theta, cosa succede?
+Se yij è minore o uguale a 0 per ogni i, in relazione a theta, cosa succede?
 A. Viene violata assunzione 0 (forma standard con m<n).
 B. Viene violata assunzione 1 (A di rango m).
 C. Viene violata assunzione 2 (F non vuota).
@@ -225,10 +225,10 @@ D. Viene violata assunzione 3 (F limitata in direzione di decrescenza della funz
 E. Nessuna di queste.
 D
 
-Cosa significa se nel calcolo di theta max c'Ã¨ un caso di paritÃ ?
+Cosa significa se nel calcolo di theta max c'è un caso di parità?
 A. La soluzione attuale era degenere.
-B. La nuova soluzione Ã¨ degenere.
-C. La nuova soluzione avrÃ  costo maggiore.
+B. La nuova soluzione è degenere.
+C. La nuova soluzione avrà costo maggiore.
 D. Niente di particolare, si prosegue scegliendo l'indice minimo.
 E. Nessuna di queste.
 B
@@ -273,27 +273,27 @@ D. L'opposto di z0 della soluzione base attuale.
 E. Nessuna di queste.
 D
 
-Cosa dice il criterio di ottimalitÃ ?
-A. Se il costo relativo j-esimo Ã¨ maggiore o uguale a 0 per ogni j, allora la soluzione attuale Ã¨ ottima.
-B. Se il costo relativo j-esimo Ã¨ positivo per ogni j, allora la soluzione attuale Ã¨ ottima.
-C. Se i valori delle variabili base sono tutti positivi o nulli, allora la soluzione attuale Ã¨ ottima.
-D. Se il valore z0 Ã¨ negativo, allora la soluzione attuale Ã¨ ottima.
+Cosa dice il criterio di ottimalità?
+A. Se il costo relativo j-esimo è maggiore o uguale a 0 per ogni j, allora la soluzione attuale è ottima.
+B. Se il costo relativo j-esimo è positivo per ogni j, allora la soluzione attuale è ottima.
+C. Se i valori delle variabili base sono tutti positivi o nulli, allora la soluzione attuale è ottima.
+D. Se il valore z0 è negativo, allora la soluzione attuale è ottima.
 E. Nessuna di queste.
 A
 
 Cosa afferma la regola di Dantzig?
-A. Entra in base la colonna Aj con il costo Cj piÃ¹ negativo.
+A. Entra in base la colonna Aj con il costo Cj più negativo.
 B. Entra in base la colonna Aj di indice minimo con costo Cj negativo.
-C. Entra in base la prima colonna Aj con costo Cj negativo. In caso di paritÃ , esce dalla base la colonna Aj di indice minimo.
-D. Esce dalla base la colonna Aj con il costo Cj piÃ¹ negativo.
+C. Entra in base la prima colonna Aj con costo Cj negativo. In caso di parità, esce dalla base la colonna Aj di indice minimo.
+D. Esce dalla base la colonna Aj con il costo Cj più negativo.
 E. Nessuna di queste
 A
 
-Nell'operazione di pivoting del simplesso primale, in caso di paritÃ  nella scelta del pivot, la nuova soluzione base:
-A. puÃ² essere peggiore della soluzione base attuale.
+Nell'operazione di pivoting del simplesso primale, in caso di parità nella scelta del pivot, la nuova soluzione base:
+A. può essere peggiore della soluzione base attuale.
 B. coincide sempre con la soluzione base attuale.
-C. non Ã¨ mai degenere.
-D. puÃ² essere non ammissibile.
+C. non è mai degenere.
+D. può essere non ammissibile.
 E. Nessuna di queste.
 E
 
@@ -305,20 +305,20 @@ D. garantisce il massimo decremento locale del valore della soluzione
 E. nessuna di queste
 A
 
-Sia v il vertice del politopo corrispondente alla base attuale B. Se B Ã¨ degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice, che Ã¨:
+Sia v il vertice del politopo corrispondente alla base attuale B. Se B è degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice, che è:
 A. sempre diverso da v.
 B. diverso da v oppure coincidente con v, dipende dal tableau attuale.
-C. coincidente con v se il determinante di B Ã¨ nullo.
+C. coincidente con v se il determinante di B è nullo.
 D. sempre coincidente con v.
-E. diverso da v purchÃ© il determinante di B sia positivo.
+E. diverso da v purché il determinante di B sia positivo.
 B
 
-Sia v il vertice del politopo corrispondente alla base attuale B. Se B non Ã¨ degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice che Ã¨:
-A. diverso da v oppure coincidente da v, non si puÃ² dire
-B. coincidente con v se il determinante di B Ã¨ nullo
+Sia v il vertice del politopo corrispondente alla base attuale B. Se B non è degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice che è:
+A. diverso da v oppure coincidente da v, non si può dire
+B. coincidente con v se il determinante di B è nullo
 C. sempre diverso da v
-D. diverso da v purchÃ¨ il determinante di B sia positivo
-E. coincidente con v se il determinante di B Ã¨ non negativo
+D. diverso da v purchè il determinante di B sia positivo
+E. coincidente con v se il determinante di B è non negativo
 C
 
 In cosa consiste la Fase 1 dell'algoritmo del Simplesso?
@@ -330,16 +330,16 @@ E. Nessuna di queste.
 C
 
 Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore negativo:
-A. si Ã¨ ottenuta una soluzione base ammissibile per il problema originale.
-B. significa che la soluzione ottima Ã¨ illimitata.
-C. significa che il problema originale Ã¨ impossibile.
-D. si Ã¨ trovata la soluzione ottima del problema originale.
+A. si è ottenuta una soluzione base ammissibile per il problema originale.
+B. significa che la soluzione ottima è illimitata.
+C. significa che il problema originale è impossibile.
+D. si è trovata la soluzione ottima del problema originale.
 E. Nessuna di queste.
 E
 
 Se la soluzione del problema artificiale della fase 1 del simplesso ha valore nullo:
 A. E' sempre possibile proseguire con la fase 2, a patto di eliminare le variabili artificiali, sostituire la funzione obiettivo con quella del costo originale e azzerare i costi relativi in corrispondenza delle basi o ridurre la dimensione della base.
-B. Non Ã¨ detto che sia sempre possibile proseguire con la fase 2.
+B. Non è detto che sia sempre possibile proseguire con la fase 2.
 C. Si prosegue con la fase 2 senza nessun tipo di operazione preliminare.
 D. Il problema originale non ha soluzione ammissibile.
 E. Nessuna di queste.
@@ -354,11 +354,11 @@ E. Nessuna di queste.
 C
 
 Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore positivo
-A. significa che la soluzione ottima Ã¨ illimitata
-B. sotto determinate condizioni si Ã¨ ottenuta una soluzione base ammissibile per il problema originale
-C. si Ã¨ trovata la soluzione ottima del problema originale
-D. si Ã¨ ottenuta una soluzione base ammissibile per il problema originale
-E. significa che il problema Ã¨ impossibile
+A. significa che la soluzione ottima è illimitata
+B. sotto determinate condizioni si è ottenuta una soluzione base ammissibile per il problema originale
+C. si è trovata la soluzione ottima del problema originale
+D. si è ottenuta una soluzione base ammissibile per il problema originale
+E. significa che il problema è impossibile
 E
 
 Se un tableau del simplesso primale corrisponde alla soluzione ottima:
@@ -369,7 +369,7 @@ D. gli elementi della riga 0, colonne da 1 a n, sono tutti non negativi.
 E. Nessuna di queste.
 D
 
-@DualitÃ  ===============================================================================================
+@Dualità ===============================================================================================
 Ad una variabile primale non negativa corrisponde
 A. nessuna di queste
 B. un vincolo duale della forma pi'a^ <= c
@@ -378,7 +378,7 @@ D. una variabile duale non negativa
 E. una variabile duale libera (non ristretta in segno)
 B
 
-Quale tra queste affermazioni Ã¨ falsa rispetto ad una corrispondenza primale-duale?
+Quale tra queste affermazioni è falsa rispetto ad una corrispondenza primale-duale?
 A. Ai costi corrispondono condizioni su variabili e viceversa.
 B. I vincoli sono dati dalle righe di A per il primale, dalle colonne di A per il duale.
 C. Ai costi corrispondono i termini noti e viceversa.
@@ -387,14 +387,14 @@ E. Nessuna di queste.
 A
 
 Se un problema di programmazione lineare (primale) ha soluzione ottima finita, allora:
-A. Il suo duale non Ã¨ detto che abbia soluzione ottima finita.
+A. Il suo duale non è detto che abbia soluzione ottima finita.
 B. Anche il suo duale ha soluzione ottima finita e i valori delle soluzioni coincidono.
-C. Anche il duale ha soluzione ottima finita, ma non Ã¨ detto che i valori delle soluzioni coincidano.
+C. Anche il duale ha soluzione ottima finita, ma non è detto che i valori delle soluzioni coincidano.
 D. Anche il duale ha soluzione ottima finita, ma i valori delle due soluzioni non coincidono.
 E. Nessuna di queste
 B
 
-Quale puÃ² essere una possibile coppia di problemi primale-duale?
+Quale può essere una possibile coppia di problemi primale-duale?
 A. Primale ottimo finito / Duale illimitato.
 B. Primale Illimitato / Duale Illimitato.
 C. Primale impossibile / Duale impossibile.
@@ -404,37 +404,37 @@ C
 
 La situazione "primale illimitato" e corrispondente "duale illimitato":
 A. dipende dal gradiente della funzione obiettivo del primale.
-B. non puÃ² mai verificarsi.
-C. puÃ² verificarsi sotto determinate condizioni.
+B. non può mai verificarsi.
+C. può verificarsi sotto determinate condizioni.
 D. dipende dai gradienti delle due funzioni obiettivo.
 E. si verifica sempre.
 B
 
-Quando un primale Ã¨ illimitato, la situazione "corrispondente duale impossibile":
+Quando un primale è illimitato, la situazione "corrispondente duale impossibile":
 A. dipende dai gradienti delle due funzioni obiettivo
-B. non puÃ² mai verificarsi
-C. puÃ² verificarsi sotto determinate condizioni
+B. non può mai verificarsi
+C. può verificarsi sotto determinate condizioni
 D. dipende dal gradiente della funzione obiettivo
 E. si verifica sempre
 E
 
 Il lemma di Farkas:
-A. Ha colto con grande anticipo l'essenza della dualitÃ .
+A. Ha colto con grande anticipo l'essenza della dualità.
 B. Ha colto con grande anticipo l'essenza della programmazione intera.
 C. Offre una solida dimostrazione sull'efficienza dell'algoritmo del simplesso.
-D. Identifica la relazione tra l'ammissibilitÃ  del primale e l'impossibilitÃ  del duale.
+D. Identifica la relazione tra l'ammissibilità del primale e l'impossibilità del duale.
 E. Nessuna di queste
 A
 
 Il teorema degli scarti complementari afferma:
-A. Per ogni i ad 1 a m, l'i-esima variabile duale Ã¨ nulla o l'i-esimo vincolo primale Ã¨ soddisfatto con uguaglianza.
+A. Per ogni i ad 1 a m, l'i-esima variabile duale è nulla o l'i-esimo vincolo primale è soddisfatto con uguaglianza.
 B. Per ogni j da 1 a n, il j-esimo vincolo primale deve essere soddisfatto con uguaglianza o la j-esima variabile duale deve essere nulla.
-C. per ogni i da 1 a m, l'i-esima variabile primale Ã¨ nulla o l'i-esimo vincolo duale Ã¨ soddisfatto con uguaglianza.
+C. per ogni i da 1 a m, l'i-esima variabile primale è nulla o l'i-esimo vincolo duale è soddisfatto con uguaglianza.
 D. Per ogni j da 1 a n, i j-esimi vincoli primali e duali devono essere soddisfatti con uguaglianza.
 E. Nessuna di queste.
 A
 
-In un problema di programmazione lineare con m vincoli ed n variabili, le condizioni di ortogonalitÃ  (complementary slackness)
+In un problema di programmazione lineare con m vincoli ed n variabili, le condizioni di ortogonalità (complementary slackness)
 A. sono m-n.
 B. sono m+n.
 C. sono m.
@@ -442,11 +442,11 @@ D. sono m*n.
 E. sono n.
 B
 
-Le condizioni di ortogonalitÃ  (complementary slackness) di una coppia primale-duale garantiscono:
-A. l'ammissibilitÃ  di due soluzioni, una primale e una duale
-B. l'ottimalitÃ  di due soluzioni ammissibili, una primale e una duale
-C. l'ottimalitÃ  di due soluzioni, una primale e una duale, anche se non ammissibili
-D. l'ottimalitÃ  di una soluzione primale e del suo complemento
+Le condizioni di ortogonalità (complementary slackness) di una coppia primale-duale garantiscono:
+A. l'ammissibilità di due soluzioni, una primale e una duale
+B. l'ottimalità di due soluzioni ammissibili, una primale e una duale
+C. l'ottimalità di due soluzioni, una primale e una duale, anche se non ammissibili
+D. l'ottimalità di una soluzione primale e del suo complemento
 E. nessuna di queste
 B
 
@@ -482,7 +482,7 @@ D. un massimo tra rapporti di valore positivo
 E. nessuna di queste
 C
 
-Cosa succede se, dopo aver individuato la riga con elemento in colonna 0 negativo, nell'algoritmo del simplesso duale ogni elemento di quella riga Ã¨ positivo o nullo?
+Cosa succede se, dopo aver individuato la riga con elemento in colonna 0 negativo, nell'algoritmo del simplesso duale ogni elemento di quella riga è positivo o nullo?
 A. Duale impossibile, Primale illimitato.
 B. Duale illimitato, Primale impossibile.
 C. Duale impossibile, Primale impossibile.
@@ -490,10 +490,10 @@ D. Duale illimitato, Primale illimitato.
 E. Nessuna di queste.
 B
 
-Nell'algoritmo del simplesso duale, sia a'i (i>0) una riga corrispondente ad un valore negativo in colonna 0. Se tutti i coefficienti di tale riga sono positivi o nulli, ciÃ² implica che:
-A. Il sistema Ax = b Ã¨ ridondante.
-B. il problema Ã¨ impossibile.
-C. la soluzione attuale Ã¨ ottima.
+Nell'algoritmo del simplesso duale, sia a'i (i>0) una riga corrispondente ad un valore negativo in colonna 0. Se tutti i coefficienti di tale riga sono positivi o nulli, ciò implica che:
+A. Il sistema Ax = b è ridondante.
+B. il problema è impossibile.
+C. la soluzione attuale è ottima.
 D. il problema ha soluzione illimitata.
 E. Nessuna di queste.
 B
@@ -502,14 +502,14 @@ Relativamente al prezzo ombra:
 A. Il valore ottimo della variabile xi fornisce il prezzo ombra della risorsa associata al vincolo i.
 B. Il prezzo ombra della risorsa i identifica il valore della soluzione ottima duale.
 C. Il valore ottimo della variabile duale pi-i identifica il prezzo ombra della risorsa associata al vincolo i.
-D. Il prezzo ombra della variabile duale pi-i indica il modo per capire se una base con coefficienti diversi Ã¨ ancora ottima.
+D. Il prezzo ombra della variabile duale pi-i indica il modo per capire se una base con coefficienti diversi è ancora ottima.
 E. Nessuna di queste.
 C
 
-Relativamente al simplesso duale, quale tra le seguenti affermazioni Ã¨ errata?
+Relativamente al simplesso duale, quale tra le seguenti affermazioni è errata?
 A. Vogliamo che il pivoting renda positiva yi0 .
 B. Si inizia con una base ammissibile per il primale e vogliamo trovare la soluzione ottima duale.
-C. Vogliamo eliminare le inammissibilitÃ  contenute nel tableau.
+C. Vogliamo eliminare le inammissibilità contenute nel tableau.
 D. Il pivoting deve portare il valore 0 in y0s .
 E. Nessuna di queste.
 B
@@ -531,7 +531,7 @@ D. z(LP) < z(ILP)
 E. z(LP) = z(ILP)
 B
 
-Una matrice m x n Ã¨ totalmente unimodulare se:
+Una matrice m x n è totalmente unimodulare se:
 A. ogni sottomatrice quadrata ha determinante di valore +1 o -1.
 B. ogni sottomatrice quadrata ha determinante di valore unitario.
 C. il suo determinante ha valore unitario.
@@ -539,7 +539,7 @@ D. il suo determinante vale 0, +1 o -1.
 E. Ogni sottomatrice quadrata ha determinante di valore 0, +1 o -1.
 E
 
-Se A Ã¨ totalmente unimodulare, relativamente a problemi ILP:
+Se A è totalmente unimodulare, relativamente a problemi ILP:
 A. Il simplesso risolve problemi in tutte le forme.
 B. Il simplesso risolve solo problemi in forma standard.
 C. Il simplesso risolve problemi in forma standard e canonica, ma non in forma generale.
@@ -556,7 +556,7 @@ E. nessuna delle precedenti
 D
 
 Aggiungendo un taglio di Gomory al tableau finale di un LP con yi0 non intero
-A. Si elimina al piÃ¹ un punto intero ammissibile non ottimo
+A. Si elimina al più un punto intero ammissibile non ottimo
 B. Il nuovo tableau contiene una base ammissibile ma non ottima per il primale
 C. Il nuovo tableau contiene una base non ammissibile per il primale ma ammissibile per il duale
 D. Si elimina almeno una soluzione ammissibile intera
@@ -564,55 +564,55 @@ E. Nessuna di queste
 C
 
 L'aggiunta al tableau del taglio di Gomory relativo ad una riga generatrice frazionaria produce una soluzione (un tableau) che:
-A. soddisfa il vincolo di interezza ma non Ã¨ ottima.
-B. soddisfa il criterio di ottimalitÃ  ma non Ã¨ ammissibile.
-C. Ã¨ ammissibile ma non Ã¨ intera.
-D. Ã¨ ammissibile ma non soddisfa il criterio di ottimalitÃ .
+A. soddisfa il vincolo di interezza ma non è ottima.
+B. soddisfa il criterio di ottimalità ma non è ammissibile.
+C. è ammissibile ma non è intera.
+D. è ammissibile ma non soddisfa il criterio di ottimalità.
 E. Nessuna di queste.
 B
 
-Sia P il problema ILP e L(P) il suo rilassamento continuo. Se L(P) Ã¨ illimitato, allora:
-A. P Ã¨ sempre impossibile
-B. non si puÃ² dire nulla su P
-C. P Ã¨ sempre illimitato
-D. P Ã¨ illimitato salvo casi molto particolari
+Sia P il problema ILP e L(P) il suo rilassamento continuo. Se L(P) è illimitato, allora:
+A. P è sempre impossibile
+B. non si può dire nulla su P
+C. P è sempre illimitato
+D. P è illimitato salvo casi molto particolari
 E. nessuna di queste
 D
 
-Sia P un problema di programmazione lineare intera e L(P) il suo rilassamento continuo. Se L(P) Ã¨ impossibile, allora
-A. P Ã¨ impossibile salvo casi molto particolari
-B. non si puÃ² dire nulla su P
-C. P Ã¨ sempre impossibile
-D. P Ã¨ illimitato
+Sia P un problema di programmazione lineare intera e L(P) il suo rilassamento continuo. Se L(P) è impossibile, allora
+A. P è impossibile salvo casi molto particolari
+B. non si può dire nulla su P
+C. P è sempre impossibile
+D. P è illimitato
 E. nessuna di queste
 C
 
 In un algoritmo branch-and-bound per un problema di massimizzazione, sia U l'upper-bound del nodo corrente. Il nodo viene ucciso se:
-A. U Ã¨ minore o uguale al valore della soluzione ottima corrente
-B. U Ã¨ minore o uguale al valore della soluzione ottima finale
-C. U Ã¨ maggiore o uguale al valore della soluzione ottima corrente
-D. U Ã¨ maggiore o uguale al valore della soluzione ottima finale
+A. U è minore o uguale al valore della soluzione ottima corrente
+B. U è minore o uguale al valore della soluzione ottima finale
+C. U è maggiore o uguale al valore della soluzione ottima corrente
+D. U è maggiore o uguale al valore della soluzione ottima finale
 E. nessuna di queste
 A
 
 Dopo aver inserito i vincoli del procedimento Branch-and-Bound nel tableau:
 A. Si prosegue sempre con il simplesso primale.
 B. Si prosegue sempre con il simplesso duale.
-C. Si puÃ² proseguire sia con il simplesso primale che con il simplesso duale.
+C. Si può proseguire sia con il simplesso primale che con il simplesso duale.
 D. Si prosegue con la Fase 1 del simplesso primale.
 E. Nessuna di queste.
 B
 
 Nel Forward Step della strategia di esplorazione Depth-First rivisitata:
 A. Si generano tutti i figli di P0 e si prosegue.
-B. Si calcola L0,si rimuove dai nodi attivi il nodo con piÃ¹ basso lower bound, si generano i suoi figli e ne si calcolano i lower bound, aggiornando quello migliore.
-C. Si genera un figlio dell'ultimo nodo Pk generato finchÃ¨ si ottiene una soluzione immediatamente risolubile e si aggiorna eventualmente z.
+B. Si calcola L0,si rimuove dai nodi attivi il nodo con più basso lower bound, si generano i suoi figli e ne si calcolano i lower bound, aggiornando quello migliore.
+C. Si genera un figlio dell'ultimo nodo Pk generato finchè si ottiene una soluzione immediatamente risolubile e si aggiorna eventualmente z.
 D. Si generano tutti i figli del nodo attuale, si calcolano i loro lower bound, si prosegue l'esplorazione dal figlio con minimo lower bound.
 E. Nessuna di queste
 D
 
-@ComplessitÃ  ===========================================================================================
-Cosa Ã¨ un'istanza di un problema?
+@Complessità ===========================================================================================
+Cosa è un'istanza di un problema?
 A. Un possibile algoritmo per risolverlo.
 B. Un algoritmo attualmente in esecuzione per risolverlo.
 C. L'insieme di tutti gli algoritmi che lo possono risolvere.
@@ -620,7 +620,7 @@ D. Un particolare caso numerico.
 E. Nessuna di queste.
 D
 
-Cosa Ã¨ la dimensione di un problema?
+Cosa è la dimensione di un problema?
 A. Minimo tempo di esecuzione di un algoritmo per risolverlo.
 B. Lunghezza minima di un output di una sua istanza.
 C. Numero di bit necessari per codificare l'input.
@@ -629,30 +629,30 @@ E. Nessuna di queste.
 C
 
 Se un problema appartiene alla classe NP
-A. Ã¨ risolubile solo mediante un albero decisionale di altezza esponenziale
-B. Ã¨ sempre risolubile mediante un algoritmo di programmazione dinamica
-C. Ã¨ sempre risolubile in tempo polinomiale
-D. Ã¨ sempre risolubile mediante un albero decisionale di altezza polinomiale
-E. Ã¨ sempre risolubile in tempo pseudo-polinomiale
+A. è risolubile solo mediante un albero decisionale di altezza esponenziale
+B. è sempre risolubile mediante un algoritmo di programmazione dinamica
+C. è sempre risolubile in tempo polinomiale
+D. è sempre risolubile mediante un albero decisionale di altezza polinomiale
+E. è sempre risolubile in tempo pseudo-polinomiale
 B
 
 Un algoritmo polinomiale per un problema NP-completo:
 A. risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli fortemente NP-completi
-B. non puÃ² esistere
+B. non può esistere
 C. risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli della classe P
 D. risolverebbe ogni problema della classe NP in tempo polinomiale
 E. nessuna di queste
 D
 
 Si dice che S' domina S'' se:
-A. La somma dei pesi di S' Ã¨ maggiore o uguale a quella dei pesi di S'' e la somma dei profitti di S' Ã¨ minore o uguale a quella dei profitti di S''.
-B. La somma dei pesi di S' e di S'' Ã¨ uguale e la somma dei profitti di S'' Ã¨ maggiore di quella dei profitti di S'.
-C. La somma dei pesi di S' Ã¨ minore o uguale alla somma dei pesi di S'' e la somma dei profitti di S' Ã¨ maggiore o uguale a quella dei profitti di S''.
-D. La somma dei pesi di S' Ã¨ minore a quella dei pesi di S'' e la somma dei profitti di S' e di S'' coincidono.
+A. La somma dei pesi di S' è maggiore o uguale a quella dei pesi di S'' e la somma dei profitti di S' è minore o uguale a quella dei profitti di S''.
+B. La somma dei pesi di S' e di S'' è uguale e la somma dei profitti di S'' è maggiore di quella dei profitti di S'.
+C. La somma dei pesi di S' è minore o uguale alla somma dei pesi di S'' e la somma dei profitti di S' è maggiore o uguale a quella dei profitti di S''.
+D. La somma dei pesi di S' è minore a quella dei pesi di S'' e la somma dei profitti di S' e di S'' coincidono.
 E. Nessuna di queste.
 C
 
-L'algoritmo Knapsack DP Ã¨:
+L'algoritmo Knapsack DP è:
 A. Polinomiale
 B. Esponenziale
 C. Pseudo-Esponenziale
@@ -661,41 +661,41 @@ E. Nessuna di queste
 D
 
 Relativamente ad un problema fortemente NP-Completo:
-A. Non puÃ² esistere nessun algoritmo pseudo-polinomiale, a meno che P=NP.
-B. Non puÃ² esistere nessun algoritmo pseudo-polinomiale.
-C. PuÃ² esistere un algoritmo pseudo-polinomiale, a meno che P=NP.
-D. PuÃ² esistere un algoritmo pseudo-polinomiale.
+A. Non può esistere nessun algoritmo pseudo-polinomiale, a meno che P=NP.
+B. Non può esistere nessun algoritmo pseudo-polinomiale.
+C. Può esistere un algoritmo pseudo-polinomiale, a meno che P=NP.
+D. Può esistere un algoritmo pseudo-polinomiale.
 E. Nessuna di queste.
 A
 
-Quale tra queste affermazioni Ã¨ errata?
+Quale tra queste affermazioni è errata?
 A. Per tutti i problemi fortemente NP-Completi esiste un algoritmo pseudo-polinomiale.
-B. La versione riconoscimento e ottimizzazione hanno stessa difficoltÃ  in relazione alla possibilitÃ  o meno di trovare la soluzione in tempo polinomiale.
-C. Se A Ã¨ trasformabile polinomialmente in B e si conosce un algoritmo polinomiale per B, allora si ha un algoritmo polinomiale anche per A.
+B. La versione riconoscimento e ottimizzazione hanno stessa difficoltà in relazione alla possibilità o meno di trovare la soluzione in tempo polinomiale.
+C. Se A è trasformabile polinomialmente in B e si conosce un algoritmo polinomiale per B, allora si ha un algoritmo polinomiale anche per A.
 D. Un problema che soddisfa la definizione di Np-Completo senza stabilire la sua appartenenza a NP viene detto NP-Difficile.
 E. Nessuna di queste.
 A
 
-Relativamente alla classe di problemi NP, quale di queste affermazioni Ã¨ errata?
+Relativamente alla classe di problemi NP, quale di queste affermazioni è errata?
 A. Contiene i problemi risolubili con un tempo polinomiale da una Macchina di Turing Non Deterministica.
-B. Se un problema non appartiene a NP, allora Ã¨ possibile trovare un algoritmo polinomiale che lo risolva.
-C. Identifica i problemi RV tali che, se l'istanza della risposta Ã¨ "sÃ© Â¬", ciÃ² puÃ² essere certificato in tempo polinomiale.
-D. Un problema A di NP Ã¨ NP-Completo se per ogni problema B di NP, B puÃ² essere trasformato polinomialmente in A.
+B. Se un problema non appartiene a NP, allora è possibile trovare un algoritmo polinomiale che lo risolva.
+C. Identifica i problemi RV tali che, se l'istanza della risposta è "sé ¬", ciò può essere certificato in tempo polinomiale.
+D. Un problema A di NP è NP-Completo se per ogni problema B di NP, B può essere trasformato polinomialmente in A.
 E. Nessuna di queste
 B
 
 La programmazione lineare:
-A. Ã¨ risolubile in tempo polinomiale, ma non dall'algoritmo del simplesso.
-B. non Ã¨ risolubile in tempo polinomiale.
-C. Ã¨ risolubile in tempo polinomiale dall'algoritmo del simplesso.
-D. Ã¨ risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso.
+A. è risolubile in tempo polinomiale, ma non dall'algoritmo del simplesso.
+B. non è risolubile in tempo polinomiale.
+C. è risolubile in tempo polinomiale dall'algoritmo del simplesso.
+D. è risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso.
 E. Nessuna di queste.
 A
 
 Relativamente ad un problema KP-01:
-A. Ã¨ risolvibile solo mediante un albero decisionale
-B. Ã¨ risolvibile in tempo polinomiale
-C. Ã¨ risolvibile mediante la programmazione dinamica
-D. non esiste algoritmo pseudo-polinomiale
+A. è risolvibile solo mediante un albero decisionale.
+B. è risolvibile in tempo polinomiale.
+C. è risolvibile mediante la programmazione dinamica.
+D. non esiste algoritmo pseudo-polinomiale.
 E. Nessuna di queste.
 C
