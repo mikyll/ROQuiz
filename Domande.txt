@@ -691,3 +691,10 @@ C. è risolubile in tempo polinomiale dall'algoritmo del simplesso.
 D. è risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso.
 E. Nessuna di queste.
 A
+
+Relativamente ad un problema KP-01:
+A. è risolvibile solo mediante un albero decisionale
+B. è risolvibile in tempo polinomiale
+C. è risolvibile mediante la programmazione dinamica
+D. non esiste algoritmo pseudo-polinomiale
+C
