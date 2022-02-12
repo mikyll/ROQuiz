@@ -1,9 +1,9 @@
 <div align="center">
 
 [![Downloads][downloads-shield]][downloads-url]
+[![Domande][domande-shield]][domande-url]
 [![Repo-size][repo-size-shield]][repo-size-url]
 [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
@@ -166,6 +166,8 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 [downloads-url]: https://github.com/mikyll/ROQuiz/releases/latest
 [contributors-shield]: https://img.shields.io/github/contributors/mikyll/ROQuiz
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
+[domande-shield]: https://img.shields.io/static/v1?label=domande&message=86&color=green
+[domande-url]: https://github.com/mikyll/ROQuiz/Domande.txt
 [forks-shield]: https://img.shields.io/github/forks/mikyll/ROQuiz
 [forks-url]: https://github.com/mikyll/ROQuiz/network/members
 [repo-size-shield]: https://img.shields.io/github/repo-size/mikyll/ROQuiz
