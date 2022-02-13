@@ -9,7 +9,7 @@ defaults:
     shell: bash
 
 jobs:
-  Update-Readme:
+  Validazione-File-Domande:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
