@@ -2,11 +2,11 @@
 
 [![Downloads][downloads-shield]][downloads-url]
 [![Domande][domande-shield]][domande-url]
-[![Repo-size][repo-size-shield]][repo-size-url]
-[![Contributors][contributors-shield]][contributors-url]
+[![Validazione Domande][validazione-shield]][validazione-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
+[![Contributors][contributors-shield]][contributors-url]
 [![MIT License][license-shield]][license-url]
+[![Issues][issues-shield]][issues-url]
 <br/>
 [![java][java-shield]][java-url]
 [![dart][dart-shield]][dart-url]
@@ -169,6 +169,8 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
 [domande-shield]: https://img.shields.io/static/v1?label=domande&message=87&color=green
 [domande-url]: https://github.com/mikyll/ROQuiz/Domande.txt
+[validazione-shield]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml/badge.svg
+[validazione-url]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml
 [forks-shield]: https://img.shields.io/github/forks/mikyll/ROQuiz
 [forks-url]: https://github.com/mikyll/ROQuiz/network/members
 [repo-size-shield]: https://img.shields.io/github/repo-size/mikyll/ROQuiz
