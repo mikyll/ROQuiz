@@ -166,7 +166,7 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 [downloads-url]: https://github.com/mikyll/ROQuiz/releases/latest
 [contributors-shield]: https://img.shields.io/github/contributors/mikyll/ROQuiz
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
-[domande-shield]: https://img.shields.io/static/v1?label=domande&message=86&color=green
+[domande-shield]: https://img.shields.io/static/v1?label=domande&message=87&color=green
 [domande-url]: https://github.com/mikyll/ROQuiz/Domande.txt
 [forks-shield]: https://img.shields.io/github/forks/mikyll/ROQuiz
 [forks-url]: https://github.com/mikyll/ROQuiz/network/members
