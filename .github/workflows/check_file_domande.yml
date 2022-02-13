@@ -1,0 +1,33 @@
+name: Validazione File Domande
+on:
+  push:
+    branches:
+      - main
+      
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  Update-Readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - run: cd ${{ github.workspace }}
+      - name: Controllo Codifica File
+        run: |
+          file_domande="Domande.txt"
+          codifica="ISO-8859-1"
+          
+          # Check Encoding
+          charset=$(file -i "$file_domande" | cut -f 2 -d ";" | cut -f 2 -d "=")
+          if [[ "${charset^^}" = "$codifica" ]]
+          then
+            echo "Codifica OK ($charset)"
+          else
+            echo "ERRORE: Codifica file \"$file_domande\" errata ($charset)"
+            exit 1
+          fi
