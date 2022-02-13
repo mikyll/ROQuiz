@@ -1,0 +1,53 @@
+name: Update Readme
+on:
+  push:
+    branches:
+      - main
+      
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  Update-Readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - run: cd ${{ github.workspace }}
+      - name: Controllo numero domande ed aggiornamento Readme
+        run: |
+          file_domande="Domande.txt"
+          file_readme="README.md"
+          
+          # Count questions
+          questions=0
+          while IFS='' read -r LINE || [ -n "${LINE}" ]
+          do
+            # Question
+            if [[ -n "$LINE" && ! "$LINE" == @* && ! "$LINE" =~ ^[A-E]\. && ! "$LINE" == [A-E] ]]
+            then
+              questions=$(expr $questions + 1)
+            fi
+          done < "$file_domande"
+          
+          # Update README
+          # Update
+          sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
+          # Update shield
+          sed -i "s/message=[0-9]*/message=$questions/" "$file_readme"
+          
+          # Check if there are changes
+          if [[ -n $(git status -s) ]]
+          then
+            echo "✅ Readme aggiornato!"
+            # Commit & Push changes
+            git add "$file_readme"
+            git config --global user.name "mikyll"
+            git commit -m "Update README.md"
+            git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
+          else
+            echo "Nessuna modifica necessaria."
+          fi
