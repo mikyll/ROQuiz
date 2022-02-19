@@ -42,12 +42,12 @@ jobs:
           # Check if there are changes
           if [[ -n $(git status -s) ]]
           then
-            echo "✅ Readme aggiornato!"
             # Commit & Push changes
             git add "$file_readme"
             git config --global user.name "mikyll"
             git commit -m "Update README.md"
             git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
+            echo "✅ Readme aggiornato!"
           else
             echo "Nessuna modifica necessaria."
           fi
