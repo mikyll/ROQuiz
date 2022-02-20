@@ -31,8 +31,7 @@ import javafx.stage.Stage;
 import model.Question;
 import model.SettingsSingleton;
 import persistence.BadFileFormatException;
-import persistence.IQuestionRepository;
-import persistence.QuestionRepository;
+import persistence.*;
 
 public class ControllerMenu implements IControllerMenu {
 	private final static String QUESTIONS_FILENAME = "Domande.txt";
@@ -79,7 +78,7 @@ public class ControllerMenu implements IControllerMenu {
 		this.settings = SettingsSingleton.getInstance();
 		
 		// check for downloads only when the app is launched
-		/*if(this.settings.isJustLaunched())
+		if(this.settings.isJustLaunched())
 		{
 			this.settings.loadSettings(".settings.json");
 			this.settings.setJustLaunched(false);
@@ -122,9 +121,9 @@ public class ControllerMenu implements IControllerMenu {
 					new File("DomandeNuove.txt").delete();
 				}
 			}
-		}*/
+		}
 		
-		/*if(!new File("Domande.txt").exists())
+		if(!new File("Domande.txt").exists())
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
 			alert.setTitle("Finestra di dialogo");
@@ -144,10 +143,10 @@ public class ControllerMenu implements IControllerMenu {
 				System.out.println("File " + QUESTIONS_FILENAME + " mancante.");
 				System.exit(1);
 			}
-		}*/
+		}
 		
 		// load question repository from file
-		try (BufferedReader readerQuiz = new BufferedReader(new InputStreamReader(new FileInputStream(QUESTIONS_FILENAME), StandardCharsets.UTF_8))){
+		try (BufferedReader readerQuiz = new BufferedReader(new InputStreamReader(new FileInputStream(QUESTIONS_FILENAME), QuestionRepository.questionsEncoding))){
 			this.qRepo = new QuestionRepository(readerQuiz);
 		} catch (FileNotFoundException e) {
 			System.out.println("File " + QUESTIONS_FILENAME + " mancante.");

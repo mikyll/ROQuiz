@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import model.Question;
 import model.SettingsSingleton;
 
 public class QuestionRepository implements IQuestionRepository {
+	public static final Charset questionsEncoding = StandardCharsets.UTF_8;
+	
 	private static final String regexTopic = "[^a-zA-ZÀ-ÿ\\s]+";
 	
 	private List<Question> questions;
@@ -144,8 +147,8 @@ public class QuestionRepository implements IQuestionRepository {
 	// check which file is longer. -1 file1 is longer, 0 they're equal, 1 file2 is longer.
 	public static int compareFilesLength(String filename1, String filename2)
 	{
-		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(filename1), StandardCharsets.UTF_8));
-				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), StandardCharsets.UTF_8))){
+		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(filename1), questionsEncoding));
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), questionsEncoding))){
 			
 			String line1, line2;
 			while ((line1 = br1.readLine()) != null)
