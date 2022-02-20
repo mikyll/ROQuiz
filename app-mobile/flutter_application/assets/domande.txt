@@ -523,6 +523,14 @@ D. z(ILP) > z(LP)
 E. z(ILP) = z(LP)
 A
 
+Relativamente ad un problema ILP e il suo rilassamento continuo LP
+A. z(LP) >= z(ILP)
+B. z(LP) <= z(ILP)
+C. z(LP) > z(ILP)
+D. z(LP) < z(ILP)
+E. z(LP) = z(ILP)
+B
+
 Una matrice m x n è totalmente unimodulare se:
 A. ogni sottomatrice quadrata ha determinante di valore +1 o -1.
 B. ogni sottomatrice quadrata ha determinante di valore unitario.
@@ -683,3 +691,11 @@ C. è risolubile in tempo polinomiale dall'algoritmo del simplesso.
 D. è risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso.
 E. Nessuna di queste.
 A
+
+Relativamente ad un problema KP-01:
+A. è risolvibile solo mediante un albero decisionale.
+B. è risolvibile in tempo polinomiale.
+C. è risolvibile mediante la programmazione dinamica.
+D. non esiste algoritmo pseudo-polinomiale.
+E. Nessuna di queste.
+C
