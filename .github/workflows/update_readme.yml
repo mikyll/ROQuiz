@@ -47,7 +47,7 @@ jobs:
             git config --global user.name "mikyll"
             git commit -m "Update README.md"
             git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
-            echo "✅ Readme aggiornato!"
+            echo "✔️ Readme aggiornato!"
           else
             echo "Nessuna modifica necessaria."
           fi
