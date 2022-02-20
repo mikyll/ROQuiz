@@ -144,8 +144,8 @@ public class QuestionRepository implements IQuestionRepository {
 	// check which file is longer. -1 file1 is longer, 0 they're equal, 1 file2 is longer.
 	public static int compareFilesLength(String filename1, String filename2)
 	{
-		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(filename1), StandardCharsets.ISO_8859_1));
-				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), StandardCharsets.ISO_8859_1))){
+		try (BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(filename1), StandardCharsets.UTF_8));
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(filename2), StandardCharsets.UTF_8))){
 			
 			String line1, line2;
 			while ((line1 = br1.readLine()) != null)
