@@ -1,26 +1,26 @@
 package model;
 
 public class Settings {
-	private static int questionNumber;
-	private static int timer;
-	private static boolean checkQuestionsUpdate;
-	private static boolean darkMode;
+	private int questionNumber;
+	private int timer;
+	private boolean checkQuestionsUpdate;
+	private boolean darkMode;
 	
 	public Settings() {}
 	public Settings(int qNum, int sTime, boolean qUpdate, boolean dMode)
 	{
-		questionNumber = qNum;
-		timer = sTime;
-		checkQuestionsUpdate = qUpdate;
-		darkMode = dMode;
+		this.questionNumber = qNum;
+		this.timer = sTime;
+		this.checkQuestionsUpdate = qUpdate;
+		this.darkMode = dMode;
 	}
 	
-	public int getQuestionNumber() {return questionNumber;}
-	public void setQuestionNumber(int qNum) {questionNumber = qNum;}
-	public int getTimer() {return timer;}
-	public void setTimer(int sTime) {timer = sTime;}
-	public boolean isCheckQuestionsUpdate() {return checkQuestionsUpdate;}
-	public void setCheckQuestionsUpdate(boolean qUpdate) {checkQuestionsUpdate = qUpdate;}
-	public boolean isDarkMode() {return darkMode;}
-	public void setDarkMode(boolean dMode) {darkMode = dMode;}
+	public int getQuestionNumber() {return this.questionNumber;}
+	public void setQuestionNumber(int qNum) {this.questionNumber = qNum;}
+	public int getTimer() {return this.timer;}
+	public void setTimer(int sTime) {this.timer = sTime;}
+	public boolean isCheckQuestionsUpdate() {return this.checkQuestionsUpdate;}
+	public void setCheckQuestionsUpdate(boolean qUpdate) {this.checkQuestionsUpdate = qUpdate;}
+	public boolean isDarkMode() {return this.darkMode;}
+	public void setDarkMode(boolean dMode) {this.darkMode = dMode;}
 }
