@@ -20,7 +20,7 @@ jobs:
       - name: Controllo Codifica File
         run: |
           file_domande="Domande.txt"
-          codifica="ISO-8859-1"
+          codifica="UTF-8"
           
           # Check Encoding
           charset=$(file -i "$file_domande" | cut -f 2 -d ";" | cut -f 2 -d "=")
