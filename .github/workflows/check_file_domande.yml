@@ -26,8 +26,8 @@ jobs:
           charset=$(file -i "$file_domande" | cut -f 2 -d ";" | cut -f 2 -d "=")
           if [[ "${charset^^}" = "$codifica" ]]
           then
-            echo "Codifica OK ($charset)"
+            echo "✔️ DEUBG: Codifica OK ($charset)"
           else
-            echo "ERRORE: Codifica file \"$file_domande\" errata ($charset)"
+            echo "❌ ERRORE: Codifica file \"$file_domande\" errata ($charset)"
             exit 1
           fi
