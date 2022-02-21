@@ -1,6 +1,10 @@
 class Settings {
-  final DEFAULT_QUESTION_NUMBER = 16;
-  final DEFAULT_ANSWER_NUMBER = 5;
+  final double VERSION_NUMBER = 1.4;
+  final String VERSION_SUFFIX = ""; //"-mobile_beta";
+  final int DEFAULT_QUESTION_NUMBER = 16;
+  final int DEFAULT_ANSWER_NUMBER = 5;
+  final int DEFAULT_TIMER = 18;
+  final bool DEFAULT_DARK_MODE = false;
 
   int questionNumber = -1;
   int timer = -1;

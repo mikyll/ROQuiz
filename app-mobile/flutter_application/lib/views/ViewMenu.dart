@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ViewMenu extends StatefulWidget {
   ViewMenu({Key? key}) : super(key: key);
 
-  QuestionRepository qRepo = QuestionRepository();
+  final QuestionRepository qRepo = QuestionRepository();
   Settings settings = Settings(16, 18, false, false);
   List<Question> questions = [];
 
@@ -25,12 +25,20 @@ class ViewMenu extends StatefulWidget {
 class ViewMenuState extends State<ViewMenu> {
   bool _topicsPresent = false;
   List<bool> selectedTopics = [];
+  int quizPool = 0;
 
   void _initTopics() {
     setState(() {
       for (int i = 0; i < widget.qRepo.topics.length; i++) {
         selectedTopics.add(true);
+        quizPool += widget.qRepo.qNumPerTopic[i];
       }
+    });
+  }
+
+  void updateQuizPool(int v) {
+    setState(() {
+      quizPool = v;
     });
   }
 
@@ -80,7 +88,7 @@ class ViewMenuState extends State<ViewMenu> {
                     fontWeight: FontWeight.bold, /*fontStyle: FontStyle.italic*/
                   )),
               Text(
-                "v1.3-mobile_beta",
+                "v${widget.settings.VERSION_NUMBER}${widget.settings.VERSION_SUFFIX}",
                 style: TextStyle(
                   fontSize: 25,
                   color: Colors.grey[500],
@@ -123,6 +131,7 @@ class ViewMenuState extends State<ViewMenu> {
                                 builder: (context) => ViewTopics(
                                       qRepo: widget.qRepo,
                                       settings: widget.settings,
+                                      updateQuizPool: updateQuizPool,
                                       selectedTopics: selectedTopics,
                                     )));
                       }
@@ -165,7 +174,7 @@ class ViewMenuState extends State<ViewMenu> {
                       color: Colors.grey,
                     ),
                     Text(
-                        "Domande: ${widget.settings.questionNumber} su ${widget.qRepo.questions.length}"),
+                        "Domande: ${widget.settings.questionNumber} su $quizPool"),
                     const SizedBox(width: 20),
                     const Icon(
                       Icons.timer_rounded,

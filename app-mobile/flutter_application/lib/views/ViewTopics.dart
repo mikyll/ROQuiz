@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/model/Settings.dart';
-import 'package:roquiz/views/ViewMenu.dart';
 
 class ViewTopics extends StatefulWidget {
   ViewTopics(
       {Key? key,
       required this.qRepo,
       required this.settings,
+      required this.updateQuizPool,
       required this.selectedTopics})
       : super(key: key);
 
   final QuestionRepository qRepo;
   final Settings settings;
+  final Function(int) updateQuizPool;
   List<bool> selectedTopics;
 
   @override
@@ -21,7 +22,7 @@ class ViewTopics extends StatefulWidget {
 
 class ViewTopicsState extends State<ViewTopics> {
   List<bool> enabledTopics = [];
-  int currentPool = 0;
+  int currentQuizPool = 0;
 
   void _selectTopic(int index) {
     setState(() {
@@ -35,7 +36,7 @@ class ViewTopicsState extends State<ViewTopics> {
     setState(() {
       for (int i = 0; i < enabledTopics.length; i++) {
         // se il numero del pool meno queste è minore del numero di domande nel quiz
-        enabledTopics[i] = currentPool - widget.qRepo.qNumPerTopic[i] >=
+        enabledTopics[i] = currentQuizPool - widget.qRepo.qNumPerTopic[i] >=
             widget.settings.questionNumber;
       }
     });
@@ -55,7 +56,7 @@ class ViewTopicsState extends State<ViewTopics> {
       for (int i = 0; i < enabledTopics.length; i++) {
         res += widget.selectedTopics[i] ? widget.qRepo.qNumPerTopic[i] : 0;
       }
-      currentPool = res;
+      currentQuizPool = res;
     });
   }
 
@@ -63,19 +64,18 @@ class ViewTopicsState extends State<ViewTopics> {
   void initState() {
     super.initState();
     setState(() {
-      currentPool = _getPoolSize();
+      currentQuizPool = _getPoolSize();
       for (int i = 0; i < widget.selectedTopics.length; i++) {
         enabledTopics.add(widget.selectedTopics[i]);
       }
     });
-    print("Pool: ${currentPool}, ${enabledTopics}");
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // ask for save / discard ?
+        widget.updateQuizPool(currentQuizPool);
         return true;
       },
       child: Scaffold(
@@ -88,6 +88,7 @@ class ViewTopicsState extends State<ViewTopics> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
+                widget.updateQuizPool(currentQuizPool);
                 Navigator.pop(context);
               },
             ),
@@ -104,7 +105,6 @@ class ViewTopicsState extends State<ViewTopics> {
                   onTap: () {
                     if (enabledTopics[index] || !widget.selectedTopics[index]) {
                       _selectTopic(index);
-                      print("select ${index}, ${widget.selectedTopics[index]}");
                     }
                   },
                   child: Column(children: [
@@ -114,6 +114,7 @@ class ViewTopicsState extends State<ViewTopics> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Checkbox(
+                            checkColor: Colors.black,
                             value: widget.selectedTopics[index],
                             onChanged: (_) => enabledTopics[index] ||
                                     !widget.selectedTopics[index]
@@ -128,6 +129,10 @@ class ViewTopicsState extends State<ViewTopics> {
                           icon: const Icon(Icons.arrow_forward_ios),
                           onPressed: () {
                             print("coming-soon ${index}");
+                            /*Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewQuestions()));*/
                           },
                         ),
                       ],
@@ -175,7 +180,9 @@ class ViewTopicsState extends State<ViewTopics> {
                       color: Colors.indigo[700],
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("${currentPool}"),
+                        child: Text("$currentQuizPool",
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                       )),
                 ]),
               ),

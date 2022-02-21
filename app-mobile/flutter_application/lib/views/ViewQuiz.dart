@@ -5,7 +5,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/model/Answer.dart';
-import 'package:roquiz/views/ViewMenu.dart';
 
 class ViewQuiz extends StatefulWidget {
   const ViewQuiz({Key? key, required this.qRepo}) : super(key: key);
