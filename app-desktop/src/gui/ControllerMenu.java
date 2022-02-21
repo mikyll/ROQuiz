@@ -431,7 +431,7 @@ public class ControllerMenu implements IControllerMenu {
 			CheckBox cb = new CheckBox();
 			cb.setPrefWidth(350);
 			cb.setPrefHeight(20);
-			cb.setText(this.qRepo.getTopics().get(i));
+			cb.setText(this.qRepo.getTopics().get(i) + " (" + this.qRepo.getqNumPerTopics().get(i) + ")");
 			cb.setOnAction(this::setTopics);
 			cb.setSelected(true);
 			
