@@ -10,7 +10,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 public class SettingsSingleton {
-	public final static double VERSION_NUMBER = 1.3;
+	public final static double VERSION_NUMBER = 1.4;
 	public final static int DEFAULT_QUESTION_NUMBER = 16;
 	public final static int DEFAULT_ANSWER_NUMBER = 5;
 	public final static int DEFAULT_TIMER = 18;
