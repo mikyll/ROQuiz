@@ -15,10 +15,10 @@ class QuestionRepository {
   List<int> qNumPerTopic = [];
   bool topicsPresent = false;
 
-  Future<void> loadFile() async {
+  Future<void> loadFile(String filePath) async {
     try {
       int numPerTopic = 0, totQuest = 0;
-      String fileText = await rootBundle.loadString("assets/Domande.txt");
+      String fileText = await rootBundle.loadString(filePath);
       // print(fileText); // test
 
       LineSplitter ls = const LineSplitter();
@@ -105,18 +105,21 @@ class QuestionRepository {
     }
   }
 
-  Future<List<Question>> getQuestions() async {
+  List<Question> getQuestions() {
     return questions;
   }
 
-  Future<List<String>> getTopics() async {
+  List<String> getTopics() {
     return topics;
   }
 
-  Future<List<int>> getQuestionNumPerTopic() async {
+  List<int> getQuestionNumPerTopic() {
     return qNumPerTopic;
   }
 
+  bool hasTopics() {
+    return topicsPresent;
+  }
   /*late List<Question> questions;
   late List<String> topics;
   late List<int> questionsPerTopic; // how many questions are in a topic
