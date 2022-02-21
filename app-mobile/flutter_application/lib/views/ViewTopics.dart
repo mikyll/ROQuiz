@@ -128,8 +128,9 @@ class ViewTopicsState extends State<ViewTopics> {
                         IconButton(
                           icon: const Icon(Icons.arrow_forward_ios),
                           onPressed: () {
-                            print("coming-soon ${index}");
-                            /*Navigator.push(
+                            /*
+                            // coming in v1.5
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ViewQuestions()));*/

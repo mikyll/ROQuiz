@@ -3,20 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:roquiz/constants.dart';
+import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/model/Answer.dart';
+import 'package:roquiz/model/Settings.dart';
 
 class ViewQuiz extends StatefulWidget {
-  const ViewQuiz({Key? key, required this.qRepo}) : super(key: key);
+  const ViewQuiz({Key? key, required this.questions, required this.settings})
+      : super(key: key);
 
-  final QuestionRepository qRepo;
+  final List<Question> questions;
+  final Settings settings;
 
   @override
   State<StatefulWidget> createState() => _ViewQuizState();
 }
-
-const int maxQuestion = 16;
-const int minTimer = 18;
 
 class _ViewQuizState extends State<ViewQuiz> {
   bool isOver = false;
@@ -27,11 +28,11 @@ class _ViewQuizState extends State<ViewQuiz> {
   String currentQuestion = "";
   List<String> currentAnswers = [];
 
-  List<Answer> userAnswers =
-      List<Answer>.filled(maxQuestion, Answer.NONE, growable: true);
+  List<Answer> userAnswers = [];
+  //List<Answer>.filled(maxQuestion, Answer.NONE, growable: true);
 
   late Timer _timer;
-  int _timerCounter = minTimer * 60;
+  int _timerCounter = -1;
 
   void previousQuestion() {
     setState(() {
@@ -41,22 +42,21 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   void nextQuestion() {
     setState(() {
-      if (qIndex < maxQuestion - 1) qIndex++;
+      if (qIndex < widget.settings.questionNumber - 1) qIndex++;
     });
   }
 
   void loadQuestion() {
     setState(() {
-      currentQuestion = widget.qRepo.questions[qIndex].question;
-      currentAnswers = widget.qRepo.questions[qIndex].answers;
+      currentQuestion = widget.questions[qIndex].question;
+      currentAnswers = widget.questions[qIndex].answers;
     });
   }
 
   void setUserAnswer(int answer) {
     setState(() {
       userAnswers[qIndex] = Answer.values[answer];
-      if (Answer.values[answer] ==
-          widget.qRepo.questions[qIndex].correctAnswer) {}
+      if (Answer.values[answer] == widget.questions[qIndex].correctAnswer) {}
     });
   }
 
@@ -65,8 +65,8 @@ class _ViewQuizState extends State<ViewQuiz> {
       isOver = true;
       _timer.cancel();
     });
-    for (int i = 0; i < maxQuestion; i++) {
-      if (userAnswers[i] == widget.qRepo.questions[i].correctAnswer) {
+    for (int i = 0; i < widget.settings.questionNumber; i++) {
+      if (userAnswers[i] == widget.questions[i].correctAnswer) {
         correctAnswers++;
       }
     }
@@ -89,14 +89,18 @@ class _ViewQuizState extends State<ViewQuiz> {
   @override
   void initState() {
     super.initState();
-    widget.qRepo.loadFile("assets/Domande.txt").then((value) {
-      setState(() {
-        widget.qRepo.questions.shuffle();
-        currentQuestion = widget.qRepo.questions[0].question;
-        currentAnswers = widget.qRepo.questions[0].answers;
 
-        _startTimer();
-      });
+    setState(() {
+      for (int i = 0; i < widget.settings.questionNumber; i++) {
+        userAnswers.add(Answer.NONE);
+      }
+
+      widget.questions.shuffle();
+      currentQuestion = widget.questions[0].question;
+      currentAnswers = widget.questions[0].answers;
+
+      _timerCounter = widget.settings.timer * 60;
+      _startTimer();
     });
   }
 
@@ -133,7 +137,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                 Row(
                   children: [
                     AutoSizeText(
-                      "Question: ${qIndex + 1}/$maxQuestion",
+                      "Question: ${qIndex + 1}/${widget.settings.questionNumber}",
                       maxLines: 1,
                       style: const TextStyle(
                         fontSize: 24,
@@ -199,18 +203,17 @@ class _ViewQuizState extends State<ViewQuiz> {
                                       ? Colors.cyan[900]
                                       : (!isOver
                                           ? Colors.cyan
-                                          : (widget.qRepo.questions[qIndex]
+                                          : (widget.questions[qIndex]
                                                           .correctAnswer ==
                                                       Answer.values[index] &&
                                                   (userAnswers[qIndex] ==
                                                           Answer.NONE ||
                                                       userAnswers[qIndex] !=
                                                           widget
-                                                              .qRepo
                                                               .questions[qIndex]
                                                               .correctAnswer)
                                               ? Colors.green[900]
-                                              : (widget.qRepo.questions[qIndex]
+                                              : (widget.questions[qIndex]
                                                           .correctAnswer ==
                                                       Answer.values[index]
                                                   ? Colors.green
@@ -250,7 +253,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                 const SizedBox(height: 10),
                 isOver
                     ? Text(
-                        "Risposte corrette: $correctAnswers/$maxQuestion, Risposte errate: ${maxQuestion - correctAnswers}.\nRange di voto finale, in base allo scritto: [${(11.33 + correctAnswers ~/ 3).toInt().toString()}, ${22 + correctAnswers * 2 ~/ 3}]")
+                        "Risposte corrette: $correctAnswers/${widget.settings.questionNumber}, Risposte errate: ${widget.settings.questionNumber - correctAnswers}.\nRange di voto finale, in base allo scritto: [${(11.33 + correctAnswers ~/ 3).toInt().toString()}, ${22 + correctAnswers * 2 ~/ 3}]")
                     : const Text(""),
               ],
             ),
@@ -267,14 +270,14 @@ class _ViewQuizState extends State<ViewQuiz> {
                 },
                 child: Container(
                   alignment: Alignment.center,
-                  width: 60,
-                  height: 60,
+                  width: 50,
+                  height: 50,
                   decoration: const BoxDecoration(
                       gradient: kPrimaryGradient,
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   child: const Icon(
                     Icons.arrow_back_ios_rounded,
-                    size: 40,
+                    size: 35,
                     color: Colors.black,
                   ),
                 ),
@@ -288,14 +291,14 @@ class _ViewQuizState extends State<ViewQuiz> {
                 },
                 child: Container(
                   alignment: Alignment.center,
-                  width: 60, // fix: fit <->
-                  height: 60,
+                  width: 50, // fix: fit <->
+                  height: 50,
                   decoration: const BoxDecoration(
                       gradient: kPrimaryGradient,
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   child: const Icon(
                     Icons.arrow_forward_ios_rounded,
-                    size: 40,
+                    size: 35,
                     color: Colors.black,
                   ),
                 ),
@@ -310,7 +313,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                 },
                 child: Container(
                   alignment: Alignment.center,
-                  height: 60,
+                  height: 50,
                   decoration: const BoxDecoration(
                       gradient: kPrimaryGradient,
                       borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -319,7 +322,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                     child: Text("   Termina   ",
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 30,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold)),
                   ),
                 ),

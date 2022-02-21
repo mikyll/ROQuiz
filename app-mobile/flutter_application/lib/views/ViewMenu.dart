@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/QuestionRepository.dart';
@@ -36,9 +35,30 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
+  List<Question> _getPoolFromSelected() {
+    List<Question> res = [];
+    for (int i = 0, j = 0; i < selectedTopics.length; i++) {
+      if (selectedTopics[i]) {
+        for (int k = 0; k < widget.qRepo.getQuestionNumPerTopic()[i]; k++) {
+          res.add(widget.qRepo.getQuestions()[i]);
+        }
+      } else {
+        j += widget.qRepo.getQuestionNumPerTopic()[i];
+      }
+    }
+    return res;
+  }
+
   void updateQuizPool(int v) {
     setState(() {
       quizPool = v;
+    });
+  }
+
+  void saveSettings(int q, int t) {
+    setState(() {
+      widget.settings.questionNumber = q;
+      widget.settings.timer = t;
     });
   }
 
@@ -51,11 +71,6 @@ class ViewMenuState extends State<ViewMenu> {
             _topicsPresent = widget.qRepo.hasTopics();
           })
         });
-
-    // navigate to ViewQuiz, passing the questions pool (selected topics)
-    void _navigateToQuiz() {
-      // NB: the timer starts inside the ViewQuiz
-    }
   }
 
   Future<void> _launchInBrowser(String url) async {
@@ -75,7 +90,7 @@ class ViewMenuState extends State<ViewMenu> {
       backgroundColor: Colors.indigo[900],
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,18 +106,20 @@ class ViewMenuState extends State<ViewMenu> {
                 "v${widget.settings.VERSION_NUMBER}${widget.settings.VERSION_SUFFIX}",
                 style: TextStyle(
                   fontSize: 25,
+                  fontWeight: FontWeight.bold,
                   color: Colors.grey[500],
                 ),
               ),
-              const Spacer(flex: 2),
+              const Spacer(flex: 1),
               // Buttons
               InkWell(
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              ViewQuiz(qRepo: QuestionRepository())));
+                          builder: (context) => ViewQuiz(
+                              questions: _getPoolFromSelected(),
+                              settings: widget.settings)));
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -136,7 +153,6 @@ class ViewMenuState extends State<ViewMenu> {
                                     )));
                       }
                     : null,
-                // remove those to enable splash effects
                 splashColor: _topicsPresent ? Colors.transparent : null,
                 hoverColor: _topicsPresent ? Colors.transparent : null,
                 highlightColor: _topicsPresent ? Colors.transparent : null,
@@ -182,7 +198,7 @@ class ViewMenuState extends State<ViewMenu> {
                     ),
                     Text("Tempo: ${widget.settings.timer} min"),
                   ]),
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
               InkWell(
                   onTap: () {
                     _launchInBrowser("https://github.com/mikyll/ROQuiz");
@@ -191,89 +207,80 @@ class ViewMenuState extends State<ViewMenu> {
                     color: Colors.indigo[700],
                     height: 120,
                     alignment: Alignment.center,
-                    child: const Text(
-                        "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui: https://github.com/mikyll/ROQuiz",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                        )),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                          "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui: https://github.com/mikyll/ROQuiz",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                          )),
+                    ),
                   )),
-              const Spacer(flex: 1),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Column(
-                    children: [
-                      InkWell(
-                        // remove those to enable splash effects
-                        splashColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () {
-                          /*Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewSettings()));
-                        */
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 60, // fix: fit <->
-                          height: 60,
-                          decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          child: const Icon(
-                            Icons.settings,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      InkWell(
-                        onTap: () {
-                          /*Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewInfo()));*/
-                        },
-                        // remove those to enable splash effects
-                        splashColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 60, // fix: fit <->
-                          height: 60,
-                          decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          child: const Icon(
-                            Icons.info,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              )
+              const Spacer(flex: 5),
             ],
           ),
         ),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ViewSettings(
+                            qRepo: widget.qRepo,
+                            settings: widget.settings,
+                            saveSettings: saveSettings,
+                          )));
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: 60, // fix: fit <->
+              height: 60,
+              decoration: const BoxDecoration(
+                  gradient: kPrimaryGradient,
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              child: const Icon(
+                Icons.settings,
+                size: 40,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          InkWell(
+            onTap: () {
+              /*Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewInfo()));*/
+            },
+            // remove those to enable splash effects
+            splashColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            child: Container(
+              alignment: Alignment.center,
+              width: 60, // fix: fit <->
+              height: 60,
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              child: const Icon(
+                Icons.info,
+                size: 40,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
