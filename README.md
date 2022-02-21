@@ -11,8 +11,6 @@
 [![java][java-shield]][java-url]
 [![dart][dart-shield]][dart-url]
 [![flutter][flutter-shield]][flutter-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-[![GitHub followers][github-shield]][github-url]
 
 <h1> ROQuiz</h1>
 <h3> Applicazione multipiattaforma per esercitarsi con i quiz del corso Ricerca Operativa M.</h3>
@@ -162,6 +160,12 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * Gestione dei moduli (ad esempio Gson): [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}")](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
 <!--* [Doc LaTeX con definizioni per la teoria](https://github.com/kmfrick/College_Notes/tree/main/RO-M), realizzato da [kmfrick](https://github.com/kmfrick), Corinna Marchili, Sofia Montebugnoli-->
 
+<div align="center">
+  
+[![LinkedIn][linkedin-shield]][linkedin-url]
+[![GitHub followers][github-shield]][github-url]
+
+</div>
 
 [downloads-shield]: https://img.shields.io/github/downloads/mikyll/ROQuiz/total
 [downloads-url]: https://github.com/mikyll/ROQuiz/releases/latest
