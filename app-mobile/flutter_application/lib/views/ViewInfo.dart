@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/Settings.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+const DEFAULT_SIZE = 50.0;
 
 class ViewInfo extends StatefulWidget {
   const ViewInfo({Key? key, required this.settings}) : super(key: key);
@@ -14,21 +18,18 @@ class ViewInfo extends StatefulWidget {
 }
 
 class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
-  double _size = 50.0;
+  dynamic _time;
+  double _size = DEFAULT_SIZE;
+  double _maxSize = 0.0;
   bool _isPressedStar = false;
 
   void _increaseSize(int v) {
     setState(() {
-      if (_size < 60.0) {
-        _size += v;
-      } else if (_size < 90.0) {
-        _size += v * 2;
-      } else if (_size < 150.0) {
-        _size += v * 5;
-      } else if (_size < 250.0) {
-        _size += v * 10;
+      if (_size < _maxSize) {
+        _size +=
+            v * pow((DateTime.now().millisecondsSinceEpoch - _time) / 250, 2);
       } else {
-        _size = 50.0;
+        _size = DEFAULT_SIZE;
         _isPressedStar = false;
         _launchInBrowser("https://github.com/mikyll/ROQuiz");
       }
@@ -132,8 +133,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                             decoration: TextDecoration.underline)),
                   ),
                 ),
-                const Expanded(
-                    child: Text("su GitHub!", style: TextStyle(fontSize: 20))),
+                const Text("su GitHub!", style: TextStyle(fontSize: 18)),
               ]),
               const SizedBox(height: 50),
               Container(
@@ -162,13 +162,15 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
         },
         onLongPressStart: (_) async {
           _isPressedStar = true;
+          _time = DateTime.now().millisecondsSinceEpoch;
+          _maxSize = MediaQuery.of(context).size.width - 50.0;
           do {
             _increaseSize(1);
             await Future.delayed(const Duration(milliseconds: 40));
           } while (_isPressedStar);
         },
         onLongPressEnd: (_) => {
-          setState(() => {_isPressedStar = false, _size = 50.0})
+          setState(() => {_isPressedStar = false})
         },
         child: InkWell(
           child: Container(
