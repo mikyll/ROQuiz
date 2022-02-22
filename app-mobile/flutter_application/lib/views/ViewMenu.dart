@@ -35,6 +35,15 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
+  void _resetTopics() {
+    setState(() {
+      for (int i = 0; i < selectedTopics.length; i++) {
+        selectedTopics[i] = true;
+      }
+      quizPool = widget.qRepo.questions.length;
+    });
+  }
+
   List<Question> _getPoolFromSelected() {
     List<Question> res = [];
     for (int i = 0, j = 0; i < selectedTopics.length; i++) {
@@ -59,6 +68,7 @@ class ViewMenuState extends State<ViewMenu> {
     setState(() {
       widget.settings.questionNumber = q;
       widget.settings.timer = t;
+      _resetTopics();
     });
   }
 
