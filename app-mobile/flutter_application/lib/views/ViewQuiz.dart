@@ -130,8 +130,8 @@ class _ViewQuizState extends State<ViewQuiz> {
         onPanUpdate: (details) {
           setState(() {
             details.delta.dx > 5
-                ? _dragDirectionDX = 1
-                : (details.delta.dx < -5 ? _dragDirectionDX = -1 : null);
+                ? _dragDirectionDX = -1
+                : (details.delta.dx < -5 ? _dragDirectionDX = 1 : null);
           });
         },
         onPanEnd: (details) {

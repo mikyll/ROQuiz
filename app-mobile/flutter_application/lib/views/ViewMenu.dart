@@ -231,7 +231,7 @@ class ViewMenuState extends State<ViewMenu> {
                     child: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                          "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui: https://github.com/mikyll/ROQuiz",
+                          "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
