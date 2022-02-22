@@ -135,19 +135,22 @@ class ViewMenuState extends State<ViewMenu> {
                                 resetTopics: resetTopics,
                               )));
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 400, // fix: fit <->
-                  height: 60,
-                  decoration: const BoxDecoration(
-                      gradient: kPrimaryGradient,
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: const Text(
-                    "Avvia",
-                    style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: double.infinity, // fix: fit <->
+                    height: 60,
+                    decoration: const BoxDecoration(
+                        gradient: kPrimaryGradient,
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: const Text(
+                      "Avvia",
+                      style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
                   ),
                 ),
               ),
@@ -170,27 +173,31 @@ class ViewMenuState extends State<ViewMenu> {
                 splashColor: _topicsPresent ? Colors.transparent : null,
                 hoverColor: _topicsPresent ? Colors.transparent : null,
                 highlightColor: _topicsPresent ? Colors.transparent : null,
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 400, // fix: fit <->
-                  height: 60,
-                  decoration: _topicsPresent
-                      ? const BoxDecoration(
-                          gradient: kPrimaryGradient,
-                          borderRadius: BorderRadius.all(Radius.circular(30)))
-                      : const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: const Text(
-                    "Argomenti",
-                    style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: double.infinity, // fix: fit <->
+                    height: 60,
+                    decoration: _topicsPresent
+                        ? const BoxDecoration(
+                            gradient: kPrimaryGradient,
+                            borderRadius: BorderRadius.all(Radius.circular(30)))
+                        : const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                    child: const Text(
+                      "Argomenti",
+                      style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
                   ),
                 ),
               ),
