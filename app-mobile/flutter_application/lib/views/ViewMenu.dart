@@ -136,7 +136,7 @@ class ViewMenuState extends State<ViewMenu> {
                               )));
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
                     alignment: Alignment.center,
                     width: double.infinity, // fix: fit <->
@@ -174,7 +174,7 @@ class ViewMenuState extends State<ViewMenu> {
                 hoverColor: _topicsPresent ? Colors.transparent : null,
                 highlightColor: _topicsPresent ? Colors.transparent : null,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
                     alignment: Alignment.center,
                     width: double.infinity, // fix: fit <->
