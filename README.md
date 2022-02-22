@@ -62,7 +62,7 @@
 2. Eseguire Launcher con doppioclick.
 
 #### Versione Mobile (Android)
-1. Scaricare l'[apk](https://github.com/mikyll/ROQuiz/releases/download/v1.3-mobile_beta/roquiz_v1.3-mobile_beta.apk).
+1. Scaricare l'[apk](https://github.com/mikyll/ROQuiz/releases/download/v1.4/roquiz-mobile.apk).
 2. Selezionare ```INSTALLA``` e ```INSTALLA COMUNQUE```.
 
 ### Formattazione domande
@@ -143,10 +143,17 @@ Features da aggiungere e sviluppi futuri:
 - [ ] cambiare il controllo per le domande nuove e farlo in base alla data di modifica o ad un numero di versione
 
 ### Built With
-Per l'implementazione ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20Setup.md).
+#### Desktop
+Per l'implementazione dell'app desktop ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20Setup.md).
 
 versione Java: JavaSE-11 (jdk-11.0.11)<br/>
 versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
+
+#### Mobile
+Per l'implementazione dell'app mobile ho utilizzato Flutter, come IDE Visual Studio Code (versione 1.64.2).
+
+versione Flutter: 2.8.1<br/>
+versione Dart: 2.15.1
 
 ### Disclaimer
 L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teoria (molto meglio se dal libro, in quanto è completo ed esaustivo). <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
