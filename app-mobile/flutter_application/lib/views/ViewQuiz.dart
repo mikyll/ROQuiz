@@ -129,12 +129,17 @@ class _ViewQuizState extends State<ViewQuiz> {
       child: GestureDetector(
         onPanUpdate: (details) {
           setState(() {
-            details.delta.dx > 0 ? _dragDirectionDX = 1 : _dragDirectionDX = -1;
+            details.delta.dx > 5
+                ? _dragDirectionDX = 1
+                : (details.delta.dx < -5 ? _dragDirectionDX = -1 : null);
           });
         },
-        onPanEnd: (_) {
-          _dragDirectionDX > 0 ? _nextQuestion() : _previousQuestion();
+        onPanEnd: (details) {
+          _dragDirectionDX > 0
+              ? _nextQuestion()
+              : (_dragDirectionDX < 0 ? _previousQuestion() : null);
           _loadQuestion();
+          _dragDirectionDX = 0;
         },
         /*onHorizontalDragEnd: (_) {
           print("ciao");
