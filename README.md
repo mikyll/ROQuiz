@@ -129,6 +129,7 @@ Features da aggiungere e sviluppi futuri:
 - [x] impostazione per abilitare/disabilitare il controllo delle domande aggiornate
 - [x] deploy su MacOS
 - [x] aggiornamento automatico del Readme quando vengono aggiunte nuove domande (GitHub actions)
+- [ ] aggiungere bottone per visualizzare l'elenco delle domande, dagli argomenti
 - [ ] fare il porting su mobile
   - [x] [Android](https://github.com/mikyll/ROQuiz/releases/tag/v1.3-mobile_beta)
   - [ ] iOS
