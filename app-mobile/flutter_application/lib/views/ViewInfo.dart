@@ -78,7 +78,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Expanded(
                   child: Text("Applicazione sviluppata da:",
-                      style: TextStyle(fontSize: 20)),
+                      style: TextStyle(fontSize: 18)),
                 ),
                 InkWell(
                   onTap: () {
@@ -89,7 +89,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     child: Text("mikyll",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             decoration: TextDecoration.underline)),
                   ),
                 ),
@@ -98,7 +98,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Expanded(
                     child: Text("Repository GitHub:",
-                        style: TextStyle(fontSize: 20))),
+                        style: TextStyle(fontSize: 18))),
                 InkWell(
                   onTap: () {
                     _launchInBrowser("https://github.com/mikyll/ROQuiz");
@@ -108,7 +108,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     child: Text("mikyll/ROQuiz",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             decoration: TextDecoration.underline)),
                   ),
                 ),
@@ -117,7 +117,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Expanded(
                   child: Text("Problemi con l'app?",
-                      style: TextStyle(fontSize: 20)),
+                      style: TextStyle(fontSize: 18)),
                 ),
                 InkWell(
                   onTap: () {
@@ -128,11 +128,12 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     child: Text("Apri una issue",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             decoration: TextDecoration.underline)),
                   ),
                 ),
-                const Text("su GitHub!", style: TextStyle(fontSize: 20)),
+                const Expanded(
+                    child: Text("su GitHub!", style: TextStyle(fontSize: 20))),
               ]),
               const SizedBox(height: 50),
               Container(
@@ -154,39 +155,35 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
         ),
       ),
       // CAGATE
-      floatingActionButton: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            GestureDetector(
-              onTap: () {
-                _launchInBrowser("https://github.com/mikyll/ROQuiz");
-              },
-              onLongPressStart: (_) async {
-                _isPressedStar = true;
-                do {
-                  _increaseSize(1);
-                  await Future.delayed(const Duration(milliseconds: 40));
-                } while (_isPressedStar);
-              },
-              onLongPressEnd: (_) => {setState(() => _isPressedStar = false)},
-              child: InkWell(
-                child: Container(
-                  alignment: Alignment.center,
-                  width: _size,
-                  height: _size,
-                  decoration: BoxDecoration(
-                      gradient: kPrimaryGradient,
-                      borderRadius: BorderRadius.all(Radius.circular(_size))),
-                  child: Icon(
-                    Icons.star,
-                    size: _size,
-                    color: Colors.yellow,
-                  ),
-                ),
-              ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          _launchInBrowser("https://github.com/mikyll/ROQuiz");
+        },
+        onLongPressStart: (_) async {
+          _isPressedStar = true;
+          do {
+            _increaseSize(1);
+            await Future.delayed(const Duration(milliseconds: 40));
+          } while (_isPressedStar);
+        },
+        onLongPressEnd: (_) => {
+          setState(() => {_isPressedStar = false, _size = 50.0})
+        },
+        child: InkWell(
+          child: Container(
+            alignment: Alignment.center,
+            width: _size,
+            height: _size,
+            decoration: BoxDecoration(
+                gradient: kPrimaryGradient,
+                borderRadius: BorderRadius.all(Radius.circular(_size))),
+            child: Icon(
+              Icons.star,
+              size: _size,
+              color: Colors.yellow,
             ),
-          ],
+          ),
         ),
       ),
     );
