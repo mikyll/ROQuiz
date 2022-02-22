@@ -253,25 +253,18 @@ class ViewMenuState extends State<ViewMenu> {
           const SizedBox(height: 20),
           InkWell(
             onTap: () {
-              /*Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewInfo()));*/
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ViewInfo(settings: widget.settings)));
             },
-            // remove those to enable splash effects
-            splashColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
             child: Container(
               alignment: Alignment.center,
               width: 60, // fix: fit <->
               height: 60,
               decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
+                  gradient: kPrimaryGradient,
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               child: const Icon(
                 Icons.info,

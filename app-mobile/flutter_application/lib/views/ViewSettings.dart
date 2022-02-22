@@ -67,13 +67,6 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  /*void saveSettings() {
-    setState(() {
-      widget.settings.questionNumber = _questionNumber;
-      widget.settings.timer = _timer;
-    });
-  }*/
-
   @override
   void initState() {
     super.initState();

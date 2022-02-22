@@ -93,140 +93,138 @@ class ViewTopicsState extends State<ViewTopics> {
               },
             ),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              ...List.generate(
-                widget.qRepo.getTopics().length,
-                (index) => InkWell(
-                  enableFeedback: true,
-                  onTap: () {
-                    if (enabledTopics[index] || !widget.selectedTopics[index]) {
-                      _selectTopic(index);
-                    }
-                  },
-                  child: Column(children: [
-                    const SizedBox(height: 5),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Checkbox(
-                            checkColor: Colors.black,
-                            value: widget.selectedTopics[index],
-                            onChanged: (_) => enabledTopics[index] ||
-                                    !widget.selectedTopics[index]
-                                ? _selectTopic(index)
-                                : null),
-                        Expanded(
-                          child: Text(
-                              "${widget.qRepo.topics[index]} (${widget.qRepo.qNumPerTopic[index]})",
-                              style: const TextStyle(fontSize: 20)),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.arrow_forward_ios),
-                          onPressed: () {
-                            /*
-                            // coming in v1.5
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewQuestions()));*/
-                          },
-                        ),
-                      ],
+          body: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Container(
+                          color: Colors.indigo[700],
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("Domande Totali: ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                )),
+                          )),
                     ),
+                    Container(
+                        color: Colors.indigo[700],
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("${widget.qRepo.questions.length}",
+                              style: const TextStyle(
+                                fontSize: 18,
+                              )),
+                        )),
                   ]),
                 ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(children: [
-                  Expanded(
-                    child: Container(
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Container(
+                          color: Colors.indigo[700],
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("Dimensione Pool Corrente: ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                )),
+                          )),
+                    ),
+                    Container(
                         color: Colors.indigo[700],
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("Domande Totali: "),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("$currentQuizPool",
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
                         )),
-                  ),
-                  Container(
-                      color: Colors.indigo[700],
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("${widget.qRepo.questions.length}"),
-                      )),
-                ]),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(children: [
-                  Expanded(
-                    child: Container(
+                  ]),
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Container(
+                          color: Colors.indigo[700],
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("Domande per Quiz: ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                )),
+                          )),
+                    ),
+                    Container(
                         color: Colors.indigo[700],
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("Dimensione Pool Corrente: "),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("${widget.settings.questionNumber}",
+                              style: const TextStyle(
+                                fontSize: 18,
+                              )),
                         )),
+                  ]),
+                ),
+                const SizedBox(height: 25),
+                ...List.generate(
+                  widget.qRepo.getTopics().length,
+                  (index) => InkWell(
+                    enableFeedback: true,
+                    onTap: () {
+                      if (enabledTopics[index] ||
+                          !widget.selectedTopics[index]) {
+                        _selectTopic(index);
+                      }
+                    },
+                    child: Column(children: [
+                      const SizedBox(height: 5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                              checkColor: Colors.black,
+                              value: widget.selectedTopics[index],
+                              onChanged: (_) => enabledTopics[index] ||
+                                      !widget.selectedTopics[index]
+                                  ? _selectTopic(index)
+                                  : null),
+                          Expanded(
+                            child: Text(
+                                "${widget.qRepo.topics[index]} (${widget.qRepo.qNumPerTopic[index]})",
+                                style: const TextStyle(fontSize: 20)),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.arrow_forward_ios,
+                                color: Colors.grey),
+                            onPressed: () {
+                              /*
+                              // coming in v1.5
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewQuestions()));*/
+                            },
+                          ),
+                        ],
+                      ),
+                    ]),
                   ),
-                  Container(
-                      color: Colors.indigo[700],
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("$currentQuizPool",
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                      )),
-                ]),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(children: [
-                  Expanded(
-                    child: Container(
-                        color: Colors.indigo[700],
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("Domande per Quiz: "),
-                        )),
-                  ),
-                  Container(
-                      color: Colors.indigo[700],
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("${widget.settings.questionNumber}"),
-                      )),
-                ]),
-              ),
-            ],
+                ),
+              ],
+            ),
           )),
     );
   }
-
-  /*Column buildTopics(List<String> topics) {
-    final res = Column();
-    for (String t in topics) {
-      final r = Row(
-        children: [
-          const Checkbox(value: true, onChanged: null),
-          Text(t),
-          const Icon(Icons.arrow_forward)
-        ],
-      );
-      res.children.add(r);
-    }
-
-    return res;
-  }*/
 }
