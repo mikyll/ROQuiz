@@ -276,7 +276,7 @@ class ViewSettingsState extends State<ViewSettings> {
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
-                    child: Text(" Salva ",
+                    child: Text("Salva",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 24,
@@ -298,7 +298,7 @@ class ViewSettingsState extends State<ViewSettings> {
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
-                    child: Text(" Cancella ",
+                    child: Text("Cancella",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 24,
@@ -320,7 +320,7 @@ class ViewSettingsState extends State<ViewSettings> {
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
-                    child: Text(" Ripristina ",
+                    child: Text("Ripristina",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 24,

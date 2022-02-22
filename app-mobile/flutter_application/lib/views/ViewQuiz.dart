@@ -329,8 +329,9 @@ class _ViewQuizState extends State<ViewQuiz> {
                       gradient: kPrimaryGradient,
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("   ${!_isOver ? "Termina" : "Riavvia"}   ",
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 10.0),
+                    child: Text(!_isOver ? "Termina" : "Riavvia",
                         style: const TextStyle(
                             color: Colors.black,
                             fontSize: 24,
