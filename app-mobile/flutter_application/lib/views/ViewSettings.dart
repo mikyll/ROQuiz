@@ -145,7 +145,7 @@ class ViewSettingsState extends State<ViewSettings> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text("$_questionNumber",
-                        style: TextStyle(fontSize: 20)),
+                        style: const TextStyle(fontSize: 20)),
                   ),
                   // INCREASE POOL SIZE
                   GestureDetector(
@@ -220,7 +220,8 @@ class ViewSettingsState extends State<ViewSettings> {
                   // TIMER COUNTER
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text("$_timer", style: TextStyle(fontSize: 20)),
+                    child:
+                        Text("$_timer", style: const TextStyle(fontSize: 20)),
                   ),
                   // INCREASE TIMER
                   GestureDetector(

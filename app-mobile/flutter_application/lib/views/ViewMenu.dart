@@ -7,8 +7,8 @@ import 'package:roquiz/views/ViewQuiz.dart';
 import 'package:roquiz/views/ViewSettings.dart';
 import 'package:roquiz/views/ViewTopics.dart';
 import 'package:roquiz/views/ViewInfo.dart';
-import 'package:websafe_svg/websafe_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+//import 'package:websafe_svg/websafe_svg.dart';
 
 class ViewMenu extends StatefulWidget {
   ViewMenu({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void _resetTopics() {
+  void resetTopics() {
     setState(() {
       for (int i = 0; i < selectedTopics.length; i++) {
         selectedTopics[i] = true;
@@ -48,8 +48,10 @@ class ViewMenuState extends State<ViewMenu> {
     List<Question> res = [];
     for (int i = 0, j = 0; i < selectedTopics.length; i++) {
       if (selectedTopics[i]) {
-        for (int k = 0; k < widget.qRepo.getQuestionNumPerTopic()[i]; k++) {
-          res.add(widget.qRepo.getQuestions()[i]);
+        for (int k = 0;
+            k < widget.qRepo.getQuestionNumPerTopic()[i];
+            j++, k++) {
+          res.add(widget.qRepo.getQuestions()[j]);
         }
       } else {
         j += widget.qRepo.getQuestionNumPerTopic()[i];
@@ -68,7 +70,7 @@ class ViewMenuState extends State<ViewMenu> {
     setState(() {
       widget.settings.questionNumber = q;
       widget.settings.timer = t;
-      _resetTopics();
+      resetTopics();
     });
   }
 
@@ -128,8 +130,10 @@ class ViewMenuState extends State<ViewMenu> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ViewQuiz(
-                              questions: _getPoolFromSelected(),
-                              settings: widget.settings)));
+                                questions: _getPoolFromSelected(),
+                                settings: widget.settings,
+                                resetTopics: resetTopics,
+                              )));
                 },
                 child: Container(
                   alignment: Alignment.center,

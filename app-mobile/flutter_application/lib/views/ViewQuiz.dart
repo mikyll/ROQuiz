@@ -4,16 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/Question.dart';
-import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Settings.dart';
 
 class ViewQuiz extends StatefulWidget {
-  const ViewQuiz({Key? key, required this.questions, required this.settings})
+  const ViewQuiz(
+      {Key? key,
+      required this.questions,
+      required this.settings,
+      required this.resetTopics})
       : super(key: key);
 
   final List<Question> questions;
   final Settings settings;
+  final Function() resetTopics;
 
   @override
   State<StatefulWidget> createState() => _ViewQuizState();
@@ -23,7 +27,7 @@ class _ViewQuizState extends State<ViewQuiz> {
   bool isOver = false;
 
   int qIndex = 0;
-  int correctAnswers = 0; // TMP
+  int correctAnswers = 0;
 
   String currentQuestion = "";
   List<String> currentAnswers = [];
@@ -110,6 +114,7 @@ class _ViewQuizState extends State<ViewQuiz> {
       // this enables us to catch the "hard back" from device
       onWillPop: () async {
         endQuiz(); // end quiz and stop timer
+        widget.resetTopics();
         return true; // "return true" pops the element from the stack (== Navigator.pop())
       },
       child: Scaffold(
@@ -123,6 +128,7 @@ class _ViewQuizState extends State<ViewQuiz> {
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
               endQuiz();
+              widget.resetTopics();
               Navigator.pop(context);
             },
           ),
@@ -221,8 +227,8 @@ class _ViewQuizState extends State<ViewQuiz> {
                                                           Answer.values[index]
                                                       ? Colors.red
                                                       : Colors.cyan)))),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(15))),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(children: [
