@@ -24,54 +24,54 @@ class ViewQuiz extends StatefulWidget {
 }
 
 class _ViewQuizState extends State<ViewQuiz> {
-  bool isOver = false;
+  bool _isOver = false;
 
-  int qIndex = 0;
-  int correctAnswers = 0;
+  int _qIndex = 0;
+  int _correctAnswers = 0;
 
-  String currentQuestion = "";
-  List<String> currentAnswers = [];
+  String _currentQuestion = "";
+  List<String> _currentAnswers = [];
 
-  List<Answer> userAnswers = [];
+  List<Answer> _userAnswers = [];
   //List<Answer>.filled(maxQuestion, Answer.NONE, growable: true);
 
   late Timer _timer;
   int _timerCounter = -1;
 
-  void previousQuestion() {
+  void _previousQuestion() {
     setState(() {
-      if (qIndex > 0) qIndex--;
+      if (_qIndex > 0) _qIndex--;
     });
   }
 
-  void nextQuestion() {
+  void _nextQuestion() {
     setState(() {
-      if (qIndex < widget.settings.questionNumber - 1) qIndex++;
+      if (_qIndex < widget.settings.questionNumber - 1) _qIndex++;
     });
   }
 
-  void loadQuestion() {
+  void _loadQuestion() {
     setState(() {
-      currentQuestion = widget.questions[qIndex].question;
-      currentAnswers = widget.questions[qIndex].answers;
+      _currentQuestion = widget.questions[_qIndex].question;
+      _currentAnswers = widget.questions[_qIndex].answers;
     });
   }
 
-  void setUserAnswer(int answer) {
+  void _setUserAnswer(int answer) {
     setState(() {
-      userAnswers[qIndex] = Answer.values[answer];
-      if (Answer.values[answer] == widget.questions[qIndex].correctAnswer) {}
+      _userAnswers[_qIndex] = Answer.values[answer];
+      if (Answer.values[answer] == widget.questions[_qIndex].correctAnswer) {}
     });
   }
 
-  void endQuiz() {
+  void _endQuiz() {
     setState(() {
-      isOver = true;
+      _isOver = true;
       _timer.cancel();
     });
     for (int i = 0; i < widget.settings.questionNumber; i++) {
-      if (userAnswers[i] == widget.questions[i].correctAnswer) {
-        correctAnswers++;
+      if (_userAnswers[i] == widget.questions[i].correctAnswer) {
+        _correctAnswers++;
       }
     }
   }
@@ -80,32 +80,39 @@ class _ViewQuizState extends State<ViewQuiz> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_timerCounter > 0) {
-          //print("tick: $_timerCounter"); // test
           _timerCounter--;
         } else {
           _timer.cancel();
-          endQuiz();
+          _endQuiz();
         }
       });
     });
+  }
+
+  void _resetQuiz() {
+    setState(() {
+      _userAnswers = [];
+      for (int i = 0; i < widget.settings.questionNumber; i++) {
+        _userAnswers.add(Answer.NONE);
+      }
+      widget.questions.shuffle();
+
+      _qIndex = 0;
+      _correctAnswers = 0;
+      _isOver = false;
+      _currentQuestion = widget.questions[_qIndex].question;
+      _currentAnswers = widget.questions[_qIndex].answers;
+
+      _timerCounter = widget.settings.timer * 60;
+    });
+    _startTimer();
   }
 
   @override
   void initState() {
     super.initState();
 
-    setState(() {
-      for (int i = 0; i < widget.settings.questionNumber; i++) {
-        userAnswers.add(Answer.NONE);
-      }
-
-      widget.questions.shuffle();
-      currentQuestion = widget.questions[0].question;
-      currentAnswers = widget.questions[0].answers;
-
-      _timerCounter = widget.settings.timer * 60;
-      _startTimer();
-    });
+    _resetQuiz();
   }
 
   @override
@@ -113,7 +120,7 @@ class _ViewQuizState extends State<ViewQuiz> {
     return WillPopScope(
       // this enables us to catch the "hard back" from device
       onWillPop: () async {
-        endQuiz(); // end quiz and stop timer
+        _endQuiz(); // end quiz and stop timer
         widget.resetTopics();
         return true; // "return true" pops the element from the stack (== Navigator.pop())
       },
@@ -127,7 +134,7 @@ class _ViewQuizState extends State<ViewQuiz> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              endQuiz();
+              _endQuiz();
               widget.resetTopics();
               Navigator.pop(context);
             },
@@ -143,7 +150,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                 Row(
                   children: [
                     AutoSizeText(
-                      "Question: ${qIndex + 1}/${widget.settings.questionNumber}",
+                      "Question: ${_qIndex + 1}/${widget.settings.questionNumber}",
                       maxLines: 1,
                       style: const TextStyle(
                         fontSize: 24,
@@ -182,19 +189,19 @@ class _ViewQuizState extends State<ViewQuiz> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           // QUESIO
-                          child: Text(currentQuestion,
+                          child: Text(_currentQuestion,
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 20)),
                         ),
                       ),
                       // ANSWERS
                       ...List.generate(
-                        currentAnswers.length,
+                        _currentAnswers.length,
                         (index) => InkWell(
                           enableFeedback: true,
                           onTap: () {
-                            if (!isOver) {
-                              setUserAnswer(index);
+                            if (!_isOver) {
+                              _setUserAnswer(index);
                             }
                           },
                           child: Column(children: [
@@ -203,32 +210,32 @@ class _ViewQuizState extends State<ViewQuiz> {
                               alignment: Alignment.centerLeft,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                  color: !isOver &&
-                                          userAnswers[qIndex] ==
+                                  color: !_isOver &&
+                                          _userAnswers[_qIndex] ==
                                               Answer.values[index]
                                       ? Colors.cyan[900]
-                                      : (!isOver
+                                      : (!_isOver
                                           ? Colors.cyan
-                                          : (widget.questions[qIndex]
-                                                          .correctAnswer ==
+                                          : (widget.questions[_qIndex].correctAnswer ==
                                                       Answer.values[index] &&
-                                                  (userAnswers[qIndex] ==
+                                                  (_userAnswers[_qIndex] ==
                                                           Answer.NONE ||
-                                                      userAnswers[qIndex] !=
+                                                      _userAnswers[_qIndex] !=
                                                           widget
-                                                              .questions[qIndex]
+                                                              .questions[
+                                                                  _qIndex]
                                                               .correctAnswer)
                                               ? Colors.green[900]
-                                              : (widget.questions[qIndex]
+                                              : (widget.questions[_qIndex]
                                                           .correctAnswer ==
                                                       Answer.values[index]
                                                   ? Colors.green
-                                                  : (userAnswers[qIndex] ==
+                                                  : (_userAnswers[_qIndex] ==
                                                           Answer.values[index]
                                                       ? Colors.red
                                                       : Colors.cyan)))),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(15))),
+                                  borderRadius:
+                                      const BorderRadius.all(Radius.circular(15))),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(children: [
@@ -244,7 +251,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold)),
                                   Flexible(
-                                    child: Text(currentAnswers[index],
+                                    child: Text(_currentAnswers[index],
                                         style: const TextStyle(fontSize: 16)),
                                   ),
                                 ]),
@@ -257,9 +264,9 @@ class _ViewQuizState extends State<ViewQuiz> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                isOver
+                _isOver
                     ? Text(
-                        "Risposte corrette: $correctAnswers/${widget.settings.questionNumber}, Risposte errate: ${widget.settings.questionNumber - correctAnswers}.\nRange di voto finale, in base allo scritto: [${(11.33 + correctAnswers ~/ 3).toInt().toString()}, ${22 + correctAnswers * 2 ~/ 3}]")
+                        "Risposte corrette: $_correctAnswers/${widget.settings.questionNumber}, Risposte errate: ${widget.settings.questionNumber - _correctAnswers}.\nRange di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]")
                     : const Text(""),
               ],
             ),
@@ -271,8 +278,8 @@ class _ViewQuizState extends State<ViewQuiz> {
               InkWell(
                 enableFeedback: true,
                 onTap: () {
-                  previousQuestion();
-                  loadQuestion();
+                  _previousQuestion();
+                  _loadQuestion();
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -292,8 +299,8 @@ class _ViewQuizState extends State<ViewQuiz> {
               InkWell(
                 enableFeedback: true,
                 onTap: () {
-                  nextQuestion();
-                  loadQuestion();
+                  _nextQuestion();
+                  _loadQuestion();
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -313,9 +320,7 @@ class _ViewQuizState extends State<ViewQuiz> {
               InkWell(
                 enableFeedback: true,
                 onTap: () {
-                  if (!isOver) {
-                    endQuiz();
-                  }
+                  !_isOver ? _endQuiz() : _resetQuiz();
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -323,10 +328,10 @@ class _ViewQuizState extends State<ViewQuiz> {
                   decoration: const BoxDecoration(
                       gradient: kPrimaryGradient,
                       borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("   Termina   ",
-                        style: TextStyle(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("   ${!_isOver ? "Termina" : "Riavvia"}   ",
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 24,
                             fontWeight: FontWeight.bold)),
