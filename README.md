@@ -35,8 +35,8 @@
 #### Desktop
 <table style="border: none">
   <tr>
-    <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
-    <td width="49.9%"><img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
+    <td width="49.9%"><img src="./gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
+    <td width="49.9%"><img src="./gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
   </tr>
   <tr>
     <td align="center">Terminazione quiz</td>
@@ -47,8 +47,8 @@
 #### Mobile
 <table style="border: none">
   <tr>
-    <td align="center"><img width=50% src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] MobileInstall.gif" alt="InstallMobileGIF"/></td>
-    <td align="center"><img width=50% src="https://github.com/mikyll/ROQuiz/blob/main/gfx/[GIF] MobileUsage.gif" alt="MobileUsageGIF"/></td>
+    <td align="center"><img width=50% src="./gfx/[GIF] MobileInstall.gif" alt="InstallMobileGIF"/></td>
+    <td align="center"><img width=50% src="./gfx/[GIF] MobileUsage.gif" alt="MobileUsageGIF"/></td>
   </tr>
   <tr>
     <td align="center">Installazione versione mobile</td>
@@ -66,7 +66,7 @@
 2. Selezionare ```INSTALLA``` e ```INSTALLA COMUNQUE```.
 
 ### Formattazione domande
-Le domande sono caricate da un file "<a href="https://github.com/mikyll/ROQuiz/blob/main/Domande.txt">Domande.txt</a>" che ha il seguente formato:
+Le domande sono caricate da un file "<a href="./Domande.txt">Domande.txt</a>" che ha il seguente formato:
 * (opzionale) Argomenti:
   - la riga di un argomento inizia col carattere speciale '@', seguito dal nome dell'argomento. Ogni riga di argomento è seguita dalle domande relative a quell'argomento, fino all'argomento successivo. Alla fine della riga dell'argomento possono essere usati caratteri non alfabetici (ad esempio '=') per separare visivamente le domande di argomenti differenti (tali caratteri verranno ignorati).
 * Domande: 
@@ -144,7 +144,7 @@ Features da aggiungere e sviluppi futuri:
 
 ### Built With
 #### Desktop
-Per l'implementazione dell'app desktop ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](https://github.com/mikyll/ROQuiz/blob/main/Project%20Setup.md).
+Per l'implementazione dell'app desktop ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](./Project%20Setup.md).
 
 versione Java: JavaSE-11 (jdk-11.0.11)<br/>
 versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
