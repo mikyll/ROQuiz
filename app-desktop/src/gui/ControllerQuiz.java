@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +29,8 @@ import model.Quiz;
 import model.SettingsSingleton;
 
 public class ControllerQuiz implements IControllerQuiz{
+	private HostServices hostServices;
+	
 	private List<Question> questions;
 	private SettingsSingleton settings;
 	private Quiz quiz;
@@ -352,8 +355,9 @@ public class ControllerQuiz implements IControllerQuiz{
 		try {
 			FXMLLoader loader = new FXMLLoader(ControllerMenu.class.getResource("/gui/ViewMenu.fxml"));
 			Stage stage = (Stage) this.vboxResult.getScene().getWindow();
-			// loader.setController(new ControllerMenu());
 			AnchorPane menu = (AnchorPane) loader.load();
+			ControllerMenu controller = loader.getController();
+			controller.setHostServices(this.hostServices);
 		
 			Scene scene = new Scene(menu);
 			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/application.css").toExternalForm());
@@ -364,5 +368,10 @@ public class ControllerQuiz implements IControllerQuiz{
 			System.out.println("ERRORE: " + e.getMessage());
 			System.exit(1);
 		}
+	}
+	
+	public void setHostServices(HostServices hostServices)
+	{
+		this.hostServices = hostServices;
 	}
 }

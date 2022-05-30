@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import persistence.*;
 public class ControllerMenu implements IControllerMenu {
 	private final static String QUESTIONS_FILENAME = "Domande.txt";
 	
-	private HostServices hostServies;
+	private HostServices hostServices;
 	private SettingsSingleton settings;
 	private IQuestionRepository qRepo;
 	
@@ -261,7 +260,9 @@ public class ControllerMenu implements IControllerMenu {
 		try {
 			FXMLLoader loader = new FXMLLoader(ControllerMenu.class.getResource("/gui/ViewQuiz.fxml"));
 			Stage stage = (Stage) this.vboxMain.getScene().getWindow();
-			loader.setController(new ControllerQuiz(questions));
+			ControllerQuiz controller = new ControllerQuiz(questions);
+			controller.setHostServices(this.hostServices);
+			loader.setController(controller);
 			AnchorPane quiz = (AnchorPane) loader.load();
 			/*ControllerQuiz controller = loader.getController(); // throws NullPointerException because initialize() will be called before 'List<Question> questions' is set
 			controller.setQuestions(questions);*/
@@ -404,15 +405,15 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		Hyperlink hl = (Hyperlink) event.getSource();
 		if(hl.getText().equals("mikyll"))
-			this.hostServies.showDocument("https://github.com/mikyll");
+			this.hostServices.showDocument("https://github.com/mikyll");
 		if(hl.getText().equals("mikyll/ROQuiz"))
-			this.hostServies.showDocument("https://github.com/mikyll/ROQuiz");
+			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz");
 		if(hl.getText().equals("Icons8"))
-			this.hostServies.showDocument("https://icons8.com");
+			this.hostServices.showDocument("https://icons8.com");
 		if(hl.getText().equals("Apri una issue"))
-			this.hostServies.showDocument("https://github.com/mikyll/ROQuiz/issues");
+			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz/issues");
 		if(hl.getChildrenUnmodifiable().get(0) instanceof Label)
-			this.hostServies.showDocument("https://github.com/mikyll/ROQuiz");
+			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz");
 	}
 	
 	// public void selectQuizFile() {}
@@ -453,6 +454,6 @@ public class ControllerMenu implements IControllerMenu {
 	
 	public void setHostServices(HostServices hostServices)
 	{
-		this.hostServies = hostServices;
+		this.hostServices = hostServices;
 	}
 }
