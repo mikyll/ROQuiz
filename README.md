@@ -141,6 +141,7 @@ Features da aggiungere e sviluppi futuri:
 - [x] mobile: aggiungere scelta argomenti
 - [ ] mobile: aggiungere possibilità di caricare un file domande personalizzato
 - [ ] cambiare il controllo per le domande nuove e farlo in base alla data di modifica o ad un numero di versione
+- [ ] aggiungere bottone di reset e reload negli argomenti
 
 ### Built With
 #### Desktop
