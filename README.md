@@ -56,7 +56,7 @@
   </tr>
 </table>
 
-### Esecuzione
+### Download
 #### Versione Desktop (Windows e Linux)
 1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployWindows.zip), [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployLinux.tar.gz) o [MacOS](https://github.com/mikyll/ROQuiz/releases/download/v1.4/ROQuizDeployMac.tar.gz)) ed estrarre il contenuto.
 2. Eseguire Launcher con doppioclick.
