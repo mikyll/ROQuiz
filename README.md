@@ -29,6 +29,7 @@
   - Scelta di un numero specifico di domande (default: 16, selezionate casualmente).
   - Modifica del tempo a disposizione per il quiz (default: 18 minuti).
   - Controllo all'avvio dell'app se nella repository sono presenti nuove domande.
+  - Scelta del tema (chiaro/scuro)
 - Possibilità di inserimento di domande personalizzate (modificando il file Domande.txt).
 
 ### Demo
@@ -141,7 +142,10 @@ Features da aggiungere e sviluppi futuri:
 - [x] mobile: aggiungere scelta argomenti
 - [ ] mobile: aggiungere possibilità di caricare un file domande personalizzato
 - [ ] cambiare il controllo per le domande nuove e farlo in base alla data di modifica o ad un numero di versione
-- [ ] aggiungere bottone di reset e reload negli argomenti
+- [ ] modificare il colore barra del titolo della finestra (nera se tema scuro)
+- [ ] aggiungere template per le issue: es [Desktop]/[Mobile] in base a da dove viene cliccato il link
+- [ ] aggiungere impostazione per mescolare le risposte
+- [ ] aggiungere dei tooltips
 
 ### Built With
 #### Desktop
