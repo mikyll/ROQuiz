@@ -167,6 +167,8 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
 * Soluzione per eccezione SSL handshake: [SSLHandshakeException: Received fatal alert: handshake_failure](https://stackoverflow.com/questions/54770538/received-fatal-alert-handshake-failure-in-jlinked-jre)
 * Gestione dei moduli (ad esempio Gson): [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}")](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
+* [JavaFX CSS Docs](https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html)
+* [Fix puntini bianchi](https://stackoverflow.com/questions/44169273/javafx-unwanted-white-corner-textarea) negli angoli della TextArea, usand il tema scuro
 <!--* [Doc LaTeX con definizioni per la teoria](https://github.com/kmfrick/College_Notes/tree/main/RO-M), realizzato da [kmfrick](https://github.com/kmfrick), Corinna Marchili, Sofia Montebugnoli-->
 
 <div align="center">
