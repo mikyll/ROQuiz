@@ -16,11 +16,12 @@
 
 .text-field {
 	-fx-background-color: #404040;
+	-fx-base: #404040;
 	-fx-text-fill: white;
 }
 
 .text-area {
-	-fx-background-color: #404040;
+	-fx-base: #404040;
   	-fx-focus-color: transparent;
 	-fx-control-inner-background: #404040;
 	-fx-text-fill: white;
@@ -32,15 +33,8 @@
     -fx-background-radius: 0 ;
 }
 
-.spinner {
-	-fx-base: #404040;
-}
 
-.check-box {
-	-fx-base: #404040;
-}
-
-.radio-button {
+.button, .spinner, .check-box, .radio-button {
 	-fx-base: #404040;
 }
 
@@ -48,7 +42,6 @@
 	-fx-background-size: 30px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: 50%;
-    -fx-background-color: #404040;
 	-fx-text-fill: white;
 }
 

@@ -50,7 +50,7 @@
             <Insets bottom="40.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vboxSettingsInfo" alignment="TOP_CENTER" layoutX="700.0" layoutY="370.0" prefHeight="90.0" prefWidth="50.0">
+      <VBox fx:id="vboxSettingsInfo" alignment="TOP_CENTER" layoutX="700.0" layoutY="370.0" prefHeight="90.0" prefWidth="50.0" visible="false">
          <children>
             <Button id="settings" fx:id="buttonSettings" mnemonicParsing="false" onAction="#selectSettings" prefHeight="40.0" prefWidth="40.0" />
             <Separator prefHeight="10.0" prefWidth="50.0" visible="false" />
@@ -207,7 +207,7 @@
             </HBox>
          </children>
       </VBox>
-      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="300.0" prefWidth="400.0">
+      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="300.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Informazioni">
                <font>
