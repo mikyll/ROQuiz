@@ -25,15 +25,16 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.collections.ObservableList;
+
 import model.Question;
 import model.SettingsSingleton;
 import persistence.BadFileFormatException;
 import persistence.*;
 
 public class ControllerMenu implements IControllerMenu {
-	private final static String QUESTIONS_FILENAME = "Domande.txt";
+	public final String QUESTIONS_FILENAME = "Domande.txt";
 	
 	private HostServices hostServices;
 	private SettingsSingleton settings;
@@ -62,11 +63,12 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Spinner<Integer> spinnerQuestionNumQuiz;
 	@FXML private Spinner<Integer> spinnerTimerMin;
 	@FXML private CheckBox checkBoxCheckQuestionsUpdate;
+	@FXML private CheckBox checkBoxDarkTheme;
 	@FXML private Button buttonSettingsSave;
 	@FXML private Button buttonSettingsCancel;
 	@FXML private Button buttonSettingsRestore;
 	
-	@FXML private Text textVersion;
+	@FXML private Label labelVersion;
 	
 	// FXML loader call order: Constructor -> initialize(). Inside initialize(), all the fxml object have been already initialized.
 	public ControllerMenu()	{}
@@ -189,8 +191,9 @@ public class ControllerMenu implements IControllerMenu {
 		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(
 				SettingsSingleton.DEFAULT_TIMER / 2, qNum * 2, this.settings.getTimer()));
 		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
+		this.checkBoxDarkTheme.setSelected(this.settings.isDarkTheme());
 		
-		this.textVersion.setText("ROQuiz v" + SettingsSingleton.VERSION_NUMBER);
+		this.labelVersion.setText("ROQuiz v" + SettingsSingleton.VERSION_NUMBER);
 		
 		new File("tmp.txt").delete();
 	}
@@ -268,7 +271,7 @@ public class ControllerMenu implements IControllerMenu {
 			controller.setQuestions(questions);*/
 		
 			Scene scene = new Scene(quiz);
-			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/application.css").toExternalForm());
+			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {
@@ -279,7 +282,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void settings(ActionEvent event)
+	public void selectSettings(ActionEvent event)
 	{
 		System.out.println("Selezione: impostazioni.");
 		
@@ -290,7 +293,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void info(ActionEvent event)
+	public void selectInfo(ActionEvent event)
 	{
 		System.out.println("Selezione: informazioni.");
 		
@@ -301,15 +304,19 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void back(ActionEvent event)
+	public void selectBack(ActionEvent event)
 	{
 		System.out.println("Selezione: indietro.");
 		
-		if(this.vboxSettings.isVisible() &&	(this.settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || this.settings.getTimer() != this.spinnerTimerMin.getValue()))
+		if(this.vboxSettings.isVisible() &&	(this.settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || 
+				this.settings.getTimer() != this.spinnerTimerMin.getValue() || 
+				this.settings.isCheckQuestionsUpdate() != this.checkBoxCheckQuestionsUpdate.isSelected() ||
+				this.settings.isDarkTheme() != this.checkBoxDarkTheme.isSelected()))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Salvare le modifiche alle impostazioni?");
+			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES)
 			{
@@ -329,6 +336,20 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxInfo.setVisible(false);
 		this.vboxSettingsInfo.setVisible(true);
 		this.vboxMain.setVisible(true);
+	}
+	
+	@FXML
+	public void changeTheme(ActionEvent event)
+	{
+		Scene scene = this.vboxMain.getScene();
+		ObservableList<String> sheets = scene.getStylesheets();
+		
+		sheets.add(ControllerMenu.class.getResource("/application/theme_" + (this.checkBoxDarkTheme.isSelected() ? "dark" : "light") + ".css").toExternalForm());
+		for(String s : sheets)
+		{
+			if(s.contains("theme"))
+				sheets.remove(s);
+		}
 	}
 	
 	@FXML 
@@ -361,22 +382,27 @@ public class ControllerMenu implements IControllerMenu {
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(SettingsSingleton.DEFAULT_QUESTION_NUMBER);
 		this.spinnerTimerMin.getValueFactory().setValue(SettingsSingleton.DEFAULT_TIMER);
 		this.checkBoxCheckQuestionsUpdate.setSelected(SettingsSingleton.DEFAULT_CHECK_QUESTIONS_UPDATE);
+		this.checkBoxDarkTheme.setSelected(SettingsSingleton.DEFAULT_DARK_MODE);
+		
+		this.changeTheme(new ActionEvent());
 	}
 	
 	private void saveSettingsChanges()
 	{
 		int sqnq, stm;
-		boolean cqu;
+		boolean cqu, dm;
 		sqnq = this.spinnerQuestionNumQuiz.getValue();
 		stm = this.spinnerTimerMin.getValue();
 		cqu = this.checkBoxCheckQuestionsUpdate.isSelected();
+		dm = this.checkBoxDarkTheme.isSelected();
 		
 		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
-				sqnq + "\nTimer (minuti): " + stm + "\nControllo aggiornamento domande: " + cqu);
+				sqnq + "\nTimer (minuti): " + stm + "\nControllo aggiornamento domande: " + cqu + "\nModalità scura: " + dm);
 		
 		this.settings.setQuestionNumber(sqnq);
 		this.settings.setTimer(stm);
 		this.settings.setCheckQuestionsUpdate(cqu);
+		this.settings.setDarkTheme(dm);
 		
 		if(this.qRepo.hasTopics())
 		{
@@ -388,6 +414,8 @@ public class ControllerMenu implements IControllerMenu {
 			this.setDisableCheckBoxes();
 		}
 		
+		this.changeTheme(new ActionEvent());
+		
 		this.settings.saveSettings(".settings.json");
 	}
 	
@@ -398,6 +426,9 @@ public class ControllerMenu implements IControllerMenu {
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(this.settings.getQuestionNumber());
 		this.spinnerTimerMin.getValueFactory().setValue(this.settings.getTimer());
 		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
+		this.checkBoxDarkTheme.setSelected(this.settings.isDarkTheme());
+		
+		this.changeTheme(new ActionEvent());
 	}
 	
 	@FXML 

@@ -29,6 +29,11 @@ import model.Quiz;
 import model.SettingsSingleton;
 
 public class ControllerQuiz implements IControllerQuiz{
+	private final static String STYLE_DEFAULT_LIGHT = "-fx-text-fill: black; -fx-font-weight: normal";
+	private final static String STYLE_DEFAULT_DARK = "-fx-text-fill: white; -fx-font-weight: normal";
+	private final static String STYLE_WRONG_ANSWER = "-fx-text-fill: red; -fx-font-weight: bold";
+	private final static String STYLE_CORRECT_ANSWER = "-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold";
+	
 	private HostServices hostServices;
 	
 	private List<Question> questions;
@@ -72,6 +77,8 @@ public class ControllerQuiz implements IControllerQuiz{
 	@FXML @Override 
 	public void initialize()
 	{
+		this.textQuestion.setMouseTransparent(true);
+		
 		// style? Example: remove focus glow on text area and textfields
 		this.buttonMenu.setVisible(false);
 		this.vboxResult.setVisible(false);
@@ -131,7 +138,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		for(Answer a : this.radioAnswers.keySet())
 		{
 			this.radioAnswers.get(a).setText(a.toString() + ". " + q.getAnswers().get(a));
-			this.radioAnswers.get(a).setStyle("-fx-text-fill: black; -fx-font-weight: normal");
+			this.radioAnswers.get(a).setStyle(this.settings.isDarkTheme() ? STYLE_DEFAULT_DARK : STYLE_DEFAULT_LIGHT);
 		}
 		if(this.quiz.getAnswers().get(this.index) != Answer.NONE)
 		{
@@ -152,8 +159,8 @@ public class ControllerQuiz implements IControllerQuiz{
 			Answer ca = this.quiz.getQuiz().get(this.index).getCorrectAnswer();
 			
 			if(ua != null && ua != Answer.NONE)
-				this.radioAnswers.get(ua).setStyle("-fx-text-fill: red; -fx-font-weight: bold");
-			this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
+				this.radioAnswers.get(ua).setStyle(STYLE_WRONG_ANSWER);
+			this.radioAnswers.get(ca).setStyle(STYLE_CORRECT_ANSWER);
 		}
 	}
 
@@ -175,7 +182,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		{
 			RadioButton rb = this.radioAnswers.get(a);
 			rb.setText(a.toString() + ". " + q.getAnswers().get(a));
-			rb.setStyle("-fx-text-fill: black; -fx-font-weight: normal");
+			rb.setStyle(this.settings.isDarkTheme() ? STYLE_DEFAULT_DARK : STYLE_DEFAULT_LIGHT);
 		}
 		if(this.quiz.getAnswers().get(this.index) != Answer.NONE)
 		{
@@ -196,8 +203,8 @@ public class ControllerQuiz implements IControllerQuiz{
 			Answer ca = this.quiz.getQuiz().get(this.index).getCorrectAnswer();
 			
 			if(ua != null && ua != Answer.NONE)
-				this.radioAnswers.get(ua).setStyle("-fx-text-fill: red; -fx-font-weight: bold");
-			this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
+				this.radioAnswers.get(ua).setStyle(STYLE_WRONG_ANSWER);
+			this.radioAnswers.get(ca).setStyle(STYLE_CORRECT_ANSWER);
 		}
 	}
 	
@@ -210,6 +217,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO/*, ButtonType.CANCEL*/);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Terminare il quiz?");
+			alert.getDialogPane().getStylesheets().add(ControllerQuiz.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
 			if(this.quiz.getGivenAnswers() < this.settings.getQuestionNumber())
 			{
 				String notAnswered = "";
@@ -247,7 +255,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	public void resetQuiz()
 	{
 		this.labelTimer.setText("" + this.settings.getTimer() + ":00");
-		this.labelTimer.setStyle("-fx-text-fill: black");
+		this.labelTimer.setStyle(this.settings.isDarkTheme() ? "-fx-text-fill: white" : "-fx-text-fill: black");
 		this.quizTerminated = false;
 		
 		Quiz q = this.quiz;
@@ -271,7 +279,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			rb.setDisable(false);
 			rb.setSelected(false);
 			rb.setText(a.toString() + ". " + question.getAnswers().get(a));
-			rb.setStyle("-fx-text-fill: black; -fx-font-weight: normal");
+			rb.setStyle(this.settings.isDarkTheme() ? STYLE_DEFAULT_DARK : STYLE_DEFAULT_LIGHT);
 		}
 		
 		// start timer
@@ -304,8 +312,8 @@ public class ControllerQuiz implements IControllerQuiz{
 		Answer ca = q.getQuiz().get(this.index).getCorrectAnswer();
 			
 		if(ua != null && ua != Answer.NONE)
-			this.radioAnswers.get(ua).setStyle("-fx-text-fill: red; -fx-font-weight: bold");
-		this.radioAnswers.get(ca).setStyle("-fx-text-fill: rgb(0,200,0); -fx-font-weight: bold");
+			this.radioAnswers.get(ua).setStyle(STYLE_WRONG_ANSWER);
+		this.radioAnswers.get(ca).setStyle(STYLE_CORRECT_ANSWER);
 		
 		// stop timer
 		this.timeline.stop();
@@ -335,6 +343,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			Alert alert = new Alert(AlertType.INFORMATION, "Tempo scaduto.", ButtonType.OK);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Quiz terminato.");
+			alert.getDialogPane().getStylesheets().add(ControllerQuiz.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
 			alert.show();
 			
 			this.endQuiz();
@@ -360,7 +369,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			controller.setHostServices(this.hostServices);
 		
 			Scene scene = new Scene(menu);
-			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/application.css").toExternalForm());
+			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {

@@ -1,21 +1,6 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
-
-/*.root {
-	-fx-background-color: #202020;
-    //-fx-font-size: 16pt;
-    //-fx-font-family: "Courier New";
-    //-fx-base: rgb(132, 145, 47);
-    //-fx-background: rgb(225, 228, 203);
+.hyperlink:visited {
+	-fx-text-fill: purple;
 }
-
-.label {
-	-fx-text-fill: white;
-}
-
-.button {
-	-fx-background-color: #404040;
-	-fx-text-fill: white;
-}*/
 
 .button {
 	-fx-background-size: 30px;
@@ -40,4 +25,12 @@
 
 #info {
 	-fx-background-image: url('../gfx/icon_info_dark.png');
+}
+
+#prev {
+	-fx-background-image: url('../gfx/icon_prev_dark.png');
+}
+
+#next {
+	-fx-background-image: url('../gfx/icon_next_dark.png');
 }

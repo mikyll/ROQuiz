@@ -10,7 +10,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 public class SettingsSingleton {
-	public final static double VERSION_NUMBER = 1.4;
+	public final static double VERSION_NUMBER = 1.5;
 	public final static int DEFAULT_QUESTION_NUMBER = 16;
 	public final static int DEFAULT_ANSWER_NUMBER = 5;
 	public final static int DEFAULT_TIMER = 18;
@@ -44,8 +44,8 @@ public class SettingsSingleton {
 	public void setTimer(int sTime) {settings.setTimer(sTime);}
 	public boolean isCheckQuestionsUpdate() {return settings.isCheckQuestionsUpdate();}
 	public void setCheckQuestionsUpdate(boolean qUpdate) {settings.setCheckQuestionsUpdate(qUpdate);}
-	public boolean isDarkMode() {return settings.isDarkMode();}
-	public void setDarkMode(boolean dMode) {settings.setDarkMode(dMode);}
+	public boolean isDarkTheme() {return settings.isDarkTheme();}
+	public void setDarkTheme(boolean dTheme) {settings.setDarkTheme(dTheme);}
 
 	public void loadSettings(String filename) {
 		try (FileReader reader = new FileReader(filename)) {
