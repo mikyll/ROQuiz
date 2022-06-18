@@ -29,6 +29,7 @@
   - Scelta di un numero specifico di domande (default: 16, selezionate casualmente).
   - Modifica del tempo a disposizione per il quiz (default: 18 minuti).
   - Controllo all'avvio dell'app se nella repository sono presenti nuove domande.
+  - Scelta del tema (chiaro/scuro)
 - Possibilità di inserimento di domande personalizzate (modificando il file Domande.txt).
 
 ### Demo
