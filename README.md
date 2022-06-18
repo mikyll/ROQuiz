@@ -144,6 +144,8 @@ Features da aggiungere e sviluppi futuri:
 - [ ] cambiare il controllo per le domande nuove e farlo in base alla data di modifica o ad un numero di versione
 - [ ] modificare il colore barra del titolo della finestra (nera se tema scuro)
 - [ ] aggiungere template per le issue: es [Desktop]/[Mobile] in base a da dove viene cliccato il link
+- [ ] aggiungere impostazione per mescolare le risposte
+- [ ] aggiungere dei tooltips
 
 ### Built With
 #### Desktop
