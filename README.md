@@ -141,7 +141,8 @@ Features da aggiungere e sviluppi futuri:
 - [x] mobile: aggiungere scelta argomenti
 - [ ] mobile: aggiungere possibilità di caricare un file domande personalizzato
 - [ ] cambiare il controllo per le domande nuove e farlo in base alla data di modifica o ad un numero di versione
-- [ ] aggiungere bottone di reset e reload negli argomenti
+- [ ] modificare il colore barra del titolo della finestra (nera se tema scuro)
+- [ ] aggiungere template per le issue: es [Desktop]/[Mobile] in base a da dove viene cliccato il link
 
 ### Built With
 #### Desktop
