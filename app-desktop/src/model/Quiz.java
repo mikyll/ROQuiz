@@ -10,9 +10,9 @@ public class Quiz {
 	private int givenAnswers;
 	private int correctAnswers;
 		
-	public Quiz(List<Question> questions, int qNum)
+	public Quiz(List<Question> questions, int qNum, boolean shuffleAnswers)
 	{
-		this.resetQuiz(questions, qNum);
+		this.resetQuiz(questions, qNum, shuffleAnswers);
 	}
 	
 	public Question getQuestionAt(int index) {return this.quiz.get(index);}
@@ -40,7 +40,7 @@ public class Quiz {
 		this.answers.set(index, value);
 	}
 	
-	public void resetQuiz(List<Question> questions, int qNum)
+	public void resetQuiz(List<Question> questions, int qNum, boolean shuffleAnswers)
 	{
 		// reset questions & user answers
 		this.quiz = new ArrayList<Question>(qNum);
@@ -48,7 +48,12 @@ public class Quiz {
 		Collections.shuffle(questions);
 		for(int i = 0; i < qNum; i++)
 		{
-			this.quiz.add(questions.get(i));
+			Question q = questions.get(i);
+			
+			if(shuffleAnswers)
+				q.shuffleAnswers();
+			
+			this.quiz.add(q);
 			this.answers.add(Answer.NONE);
 		}
 		

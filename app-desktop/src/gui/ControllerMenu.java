@@ -462,8 +462,6 @@ public class ControllerMenu implements IControllerMenu {
 			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz");
 	}
 	
-	// public void selectQuizFile() {}
-	
 	private void initCheckBoxes()
 	{
 		this.checkBoxes = new ArrayList<CheckBox>();

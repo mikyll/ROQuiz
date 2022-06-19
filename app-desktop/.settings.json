@@ -3,5 +3,5 @@
   "timer": 18,
   "checkQuestionsUpdate": true,
   "darkTheme": false,
-  "shuffleAnswers": false
+  "shuffleAnswers": true
 }

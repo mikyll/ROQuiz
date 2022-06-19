@@ -1,6 +1,9 @@
 package model;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Question {	
 	private String question;
@@ -36,6 +39,25 @@ public class Question {
 	public void setCorrectAnswer(Answer correctAnswer)
 	{
 		this.correctAnswer = correctAnswer;
+	}
+	
+	public void shuffleAnswers()
+	{
+		List<String> a = new ArrayList<String>();
+		String ca = this.answers.get(this.correctAnswer);
+		
+		for(String s : this.answers.values())
+			a.add(s);
+		
+		Collections.shuffle(a);
+		
+		this.answers = new HashMap<Answer, String>(SettingsSingleton.DEFAULT_ANSWER_NUMBER);
+		for(int i = 0; i < a.size(); i++)
+		{
+			this.answers.put(Answer.values()[i], a.get(i));
+			if(a.get(i).equals(ca))
+				this.correctAnswer = Answer.values()[i];
+		}
 	}
 	
 }

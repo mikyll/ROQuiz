@@ -223,7 +223,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" disable="true" prefHeight="30.0" prefWidth="350.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
                         <Label minHeight="27.0" minWidth="240.0" text="Mescola Risposte:">
                            <font>

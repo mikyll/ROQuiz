@@ -86,7 +86,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.settings = SettingsSingleton.getInstance();
 		this.initRadioArray();
 		
-		this.quiz = new Quiz(this.questions, this.settings.getQuestionNumber());
+		this.quiz = new Quiz(this.questions, this.settings.getQuestionNumber(), this.settings.isShuffleAnswers());
 		this.index = 0;
 		this.quizTerminated = false;
 		
@@ -260,7 +260,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		
 		Quiz q = this.quiz;
 		
-		q.resetQuiz(this.questions, this.settings.getQuestionNumber());
+		q.resetQuiz(this.questions, this.settings.getQuestionNumber(), this.settings.isShuffleAnswers());
 		this.index = 0;
 		
 		this.vboxResult.setVisible(false);
