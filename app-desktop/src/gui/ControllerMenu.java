@@ -25,8 +25,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 
 import model.Question;
 import model.SettingsSingleton;
@@ -64,6 +66,7 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Spinner<Integer> spinnerTimerMin;
 	@FXML private CheckBox checkBoxCheckQuestionsUpdate;
 	@FXML private CheckBox checkBoxDarkTheme;
+	@FXML private CheckBox checkBoxShuffleAnswers;
 	@FXML private Button buttonSettingsSave;
 	@FXML private Button buttonSettingsCancel;
 	@FXML private Button buttonSettingsRestore;
@@ -237,6 +240,13 @@ public class ControllerMenu implements IControllerMenu {
 		}
 	}
 	
+	private void showQuestions(ActionEvent event)
+	{
+		// get topic and show the related questions
+		System.out.println("Prova");
+	}
+	
+	
 	@FXML
 	public void selectQuiz(ActionEvent event)
 	{
@@ -311,7 +321,8 @@ public class ControllerMenu implements IControllerMenu {
 		if(this.vboxSettings.isVisible() &&	(this.settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || 
 				this.settings.getTimer() != this.spinnerTimerMin.getValue() || 
 				this.settings.isCheckQuestionsUpdate() != this.checkBoxCheckQuestionsUpdate.isSelected() ||
-				this.settings.isDarkTheme() != this.checkBoxDarkTheme.isSelected()))
+				this.settings.isDarkTheme() != this.checkBoxDarkTheme.isSelected() ||
+				this.settings.isShuffleAnswers() != this.checkBoxShuffleAnswers.isSelected()))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
@@ -390,19 +401,22 @@ public class ControllerMenu implements IControllerMenu {
 	private void saveSettingsChanges()
 	{
 		int sqnq, stm;
-		boolean cqu, dm;
+		boolean cqu, dm, sa;
 		sqnq = this.spinnerQuestionNumQuiz.getValue();
 		stm = this.spinnerTimerMin.getValue();
 		cqu = this.checkBoxCheckQuestionsUpdate.isSelected();
 		dm = this.checkBoxDarkTheme.isSelected();
+		sa = this.checkBoxShuffleAnswers.isSelected();
 		
 		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
-				sqnq + "\nTimer (minuti): " + stm + "\nControllo aggiornamento domande: " + cqu + "\nModalità scura: " + dm);
+				sqnq + "\nTimer (minuti): " + stm + "\nControllo aggiornamento domande: " +
+				cqu + "\nModalità scura: " + dm + "\nRisposte mescolate: " + sa);
 		
 		this.settings.setQuestionNumber(sqnq);
 		this.settings.setTimer(stm);
 		this.settings.setCheckQuestionsUpdate(cqu);
 		this.settings.setDarkTheme(dm);
+		this.settings.setShuffleAnswers(sa);
 		
 		if(this.qRepo.hasTopics())
 		{
@@ -427,6 +441,7 @@ public class ControllerMenu implements IControllerMenu {
 		this.spinnerTimerMin.getValueFactory().setValue(this.settings.getTimer());
 		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
 		this.checkBoxDarkTheme.setSelected(this.settings.isDarkTheme());
+		this.checkBoxShuffleAnswers.setSelected(this.settings.isShuffleAnswers());
 		
 		this.changeTheme(new ActionEvent());
 	}
@@ -460,15 +475,28 @@ public class ControllerMenu implements IControllerMenu {
 		
 		for(int i = 0; i < this.qRepo.getTopics().size(); i++) // dynamically generates the hbox containing the checkboxed
 		{
+			HBox hbox = new HBox();
+			hbox.setPrefWidth(350);
+			hbox.setPrefHeight(30);
+			hbox.setAlignment(Pos.CENTER);
+			
 			CheckBox cb = new CheckBox();
-			cb.setPrefWidth(350);
+			cb.setPrefWidth(300);
 			cb.setPrefHeight(20);
 			cb.setText(this.qRepo.getTopics().get(i) + " (" + this.qRepo.getqNumPerTopics().get(i) + ")");
 			cb.setOnAction(this::setTopics);
 			cb.setSelected(true);
 			
+			Button b = new Button();
+			b.setId("showQuestions");
+			b.setPrefWidth(25);
+			b.setPrefHeight(25);
+			b.setOnAction(this::showQuestions);
+			
 			this.checkBoxes.add(cb);
-			this.vboxCheckBoxes.getChildren().add(cb);
+			hbox.getChildren().add(cb);
+			hbox.getChildren().add(b);
+			this.vboxCheckBoxes.getChildren().add(hbox);
 		}
 		this.setDisableCheckBoxes();
 	}

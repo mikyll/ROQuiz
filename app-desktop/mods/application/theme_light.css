@@ -34,3 +34,13 @@
 #next {
 	-fx-background-image: url('../gfx/icon_next_dark.png');
 }
+
+#showQuestions {
+	-fx-background-image: url('../gfx/icon_show_dark.png');
+	-fx-background-size: 20px;
+	-fx-background-radius: 5em;
+	-fx-min-width: 25px;
+	-fx-min-height: 25px;
+   	-fx-max-width: 25px;
+    -fx-max-height: 25px;
+}
