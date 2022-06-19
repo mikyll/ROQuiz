@@ -16,7 +16,7 @@ public class SettingsSingleton {
 	public final static int DEFAULT_TIMER = 18;
 	public final static boolean DEFAULT_CHECK_QUESTIONS_UPDATE = true;
 	public final static boolean DEFAULT_DARK_MODE = false;
-	public final static boolean DEFAULT_SHUFFLE_QUESTIONS = false;
+	public final static boolean DEFAULT_SHUFFLE_ANSWERS = false;
 	
 	private static SettingsSingleton instance = null;
 	private static boolean justLaunched;
@@ -26,7 +26,7 @@ public class SettingsSingleton {
 	{
 		justLaunched = true;
 		
-		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_QUESTIONS);
+		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_ANSWERS);
 	}
 
 	public static synchronized SettingsSingleton getInstance()
@@ -93,7 +93,7 @@ public class SettingsSingleton {
 	public void resetSettings(String filename) {
 		
 		try(FileWriter writer = new FileWriter(filename)) {
-			settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_QUESTIONS);
+			settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_ANSWERS);
 			
 			Gson gson = new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setPrettyPrinting().create();
 			gson.toJson(settings, writer);

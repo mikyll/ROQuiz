@@ -195,6 +195,7 @@ public class ControllerMenu implements IControllerMenu {
 				SettingsSingleton.DEFAULT_TIMER / 2, qNum * 2, this.settings.getTimer()));
 		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
 		this.checkBoxDarkTheme.setSelected(this.settings.isDarkTheme());
+		this.checkBoxShuffleAnswers.setSelected(this.settings.isShuffleAnswers());
 		
 		this.labelVersion.setText("ROQuiz v" + SettingsSingleton.VERSION_NUMBER);
 		
@@ -394,6 +395,7 @@ public class ControllerMenu implements IControllerMenu {
 		this.spinnerTimerMin.getValueFactory().setValue(SettingsSingleton.DEFAULT_TIMER);
 		this.checkBoxCheckQuestionsUpdate.setSelected(SettingsSingleton.DEFAULT_CHECK_QUESTIONS_UPDATE);
 		this.checkBoxDarkTheme.setSelected(SettingsSingleton.DEFAULT_DARK_MODE);
+		this.checkBoxShuffleAnswers.setSelected(SettingsSingleton.DEFAULT_SHUFFLE_ANSWERS);
 		
 		this.changeTheme(new ActionEvent());
 	}
