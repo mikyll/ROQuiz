@@ -6,6 +6,34 @@
 	-fx-text-fill: white;
 }
 
+.list-view {
+	-fx-base: #606060;
+	-fx-border-color: #404040; 
+	-fx-border-width: 2px;
+	-fx-control-inner-background: #000000;
+}
+
+.list-view .list-cell:even {
+	-fx-background-color: #000000;
+}
+.list-view .list-cell:odd {
+	-fx-background-color: #202020;
+}
+
+.scroll-bar {
+	-fx-background-color: #404040;
+}
+
+.scroll-bar .thumb {
+	-fx-base: #606060;
+}
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+	-fx-background-color: #606060;
+}
+.scroll-bar .increment-button:hover, .scroll-bar .decrement-button:hover {
+	-fx-background-color: #808080;
+}
+
 .label {
 	-fx-text-fill: white;
 }
@@ -22,7 +50,6 @@
 
 .text-area {
 	-fx-base: #404040;
-  	-fx-focus-color: transparent;
 	-fx-control-inner-background: #404040;
 	-fx-text-fill: white;
 	
@@ -32,7 +59,6 @@
 .text-area .content {
     -fx-background-radius: 0 ;
 }
-
 
 .button, .spinner, .check-box, .radio-button {
 	-fx-base: #404040;

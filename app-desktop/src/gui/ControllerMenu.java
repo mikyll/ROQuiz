@@ -27,9 +27,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-
+import model.Answer;
 import model.Question;
 import model.SettingsSingleton;
 import persistence.BadFileFormatException;
@@ -46,6 +49,7 @@ public class ControllerMenu implements IControllerMenu {
 	
 	@FXML private VBox vboxMain;
 	@FXML private VBox vboxTopics;
+	@FXML private VBox vboxQuestions;
 	@FXML private VBox vboxCheckBoxes;
 	@FXML private VBox vboxSettingsInfo;
 	@FXML private VBox vboxSettings;
@@ -61,6 +65,8 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Label labelLoadedQ;
 	@FXML private Label labelSelectedQ;
 	@FXML private Label labelQuizQNum;
+	
+	@FXML private ListView<VBox> listViewQuestions;
 	
 	@FXML private Spinner<Integer> spinnerQuestionNumQuiz;
 	@FXML private Spinner<Integer> spinnerTimerMin;
@@ -185,6 +191,7 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxSettingsInfo.setVisible(true);
 		this.vboxBack.setVisible(false);
 		this.vboxTopics.setVisible(false);
+		this.vboxQuestions.setVisible(false);
 		this.vboxSettings.setVisible(false);
 		this.vboxInfo.setVisible(false);
 
@@ -243,8 +250,51 @@ public class ControllerMenu implements IControllerMenu {
 	
 	private void showQuestions(ActionEvent event)
 	{
-		// get topic and show the related questions
-		System.out.println("Prova");
+		int topicIndex = 0, qNum = 0;
+		CheckBox topic = ((CheckBox) ((HBox) ((Button) event.getSource()).getParent()).getChildren().get(0));
+		
+		System.out.println("Selezione: lista domande per l'argomento '" + topic.getText() + "'");
+		
+		this.vboxTopics.setVisible(false);
+		this.vboxSettingsInfo.setVisible(false);
+		this.vboxQuestions.setVisible(true);
+		this.vboxBack.setVisible(true);
+		
+		for(int i = 0; i < this.qRepo.getTopics().size(); i++)
+		{
+			qNum = this.qRepo.getqNumPerTopics().get(i);
+			if(this.checkBoxes.get(i).equals(topic))
+				break;
+			topicIndex += qNum;
+		}
+		
+		ObservableList<VBox> listVBox = FXCollections.observableArrayList();
+		
+		// build ListView
+		for(int i = topicIndex; i < topicIndex + qNum; i++)
+		{
+			Question q = this.qRepo.getQuestions().get(i);
+			VBox vbox = new VBox();
+			vbox.setMaxWidth(350);
+			vbox.setPadding(new Insets(0, 0, 20, 0));
+			
+			Label lQuestion = new Label("Q" + (i+1) + ") " + q.getQuestion());
+			lQuestion.setStyle("-fx-font-weight: bold");
+			lQuestion.setWrapText(true);
+			vbox.getChildren().add(lQuestion);
+			
+			for(int j = 0; j < q.getAnswers().keySet().size(); j++)
+			{
+				Answer a = Answer.values()[j];
+				char letter = ((char) (j + 65));
+				Label lAnswer = new Label(letter + ". " + q.getAnswers().get(a));
+				if(q.getCorrectAnswer().equals(a))
+					lAnswer.setStyle("-fx-text-fill: rgb(0,200,0);");
+				vbox.getChildren().add(lAnswer);
+			}
+			listVBox.add(vbox);
+		}
+		this.listViewQuestions.setItems(listVBox);
 	}
 	
 	
@@ -265,7 +315,7 @@ public class ControllerMenu implements IControllerMenu {
 					questions.add(this.qRepo.getQuestions().get(j));
 				}
 			}
-			else j += this.qRepo.getqNumPerTopics().get(i);
+			else j += this.qRepo.getqNumPerTopics().get(i); // skip the topic
 		}
 		
 		System.out.println("Pool domande quiz: " + questions.size());
@@ -328,7 +378,7 @@ public class ControllerMenu implements IControllerMenu {
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Salvare le modifiche alle impostazioni?");
-			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
+			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource("/application/theme_" + (this.checkBoxDarkTheme.isSelected() ? "dark" : "light") + ".css").toExternalForm());
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES)
 			{
@@ -342,12 +392,21 @@ public class ControllerMenu implements IControllerMenu {
 				return;
 		}
 		
-		this.vboxBack.setVisible(false);
-		this.vboxTopics.setVisible(false);
+		if(this.vboxQuestions.isVisible())
+		{
+			this.vboxTopics.setVisible(true);
+		}
+		else
+		{
+			this.vboxBack.setVisible(false);
+			this.vboxTopics.setVisible(false);
+			this.vboxMain.setVisible(true);
+			this.vboxSettingsInfo.setVisible(true);
+		}
+		this.vboxQuestions.setVisible(false);
 		this.vboxSettings.setVisible(false);
 		this.vboxInfo.setVisible(false);
-		this.vboxSettingsInfo.setVisible(true);
-		this.vboxMain.setVisible(true);
+		
 	}
 	
 	@FXML

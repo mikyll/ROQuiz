@@ -5,6 +5,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tooltip?>
@@ -21,7 +22,7 @@
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0">
+      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Menu Principale">
                <font>
@@ -117,6 +118,16 @@
                </VBox.margin>
             </VBox>
          </children></VBox>
+      <VBox fx:id="vboxQuestions" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0">
+         <children>
+            <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Lista Domande" wrapText="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <ListView fx:id="listViewQuestions" focusTraversable="false" prefHeight="290.0" prefWidth="400.0" />
+         </children>
+      </VBox>
       <VBox fx:id="vboxBack" alignment="CENTER" layoutX="133.0" layoutY="375.0" prefHeight="90.0" prefWidth="50.0" visible="false">
          <children>
             <Button id="back" fx:id="buttonBack" mnemonicParsing="false" onAction="#selectBack" prefHeight="40.0" prefWidth="40.0" />
