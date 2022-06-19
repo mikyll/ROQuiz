@@ -518,7 +518,7 @@ public class ControllerMenu implements IControllerMenu {
 		if(hl.getText().equals("Icons8"))
 			this.hostServices.showDocument("https://icons8.com");
 		if(hl.getText().equals("Apri una issue"))
-			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz/issues");
+			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz/issues/new?title=[Desktop]+Titolo+Problema&body=Descrivi+qui+il+problema%2C+possibilmente+aggiungendo+una+o+pi%C3%B9+etichette.");
 		if(hl.getChildrenUnmodifiable().get(0) instanceof Label)
 			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz");
 	}
