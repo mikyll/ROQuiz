@@ -5,14 +5,16 @@ public class Settings {
 	private int timer;
 	private boolean checkQuestionsUpdate;
 	private boolean darkTheme;
+	private boolean shuffleAnswers;
 	
 	public Settings() {}
-	public Settings(int qNum, int sTime, boolean qUpdate, boolean dTheme)
+	public Settings(int qNum, int sTime, boolean qUpdate, boolean dTheme, boolean shuffle)
 	{
 		this.questionNumber = qNum;
 		this.timer = sTime;
 		this.checkQuestionsUpdate = qUpdate;
 		this.darkTheme = dTheme;
+		this.shuffleAnswers = shuffle;
 	}
 	
 	public int getQuestionNumber() {return this.questionNumber;}
@@ -23,4 +25,6 @@ public class Settings {
 	public void setCheckQuestionsUpdate(boolean qUpdate) {this.checkQuestionsUpdate = qUpdate;}
 	public boolean isDarkTheme() {return this.darkTheme;}
 	public void setDarkTheme(boolean dTheme) {this.darkTheme = dTheme;}
+	public boolean isShuffleAnswers() {return shuffleAnswers;}
+	public void setShuffleAnswers(boolean shuffleAnswers) {this.shuffleAnswers = shuffleAnswers;}
 }

@@ -16,6 +16,7 @@ public class SettingsSingleton {
 	public final static int DEFAULT_TIMER = 18;
 	public final static boolean DEFAULT_CHECK_QUESTIONS_UPDATE = true;
 	public final static boolean DEFAULT_DARK_MODE = false;
+	public final static boolean DEFAULT_SHUFFLE_QUESTIONS = false;
 	
 	private static SettingsSingleton instance = null;
 	private static boolean justLaunched;
@@ -25,7 +26,7 @@ public class SettingsSingleton {
 	{
 		justLaunched = true;
 		
-		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE);
+		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_QUESTIONS);
 	}
 
 	public static synchronized SettingsSingleton getInstance()
@@ -46,6 +47,8 @@ public class SettingsSingleton {
 	public void setCheckQuestionsUpdate(boolean qUpdate) {settings.setCheckQuestionsUpdate(qUpdate);}
 	public boolean isDarkTheme() {return settings.isDarkTheme();}
 	public void setDarkTheme(boolean dTheme) {settings.setDarkTheme(dTheme);}
+	public boolean isShuffleAnswers() {return settings.isShuffleAnswers();}
+	public void setShuffleAnswers(boolean shuffle) {settings.setShuffleAnswers(shuffle);}
 
 	public void loadSettings(String filename) {
 		try (FileReader reader = new FileReader(filename)) {
@@ -90,7 +93,7 @@ public class SettingsSingleton {
 	public void resetSettings(String filename) {
 		
 		try(FileWriter writer = new FileWriter(filename)) {
-			settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE);
+			settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_QUESTIONS);
 			
 			Gson gson = new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setPrettyPrinting().create();
 			gson.toJson(settings, writer);
