@@ -16,7 +16,7 @@ public class SettingsSingleton {
 	public final static int DEFAULT_TIMER = 18;
 	public final static boolean DEFAULT_CHECK_QUESTIONS_UPDATE = true;
 	public final static boolean DEFAULT_DARK_MODE = false;
-	public final static boolean DEFAULT_SHUFFLE_ANSWERS = false;
+	public final static boolean DEFAULT_SHUFFLE_ANSWERS = true;
 	
 	private static SettingsSingleton instance = null;
 	private static boolean justLaunched;

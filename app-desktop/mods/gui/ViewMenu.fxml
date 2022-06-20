@@ -15,14 +15,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
+<AnchorPane id="base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
    <children>
       <Label alignment="CENTER" layoutX="309.0" layoutY="48.0" minHeight="50.0" minWidth="150.0" text="ROQuiz">
          <font>
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Menu Principale">
                <font>
@@ -118,11 +118,16 @@
                </VBox.margin>
             </VBox>
          </children></VBox>
-      <VBox fx:id="vboxQuestions" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0">
+      <VBox fx:id="vboxQuestions" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
          <children>
-            <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Lista Domande" wrapText="true">
+            <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Lista Domande">
                <font>
                   <Font size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="labelTopic" alignment="CENTER" minWidth="250.0" prefHeight="30.0" text="Argomento: Programmazione Lineare Intera">
+               <font>
+                  <Font size="14.0" />
                </font>
             </Label>
             <ListView fx:id="listViewQuestions" focusTraversable="false" prefHeight="290.0" prefWidth="400.0" />
@@ -153,14 +158,17 @@
                               <Font size="18.0" />
                            </font>
                            <tooltip>
-                              <Tooltip prefWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true" />
+                              <Tooltip maxWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <Spinner fx:id="spinnerQuestionNumQuiz" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0">
                            <tooltip>
-                              <Tooltip prefWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true">
+                              <Tooltip maxWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true">
                                  <font>
-                                    <Font size="18.0" />
+                                    <Font size="14.0" />
                                  </font>
                               </Tooltip>
                            </tooltip></Spinner>
@@ -173,14 +181,17 @@
                               <Font size="18.0" />
                            </font>
                            <tooltip>
-                              <Tooltip prefWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true" />
+                              <Tooltip maxWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <Spinner fx:id="spinnerTimerMin" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0">
                            <tooltip>
-                              <Tooltip prefWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true">
+                              <Tooltip maxWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true">
                                  <font>
-                                    <Font size="18.0" />
+                                    <Font size="14.0" />
                                  </font>
                               </Tooltip>
                            </tooltip></Spinner>
@@ -193,16 +204,19 @@
                               <Font size="18.0" />
                            </font>
                            <tooltip>
-                              <Tooltip prefWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se vi sono nuove domande e, in caso affermativo, chiede all'utente se vuole scaricarle" wrapText="true" />
+                              <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se vi sono nuove domande e, in caso affermativo, chiede all'utente se vuole scaricarle" wrapText="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
                            <children>
                               <CheckBox fx:id="checkBoxCheckQuestionsUpdate" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
                                  <tooltip>
-                                    <Tooltip prefWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se vi sono nuove domande e, in caso affermativo, chiede all'utente se vuole scaricarle" wrapText="true">
+                                    <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se vi sono nuove domande e, in caso affermativo, chiede all'utente se vuole scaricarle" wrapText="true">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font size="14.0" />
                                        </font>
                                     </Tooltip>
                                  </tooltip></CheckBox>
@@ -217,16 +231,19 @@
                               <Font size="18.0" />
                            </font>
                            <tooltip>
-                              <Tooltip prefWidth="400.0" text="Abilita/Disabilita il tema scuro dell'applicazione" wrapText="true" />
+                              <Tooltip maxWidth="400.0" text="Abilita/Disabilita il tema scuro dell'applicazione" wrapText="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
                            <children>
                               <CheckBox fx:id="checkBoxDarkTheme" mnemonicParsing="false" onAction="#changeTheme" prefHeight="18.0" prefWidth="18.0">
                                  <tooltip>
-                                    <Tooltip prefWidth="400.0" text="Abilita/Disabilita il tema scuro dell'applicazione" wrapText="true">
+                                    <Tooltip maxWidth="400.0" text="Abilita/Disabilita il tema scuro dell'applicazione" wrapText="true">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font size="14.0" />
                                        </font>
                                     </Tooltip>
                                  </tooltip></CheckBox>
@@ -241,14 +258,20 @@
                               <Font size="18.0" />
                            </font>
                            <tooltip>
-                              <Tooltip prefWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true" />
+                              <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
                            <children>
                               <CheckBox fx:id="checkBoxShuffleAnswers" mnemonicParsing="false" onAction="#changeTheme" prefHeight="18.0" prefWidth="18.0">
                                  <tooltip>
-                                    <Tooltip prefWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true" />
+                                    <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font></Tooltip>
                                  </tooltip>
                               </CheckBox>
                            </children>

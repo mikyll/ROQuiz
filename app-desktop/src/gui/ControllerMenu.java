@@ -23,8 +23,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -60,6 +63,8 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Button buttonStart;
 	@FXML private Button buttonSettings;
 	@FXML private Button buttonInfo;
+	
+	@FXML private Label labelTopic;
 	
 	@FXML private Label labelTopicsWarning;
 	@FXML private Label labelLoadedQ;
@@ -252,6 +257,8 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		int topicIndex = 0, qNum = 0;
 		CheckBox topic = ((CheckBox) ((HBox) ((Button) event.getSource()).getParent()).getChildren().get(0));
+		String arg = topic.getText().replace("(", "").replace(")", "").replaceAll("[0-9]*", "").trim();
+		this.labelTopic.setText("Argomento: " + arg);
 		
 		System.out.println("Selezione: lista domande per l'argomento '" + topic.getText() + "'");
 		
@@ -552,9 +559,15 @@ public class ControllerMenu implements IControllerMenu {
 			b.setPrefHeight(25);
 			b.setOnAction(this::showQuestions);
 			
+			Tooltip t = new Tooltip("Visualizza la lista delle domande per questo argomento");
+			t.setFont(Font.font("System", FontWeight.NORMAL, 14.0));
+			t.setMaxWidth(400);
+			t.setWrapText(true);
+			b.setTooltip(t);
+			
 			this.checkBoxes.add(cb);
-			hbox.getChildren().add(cb);
-			hbox.getChildren().add(b);
+			hbox.getChildren().addAll(cb, b);
+			
 			this.vboxCheckBoxes.getChildren().add(hbox);
 		}
 		this.setDisableCheckBoxes();

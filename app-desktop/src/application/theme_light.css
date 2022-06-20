@@ -8,6 +8,10 @@
     -fx-background-position: 50%;
 }
 
+.list-view {
+	-fx-border-width: 2px;
+}
+
 #star {
 	-fx-background-image: url('../gfx/icon_star_dark.png');
 	-fx-background-size: 25px;

@@ -1,5 +1,7 @@
-// Background: #202020
-// Button Background: #404040
+/*
+Background: #202020
+Button Background: #404040
+*/
 
 .root {
 	-fx-background-color: #202020;
@@ -9,7 +11,7 @@
 .list-view {
 	-fx-base: #606060;
 	-fx-border-color: #404040; 
-	-fx-border-width: 2px;
+	-fx-border-width: 1px;
 	-fx-control-inner-background: #000000;
 }
 
@@ -27,9 +29,7 @@
 .scroll-bar .thumb {
 	-fx-base: #606060;
 }
-.scroll-bar .increment-button, .scroll-bar .decrement-button {
-	-fx-background-color: #606060;
-}
+
 .scroll-bar .increment-button:hover, .scroll-bar .decrement-button:hover {
 	-fx-background-color: #808080;
 }
@@ -43,8 +43,8 @@
 }
 
 .text-field {
-	-fx-background-color: #404040;
 	-fx-base: #404040;
+	-fx-background-color: #404040;
 	-fx-text-fill: white;
 }
 
@@ -69,6 +69,11 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: 50%;
 	-fx-text-fill: white;
+}
+
+.tooltip {
+	-fx-background-color: #808080;
+	-fx-text-fill: black;
 }
 
 #star {
