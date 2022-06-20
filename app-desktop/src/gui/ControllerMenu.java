@@ -256,11 +256,11 @@ public class ControllerMenu implements IControllerMenu {
 	private void showQuestions(ActionEvent event)
 	{
 		int topicIndex = 0, qNum = 0;
-		CheckBox topic = ((CheckBox) ((HBox) ((Button) event.getSource()).getParent()).getChildren().get(0));
-		String arg = topic.getText().replace("(", "").replace(")", "").replaceAll("[0-9]*", "").trim();
-		this.labelTopic.setText("Argomento: " + arg);
+		CheckBox cbTopic = ((CheckBox) ((HBox) ((Button) event.getSource()).getParent()).getChildren().get(0));
+		String topic = cbTopic.getText().replace("(", "").replace(")", "").replaceAll("[0-9]*", "").trim();
+		this.labelTopic.setText("Argomento: " + topic);
 		
-		System.out.println("Selezione: lista domande per l'argomento '" + topic.getText() + "'");
+		System.out.println("Selezione: lista domande per l'argomento '" + topic + "'");
 		
 		this.vboxTopics.setVisible(false);
 		this.vboxSettingsInfo.setVisible(false);
@@ -270,7 +270,7 @@ public class ControllerMenu implements IControllerMenu {
 		for(int i = 0; i < this.qRepo.getTopics().size(); i++)
 		{
 			qNum = this.qRepo.getqNumPerTopics().get(i);
-			if(this.checkBoxes.get(i).equals(topic))
+			if(this.checkBoxes.get(i).equals(cbTopic))
 				break;
 			topicIndex += qNum;
 		}
