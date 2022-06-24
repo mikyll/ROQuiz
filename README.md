@@ -174,6 +174,8 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * [Fix puntini bianchi](https://stackoverflow.com/questions/44169273/javafx-unwanted-white-corner-textarea) negli angoli della TextArea, usand il tema scuro
 <!--* [Doc LaTeX con definizioni per la teoria](https://github.com/kmfrick/College_Notes/tree/main/RO-M), realizzato da [kmfrick](https://github.com/kmfrick), Corinna Marchili, Sofia Montebugnoli-->
 
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
 <div align="center">
   
 [![LinkedIn][linkedin-shield]][linkedin-url]
@@ -201,8 +203,8 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 [stars-url]: https://github.com/mikyll/ROQuiz/stargazers
 [issues-shield]: https://img.shields.io/github/issues/mikyll/ROQuiz
 [issues-url]: https://github.com/mikyll/ROQuiz/issues
-[license-shield]: https://img.shields.io/github/license/mikyll/ROQuiz
-[license-url]: https://github.com/mikyll/ROQuiz/blob/master/LICENSE
+[license-shield]: https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-lightgrey.svg
+[license-url]: https://creativecommons.org/licenses/by-nc-sa/4.0/
 [java-shield]: https://img.shields.io/badge/Java-ED8B00?logo=java&logoColor=white
 [java-url]: https://www.java.com
 [dart-shield]: https://img.shields.io/badge/Dart-%230175C2.svg?logo=dart&logoColor=white
