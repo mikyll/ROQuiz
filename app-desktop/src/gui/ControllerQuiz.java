@@ -26,7 +26,7 @@ import javafx.util.Duration;
 import model.Answer;
 import model.Question;
 import model.Quiz;
-import model.SettingsSingleton;
+import persistence.SettingsManager;
 
 public class ControllerQuiz implements IControllerQuiz{
 	private final static String STYLE_DEFAULT_LIGHT = "-fx-text-fill: black; -fx-font-weight: normal";
@@ -37,7 +37,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	private HostServices hostServices;
 	
 	private List<Question> questions;
-	private SettingsSingleton settings;
+	private SettingsManager settings;
 	private Quiz quiz;
 	private int index;
 	private boolean quizTerminated;
@@ -77,13 +77,10 @@ public class ControllerQuiz implements IControllerQuiz{
 	@FXML @Override 
 	public void initialize()
 	{
-		this.textQuestion.setMouseTransparent(true);
-		
-		// style? Example: remove focus glow on text area and textfields
 		this.buttonMenu.setVisible(false);
 		this.vboxResult.setVisible(false);
 		
-		this.settings = SettingsSingleton.getInstance();
+		this.settings = SettingsManager.getInstance();
 		this.initRadioArray();
 		
 		this.quiz = new Quiz(this.questions, this.settings.getQuestionNumber(), this.settings.isShuffleAnswers());
@@ -217,7 +214,8 @@ public class ControllerQuiz implements IControllerQuiz{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO/*, ButtonType.CANCEL*/);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Terminare il quiz?");
-			alert.getDialogPane().getStylesheets().add(ControllerQuiz.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
+
+			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource(ControllerMenu.getStyleFilename(settings.isDarkTheme())).toExternalForm());
 			if(this.quiz.getGivenAnswers() < this.settings.getQuestionNumber())
 			{
 				String notAnswered = "";
@@ -266,6 +264,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.vboxResult.setVisible(false);
 		this.buttonEndReset.setText("Termina");
 		this.buttonPrev.setDisable(true);
+		this.buttonMenu.setVisible(false);
 		
 		// init first question
 		this.textQNumber.setText("" + (this.index + 1));
@@ -343,7 +342,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			Alert alert = new Alert(AlertType.INFORMATION, "Tempo scaduto.", ButtonType.OK);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Quiz terminato.");
-			alert.getDialogPane().getStylesheets().add(ControllerQuiz.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
+			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource(ControllerMenu.getStyleFilename(settings.isDarkTheme())).toExternalForm());
 			alert.show();
 			
 			this.endQuiz();
@@ -369,7 +368,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			controller.setHostServices(this.hostServices);
 		
 			Scene scene = new Scene(menu);
-			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
+			scene.getStylesheets().add(ControllerMenu.class.getResource(ControllerMenu.getStyleFilename(settings.isDarkTheme())).toExternalForm());
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {

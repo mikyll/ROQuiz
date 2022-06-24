@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="baseQuiz" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER" layoutX="50.0" layoutY="50.0" prefHeight="350.0" prefWidth="500.0">
+      <VBox id="vboxQuiz" alignment="CENTER" layoutX="50.0" layoutY="50.0" prefHeight="350.0" prefWidth="500.0">
          <children>
             <TextArea fx:id="textQuestion" editable="false" focusTraversable="false" mouseTransparent="true" prefHeight="100.0" prefWidth="300.0" text="Nel Forward Step della strategia di esplorazione Depth-First rivisitata:" wrapText="true" />
             <HBox prefHeight="60.0" prefWidth="300.0">
@@ -59,7 +59,7 @@
          </children>
       </HBox>
       <ComboBox layoutX="50.0" layoutY="100.0" prefHeight="25.0" prefWidth="100.0" promptText="Questions" visible="false" />
-      <VBox fx:id="vboxResult" layoutX="550.0" layoutY="140.0" prefHeight="200.0" prefWidth="220.0" visible="false">
+      <VBox id="vboxQuizResult" fx:id="vboxResult" layoutX="550.0" layoutY="140.0" prefHeight="200.0" prefWidth="220.0" visible="false">
          <children>
             <Label alignment="CENTER" prefHeight="30.0" prefWidth="200.0" text="Risultato:">
                <font>
@@ -120,7 +120,7 @@
                   <Insets right="10.0" />
                </padding>
             </Label>
-            <Label fx:id="labelTimer" alignment="CENTER" prefHeight="40.0" prefWidth="80.0" text="18:00">
+            <Label id="hboxTimer" fx:id="labelTimer" alignment="CENTER" prefHeight="40.0" prefWidth="80.0" text="18:00">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

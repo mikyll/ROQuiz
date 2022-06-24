@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 
+import persistence.SettingsManager;
+
 public class Question {	
 	private String question;
 	private HashMap<Answer, String> answers;
@@ -12,7 +14,7 @@ public class Question {
 	
 	public Question(String question)
 	{
-		this.answers = new HashMap<Answer, String>(SettingsSingleton.DEFAULT_ANSWER_NUMBER);
+		this.answers = new HashMap<Answer, String>(SettingsManager.DEFAULT_ANSWER_NUMBER);
 		this.question = question;
 	}
 
@@ -22,7 +24,7 @@ public class Question {
 	public void setAnswers(HashMap<Answer, String> answers) {this.answers = answers;}
 	public void addAnswer(String answer)
 	{
-		if(this.answers.keySet().size() == SettingsSingleton.DEFAULT_ANSWER_NUMBER)
+		if(this.answers.keySet().size() == SettingsManager.DEFAULT_ANSWER_NUMBER)
 			throw new IllegalArgumentException("Answer number excedeed.");
 		
 		int index = this.answers.keySet().size();
@@ -32,7 +34,7 @@ public class Question {
 	public Answer getCorrectAnswer() {return this.correctAnswer;}
 	public void setCorrectAnswer(int correctAnswer)
 	{
-		if(correctAnswer > SettingsSingleton.DEFAULT_ANSWER_NUMBER)
+		if(correctAnswer > SettingsManager.DEFAULT_ANSWER_NUMBER)
 			throw new IllegalArgumentException("Error: the correct answer must be one of answers.");
 		this.correctAnswer = Answer.values()[correctAnswer];
 	}
@@ -51,7 +53,7 @@ public class Question {
 		
 		Collections.shuffle(a);
 		
-		this.answers = new HashMap<Answer, String>(SettingsSingleton.DEFAULT_ANSWER_NUMBER);
+		this.answers = new HashMap<Answer, String>(SettingsManager.DEFAULT_ANSWER_NUMBER);
 		for(int i = 0; i < a.size(); i++)
 		{
 			this.answers.put(Answer.values()[i], a.get(i));

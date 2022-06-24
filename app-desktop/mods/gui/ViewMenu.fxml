@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane id="base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
+<AnchorPane id="baseMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
    <children>
       <Label alignment="CENTER" layoutX="309.0" layoutY="48.0" minHeight="50.0" minWidth="150.0" text="ROQuiz">
          <font>
@@ -266,7 +266,7 @@
                         </Label>
                         <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
                            <children>
-                              <CheckBox fx:id="checkBoxShuffleAnswers" mnemonicParsing="false" onAction="#changeTheme" prefHeight="18.0" prefWidth="18.0">
+                              <CheckBox fx:id="checkBoxShuffleAnswers" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
                                  <tooltip>
                                     <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
                                        <font>
@@ -290,7 +290,7 @@
             </HBox>
          </children>
       </VBox>
-      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="300.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="340.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Informazioni">
                <font>
@@ -319,6 +319,28 @@
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="50.0" onAction="#openURL" prefHeight="27.0" prefWidth="200.0" text="mikyll" textAlignment="RIGHT" underline="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Hyperlink>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="400.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="200.0" text="In collaborazione con:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="50.0" onAction="#openURL" prefHeight="27.0" prefWidth="200.0" text="Contributors" textAlignment="RIGHT" underline="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -384,12 +406,12 @@
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="50.0" onAction="#openURL" prefHeight="27.0" prefWidth="130.0" text="Apri una issue" underline="true">
+                              <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="50.0" onAction="#openURL" text="Apri una issue" underline="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Hyperlink>
-                              <Label alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="70.0" text="su GitHub!" textAlignment="RIGHT">
+                              <Label alignment="CENTER_RIGHT" prefHeight="27.0" text="su GitHub!" textAlignment="RIGHT">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -398,20 +420,20 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <Separator prefHeight="50.0" prefWidth="400.0" visible="false" />
-                  <TextFlow prefHeight="46.0" prefWidth="342.0" textAlignment="CENTER">
+                  <Separator prefHeight="30.0" prefWidth="400.0" visible="false" />
+                  <TextFlow maxHeight="100.0" prefWidth="400.0" textAlignment="CENTER">
                      <children>
-                        <Label alignment="CENTER_RIGHT" prefHeight="27.0" text="Se l'app ti è stata utile, considera di lasciare una stellina" textAlignment="RIGHT">
+                        <Label alignment="CENTER_RIGHT" maxWidth="400.0" text="Se l'app ti è stata utile, considera di lasciare una stellina" textAlignment="CENTER" wrapText="true">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
                         <Hyperlink onAction="#openURL">
                            <graphic>
-                              <Label id="star" prefHeight="25.0" prefWidth="25.0" />
+                              <Label id="star" prefHeight="25.0" prefWidth="25.0" textAlignment="CENTER" />
                            </graphic>
                         </Hyperlink>
-                        <Label alignment="CENTER_RIGHT" prefHeight="27.0" text="alla repository su GitHub, basta un click e sono molto apprezzate! :-)" textAlignment="RIGHT">
+                        <Label alignment="CENTER_RIGHT" maxWidth="400.0" text="alla repository su GitHub, basta un click e sono molto apprezzate! :-)" textAlignment="CENTER" wrapText="true">
                            <font>
                               <Font size="14.0" />
                            </font>

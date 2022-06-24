@@ -3,9 +3,8 @@ package application;
 import java.io.File;
 
 import gui.ControllerMenu;
-import model.SettingsSingleton;
 import persistence.QuestionRepository;
-
+import persistence.SettingsManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -16,7 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 
 public class Main extends Application {
-	private SettingsSingleton settings;
+	private SettingsManager settings;
 	
 	/*
 	// To load directly the quiz
@@ -39,7 +38,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage)
 	{
-		this.settings = SettingsSingleton.getInstance();
+		this.settings = SettingsManager.getInstance();
 		this.settings.loadSettings(".settings.json");
 		//initSettings();
 		

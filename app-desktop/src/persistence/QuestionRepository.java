@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Question;
-import model.SettingsSingleton;
 
 public class QuestionRepository implements IQuestionRepository {
 	public static final Charset questionsEncoding = StandardCharsets.UTF_8;
@@ -71,7 +70,7 @@ public class QuestionRepository implements IQuestionRepository {
 				
 				Question q = new Question(line);
 				
-				for(int i = 0; i < SettingsSingleton.DEFAULT_ANSWER_NUMBER; i++) // answers
+				for(int i = 0; i < SettingsManager.DEFAULT_ANSWER_NUMBER; i++) // answers
 				{
 					line = reader.readLine();
 					lineNum++;
@@ -92,7 +91,7 @@ public class QuestionRepository implements IQuestionRepository {
 				
 				char ch = line.toCharArray()[0];
 				int value = ((int) ch) - 65;
-				if(value < 0 || value > SettingsSingleton.DEFAULT_ANSWER_NUMBER - 1)
+				if(value < 0 || value > SettingsManager.DEFAULT_ANSWER_NUMBER - 1)
 					throw new BadFileFormatException(lineNum, "risposta corretta");
 				
 				q.setCorrectAnswer(value);

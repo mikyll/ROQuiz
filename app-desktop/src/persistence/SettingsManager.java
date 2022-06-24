@@ -1,4 +1,4 @@
-package model;
+package persistence;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,7 +9,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-public class SettingsSingleton {
+import model.Settings;
+
+public class SettingsManager {
 	public final static double VERSION_NUMBER = 1.5;
 	public final static int DEFAULT_QUESTION_NUMBER = 16;
 	public final static int DEFAULT_ANSWER_NUMBER = 5;
@@ -18,26 +20,26 @@ public class SettingsSingleton {
 	public final static boolean DEFAULT_DARK_MODE = false;
 	public final static boolean DEFAULT_SHUFFLE_ANSWERS = true;
 	
-	private static SettingsSingleton instance = null;
+	private static SettingsManager instance = null;
 	private static boolean justLaunched;
 	private static Settings settings;
 	
-	private SettingsSingleton()
+	private SettingsManager()
 	{
 		justLaunched = true;
 		
 		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_ANSWERS);
 	}
 
-	public static synchronized SettingsSingleton getInstance()
+	public static synchronized SettingsManager getInstance()
 	{
 		if(instance == null)
-			instance = new SettingsSingleton();
+			instance = new SettingsManager();
 		return instance;
 	}
 
 	public boolean isJustLaunched() {return justLaunched;}
-	public void setJustLaunched(boolean justLaunched) {SettingsSingleton.justLaunched = justLaunched;}
+	public void setJustLaunched(boolean justLaunched) {SettingsManager.justLaunched = justLaunched;}
 	
 	public int getQuestionNumber() {return settings.getQuestionNumber();}
 	public void setQuestionNumber(int qNum) {settings.setQuestionNumber(qNum);}

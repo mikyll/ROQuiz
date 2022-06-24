@@ -37,15 +37,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import model.Answer;
 import model.Question;
-import model.SettingsSingleton;
-import persistence.BadFileFormatException;
 import persistence.*;
 
 public class ControllerMenu implements IControllerMenu {
-	public final String QUESTIONS_FILENAME = "Domande.txt";
+	public final static String APP_PATH = "/application/";
+	public final static String THEME_LIGHT = "theme_light.css";
+	public final static String THEME_DARK = "theme_dark.css";
+	public final static String QUESTIONS_FILENAME = "Domande.txt";
 	
 	private HostServices hostServices;
-	private SettingsSingleton settings;
+	private static SettingsManager settings;
 	private IQuestionRepository qRepo;
 	
 	private List<CheckBox> checkBoxes;
@@ -90,16 +91,16 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML @Override 
 	public void initialize()
 	{
-		this.settings = SettingsSingleton.getInstance();
+		settings = SettingsManager.getInstance();
 		
 		// check for downloads only when the app is launched
-		if(this.settings.isJustLaunched())
+		if(settings.isJustLaunched())
 		{
-			this.settings.loadSettings(".settings.json");
-			this.settings.setJustLaunched(false);
+			settings.loadSettings(".settings.json");
+			settings.setJustLaunched(false);
 			
 			// download "Domande.txt" from the GitHub repository
-			if(this.settings.isCheckQuestionsUpdate())
+			if(settings.isCheckQuestionsUpdate())
 			{
 				System.out.println("Controllo domande aggiornate...");
 				boolean res = QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "tmp.txt");
@@ -175,10 +176,10 @@ public class ControllerMenu implements IControllerMenu {
 		}
 		
 		int qNum = this.qRepo.getQuestions().size();
-		if(qNum < this.settings.getQuestionNumber())
+		if(qNum < settings.getQuestionNumber())
 		{
 			System.out.println("Errore: nel file " + QUESTIONS_FILENAME + " non sono presenti abbastanza domande.\nDomande presenti: " 
-					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + SettingsSingleton.DEFAULT_QUESTION_NUMBER);
+					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + SettingsManager.DEFAULT_QUESTION_NUMBER);
 			System.exit(1);
 		}
 		this.labelLoadedQ.setText("" + qNum);
@@ -202,14 +203,14 @@ public class ControllerMenu implements IControllerMenu {
 
 		// updating settings components
 		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(
-				SettingsSingleton.DEFAULT_QUESTION_NUMBER / 2, qNum, this.settings.getQuestionNumber()));
+				SettingsManager.DEFAULT_QUESTION_NUMBER / 2, qNum, settings.getQuestionNumber()));
 		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(
-				SettingsSingleton.DEFAULT_TIMER / 2, qNum * 2, this.settings.getTimer()));
-		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
-		this.checkBoxDarkTheme.setSelected(this.settings.isDarkTheme());
-		this.checkBoxShuffleAnswers.setSelected(this.settings.isShuffleAnswers());
+				SettingsManager.DEFAULT_TIMER / 2, qNum * 2, settings.getTimer()));
+		this.checkBoxCheckQuestionsUpdate.setSelected(settings.isCheckQuestionsUpdate());
+		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
+		this.checkBoxShuffleAnswers.setSelected(settings.isShuffleAnswers());
 		
-		this.labelVersion.setText("ROQuiz v" + SettingsSingleton.VERSION_NUMBER);
+		this.labelVersion.setText("ROQuiz v" + SettingsManager.VERSION_NUMBER);
 		
 		new File("tmp.txt").delete();
 	}
@@ -230,6 +231,7 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxBack.setVisible(true);
 	}
 	
+	@FXML
 	public void setTopics(ActionEvent event)
 	{
 		CheckBox cb = (CheckBox)event.getTarget();
@@ -247,7 +249,7 @@ public class ControllerMenu implements IControllerMenu {
 		{
 			boolean disableCheckBox = false;
 			if(this.checkBoxes.get(i).isSelected())
-				disableCheckBox = currentTotQuestNum - this.qRepo.getqNumPerTopics().get(i) < this.settings.getQuestionNumber();
+				disableCheckBox = currentTotQuestNum - this.qRepo.getqNumPerTopics().get(i) < settings.getQuestionNumber();
 			
 			this.checkBoxes.get(i).setDisable(disableCheckBox);
 		}
@@ -282,11 +284,12 @@ public class ControllerMenu implements IControllerMenu {
 		{
 			Question q = this.qRepo.getQuestions().get(i);
 			VBox vbox = new VBox();
-			vbox.setMaxWidth(350);
+			vbox.setMaxWidth(370);
 			vbox.setPadding(new Insets(0, 0, 20, 0));
 			
 			Label lQuestion = new Label("Q" + (i+1) + ") " + q.getQuestion());
 			lQuestion.setStyle("-fx-font-weight: bold");
+			lQuestion.setMaxWidth(360);
 			lQuestion.setWrapText(true);
 			vbox.getChildren().add(lQuestion);
 			
@@ -294,10 +297,20 @@ public class ControllerMenu implements IControllerMenu {
 			{
 				Answer a = Answer.values()[j];
 				char letter = ((char) (j + 65));
-				Label lAnswer = new Label(letter + ". " + q.getAnswers().get(a));
+				
+				HBox hbox = new HBox();
+				Label lLetter = new Label(letter + ". ");
+				Label lAnswer = new Label(q.getAnswers().get(a));
+				lAnswer.setMaxWidth(320);
+				lAnswer.setWrapText(true);
 				if(q.getCorrectAnswer().equals(a))
+				{
+					lLetter.setStyle("-fx-text-fill: rgb(0,200,0);");
 					lAnswer.setStyle("-fx-text-fill: rgb(0,200,0);");
-				vbox.getChildren().add(lAnswer);
+				}
+				
+				hbox.getChildren().addAll(lLetter, lAnswer);
+				vbox.getChildren().add(hbox);
 			}
 			listVBox.add(vbox);
 		}
@@ -339,7 +352,7 @@ public class ControllerMenu implements IControllerMenu {
 			controller.setQuestions(questions);*/
 		
 			Scene scene = new Scene(quiz);
-			scene.getStylesheets().add(ControllerMenu.class.getResource("/application/theme_" + (this.settings.isDarkTheme() ? "dark" : "light") + ".css").toExternalForm());
+			scene.getStylesheets().add(ControllerMenu.class.getResource(getStyleFilename(settings.isDarkTheme())).toExternalForm());
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {
@@ -376,16 +389,17 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		System.out.println("Selezione: indietro.");
 		
-		if(this.vboxSettings.isVisible() &&	(this.settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || 
-				this.settings.getTimer() != this.spinnerTimerMin.getValue() || 
-				this.settings.isCheckQuestionsUpdate() != this.checkBoxCheckQuestionsUpdate.isSelected() ||
-				this.settings.isDarkTheme() != this.checkBoxDarkTheme.isSelected() ||
-				this.settings.isShuffleAnswers() != this.checkBoxShuffleAnswers.isSelected()))
+		if(this.vboxSettings.isVisible() &&	(settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || 
+				settings.getTimer() != this.spinnerTimerMin.getValue() || 
+				settings.isCheckQuestionsUpdate() != this.checkBoxCheckQuestionsUpdate.isSelected() ||
+				settings.isDarkTheme() != this.checkBoxDarkTheme.isSelected() ||
+				settings.isShuffleAnswers() != this.checkBoxShuffleAnswers.isSelected()))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Salvare le modifiche alle impostazioni?");
-			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource("/application/theme_" + (this.checkBoxDarkTheme.isSelected() ? "dark" : "light") + ".css").toExternalForm());
+			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource(getStyleFilename(settings.isDarkTheme())).toExternalForm());
+			
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES)
 			{
@@ -413,7 +427,6 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxQuestions.setVisible(false);
 		this.vboxSettings.setVisible(false);
 		this.vboxInfo.setVisible(false);
-		
 	}
 	
 	@FXML
@@ -422,7 +435,7 @@ public class ControllerMenu implements IControllerMenu {
 		Scene scene = this.vboxMain.getScene();
 		ObservableList<String> sheets = scene.getStylesheets();
 		
-		sheets.add(ControllerMenu.class.getResource("/application/theme_" + (this.checkBoxDarkTheme.isSelected() ? "dark" : "light") + ".css").toExternalForm());
+		sheets.add(ControllerMenu.class.getResource(getStyleFilename(this.checkBoxDarkTheme.isSelected())).toExternalForm());
 		for(String s : sheets)
 		{
 			if(s.contains("theme"))
@@ -457,11 +470,11 @@ public class ControllerMenu implements IControllerMenu {
 	{
 		System.out.println("Impostazioni di default.");
 		
-		this.spinnerQuestionNumQuiz.getValueFactory().setValue(SettingsSingleton.DEFAULT_QUESTION_NUMBER);
-		this.spinnerTimerMin.getValueFactory().setValue(SettingsSingleton.DEFAULT_TIMER);
-		this.checkBoxCheckQuestionsUpdate.setSelected(SettingsSingleton.DEFAULT_CHECK_QUESTIONS_UPDATE);
-		this.checkBoxDarkTheme.setSelected(SettingsSingleton.DEFAULT_DARK_MODE);
-		this.checkBoxShuffleAnswers.setSelected(SettingsSingleton.DEFAULT_SHUFFLE_ANSWERS);
+		this.spinnerQuestionNumQuiz.getValueFactory().setValue(SettingsManager.DEFAULT_QUESTION_NUMBER);
+		this.spinnerTimerMin.getValueFactory().setValue(SettingsManager.DEFAULT_TIMER);
+		this.checkBoxCheckQuestionsUpdate.setSelected(SettingsManager.DEFAULT_CHECK_QUESTIONS_UPDATE);
+		this.checkBoxDarkTheme.setSelected(SettingsManager.DEFAULT_DARK_MODE);
+		this.checkBoxShuffleAnswers.setSelected(SettingsManager.DEFAULT_SHUFFLE_ANSWERS);
 		
 		this.changeTheme(new ActionEvent());
 	}
@@ -480,11 +493,11 @@ public class ControllerMenu implements IControllerMenu {
 				sqnq + "\nTimer (minuti): " + stm + "\nControllo aggiornamento domande: " +
 				cqu + "\nModalità scura: " + dm + "\nRisposte mescolate: " + sa);
 		
-		this.settings.setQuestionNumber(sqnq);
-		this.settings.setTimer(stm);
-		this.settings.setCheckQuestionsUpdate(cqu);
-		this.settings.setDarkTheme(dm);
-		this.settings.setShuffleAnswers(sa);
+		settings.setQuestionNumber(sqnq);
+		settings.setTimer(stm);
+		settings.setCheckQuestionsUpdate(cqu);
+		settings.setDarkTheme(dm);
+		settings.setShuffleAnswers(sa);
 		
 		if(this.qRepo.hasTopics())
 		{
@@ -498,18 +511,18 @@ public class ControllerMenu implements IControllerMenu {
 		
 		this.changeTheme(new ActionEvent());
 		
-		this.settings.saveSettings(".settings.json");
+		settings.saveSettings(".settings.json");
 	}
 	
 	private void cancelSettingsChanges()
 	{
 		System.out.println("Modifiche alle impostazioni annullate.");
 		
-		this.spinnerQuestionNumQuiz.getValueFactory().setValue(this.settings.getQuestionNumber());
-		this.spinnerTimerMin.getValueFactory().setValue(this.settings.getTimer());
-		this.checkBoxCheckQuestionsUpdate.setSelected(this.settings.isCheckQuestionsUpdate());
-		this.checkBoxDarkTheme.setSelected(this.settings.isDarkTheme());
-		this.checkBoxShuffleAnswers.setSelected(this.settings.isShuffleAnswers());
+		this.spinnerQuestionNumQuiz.getValueFactory().setValue(settings.getQuestionNumber());
+		this.spinnerTimerMin.getValueFactory().setValue(settings.getTimer());
+		this.checkBoxCheckQuestionsUpdate.setSelected(settings.isCheckQuestionsUpdate());
+		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
+		this.checkBoxShuffleAnswers.setSelected(settings.isShuffleAnswers());
 		
 		this.changeTheme(new ActionEvent());
 	}
@@ -537,7 +550,7 @@ public class ControllerMenu implements IControllerMenu {
 		// check if there are enough questions. In case there aren't, the checkbox are disabled
 		int qNum = this.qRepo.getQuestions().size();
 		this.labelSelectedQ.setText("" + qNum);
-		this.labelQuizQNum.setText("" + this.settings.getQuestionNumber());
+		this.labelQuizQNum.setText("" + settings.getQuestionNumber());
 		
 		for(int i = 0; i < this.qRepo.getTopics().size(); i++) // dynamically generates the hbox containing the checkboxed
 		{
@@ -578,7 +591,7 @@ public class ControllerMenu implements IControllerMenu {
 		int qNum = this.qRepo.getQuestions().size();
 		for(int i = 0; i < this.checkBoxes.size(); i++)
 		{
-			boolean disableCheckBox = qNum - this.qRepo.getqNumPerTopics().get(i) < this.settings.getQuestionNumber(); // disable checkboxes: they won't be deselectable if that would make the question number to be less than the quiz one.
+			boolean disableCheckBox = qNum - this.qRepo.getqNumPerTopics().get(i) < settings.getQuestionNumber(); // disable checkboxes: they won't be deselectable if that would make the question number to be less than the quiz one.
 			this.checkBoxes.get(i).setDisable(disableCheckBox);
 		}
 	}
@@ -586,5 +599,16 @@ public class ControllerMenu implements IControllerMenu {
 	public void setHostServices(HostServices hostServices)
 	{
 		this.hostServices = hostServices;
+	}
+	
+	public static String getStyleFilename(boolean dark)
+	{
+		String result;
+		
+		if(dark)
+			result = THEME_DARK;
+		else result = THEME_LIGHT;
+		
+		return APP_PATH + result;
 	}
 }
