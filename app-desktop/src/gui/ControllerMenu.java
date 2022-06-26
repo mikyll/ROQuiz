@@ -49,7 +49,7 @@ public class ControllerMenu implements IControllerMenu {
 	private static SettingsManager settings;
 	private IQuestionRepository qRepo;
 	
-	private List<CheckBox> checkBoxes;
+	private List<CheckBox> checkBoxesTopics;
 	
 	@FXML private VBox vboxMain;
 	@FXML private VBox vboxTopics;
@@ -191,6 +191,11 @@ public class ControllerMenu implements IControllerMenu {
 			
 			this.initCheckBoxes();
 		}
+		else
+		{
+			this.buttonTopics.setDisable(true);
+			this.labelTopicsWarning.setVisible(true);
+		}
 		
 		// setup vbox and panels
 		this.vboxMain.setVisible(true);
@@ -238,20 +243,20 @@ public class ControllerMenu implements IControllerMenu {
 		System.out.println("Argomento '" + cb.getText() + (cb.isSelected() ? "' selezionato." : "' deselezionato."));
 		
 		int currentTotQuestNum = 0;
-		for(int i = 0; i < this.checkBoxes.size(); i++)
+		for(int i = 0; i < this.checkBoxesTopics.size(); i++)
 		{
-			currentTotQuestNum += this.checkBoxes.get(i).isSelected() ? this.qRepo.getqNumPerTopics().get(i) : 0;
+			currentTotQuestNum += this.checkBoxesTopics.get(i).isSelected() ? this.qRepo.getqNumPerTopics().get(i) : 0;
 		}
 		this.labelSelectedQ.setText("" + currentTotQuestNum);
 		
 		// update checbox disables
-		for(int i = 0; i < this.checkBoxes.size(); i++) // disable all the topics the deselection of which would make the question number to be less than the one specified in the settings
+		for(int i = 0; i < this.checkBoxesTopics.size(); i++) // disable all the topics the deselection of which would make the question number to be less than the one specified in the settings
 		{
 			boolean disableCheckBox = false;
-			if(this.checkBoxes.get(i).isSelected())
+			if(this.checkBoxesTopics.get(i).isSelected())
 				disableCheckBox = currentTotQuestNum - this.qRepo.getqNumPerTopics().get(i) < settings.getQuestionNumber();
 			
-			this.checkBoxes.get(i).setDisable(disableCheckBox);
+			this.checkBoxesTopics.get(i).setDisable(disableCheckBox);
 		}
 	}
 	
@@ -272,7 +277,7 @@ public class ControllerMenu implements IControllerMenu {
 		for(int i = 0; i < this.qRepo.getTopics().size(); i++)
 		{
 			qNum = this.qRepo.getqNumPerTopics().get(i);
-			if(this.checkBoxes.get(i).equals(cbTopic))
+			if(this.checkBoxesTopics.get(i).equals(cbTopic))
 				break;
 			topicIndex += qNum;
 		}
@@ -324,18 +329,26 @@ public class ControllerMenu implements IControllerMenu {
 		System.out.println("\nSelezione: avvia quiz.\nArgomenti impostati:");
 		
 		List<Question> questions = new ArrayList<Question>();
-		for(int i = 0, j = 0, k; i < this.checkBoxes.size(); i++) // creates a list with questions from just the selected topics
+		if(this.qRepo.hasTopics())
 		{
-			if(this.checkBoxes.get(i).isSelected())
+			// scroll the topics list and for each selected one add its questions to the quiz pool
+			for(int i = 0, j = 0, k; i < this.checkBoxesTopics.size(); i++)
 			{
-				System.out.println("-" + this.qRepo.getTopics().get(i));
-				
-				for(k = 0; k < this.qRepo.getqNumPerTopics().get(i); j++, k++)
+				if(this.checkBoxesTopics.get(i).isSelected())
 				{
-					questions.add(this.qRepo.getQuestions().get(j));
+					System.out.println("-" + this.qRepo.getTopics().get(i));
+					
+					for(k = 0; k < this.qRepo.getqNumPerTopics().get(i); j++, k++)
+					{
+						questions.add(this.qRepo.getQuestions().get(j));
+					}
 				}
+				else j += this.qRepo.getqNumPerTopics().get(i); // skip the topic
 			}
-			else j += this.qRepo.getqNumPerTopics().get(i); // skip the topic
+		}
+		else
+		{
+			questions = this.qRepo.getQuestions();
 		}
 		
 		System.out.println("Pool domande quiz: " + questions.size());
@@ -504,7 +517,7 @@ public class ControllerMenu implements IControllerMenu {
 			this.labelSelectedQ.setText("" + this.qRepo.getQuestions().size());
 			this.labelQuizQNum.setText("" + sqnq);
 			
-			for(CheckBox cb : this.checkBoxes)
+			for(CheckBox cb : this.checkBoxesTopics)
 				cb.setSelected(true);
 			this.setDisableCheckBoxes();
 		}
@@ -545,7 +558,7 @@ public class ControllerMenu implements IControllerMenu {
 	
 	private void initCheckBoxes()
 	{
-		this.checkBoxes = new ArrayList<CheckBox>();
+		this.checkBoxesTopics = new ArrayList<CheckBox>();
 		
 		// check if there are enough questions. In case there aren't, the checkbox are disabled
 		int qNum = this.qRepo.getQuestions().size();
@@ -578,7 +591,7 @@ public class ControllerMenu implements IControllerMenu {
 			t.setWrapText(true);
 			b.setTooltip(t);
 			
-			this.checkBoxes.add(cb);
+			this.checkBoxesTopics.add(cb);
 			hbox.getChildren().addAll(cb, b);
 			
 			this.vboxCheckBoxes.getChildren().add(hbox);
@@ -589,10 +602,10 @@ public class ControllerMenu implements IControllerMenu {
 	private void setDisableCheckBoxes()
 	{
 		int qNum = this.qRepo.getQuestions().size();
-		for(int i = 0; i < this.checkBoxes.size(); i++)
+		for(int i = 0; i < this.checkBoxesTopics.size(); i++)
 		{
 			boolean disableCheckBox = qNum - this.qRepo.getqNumPerTopics().get(i) < settings.getQuestionNumber(); // disable checkboxes: they won't be deselectable if that would make the question number to be less than the quiz one.
-			this.checkBoxes.get(i).setDisable(disableCheckBox);
+			this.checkBoxesTopics.get(i).setDisable(disableCheckBox);
 		}
 	}
 	

@@ -679,7 +679,7 @@ A
 Relativamente alla classe di problemi NP, quale di queste affermazioni è errata?
 A. Contiene i problemi risolubili con un tempo polinomiale da una Macchina di Turing Non Deterministica.
 B. Se un problema non appartiene a NP, allora è possibile trovare un algoritmo polinomiale che lo risolva.
-C. Identifica i problemi RV tali che, se l'istanza della risposta è "sé ¬", ciò può essere certificato in tempo polinomiale.
+C. Identifica i problemi RV tali che, se l'istanza della risposta è "sì", ciò può essere certificato in tempo polinomiale.
 D. Un problema A di NP è NP-Completo se per ogni problema B di NP, B può essere trasformato polinomialmente in A.
 E. Nessuna di queste
 B

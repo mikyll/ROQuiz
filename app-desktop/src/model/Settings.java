@@ -25,6 +25,6 @@ public class Settings {
 	public void setCheckQuestionsUpdate(boolean qUpdate) {this.checkQuestionsUpdate = qUpdate;}
 	public boolean isDarkTheme() {return this.darkTheme;}
 	public void setDarkTheme(boolean dTheme) {this.darkTheme = dTheme;}
-	public boolean isShuffleAnswers() {return shuffleAnswers;}
+	public boolean isShuffleAnswers() {return this.shuffleAnswers;}
 	public void setShuffleAnswers(boolean shuffleAnswers) {this.shuffleAnswers = shuffleAnswers;}
 }
