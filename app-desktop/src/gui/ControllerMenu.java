@@ -398,7 +398,7 @@ public class ControllerMenu implements IControllerMenu {
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Salvare le modifiche alle impostazioni?");
-			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource(getStyleFilename(settings.isDarkTheme())).toExternalForm());
+			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource(getStyleFilename(this.checkBoxDarkTheme.isSelected())).toExternalForm());
 			
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES)
