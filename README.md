@@ -30,7 +30,7 @@
   - Modifica del tempo a disposizione per il quiz (default: 18 minuti).
   - Controllo all'avvio dell'app se nella repository sono presenti nuove domande.
   - Scelta del tema (chiaro/scuro)
-- Possibilità di inserimento di domande personalizzate (modificando il file Domande.txt).
+- Possibilità di inserimento di domande personalizzate (modificando il file Domande.txt e rispettando le regole di [formattazione](#formattazione-domande)).
 
 ### Demo
 #### Desktop
@@ -69,7 +69,7 @@
 ### Formattazione domande
 Le domande sono caricate da un file "<a href="./Domande.txt">Domande.txt</a>" che ha il seguente formato:
 * (opzionale) Argomenti:
-  - la riga di un argomento inizia col carattere speciale '@', seguito dal nome dell'argomento. Ogni riga di argomento è seguita dalle domande relative a quell'argomento, fino all'argomento successivo. Alla fine della riga dell'argomento possono essere usati caratteri non alfabetici (ad esempio '=') per separare visivamente le domande di argomenti differenti (tali caratteri verranno ignorati).
+  - la riga di un argomento inizia col carattere speciale '@', seguito dal titolo dell'argomento (es: Complessità). Ogni riga di argomento è seguita dalle domande relative a quell'argomento, fino all'argomento successivo. Alla fine della riga dell'argomento possono essere usati caratteri non alfabetici (ad esempio '=') per separare visivamente le domande di argomenti differenti (tali caratteri verranno ignorati).
 * Domande: 
   - una riga per la domanda;
   - 5 righe per le risposte (la riga inizia con una lettera maiuscola, seguita da un punto e dalla risposta);
