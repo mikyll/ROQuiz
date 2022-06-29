@@ -142,6 +142,13 @@ Proposta feature:
             <br />
             <sub><b>TryKatChup</b></sub>
         </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/lollofred">
+            <img src="https://avatars.githubusercontent.com/u/73138694?v=4" width="100;" alt="lollofred"/>
+            <br />
+            <sub><b>lollofred</b></sub>
+        </a>
     </td></tr>
 </table>
 <!-- readme: contributors -end -->
