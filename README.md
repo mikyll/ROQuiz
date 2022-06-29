@@ -124,6 +124,23 @@ Proposta feature:
 
 #### Contributors
 <!-- readme: contributors -start -->
+<table>
+<tr>
+    <td align="center">
+        <a href="https://github.com/mikyll">
+            <img src="https://avatars.githubusercontent.com/u/56556806?v=4" width="100;" alt="mikyll"/>
+            <br />
+            <sub><b>Michele Righi</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/TryKatChup">
+            <img src="https://avatars.githubusercontent.com/u/39459803?v=4" width="100;" alt="TryKatChup"/>
+            <br />
+            <sub><b>Karina</b></sub>
+        </a>
+    </td></tr>
+</table>
 <!-- readme: contributors -end -->
 
 ### Roadmap
