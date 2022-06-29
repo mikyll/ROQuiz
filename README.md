@@ -108,7 +108,7 @@ A
 </pre>
 
 ### Spiegazione Domande
-[Questo documento](./Domande%20RO%20con%20spiegazione.pdf), a cura di [Lorenzo di Palma](https://github.com/lollofred) e [Filippo Veronesi](https://github.com/filippoveronesi) contiene, la spiegazione alla maggior parte delle domande presenti nel quiz.
+[Questo documento](./Domande%20RO%20con%20spiegazione.pdf), a cura di [Lorenzo di Palma](https://github.com/lollofred) e [Filippo Veronesi](https://github.com/filippoveronesi), contiene la spiegazione alla maggior parte delle domande presenti nel quiz.
 
 ### Contribuire
 Aggiunta domande o feature al progetto:
@@ -125,7 +125,7 @@ Proposta feature:
 1. Aprire un issue spiegando in cosa consiste la feature da aggiungere.
 2. Possibilmente aggiungervi la label "enhancement".
 
-#### Contributors
+#### Contributors Attuali
 <!-- readme: contributors -start -->
 <table>
 <tr>
