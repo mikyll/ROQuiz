@@ -122,6 +122,10 @@ Proposta feature:
 1. Aprire un issue spiegando in cosa consiste la feature da aggiungere.
 2. Possibilmente aggiungervi la label "enhancement".
 
+#### Contributors
+<!-- readme: contributors -start -->
+<!-- readme: contributors -end -->
+
 ### Roadmap
 Features da aggiungere e sviluppi futuri:
 - [x] aggiungere la scelta degli argomenti
