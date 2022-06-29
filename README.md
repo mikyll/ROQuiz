@@ -137,6 +137,13 @@ Proposta feature:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/filippoveronesi">
+            <img src="https://avatars.githubusercontent.com/u/61983672?v=4" width="100;" alt="filippoveronesi"/>
+            <br />
+            <sub><b>filippoveronesi</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/TryKatChup">
             <img src="https://avatars.githubusercontent.com/u/39459803?v=4" width="100;" alt="TryKatChup"/>
             <br />
