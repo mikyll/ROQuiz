@@ -107,6 +107,9 @@ E. Nessuna di queste.
 A
 </pre>
 
+### Spiegazione Domande
+[Questo documento](./Domande%20RO%20con%20spiegazione.pdf), a cura di [Lorenzo di Palma](https://github.com/lollofred) e [Filippo Veronesi](https://github.com/filippoveronesi) contiene, la spiegazione alla maggior parte delle domande presenti nel quiz.
+
 ### Contribuire
 Aggiunta domande o feature al progetto:
 1. Fare una **fork** della repository.
