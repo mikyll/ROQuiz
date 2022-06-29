@@ -57,7 +57,8 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private VBox vboxCheckBoxes;
 	@FXML private VBox vboxSettingsInfo;
 	@FXML private VBox vboxSettings;
-	@FXML private VBox vboxInfo;	
+	@FXML private VBox vboxInfo;
+	@FXML private VBox vboxCredits;
 	@FXML private VBox vboxBack;
 	
 	@FXML private Button buttonTopics;
@@ -205,6 +206,7 @@ public class ControllerMenu implements IControllerMenu {
 		this.vboxQuestions.setVisible(false);
 		this.vboxSettings.setVisible(false);
 		this.vboxInfo.setVisible(false);
+		this.vboxCredits.setVisible(false);
 
 		// updating settings components
 		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(
@@ -398,6 +400,13 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
+	public void selectCredits(ActionEvent event)
+	{
+		this.vboxInfo.setVisible(false);
+		this.vboxCredits.setVisible(true);
+	}
+	
+	@FXML
 	public void selectBack(ActionEvent event)
 	{
 		System.out.println("Selezione: indietro.");
@@ -428,18 +437,25 @@ public class ControllerMenu implements IControllerMenu {
 		
 		if(this.vboxQuestions.isVisible())
 		{
+			this.vboxQuestions.setVisible(false);
 			this.vboxTopics.setVisible(true);
+		}
+		else if(this.vboxCredits.isVisible())
+		{
+			this.vboxCredits.setVisible(false);
+			this.vboxInfo.setVisible(true);
 		}
 		else
 		{
 			this.vboxBack.setVisible(false);
 			this.vboxTopics.setVisible(false);
+			this.vboxInfo.setVisible(false);
 			this.vboxMain.setVisible(true);
 			this.vboxSettingsInfo.setVisible(true);
 		}
 		this.vboxQuestions.setVisible(false);
 		this.vboxSettings.setVisible(false);
-		this.vboxInfo.setVisible(false);
+		this.vboxCredits.setVisible(false);
 	}
 	
 	@FXML
@@ -544,16 +560,26 @@ public class ControllerMenu implements IControllerMenu {
 	public void openURL(ActionEvent event)
 	{
 		Hyperlink hl = (Hyperlink) event.getSource();
-		if(hl.getText().equals("mikyll"))
+		
+		if(hl.getText().equalsIgnoreCase("mikyll"))
 			this.hostServices.showDocument("https://github.com/mikyll");
-		if(hl.getText().equals("mikyll/ROQuiz"))
+		else if(hl.getText().equalsIgnoreCase("mikyll/ROQuiz"))
 			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz");
-		if(hl.getText().equals("Icons8"))
-			this.hostServices.showDocument("https://icons8.com");
-		if(hl.getText().equals("Apri una issue"))
+		else if(hl.getText().equalsIgnoreCase("Apri una issue"))
 			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz/issues/new?title=[Desktop]+Titolo+Problema&body=Descrivi+qui+il+problema%2C+possibilmente+aggiungendo+una+o+pi%C3%B9+etichette.");
-		if(hl.getChildrenUnmodifiable().get(0) instanceof Label)
+		else if(hl.getChildrenUnmodifiable().get(0) instanceof Label)
 			this.hostServices.showDocument("https://github.com/mikyll/ROQuiz");
+		
+		else if(hl.getText().equalsIgnoreCase("TryKatChup"))
+			this.hostServices.showDocument("https://github.com/TryKatChup");
+		else if(hl.getText().equalsIgnoreCase("Federyeeco"))
+			this.hostServices.showDocument("https://github.com/Federicoand98");
+		else if(hl.getText().equalsIgnoreCase("LolloFred"))
+			this.hostServices.showDocument("https://github.com/lollofred");
+		else if(hl.getText().equalsIgnoreCase("filovero98"))
+			this.hostServices.showDocument("https://github.com/filippoveronesi");
+		else if(hl.getText().equalsIgnoreCase("Icons8"))
+			this.hostServices.showDocument("https://icons8.com");
 	}
 	
 	private void initCheckBoxes()

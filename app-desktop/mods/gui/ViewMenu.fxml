@@ -22,7 +22,7 @@
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0">
+      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Menu Principale">
                <font>
@@ -290,7 +290,7 @@
             </HBox>
          </children>
       </VBox>
-      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="340.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="340.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Informazioni">
                <font>
@@ -300,25 +300,25 @@
             <Separator prefHeight="30.0" prefWidth="400.0" visible="false" />
             <VBox alignment="TOP_CENTER" prefHeight="260.0" prefWidth="400.0">
                <children>
-                  <Label fx:id="labelVersion" prefHeight="27.0" text="ROQuiz v">
+                  <Label fx:id="labelVersion" minHeight="30.0" prefHeight="30.0" text="ROQuiz v">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="400.0">
+                  <HBox alignment="TOP_CENTER" minHeight="30.0" prefHeight="30.0" prefWidth="400.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0">
                            <children>
-                              <Label prefHeight="27.0" prefWidth="200.0" text="Applicazione sviluppata da:">
+                              <Label prefWidth="200.0" text="Applicazione sviluppata da:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_RIGHT" prefWidth="200.0">
                            <children>
-                              <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="50.0" onAction="#openURL" prefHeight="27.0" prefWidth="200.0" text="mikyll" textAlignment="RIGHT" underline="true">
+                              <Hyperlink alignment="CENTER_RIGHT" minWidth="50.0" onAction="#openURL" prefWidth="200.0" text="mikyll" textAlignment="RIGHT" underline="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -327,20 +327,20 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="400.0">
+                  <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="400.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0">
                            <children>
-                              <Label prefHeight="27.0" prefWidth="200.0" text="In collaborazione con:">
+                              <Label prefWidth="200.0" text="In collaborazione con:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_RIGHT" prefWidth="200.0">
                            <children>
-                              <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="50.0" onAction="#openURL" prefHeight="27.0" prefWidth="200.0" text="Contributors" textAlignment="RIGHT" underline="true">
+                              <Hyperlink alignment="CENTER_RIGHT" minWidth="50.0" onAction="#selectCredits" prefWidth="200.0" text="contributors" textAlignment="RIGHT" underline="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -349,20 +349,20 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="400.0">
+                  <HBox alignment="TOP_CENTER" minHeight="30.0" prefHeight="30.0" prefWidth="400.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0">
                            <children>
-                              <Label prefHeight="27.0" prefWidth="200.0" text="Repository GitHub:">
+                              <Label prefWidth="200.0" text="Repository GitHub:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_RIGHT" prefWidth="200.0">
                            <children>
-                              <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="105.0" onAction="#openURL" prefHeight="27.0" prefWidth="200.0" text="mikyll/ROQuiz" textAlignment="RIGHT" underline="true">
+                              <Hyperlink alignment="CENTER_RIGHT" minWidth="105.0" onAction="#openURL" prefWidth="200.0" text="mikyll/ROQuiz" textAlignment="RIGHT" underline="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -371,11 +371,11 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="400.0">
+                  <HBox alignment="TOP_CENTER" minHeight="30.0" prefHeight="30.0" prefWidth="400.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0">
                            <children>
-                              <Label prefHeight="27.0" prefWidth="200.0" text="Icone:">
+                              <Label prefWidth="200.0" text="Problemi con l'app?">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -384,34 +384,12 @@
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="50.0" onAction="#openURL" prefHeight="27.0" prefWidth="200.0" text="Icons8" textAlignment="RIGHT" underline="true">
+                              <Hyperlink alignment="CENTER_RIGHT" onAction="#openURL" text="Apri una issue" underline="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Hyperlink>
-                           </children>
-                        </HBox>
-                     </children>
-                  </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="400.0">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="200.0">
-                           <children>
-                              <Label prefHeight="27.0" prefWidth="200.0" text="Problemi con l'app?">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <Hyperlink alignment="CENTER_RIGHT" minHeight="27.0" minWidth="50.0" onAction="#openURL" text="Apri una issue" underline="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Hyperlink>
-                              <Label alignment="CENTER_RIGHT" prefHeight="27.0" text="su GitHub!" textAlignment="RIGHT">
+                              <Label alignment="CENTER_RIGHT" text="su GitHub!" textAlignment="RIGHT">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -420,8 +398,8 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <Separator prefHeight="30.0" prefWidth="400.0" visible="false" />
-                  <TextFlow maxHeight="100.0" prefWidth="400.0" textAlignment="CENTER">
+                  <Separator prefHeight="36.0" prefWidth="400.0" visible="false" />
+                  <TextFlow prefWidth="400.0" textAlignment="CENTER">
                      <children>
                         <Label alignment="CENTER_RIGHT" maxWidth="400.0" text="Se l'app ti è stata utile, considera di lasciare una stellina" textAlignment="CENTER" wrapText="true">
                            <font>
@@ -440,6 +418,107 @@
                         </Label>
                      </children>
                   </TextFlow>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox fx:id="vboxCredits" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="340.0" prefWidth="400.0" visible="false">
+         <children>
+            <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Crediti">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Separator prefHeight="50.0" prefWidth="400.0" visible="false" />
+            <VBox alignment="TOP_CENTER" prefHeight="260.0" prefWidth="400.0">
+               <children>
+                  <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="400.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <Label minHeight="30.0" prefHeight="30.0" prefWidth="200.0" text="Build macOS e iOS:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <Hyperlink alignment="CENTER_RIGHT" minHeight="30.0" minWidth="50.0" onAction="#openURL" prefHeight="30.0" text="TryKatChup" textAlignment="RIGHT" underline="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label minHeight="30.0" prefHeight="30.0" text="&amp;">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Hyperlink alignment="CENTER_RIGHT" minHeight="30.0" minWidth="50.0" onAction="#openURL" prefHeight="30.0" text="Federyeeco" textAlignment="RIGHT" underline="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Hyperlink>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" minHeight="30.0" prefHeight="30.0" prefWidth="400.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <Label minHeight="30.0" prefHeight="30.0" prefWidth="200.0" text="Spiegazione domande:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <Hyperlink alignment="CENTER_RIGHT" minHeight="30.0" minWidth="50.0" onAction="#openURL" prefHeight="30.0" text="LolloFred" textAlignment="RIGHT" underline="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Hyperlink>
+                              <Label minHeight="30.0" prefHeight="30.0" text="&amp;">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Hyperlink alignment="CENTER_RIGHT" minHeight="30.0" minWidth="50.0" onAction="#openURL" prefHeight="30.0" text="filovero98" textAlignment="RIGHT" underline="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Hyperlink>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" minHeight="30.0" prefHeight="30.0" prefWidth="400.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <Label minHeight="30.0" prefHeight="30.0" prefWidth="200.0" text="Icone:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <Hyperlink alignment="CENTER_RIGHT" minHeight="30.0" minWidth="50.0" onAction="#openURL" prefHeight="30.0" prefWidth="200.0" text="Icons8" textAlignment="RIGHT" underline="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Hyperlink>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <Separator prefHeight="30.0" prefWidth="400.0" visible="false" />
                </children>
             </VBox>
          </children>
