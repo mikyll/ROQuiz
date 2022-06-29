@@ -9,7 +9,14 @@ defaults:
     shell: bash
 
 jobs:
-  Update-Readme:
+  Update-Contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggiornamento contributors
+        uses: akhilmhdh/contributors-readme-action@v2.3.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  Update-Questions:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -17,7 +24,7 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
       - run: cd ${{ github.workspace }}
-      - name: Controllo numero domande ed aggiornamento Readme
+      - name: Aggiornamento numero domande
         run: |
           file_domande="Domande.txt"
           file_readme="README.md"
@@ -51,3 +58,4 @@ jobs:
           else
             echo "Nessuna modifica necessaria."
           fi
+  
