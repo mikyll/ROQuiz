@@ -130,14 +130,14 @@ Proposta feature:
         <a href="https://github.com/mikyll">
             <img src="https://avatars.githubusercontent.com/u/56556806?v=4" width="100;" alt="mikyll"/>
             <br />
-            <sub><b>Michele Righi</b></sub>
+            <sub><b>mikyll</b></sub>
         </a>
     </td>
     <td align="center">
         <a href="https://github.com/TryKatChup">
             <img src="https://avatars.githubusercontent.com/u/39459803?v=4" width="100;" alt="TryKatChup"/>
             <br />
-            <sub><b>Karina</b></sub>
+            <sub><b>TryKatChup</b></sub>
         </a>
     </td></tr>
 </table>
