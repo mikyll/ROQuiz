@@ -151,6 +151,13 @@ Proposta feature:
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/Federicoand98">
+            <img src="https://avatars.githubusercontent.com/u/40764404?v=4" width="100;" alt="Federicoand98"/>
+            <br />
+            <sub><b>Federicoand98</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/lollofred">
             <img src="https://avatars.githubusercontent.com/u/73138694?v=4" width="100;" alt="lollofred"/>
             <br />
