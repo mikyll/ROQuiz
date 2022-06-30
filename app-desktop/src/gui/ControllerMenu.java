@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import application.Main;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -203,12 +202,12 @@ public class ControllerMenu implements IControllerMenu {
 		{
 			Question q = this.qRepo.getQuestions().get(i);
 			VBox vbox = new VBox();
-			vbox.setMaxWidth(this.vboxTopics.getPrefWidth() - 30.0);
+			vbox.setMaxWidth(this.vboxQuestions.getPrefWidth() - 30.0);
 			vbox.setPadding(new Insets(0, 0, 20, 0));
 			
 			Label lQuestion = new Label("Q" + (i+1) + ") " + q.getQuestion());
 			lQuestion.setStyle("-fx-font-weight: bold");
-			lQuestion.setMaxWidth(this.vboxTopics.getWidth() - 20.0);
+			lQuestion.setMaxWidth(this.vboxQuestions.getPrefWidth() - 40.0);
 			lQuestion.setWrapText(true);
 			vbox.getChildren().add(lQuestion);
 			
@@ -220,7 +219,7 @@ public class ControllerMenu implements IControllerMenu {
 				HBox hbox = new HBox();
 				Label lLetter = new Label(letter + ". ");
 				Label lAnswer = new Label(q.getAnswers().get(a));
-				lAnswer.setMaxWidth(320);
+				lAnswer.setMaxWidth(this.vboxQuestions.getPrefWidth() - 60.0);
 				lAnswer.setWrapText(true);
 				if(q.getCorrectAnswer().equals(a))
 				{
