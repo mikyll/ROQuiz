@@ -16,7 +16,7 @@ jobs:
         uses: akhilmhdh/contributors-readme-action@v2.3.4
         with:
           use_username: true
-          committer_username: mikyll
+          committer_username: "mikyll"
           commit_message: "update README.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

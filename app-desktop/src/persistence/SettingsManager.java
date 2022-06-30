@@ -20,15 +20,23 @@ public class SettingsManager {
 	public final static boolean DEFAULT_DARK_MODE = false;
 	public final static boolean DEFAULT_SHUFFLE_ANSWERS = true;
 	
+	public final static String APP_PATH = "/application/";
+	public final static String THEME_LIGHT_FILE = "theme_light.css";
+	public final static String THEME_DARK_FILE = "theme_dark.css";
+	public final static String QUESTIONS_FILENAME = "Domande.txt";
+	
 	private static SettingsManager instance = null;
-	private static boolean justLaunched;
 	private static Settings settings;
+	
+	private static String themeLight;
+	private static String themeDark;
 	
 	private SettingsManager()
 	{
-		justLaunched = true;
-		
 		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_ANSWERS);
+		
+		themeLight = getClass().getResource(APP_PATH + THEME_LIGHT_FILE).toExternalForm();
+		themeDark = getClass().getResource(APP_PATH + THEME_DARK_FILE).toExternalForm();
 	}
 
 	public static synchronized SettingsManager getInstance()
@@ -37,9 +45,6 @@ public class SettingsManager {
 			instance = new SettingsManager();
 		return instance;
 	}
-
-	public boolean isJustLaunched() {return justLaunched;}
-	public void setJustLaunched(boolean justLaunched) {SettingsManager.justLaunched = justLaunched;}
 	
 	public int getQuestionNumber() {return settings.getQuestionNumber();}
 	public void setQuestionNumber(int qNum) {settings.setQuestionNumber(qNum);}
@@ -107,5 +112,16 @@ public class SettingsManager {
 			System.out.println("Errore durante il ripristino del file delle impostazioni.");
 			System.exit(1);
 		}
+	}
+	
+	public static String getStyle(boolean dark)
+	{
+		String result;
+		
+		if(dark)
+			result = themeDark;
+		else result = themeLight;
+		
+		return result;
 	}
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import application.Main;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.HostServices;
@@ -26,6 +27,7 @@ import javafx.util.Duration;
 import model.Answer;
 import model.Question;
 import model.Quiz;
+import persistence.QuestionRepository;
 import persistence.SettingsManager;
 
 public class ControllerQuiz implements IControllerQuiz{
@@ -215,7 +217,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Terminare il quiz?");
 
-			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource(ControllerMenu.getStyleFilename(settings.isDarkTheme())).toExternalForm());
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(settings.isDarkTheme()));
 			if(this.quiz.getGivenAnswers() < this.settings.getQuestionNumber())
 			{
 				String notAnswered = "";
@@ -342,7 +344,7 @@ public class ControllerQuiz implements IControllerQuiz{
 			Alert alert = new Alert(AlertType.INFORMATION, "Tempo scaduto.", ButtonType.OK);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Quiz terminato.");
-			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource(ControllerMenu.getStyleFilename(settings.isDarkTheme())).toExternalForm());
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(settings.isDarkTheme()));
 			alert.show();
 			
 			this.endQuiz();
@@ -359,16 +361,19 @@ public class ControllerQuiz implements IControllerQuiz{
 	public void selectMenu(ActionEvent event) {
 		System.out.println("\nSelezione: menu principale.");
 		
-		// load
+		QuestionRepository qRepo = QuestionRepository.getQuestionRepositoryFromFile(SettingsManager.QUESTIONS_FILENAME);
+		
+		// load menu
 		try {
 			FXMLLoader loader = new FXMLLoader(ControllerMenu.class.getResource("/gui/ViewMenu.fxml"));
 			Stage stage = (Stage) this.vboxResult.getScene().getWindow();
-			AnchorPane menu = (AnchorPane) loader.load();
-			ControllerMenu controller = loader.getController();
+			ControllerMenu controller = new ControllerMenu(qRepo);
 			controller.setHostServices(this.hostServices);
+			loader.setController(controller);
+			AnchorPane menu = (AnchorPane) loader.load();
 		
 			Scene scene = new Scene(menu);
-			scene.getStylesheets().add(ControllerMenu.class.getResource(ControllerMenu.getStyleFilename(settings.isDarkTheme())).toExternalForm());
+			scene.getStylesheets().add(SettingsManager.getStyle(settings.isDarkTheme()));
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {

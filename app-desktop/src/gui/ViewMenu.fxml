@@ -15,14 +15,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane id="baseMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMenu">
+<AnchorPane id="baseMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="768.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label alignment="CENTER" layoutX="309.0" layoutY="48.0" minHeight="50.0" minWidth="150.0" text="ROQuiz">
          <font>
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Menu Principale">
                <font>
@@ -56,6 +56,11 @@
             <Button id="settings" fx:id="buttonSettings" mnemonicParsing="false" onAction="#selectSettings" prefHeight="40.0" prefWidth="40.0" />
             <Separator prefHeight="10.0" prefWidth="50.0" visible="false" />
             <Button id="info" fx:id="buttonInfo" mnemonicParsing="false" onAction="#selectInfo" prefHeight="40.0" prefWidth="40.0" />
+         </children>
+      </VBox>
+      <VBox fx:id="vboxBack" alignment="CENTER" layoutX="49.0" layoutY="370.0" prefHeight="90.0" prefWidth="50.0" visible="false">
+         <children>
+            <Button id="back" fx:id="buttonBack" mnemonicParsing="false" onAction="#selectBack" prefHeight="40.0" prefWidth="40.0" />
          </children>
       </VBox>
       <VBox fx:id="vboxTopics" alignment="TOP_CENTER" layoutX="100.0" layoutY="100.0" prefHeight="350.0" prefWidth="568.0" visible="false">
@@ -118,27 +123,22 @@
                </VBox.margin>
             </VBox>
          </children></VBox>
-      <VBox fx:id="vboxQuestions" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxQuestions" alignment="TOP_CENTER" layoutX="134.0" layoutY="100.0" prefHeight="330.0" prefWidth="500.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Lista Domande">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="labelTopic" alignment="CENTER" minWidth="250.0" prefHeight="30.0" text="Argomento: Programmazione Lineare Intera">
+            <Label fx:id="labelTopic" alignment="CENTER" minWidth="250.0" prefHeight="30.0" text="Argomento: ">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <ListView fx:id="listViewQuestions" focusTraversable="false" prefHeight="290.0" prefWidth="400.0" />
+            <ListView fx:id="listViewQuestions" focusTraversable="false" prefHeight="260.0" prefWidth="400.0" />
          </children>
       </VBox>
-      <VBox fx:id="vboxBack" alignment="CENTER" layoutX="133.0" layoutY="375.0" prefHeight="90.0" prefWidth="50.0" visible="false">
-         <children>
-            <Button id="back" fx:id="buttonBack" mnemonicParsing="false" onAction="#selectBack" prefHeight="40.0" prefWidth="40.0" />
-         </children>
-      </VBox>
-      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="134.0" layoutY="100.0" prefHeight="330.0" prefWidth="500.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Impostazioni">
                <font>
@@ -146,139 +146,217 @@
                </font>
             </Label>
             <Separator prefHeight="50.0" prefWidth="400.0" visible="false" />
-            <VBox prefHeight="180.0" prefWidth="400.0" spacing="10.0">
-               <padding>
-                  <Insets left="50.0" right="25.0" />
-               </padding>
+            <VBox prefHeight="222.0" prefWidth="400.0" spacing="10.0">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <Label minHeight="27.0" minWidth="240.0" text="Numero domande per quiz:">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <tooltip>
-                              <Tooltip maxWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Tooltip>
-                           </tooltip>
-                        </Label>
-                        <Spinner fx:id="spinnerQuestionNumQuiz" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0">
-                           <tooltip>
-                              <Tooltip maxWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Tooltip>
-                           </tooltip></Spinner>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
-                     <children>
-                        <Label minHeight="27.0" minWidth="240.0" text="Timer (minuti):">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <tooltip>
-                              <Tooltip maxWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Tooltip>
-                           </tooltip>
-                        </Label>
-                        <Spinner fx:id="spinnerTimerMin" minHeight="26.0" minWidth="60.0" prefHeight="26.0" prefWidth="60.0">
-                           <tooltip>
-                              <Tooltip maxWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Tooltip>
-                           </tooltip></Spinner>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
-                     <children>
-                        <Label minHeight="27.0" minWidth="240.0" text="Controllo nuove domande:">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <tooltip>
-                              <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se vi sono nuove domande e, in caso affermativo, chiede all'utente se vuole scaricarle" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Tooltip>
-                           </tooltip>
-                        </Label>
-                        <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="250.0">
                            <children>
-                              <CheckBox fx:id="checkBoxCheckQuestionsUpdate" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
+                              <Label minHeight="30.0" minWidth="300.0" text="Numero domande per quiz:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
                                  <tooltip>
-                                    <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se vi sono nuove domande e, in caso affermativo, chiede all'utente se vuole scaricarle" wrapText="true">
+                                    <Tooltip maxWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Tooltip>
-                                 </tooltip></CheckBox>
+                                 </tooltip>
+                              </Label>
                            </children>
-                        </VBox>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0">
+                           <children>
+                              <Spinner fx:id="spinnerQuestionNumQuiz" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0">
+                                 <tooltip>
+                                    <Tooltip maxWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </Spinner>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets right="50.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="250.0">
+                           <children>
+                              <Label minHeight="30.0" minWidth="300.0" text="Timer (minuti):">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <tooltip>
+                                    <Tooltip maxWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0">
+                           <children>
+                              <Spinner fx:id="spinnerTimerMin" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0">
+                                 <tooltip>
+                                    <Tooltip maxWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </Spinner>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets right="50.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="350.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" maxWidth="300.0" prefHeight="30.0" prefWidth="248.0">
+                           <children>
+                              <Label minHeight="30.0" minWidth="300.0" text="Controllo nuove domande:" textAlignment="CENTER" wrapText="true">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <tooltip>
+                                    <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se sono presenti nuove domande" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="100.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                                 <children>
+                                    <CheckBox fx:id="checkBoxUpdates" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
+                                       <tooltip>
+                                          <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se sono presenti nuove domande" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Tooltip>
+                                       </tooltip>
+                                    </CheckBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="50.0">
+                           <children>
+                              <Button id="updates" fx:id="buttonUpdates" mnemonicParsing="false" onAction="#checkForUpdates" prefHeight="30.0" prefWidth="30.0">
+                                 <tooltip>
+                                    <Tooltip maxWidth="400.0" text="Controlla se sono presenti nuove domande" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <Label minHeight="27.0" minWidth="240.0" text="Tema scuro:">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <tooltip>
-                              <Tooltip maxWidth="400.0" text="Abilita/Disabilita il tema scuro dell'applicazione" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Tooltip>
-                           </tooltip>
-                        </Label>
-                        <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="250.0">
                            <children>
-                              <CheckBox fx:id="checkBoxDarkTheme" mnemonicParsing="false" onAction="#changeTheme" prefHeight="18.0" prefWidth="18.0">
+                              <Label minHeight="30.0" minWidth="300.0" text="Tema scuro:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
                                  <tooltip>
                                     <Tooltip maxWidth="400.0" text="Abilita/Disabilita il tema scuro dell'applicazione" wrapText="true">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Tooltip>
-                                 </tooltip></CheckBox>
+                                 </tooltip>
+                              </Label>
                            </children>
-                        </VBox>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                                 <children>
+                                    <CheckBox fx:id="checkBoxDarkTheme" mnemonicParsing="false" onAction="#changeTheme" prefHeight="18.0" prefWidth="18.0">
+                                       <tooltip>
+                                          <Tooltip maxWidth="400.0" text="Abilita/Disabilita il tema scuro dell'applicazione" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Tooltip>
+                                       </tooltip>
+                                    </CheckBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children>
+                     <padding>
+                        <Insets right="50.0" />
+                     </padding>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <Label minHeight="27.0" minWidth="240.0" text="Mescola risposte:">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <tooltip>
-                              <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font></Tooltip>
-                           </tooltip>
-                        </Label>
-                        <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="250.0">
                            <children>
-                              <CheckBox fx:id="checkBoxShuffleAnswers" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
+                              <Label minHeight="30.0" minWidth="300.0" text="Mescola risposte:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
                                  <tooltip>
                                     <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
                                        <font>
                                           <Font size="14.0" />
-                                       </font></Tooltip>
+                                       </font>
+                                    </Tooltip>
                                  </tooltip>
-                              </CheckBox>
+                              </Label>
                            </children>
-                        </VBox>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                                 <children>
+                                    <CheckBox fx:id="checkBoxShuffleAnswers" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
+                                       <tooltip>
+                                          <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Tooltip>
+                                       </tooltip>
+                                    </CheckBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children>
+                     <padding>
+                        <Insets right="50.0" />
+                     </padding>
                   </HBox>
                </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
             </VBox>
             <Separator prefHeight="20.0" prefWidth="400.0" visible="false" />
             <HBox alignment="CENTER" prefHeight="40.0" prefWidth="350.0" spacing="20.0">
@@ -290,7 +368,7 @@
             </HBox>
          </children>
       </VBox>
-      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="340.0" prefWidth="400.0">
+      <VBox fx:id="vboxInfo" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="340.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Informazioni">
                <font>

@@ -1,14 +1,11 @@
 package gui;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.Main;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,11 +37,6 @@ import model.Question;
 import persistence.*;
 
 public class ControllerMenu implements IControllerMenu {
-	public final static String APP_PATH = "/application/";
-	public final static String THEME_LIGHT = "theme_light.css";
-	public final static String THEME_DARK = "theme_dark.css";
-	public final static String QUESTIONS_FILENAME = "Domande.txt";
-	
 	private HostServices hostServices;
 	private static SettingsManager settings;
 	private IQuestionRepository qRepo;
@@ -77,7 +69,8 @@ public class ControllerMenu implements IControllerMenu {
 	
 	@FXML private Spinner<Integer> spinnerQuestionNumQuiz;
 	@FXML private Spinner<Integer> spinnerTimerMin;
-	@FXML private CheckBox checkBoxCheckQuestionsUpdate;
+	@FXML private CheckBox checkBoxUpdates;
+	@FXML private Button buttonUpdates;
 	@FXML private CheckBox checkBoxDarkTheme;
 	@FXML private CheckBox checkBoxShuffleAnswers;
 	@FXML private Button buttonSettingsSave;
@@ -87,99 +80,20 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML private Label labelVersion;
 	
 	// FXML loader call order: Constructor -> initialize(). Inside initialize(), all the fxml object have been already initialized.
-	public ControllerMenu()	{}
+	public ControllerMenu(IQuestionRepository repository)
+	{
+		this.qRepo = repository;
+	}
 	
 	@FXML @Override 
 	public void initialize()
 	{
 		settings = SettingsManager.getInstance();
 		
-		// check for downloads only when the app is launched
-		if(settings.isJustLaunched())
-		{
-			settings.loadSettings(".settings.json");
-			settings.setJustLaunched(false);
-			
-			// download "Domande.txt" from the GitHub repository
-			if(settings.isCheckQuestionsUpdate())
-			{
-				System.out.println("Controllo domande aggiornate...");
-				boolean res = QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "tmp.txt");
-				
-				if(new File(QUESTIONS_FILENAME).exists() && res)
-				{
-					// a new file has been found.
-					if(QuestionRepository.compareFilesLength("Domande.txt", "tmp.txt") > 0)
-					{
-						System.out.println("È stata trovata una versione più recente del file contenente le domande.");
-						Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
-						alert.setTitle("Finestra di dialogo");
-						alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
-						alert.setContentText("Questa azione sovrascriverà il file " + QUESTIONS_FILENAME + " attualmente presente.");
-						alert.showAndWait();
-						if (alert.getResult() == ButtonType.YES)
-						{
-							// update Domande.txt with DomandeNew.txt
-							new File(QUESTIONS_FILENAME).delete();
-							
-							new File("tmp.txt").renameTo(new File(QUESTIONS_FILENAME));
-						}
-						if (alert.getResult() == ButtonType.NO)
-						{
-							new File("tmp.txt").delete();
-						}
-					}
-					else {
-						System.out.println("Non sono state trovate nuove domande.\n");
-						new File("tmp.txt").delete();
-					}
-				}
-				else {
-					new File("DomandeNuove.txt").delete();
-				}
-			}
-		}
-		
-		if(!new File("Domande.txt").exists())
-		{
-			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
-			alert.setTitle("Finestra di dialogo");
-			alert.setHeaderText("File domande non presente, scaricarlo?");
-			alert.showAndWait();
-			if (alert.getResult() == ButtonType.YES)
-			{
-				if(!QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", QUESTIONS_FILENAME))
-				{
-					System.out.println("Download file domande fallito");
-					System.exit(1);
-				}
-			}
-			if (alert.getResult() == ButtonType.NO)
-			{
-				new File("tmp.txt").delete();
-				System.out.println("File " + QUESTIONS_FILENAME + " mancante.");
-				System.exit(1);
-			}
-		}
-		
-		// load question repository from file
-		try (BufferedReader readerQuiz = new BufferedReader(new InputStreamReader(new FileInputStream(QUESTIONS_FILENAME), QuestionRepository.questionsEncoding))){
-			this.qRepo = new QuestionRepository(readerQuiz);
-		} catch (FileNotFoundException e) {
-			System.out.println("File " + QUESTIONS_FILENAME + " mancante.");
-			System.exit(1);
-		} catch (IOException e) {
-			System.out.println("Errore nella lettura del file " + QUESTIONS_FILENAME);
-			System.exit(1);
-		} catch (BadFileFormatException e) {
-			System.out.println("Errore nella formattazione del file " + QUESTIONS_FILENAME + ": " + e.getMessage() + " (linea " + e.getExceptionLine() + ")");
-			System.exit(1);
-		}
-		
 		int qNum = this.qRepo.getQuestions().size();
 		if(qNum < settings.getQuestionNumber())
 		{
-			System.out.println("Errore: nel file " + QUESTIONS_FILENAME + " non sono presenti abbastanza domande.\nDomande presenti: " 
+			System.out.println("Errore: nel file " + SettingsManager.QUESTIONS_FILENAME + " non sono presenti abbastanza domande.\nDomande presenti: " 
 					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + SettingsManager.DEFAULT_QUESTION_NUMBER);
 			System.exit(1);
 		}
@@ -213,13 +127,11 @@ public class ControllerMenu implements IControllerMenu {
 				SettingsManager.DEFAULT_QUESTION_NUMBER / 2, qNum, settings.getQuestionNumber()));
 		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(
 				SettingsManager.DEFAULT_TIMER / 2, qNum * 2, settings.getTimer()));
-		this.checkBoxCheckQuestionsUpdate.setSelected(settings.isCheckQuestionsUpdate());
+		this.checkBoxUpdates.setSelected(settings.isCheckQuestionsUpdate());
 		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
 		this.checkBoxShuffleAnswers.setSelected(settings.isShuffleAnswers());
 		
 		this.labelVersion.setText("ROQuiz v" + SettingsManager.VERSION_NUMBER);
-		
-		new File("tmp.txt").delete();
 	}
 	
 	public void setQuestionRepository(IQuestionRepository qRepo)
@@ -269,7 +181,7 @@ public class ControllerMenu implements IControllerMenu {
 		String topic = cbTopic.getText().replace("(", "").replace(")", "").replaceAll("[0-9]*", "").trim();
 		this.labelTopic.setText("Argomento: " + topic);
 		
-		System.out.println("Selezione: lista domande per l'argomento '" + topic + "'");
+		System.out.println("Selezione: lista domande per l'argomento '" + topic + "'.");
 		
 		this.vboxTopics.setVisible(false);
 		this.vboxSettingsInfo.setVisible(false);
@@ -291,12 +203,12 @@ public class ControllerMenu implements IControllerMenu {
 		{
 			Question q = this.qRepo.getQuestions().get(i);
 			VBox vbox = new VBox();
-			vbox.setMaxWidth(370);
+			vbox.setMaxWidth(this.vboxTopics.getPrefWidth() - 30.0);
 			vbox.setPadding(new Insets(0, 0, 20, 0));
 			
 			Label lQuestion = new Label("Q" + (i+1) + ") " + q.getQuestion());
 			lQuestion.setStyle("-fx-font-weight: bold");
-			lQuestion.setMaxWidth(360);
+			lQuestion.setMaxWidth(this.vboxTopics.getWidth() - 20.0);
 			lQuestion.setWrapText(true);
 			vbox.getChildren().add(lQuestion);
 			
@@ -355,7 +267,7 @@ public class ControllerMenu implements IControllerMenu {
 		
 		System.out.println("Pool domande quiz: " + questions.size());
 		
-		// load
+		// load quiz
 		try {
 			FXMLLoader loader = new FXMLLoader(ControllerMenu.class.getResource("/gui/ViewQuiz.fxml"));
 			Stage stage = (Stage) this.vboxMain.getScene().getWindow();
@@ -367,7 +279,7 @@ public class ControllerMenu implements IControllerMenu {
 			controller.setQuestions(questions);*/
 		
 			Scene scene = new Scene(quiz);
-			scene.getStylesheets().add(ControllerMenu.class.getResource(getStyleFilename(settings.isDarkTheme())).toExternalForm());
+			scene.getStylesheets().add(SettingsManager.getStyle(settings.isDarkTheme()));
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {
@@ -402,6 +314,8 @@ public class ControllerMenu implements IControllerMenu {
 	@FXML
 	public void selectCredits(ActionEvent event)
 	{
+		System.out.println("Selezione: crediti.");
+		
 		this.vboxInfo.setVisible(false);
 		this.vboxCredits.setVisible(true);
 	}
@@ -413,14 +327,14 @@ public class ControllerMenu implements IControllerMenu {
 		
 		if(this.vboxSettings.isVisible() &&	(settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || 
 				settings.getTimer() != this.spinnerTimerMin.getValue() || 
-				settings.isCheckQuestionsUpdate() != this.checkBoxCheckQuestionsUpdate.isSelected() ||
+				settings.isCheckQuestionsUpdate() != this.checkBoxUpdates.isSelected() ||
 				settings.isDarkTheme() != this.checkBoxDarkTheme.isSelected() ||
 				settings.isShuffleAnswers() != this.checkBoxShuffleAnswers.isSelected()))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
 			alert.setHeaderText("Salvare le modifiche alle impostazioni?");
-			alert.getDialogPane().getStylesheets().add(ControllerMenu.class.getResource(getStyleFilename(this.checkBoxDarkTheme.isSelected())).toExternalForm());
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
 			
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES)
@@ -464,12 +378,52 @@ public class ControllerMenu implements IControllerMenu {
 		Scene scene = this.vboxMain.getScene();
 		ObservableList<String> sheets = scene.getStylesheets();
 		
-		sheets.add(ControllerMenu.class.getResource(getStyleFilename(this.checkBoxDarkTheme.isSelected())).toExternalForm());
+		sheets.add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
 		for(String s : sheets)
 		{
 			if(s.contains("theme"))
 				sheets.remove(s);
 		}
+	}
+	
+	@FXML
+	public void checkForUpdates(ActionEvent event)
+	{
+		System.out.println("Controllo domande aggiornate...");
+		
+		// download "Domande.txt" from the GitHub repository
+		boolean res = QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "tmp.txt");
+		
+		if(res)
+		{
+			// a new file has been found.
+			if(this.qRepo.isLonger("tmp.txt"))
+			{
+				System.out.println("È stata trovata una versione più recente del file contenente le domande.");
+				Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+				alert.setTitle("Finestra di dialogo");
+				alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
+				alert.setContentText("Questa azione sovrascriverà il file " + SettingsManager.QUESTIONS_FILENAME + " attualmente presente.");
+				alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+				alert.showAndWait();
+				
+				if (alert.getResult() == ButtonType.YES)
+				{
+					// update Domande.txt with DomandeNew.txt
+					new File(SettingsManager.QUESTIONS_FILENAME).delete();
+					
+					new File("tmp.txt").renameTo(new File(SettingsManager.QUESTIONS_FILENAME));
+				}
+				if (alert.getResult() == ButtonType.NO)
+				{
+					new File("tmp.txt").delete();
+				}
+			}
+			else {
+				System.out.println("Non sono state trovate nuove domande.\n");
+			}
+		}
+		new File("tmp.txt").delete();
 	}
 	
 	@FXML 
@@ -501,7 +455,7 @@ public class ControllerMenu implements IControllerMenu {
 		
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(SettingsManager.DEFAULT_QUESTION_NUMBER);
 		this.spinnerTimerMin.getValueFactory().setValue(SettingsManager.DEFAULT_TIMER);
-		this.checkBoxCheckQuestionsUpdate.setSelected(SettingsManager.DEFAULT_CHECK_QUESTIONS_UPDATE);
+		this.checkBoxUpdates.setSelected(SettingsManager.DEFAULT_CHECK_QUESTIONS_UPDATE);
 		this.checkBoxDarkTheme.setSelected(SettingsManager.DEFAULT_DARK_MODE);
 		this.checkBoxShuffleAnswers.setSelected(SettingsManager.DEFAULT_SHUFFLE_ANSWERS);
 		
@@ -514,7 +468,7 @@ public class ControllerMenu implements IControllerMenu {
 		boolean cqu, dm, sa;
 		sqnq = this.spinnerQuestionNumQuiz.getValue();
 		stm = this.spinnerTimerMin.getValue();
-		cqu = this.checkBoxCheckQuestionsUpdate.isSelected();
+		cqu = this.checkBoxUpdates.isSelected();
 		dm = this.checkBoxDarkTheme.isSelected();
 		sa = this.checkBoxShuffleAnswers.isSelected();
 		
@@ -549,7 +503,7 @@ public class ControllerMenu implements IControllerMenu {
 		
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(settings.getQuestionNumber());
 		this.spinnerTimerMin.getValueFactory().setValue(settings.getTimer());
-		this.checkBoxCheckQuestionsUpdate.setSelected(settings.isCheckQuestionsUpdate());
+		this.checkBoxUpdates.setSelected(settings.isCheckQuestionsUpdate());
 		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
 		this.checkBoxShuffleAnswers.setSelected(settings.isShuffleAnswers());
 		
@@ -638,16 +592,5 @@ public class ControllerMenu implements IControllerMenu {
 	public void setHostServices(HostServices hostServices)
 	{
 		this.hostServices = hostServices;
-	}
-	
-	public static String getStyleFilename(boolean dark)
-	{
-		String result;
-		
-		if(dark)
-			result = THEME_DARK;
-		else result = THEME_LIGHT;
-		
-		return APP_PATH + result;
 	}
 }

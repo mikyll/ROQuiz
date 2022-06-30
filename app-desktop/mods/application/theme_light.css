@@ -27,6 +27,11 @@
 	-fx-background-image: url('../gfx/icon_settings_dark.png');
 }
 
+#updates {
+	-fx-background-image: url('../gfx/icon_refresh_dark.png');
+	-fx-background-size: 25px;
+}
+
 #info {
 	-fx-background-image: url('../gfx/icon_info_dark.png');
 }
