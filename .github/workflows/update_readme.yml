@@ -19,7 +19,7 @@ jobs:
           committer_username: "mikyll"
           commit_message: "update README.md"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   Update-Questions:
     runs-on: ubuntu-latest
     steps:
