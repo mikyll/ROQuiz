@@ -7,7 +7,7 @@
 [![Contributors][contributors-shield]][contributors-url]
 [![MIT License][license-shield]][license-url]
 [![Issues][issues-shield]][issues-url]
-<br/>
+<br />
 [![java][java-shield]][java-url]
 [![dart][dart-shield]][dart-url]
 [![flutter][flutter-shield]][flutter-url]
@@ -148,6 +148,13 @@ Proposta feature:
             <img src="https://avatars.githubusercontent.com/u/39459803?v=4" width="100;" alt="TryKatChup"/>
             <br />
             <sub><b>TryKatChup</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Federicoand98">
+            <img src="https://avatars.githubusercontent.com/u/40764404?v=4" width="100;" alt="Federicoand98"/>
+            <br />
+            <sub><b>Federicoand98</b></sub>
         </a>
     </td>
     <td align="center">
