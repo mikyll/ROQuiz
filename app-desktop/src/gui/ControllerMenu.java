@@ -381,7 +381,7 @@ public class ControllerMenu {
 	}
 	
 	@FXML
-	private void checkForUpdates(ActionEvent event)
+	private void checkForQuestionUpdates(ActionEvent event)
 	{
 		System.out.println("Controllo domande aggiornate...");
 		
@@ -528,6 +528,16 @@ public class ControllerMenu {
 			this.hostServices.showDocument("https://github.com/filippoveronesi");
 		else if(hl.getText().equalsIgnoreCase("Icons8"))
 			this.hostServices.showDocument("https://icons8.com");
+	}
+	
+	@FXML
+	private void checkForAppUpdates(ActionEvent event)
+	{
+		if(settings.checkAppUpdates())
+		{
+			System.out.println("È stata trovata una versione più recente dell'app, vuoi scaricarla?");
+		}
+		else System.out.println("Non sono state trovate versioni più recenti.");
 	}
 	
 	private void initCheckBoxes()

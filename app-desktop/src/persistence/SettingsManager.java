@@ -4,6 +4,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
@@ -12,7 +18,7 @@ import com.google.gson.JsonSyntaxException;
 import model.Settings;
 
 public class SettingsManager {
-	public final static double VERSION_NUMBER = 1.5;
+	public final static String VERSION_NUMBER = "1.5";
 	public final static int DEFAULT_QUESTION_NUMBER = 16;
 	public final static int DEFAULT_ANSWER_NUMBER = 5;
 	public final static int DEFAULT_TIMER = 18;
@@ -121,6 +127,42 @@ public class SettingsManager {
 		if(dark)
 			result = themeDark;
 		else result = themeLight;
+		
+		return result;
+	}
+	
+	public boolean checkAppUpdates()
+	{
+		String url, latestVersion;
+		int currentV, latestV;
+		boolean result = false;
+		
+		url = "https://api.github.com/repos/mikyll/ROQuiz/releases/latest";
+		latestVersion = VERSION_NUMBER;
+
+		try {
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+			HttpGet request = new HttpGet(url);
+			request.addHeader("content-type", "application/json");
+			CloseableHttpResponse response = httpClient.execute(request);
+			
+			String json = EntityUtils.toString(response.getEntity(), "UTF-8");
+			
+			int iStart, iEnd;
+			iStart = json.indexOf("tag_name");
+			iEnd = json.indexOf("target_commitish");
+			latestVersion = json.substring(iStart + 12, iEnd - 3);
+			
+			currentV = Integer.parseInt(VERSION_NUMBER.replaceAll("\\.", ""));
+			latestV = Integer.parseInt(latestVersion.replaceAll("\\.", ""));
+			
+			if(currentV < latestV)
+			{
+				result = true;
+			}
+		} catch (Exception e) {
+			result = false;
+		}
 		
 		return result;
 	}
