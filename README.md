@@ -7,7 +7,7 @@
 [![Contributors][contributors-shield]][contributors-url]
 [![MIT License][license-shield]][license-url]
 [![Issues][issues-shield]][issues-url]
-<br/>
+<br />
 [![java][java-shield]][java-url]
 [![dart][dart-shield]][dart-url]
 [![flutter][flutter-shield]][flutter-url]
