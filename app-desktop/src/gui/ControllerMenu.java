@@ -35,7 +35,7 @@ import model.Answer;
 import model.Question;
 import persistence.*;
 
-public class ControllerMenu implements IControllerMenu {
+public class ControllerMenu {
 	private HostServices hostServices;
 	private static SettingsManager settings;
 	private IQuestionRepository qRepo;
@@ -84,8 +84,8 @@ public class ControllerMenu implements IControllerMenu {
 		this.qRepo = repository;
 	}
 	
-	@FXML @Override 
-	public void initialize()
+	@FXML
+	private void initialize()
 	{
 		settings = SettingsManager.getInstance();
 		
@@ -133,13 +133,8 @@ public class ControllerMenu implements IControllerMenu {
 		this.labelVersion.setText("ROQuiz v" + SettingsManager.VERSION_NUMBER);
 	}
 	
-	public void setQuestionRepository(IQuestionRepository qRepo)
-	{
-		this.qRepo = qRepo;
-	}
-	
 	@FXML
-	public void selectTopics(ActionEvent event)
+	private void selectTopics(ActionEvent event)
 	{
 		System.out.println("Selezione: argomenti.");
 		
@@ -150,7 +145,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void setTopics(ActionEvent event)
+	private void setTopics(ActionEvent event)
 	{
 		CheckBox cb = (CheckBox)event.getTarget();
 		System.out.println("Argomento '" + cb.getText() + (cb.isSelected() ? "' selezionato." : "' deselezionato."));
@@ -237,7 +232,7 @@ public class ControllerMenu implements IControllerMenu {
 	
 	
 	@FXML
-	public void selectQuiz(ActionEvent event)
+	private void selectQuiz(ActionEvent event)
 	{
 		System.out.println("\nSelezione: avvia quiz.\nArgomenti impostati:");
 		
@@ -289,7 +284,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void selectSettings(ActionEvent event)
+	private void selectSettings(ActionEvent event)
 	{
 		System.out.println("Selezione: impostazioni.");
 		
@@ -300,7 +295,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void selectInfo(ActionEvent event)
+	private void selectInfo(ActionEvent event)
 	{
 		System.out.println("Selezione: informazioni.");
 		
@@ -311,7 +306,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void selectCredits(ActionEvent event)
+	private void selectCredits(ActionEvent event)
 	{
 		System.out.println("Selezione: crediti.");
 		
@@ -320,7 +315,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void selectBack(ActionEvent event)
+	private void selectBack(ActionEvent event)
 	{
 		System.out.println("Selezione: indietro.");
 		
@@ -372,7 +367,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void changeTheme(ActionEvent event)
+	private void changeTheme(ActionEvent event)
 	{
 		Scene scene = this.vboxMain.getScene();
 		ObservableList<String> sheets = scene.getStylesheets();
@@ -386,7 +381,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void checkForUpdates(ActionEvent event)
+	private void checkForUpdates(ActionEvent event)
 	{
 		System.out.println("Controllo domande aggiornate...");
 		
@@ -426,7 +421,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML 
-	public void saveSettings(ActionEvent event)
+	private void saveSettings(ActionEvent event)
 	{
 		this.saveSettingsChanges();
 		
@@ -437,7 +432,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML 
-	public void cancelSettings(ActionEvent event)
+	private void cancelSettings(ActionEvent event)
 	{
 		this.cancelSettingsChanges();
 		
@@ -448,7 +443,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML
-	public void restoreSettings(ActionEvent event)
+	private void restoreSettings(ActionEvent event)
 	{
 		System.out.println("Impostazioni di default.");
 		
@@ -510,7 +505,7 @@ public class ControllerMenu implements IControllerMenu {
 	}
 	
 	@FXML 
-	public void openURL(ActionEvent event)
+	private void openURL(ActionEvent event)
 	{
 		Hyperlink hl = (Hyperlink) event.getSource();
 		

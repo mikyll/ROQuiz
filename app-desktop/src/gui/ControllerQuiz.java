@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import application.Main;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.HostServices;
@@ -30,7 +29,7 @@ import model.Quiz;
 import persistence.QuestionRepository;
 import persistence.SettingsManager;
 
-public class ControllerQuiz implements IControllerQuiz{
+public class ControllerQuiz {
 	private final static String STYLE_DEFAULT_LIGHT = "-fx-text-fill: black; -fx-font-weight: normal";
 	private final static String STYLE_DEFAULT_DARK = "-fx-text-fill: white; -fx-font-weight: normal";
 	private final static String STYLE_WRONG_ANSWER = "-fx-text-fill: red; -fx-font-weight: bold";
@@ -76,8 +75,8 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.questions = questions;
 	}
 	
-	@FXML @Override 
-	public void initialize()
+	@FXML 
+	private void initialize()
 	{
 		this.buttonMenu.setVisible(false);
 		this.vboxResult.setVisible(false);
@@ -112,7 +111,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	
 	
 	@FXML
-	public void setAnswer(ActionEvent event)
+	private void setAnswer(ActionEvent event)
 	{
 		String answer = event.getSource().toString().substring(20, 21);
 		this.quiz.setAnswer(this.index, Answer.valueOf(answer));
@@ -120,8 +119,8 @@ public class ControllerQuiz implements IControllerQuiz{
 		System.out.println("Domanda " + (this.index+1) + ": selezionata la risposta " + answer + ".");
 	}
 	
-	@FXML @Override 
-	public void previousQuestion(ActionEvent event)
+	@FXML 
+	private void previousQuestion(ActionEvent event)
 	{
 		this.index--;
 		if(this.index == this.settings.getQuestionNumber() - 2)
@@ -163,8 +162,8 @@ public class ControllerQuiz implements IControllerQuiz{
 		}
 	}
 
-	@FXML @Override 
-	public void nextQuestion(ActionEvent event)
+	@FXML 
+	private void nextQuestion(ActionEvent event)
 	{
 		this.index++;
 		if(this.index == 1)
@@ -207,8 +206,8 @@ public class ControllerQuiz implements IControllerQuiz{
 		}
 	}
 	
-	@Override
-	public void endResetQuiz()
+	@FXML
+	private void endResetQuiz()
 	{
 		if(!this.quizTerminated)
 		{
@@ -240,7 +239,6 @@ public class ControllerQuiz implements IControllerQuiz{
 		}
 	}
 
-	
 	private void initRadioArray()
 	{
 		this.radioAnswers = new HashMap<Answer, RadioButton>(5);
@@ -250,9 +248,8 @@ public class ControllerQuiz implements IControllerQuiz{
 		this.radioAnswers.put(Answer.D, this.radioD);
 		this.radioAnswers.put(Answer.E, this.radioE);
 	}
-	
-	@Override 
-	public void resetQuiz()
+	 
+	private void resetQuiz()
 	{
 		this.labelTimer.setText("" + this.settings.getTimer() + ":00");
 		this.labelTimer.setStyle(this.settings.isDarkTheme() ? "-fx-text-fill: white" : "-fx-text-fill: black");
@@ -292,8 +289,7 @@ public class ControllerQuiz implements IControllerQuiz{
 		System.out.println("Timer: start");
 	}
 	
-	@Override
-	public void endQuiz()
+	private void endQuiz()
 	{
 		Quiz q = this.quiz;
 		q.checkAnswers();
@@ -358,7 +354,7 @@ public class ControllerQuiz implements IControllerQuiz{
 	}
 	
 	@FXML
-	public void selectMenu(ActionEvent event) {
+	private void selectMenu(ActionEvent event) {
 		System.out.println("\nSelezione: menu principale.");
 		
 		QuestionRepository qRepo = QuestionRepository.getQuestionRepositoryFromFile(SettingsManager.QUESTIONS_FILENAME);
