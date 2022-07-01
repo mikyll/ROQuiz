@@ -22,7 +22,7 @@
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0">
+      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Menu Principale">
                <font>
@@ -138,14 +138,14 @@
             <ListView fx:id="listViewQuestions" focusTraversable="false" prefHeight="260.0" prefWidth="400.0" />
          </children>
       </VBox>
-      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="134.0" layoutY="100.0" prefHeight="330.0" prefWidth="500.0" visible="false">
+      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="134.0" layoutY="100.0" prefHeight="350.0" prefWidth="500.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Impostazioni">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Separator prefHeight="50.0" prefWidth="400.0" visible="false" />
+            <Separator prefHeight="30.0" prefWidth="400.0" visible="false" />
             <VBox prefHeight="222.0" prefWidth="400.0" spacing="10.0">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
@@ -220,16 +220,16 @@
                         <Insets right="50.0" />
                      </padding>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="350.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" maxWidth="300.0" prefHeight="30.0" prefWidth="248.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="250.0">
                            <children>
-                              <Label minHeight="30.0" minWidth="300.0" text="Controllo nuove domande:" textAlignment="CENTER" wrapText="true">
+                              <Label minHeight="30.0" minWidth="300.0" text="Mescola risposte:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                                  <tooltip>
-                                    <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se sono presenti nuove domande" wrapText="true">
+                                    <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -238,13 +238,13 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="100.0">
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0">
                            <children>
                               <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
                                  <children>
-                                    <CheckBox fx:id="checkBoxUpdates" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
+                                    <CheckBox fx:id="checkBoxShuffleAnswers" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
                                        <tooltip>
-                                          <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se sono presenti nuove domande" wrapText="true">
+                                          <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
@@ -255,20 +255,10 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="50.0">
-                           <children>
-                              <Button id="updates" fx:id="buttonUpdates" mnemonicParsing="false" onAction="#checkForUpdates" prefHeight="30.0" prefWidth="30.0">
-                                 <tooltip>
-                                    <Tooltip maxWidth="400.0" text="Controlla se sono presenti nuove domande" wrapText="true">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Tooltip>
-                                 </tooltip>
-                              </Button>
-                           </children>
-                        </HBox>
                      </children>
+                     <padding>
+                        <Insets right="50.0" />
+                     </padding>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
                      <children>
@@ -310,16 +300,16 @@
                         <Insets right="50.0" />
                      </padding>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="350.0">
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="350.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="250.0">
+                        <HBox alignment="CENTER_LEFT" maxWidth="300.0" prefHeight="30.0" prefWidth="248.0">
                            <children>
-                              <Label minHeight="30.0" minWidth="300.0" text="Mescola risposte:">
+                              <Label minHeight="30.0" minWidth="300.0" text="Controllo nuove domande:" textAlignment="CENTER" wrapText="true">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                                  <tooltip>
-                                    <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
+                                    <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se sono presenti nuove domande" wrapText="true">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -328,13 +318,13 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0">
+                        <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="100.0">
                            <children>
                               <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
                                  <children>
-                                    <CheckBox fx:id="checkBoxShuffleAnswers" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
+                                    <CheckBox fx:id="checkBoxUpdateQuestions" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
                                        <tooltip>
-                                          <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
+                                          <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se sono presenti nuove domande" wrapText="true">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
@@ -345,10 +335,70 @@
                               </VBox>
                            </children>
                         </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="50.0">
+                           <children>
+                              <Button id="update" fx:id="buttonUpdateQuestion" mnemonicParsing="false" onAction="#checkForQuestionUpdates" prefHeight="30.0" prefWidth="30.0">
+                                 <tooltip>
+                                    <Tooltip maxWidth="400.0" text="Controlla se sono presenti nuove domande" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
-                     <padding>
-                        <Insets right="50.0" />
-                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="350.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" maxWidth="300.0" prefHeight="30.0" prefWidth="248.0">
+                           <children>
+                              <Label minHeight="30.0" minWidth="300.0" text="Controllo aggiornamenti app:" textAlignment="CENTER" wrapText="true">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <tooltip>
+                                    <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se sono presenti nuove versioni dell'app" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="100.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="30.0" prefWidth="60.0">
+                                 <children>
+                                    <CheckBox fx:id="checkBoxUpdateApp" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
+                                       <tooltip>
+                                          <Tooltip maxWidth="400.0" text="Se abilitata, l'applicazione all'avvio controlla se sono presenti nuove versioni dell'app" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Tooltip>
+                                       </tooltip>
+                                    </CheckBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="50.0">
+                           <children>
+                              <Button id="update" fx:id="buttonUpdateApp" mnemonicParsing="false" onAction="#checkForAppUpdates" prefHeight="30.0" prefWidth="30.0">
+                                 <tooltip>
+                                    <Tooltip maxWidth="400.0" text="Controlla se sono presenti nuove versioni dell'app" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
                   </HBox>
                </children>
                <VBox.margin>

@@ -22,9 +22,9 @@ public class SettingsManager {
 	public final static int DEFAULT_QUESTION_NUMBER = 16;
 	public final static int DEFAULT_ANSWER_NUMBER = 5;
 	public final static int DEFAULT_TIMER = 18;
-	public final static boolean DEFAULT_CHECK_QUESTIONS_UPDATE = true;
-	public final static boolean DEFAULT_DARK_MODE = false;
 	public final static boolean DEFAULT_SHUFFLE_ANSWERS = true;
+	public final static boolean DEFAULT_DARK_THEME = false;
+	public final static boolean DEFAULT_CHECK_QUESTIONS_UPDATE = true;
 	
 	public final static String APP_PATH = "/application/";
 	public final static String THEME_LIGHT_FILE = "theme_light.css";
@@ -39,7 +39,7 @@ public class SettingsManager {
 	
 	private SettingsManager()
 	{
-		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_ANSWERS);
+		settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_THEME, DEFAULT_SHUFFLE_ANSWERS);
 		
 		themeLight = getClass().getResource(APP_PATH + THEME_LIGHT_FILE).toExternalForm();
 		themeDark = getClass().getResource(APP_PATH + THEME_DARK_FILE).toExternalForm();
@@ -56,13 +56,13 @@ public class SettingsManager {
 	public void setQuestionNumber(int qNum) {settings.setQuestionNumber(qNum);}
 	public int getTimer() {return settings.getTimer();}
 	public void setTimer(int sTime) {settings.setTimer(sTime);}
-	public boolean isCheckQuestionsUpdate() {return settings.isCheckQuestionsUpdate();}
-	public void setCheckQuestionsUpdate(boolean qUpdate) {settings.setCheckQuestionsUpdate(qUpdate);}
-	public boolean isDarkTheme() {return settings.isDarkTheme();}
-	public void setDarkTheme(boolean dTheme) {settings.setDarkTheme(dTheme);}
 	public boolean isShuffleAnswers() {return settings.isShuffleAnswers();}
 	public void setShuffleAnswers(boolean shuffle) {settings.setShuffleAnswers(shuffle);}
-
+	public boolean isDarkTheme() {return settings.isDarkTheme();}
+	public void setDarkTheme(boolean dTheme) {settings.setDarkTheme(dTheme);}
+	public boolean isCheckQuestionsUpdate() {return settings.isCheckQuestionsUpdate();}
+	public void setCheckQuestionsUpdate(boolean qUpdate) {settings.setCheckQuestionsUpdate(qUpdate);}
+	
 	public void loadSettings(String filename) {
 		try (FileReader reader = new FileReader(filename)) {
 			Gson gson = new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).create(); // need this since we use a static class
@@ -106,7 +106,7 @@ public class SettingsManager {
 	public void resetSettings(String filename) {
 		
 		try(FileWriter writer = new FileWriter(filename)) {
-			settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_CHECK_QUESTIONS_UPDATE, DEFAULT_DARK_MODE, DEFAULT_SHUFFLE_ANSWERS);
+			settings = new Settings(DEFAULT_QUESTION_NUMBER, DEFAULT_TIMER, DEFAULT_SHUFFLE_ANSWERS, DEFAULT_DARK_THEME, DEFAULT_CHECK_QUESTIONS_UPDATE);
 			
 			Gson gson = new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setPrettyPrinting().create();
 			gson.toJson(settings, writer);

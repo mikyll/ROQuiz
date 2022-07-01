@@ -1,7 +1,7 @@
 {
   "questionNumber": 16,
   "timer": 18,
-  "checkQuestionsUpdate": true,
+  "shuffleAnswers": true,
   "darkTheme": false,
-  "shuffleAnswers": true
+  "checkQuestionsUpdate": true
 }

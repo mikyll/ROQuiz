@@ -68,10 +68,12 @@ public class ControllerMenu {
 	
 	@FXML private Spinner<Integer> spinnerQuestionNumQuiz;
 	@FXML private Spinner<Integer> spinnerTimerMin;
-	@FXML private CheckBox checkBoxUpdates;
-	@FXML private Button buttonUpdates;
-	@FXML private CheckBox checkBoxDarkTheme;
 	@FXML private CheckBox checkBoxShuffleAnswers;
+	@FXML private CheckBox checkBoxDarkTheme;
+	@FXML private CheckBox checkBoxUpdateQuestions;
+	@FXML private Button buttonUpdateQuestions;
+	@FXML private CheckBox checkBoxUpdateApp;
+	@FXML private Button buttonUpdateApp;
 	@FXML private Button buttonSettingsSave;
 	@FXML private Button buttonSettingsCancel;
 	@FXML private Button buttonSettingsRestore;
@@ -126,9 +128,9 @@ public class ControllerMenu {
 				SettingsManager.DEFAULT_QUESTION_NUMBER / 2, qNum, settings.getQuestionNumber()));
 		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(
 				SettingsManager.DEFAULT_TIMER / 2, qNum * 2, settings.getTimer()));
-		this.checkBoxUpdates.setSelected(settings.isCheckQuestionsUpdate());
-		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
 		this.checkBoxShuffleAnswers.setSelected(settings.isShuffleAnswers());
+		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
+		this.checkBoxUpdateQuestions.setSelected(settings.isCheckQuestionsUpdate());
 		
 		this.labelVersion.setText("ROQuiz v" + SettingsManager.VERSION_NUMBER);
 	}
@@ -320,10 +322,10 @@ public class ControllerMenu {
 		System.out.println("Selezione: indietro.");
 		
 		if(this.vboxSettings.isVisible() &&	(settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || 
-				settings.getTimer() != this.spinnerTimerMin.getValue() || 
-				settings.isCheckQuestionsUpdate() != this.checkBoxUpdates.isSelected() ||
+				settings.getTimer() != this.spinnerTimerMin.getValue() ||
+				settings.isShuffleAnswers() != this.checkBoxShuffleAnswers.isSelected() ||
 				settings.isDarkTheme() != this.checkBoxDarkTheme.isSelected() ||
-				settings.isShuffleAnswers() != this.checkBoxShuffleAnswers.isSelected()))
+				settings.isCheckQuestionsUpdate() != this.checkBoxUpdateQuestions.isSelected()))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
@@ -414,7 +416,13 @@ public class ControllerMenu {
 				}
 			}
 			else {
-				System.out.println("Non sono state trovate nuove domande.\n");
+				System.out.println("Non sono state trovate nuove domande.");
+				
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setHeaderText("Non sono state trovate nuove domande.");
+				alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+				
+				alert.showAndWait();
 			}
 		}
 		new File("tmp.txt").delete();
@@ -445,13 +453,13 @@ public class ControllerMenu {
 	@FXML
 	private void restoreSettings(ActionEvent event)
 	{
-		System.out.println("Impostazioni di default.");
+		System.out.println("Impostazioni predefinite.");
 		
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(SettingsManager.DEFAULT_QUESTION_NUMBER);
 		this.spinnerTimerMin.getValueFactory().setValue(SettingsManager.DEFAULT_TIMER);
-		this.checkBoxUpdates.setSelected(SettingsManager.DEFAULT_CHECK_QUESTIONS_UPDATE);
-		this.checkBoxDarkTheme.setSelected(SettingsManager.DEFAULT_DARK_MODE);
 		this.checkBoxShuffleAnswers.setSelected(SettingsManager.DEFAULT_SHUFFLE_ANSWERS);
+		this.checkBoxDarkTheme.setSelected(SettingsManager.DEFAULT_DARK_THEME);
+		this.checkBoxUpdateQuestions.setSelected(SettingsManager.DEFAULT_CHECK_QUESTIONS_UPDATE);
 		
 		this.changeTheme(new ActionEvent());
 	}
@@ -459,22 +467,22 @@ public class ControllerMenu {
 	private void saveSettingsChanges()
 	{
 		int sqnq, stm;
-		boolean cqu, dm, sa;
+		boolean sa, dm, cqu;
 		sqnq = this.spinnerQuestionNumQuiz.getValue();
 		stm = this.spinnerTimerMin.getValue();
-		cqu = this.checkBoxUpdates.isSelected();
-		dm = this.checkBoxDarkTheme.isSelected();
 		sa = this.checkBoxShuffleAnswers.isSelected();
+		dm = this.checkBoxDarkTheme.isSelected();
+		cqu = this.checkBoxUpdateQuestions.isSelected();
 		
 		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
-				sqnq + "\nTimer (minuti): " + stm + "\nControllo aggiornamento domande: " +
-				cqu + "\nModalità scura: " + dm + "\nRisposte mescolate: " + sa);
+				sqnq + "\nTimer (minuti): " + stm + "\nRisposte mescolate: " + sa + "\nModalità scura: " + dm
+				+ "\nControllo aggiornamento domande: " + cqu);
 		
 		settings.setQuestionNumber(sqnq);
 		settings.setTimer(stm);
-		settings.setCheckQuestionsUpdate(cqu);
-		settings.setDarkTheme(dm);
 		settings.setShuffleAnswers(sa);
+		settings.setDarkTheme(dm);
+		settings.setCheckQuestionsUpdate(cqu);
 		
 		if(this.qRepo.hasTopics())
 		{
@@ -497,9 +505,9 @@ public class ControllerMenu {
 		
 		this.spinnerQuestionNumQuiz.getValueFactory().setValue(settings.getQuestionNumber());
 		this.spinnerTimerMin.getValueFactory().setValue(settings.getTimer());
-		this.checkBoxUpdates.setSelected(settings.isCheckQuestionsUpdate());
-		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
 		this.checkBoxShuffleAnswers.setSelected(settings.isShuffleAnswers());
+		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
+		this.checkBoxUpdateQuestions.setSelected(settings.isCheckQuestionsUpdate());
 		
 		this.changeTheme(new ActionEvent());
 	}
@@ -533,11 +541,31 @@ public class ControllerMenu {
 	@FXML
 	private void checkForAppUpdates(ActionEvent event)
 	{
-		if(settings.checkAppUpdates())
+		if(settings.checkAppUpdates()) // a new version is available
 		{
-			System.out.println("È stata trovata una versione più recente dell'app, vuoi scaricarla?");
+			System.out.println("È stata trovata una versione più recente dell'app.");
+			
+			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+			alert.setTitle("Finestra di dialogo");
+			alert.setHeaderText("È stata trovata una versione più recente dell'app. Scaricarla?");
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+			
+			alert.showAndWait();
+			if (alert.getResult() == ButtonType.YES)
+			{
+				this.hostServices.showDocument("https://github.com/mikyll/ROQuiz/releases/latest");
+			}
 		}
-		else System.out.println("Non sono state trovate versioni più recenti.");
+		else
+		{
+			System.out.println("Non sono state trovate versioni più recenti dell'app.");
+			
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setHeaderText("Non sono state trovate versioni più recenti dell'app.");
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+			
+			alert.showAndWait();
+		}
 	}
 	
 	private void initCheckBoxes()

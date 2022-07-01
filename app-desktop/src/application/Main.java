@@ -86,6 +86,7 @@ public class Main extends Application {
 					if(qRepo.isLonger("tmp.txt"))
 					{
 						System.out.println("È stata trovata una versione più recente del file contenente le domande.");
+						
 						Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
 						alert.setTitle("Finestra di dialogo");
 						alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
@@ -106,7 +107,7 @@ public class Main extends Application {
 						}
 					}
 					else {
-						System.out.println("Non sono state trovate nuove domande.\n");
+						System.out.println("Non sono state trovate nuove domande.");
 					}
 				}
 				new File("tmp.txt").delete();

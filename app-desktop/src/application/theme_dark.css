@@ -91,7 +91,7 @@ Button Background: #404040
 	-fx-background-image: url('../gfx/icon_settings_light.png');
 }
 
-#updates {
+#update {
 	-fx-background-image: url('../gfx/icon_refresh_light.png');
 	-fx-background-size: 25px;
 }
