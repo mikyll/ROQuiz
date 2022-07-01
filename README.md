@@ -35,25 +35,25 @@
 ### Demo
 #### Desktop
 <table style="border: none">
-  <tr>
-    <td width="49.9%"><img src="./gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
-    <td width="49.9%"><img src="./gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
+  <tr align="center">
+    <td><img src="./gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
+    <td><img src="./gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
   </tr>
-  <tr>
-    <td align="center">Terminazione quiz</td>
-    <td align="center">Tempo scaduto</td>
+  <tr align="center">
+    <td>Terminazione quiz</td>
+    <td>Tempo scaduto</td>
   </tr>
 </table>
 
 #### Mobile
 <table style="border: none">
-  <tr>
-    <td align="center"><img width=50% src="./gfx/[GIF] MobileInstall.gif" alt="InstallMobileGIF"/></td>
-    <td align="center"><img width=50% src="./gfx/[GIF] MobileUsage.gif" alt="MobileUsageGIF"/></td>
+  <tr align="center">
+    <td><img width=50% src="./gfx/[GIF] MobileInstall.gif" alt="InstallMobileGIF"/></td>
+    <td><img width=50% src="./gfx/[GIF] MobileUsage.gif" alt="MobileUsageGIF"/></td>
   </tr>
-  <tr>
-    <td align="center">Installazione versione mobile</td>
-    <td align="center">Terminazione quiz</td>
+  <tr align="center">
+    <td>Installazione versione mobile</td>
+    <td>Terminazione quiz</td>
   </tr>
 </table>
 
