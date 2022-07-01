@@ -120,6 +120,7 @@ Aggiunta domande o feature al progetto:
   * Per aggiungere delle feature, basta implementarle e integrarle col resto dell'applicazione (in caso di dubbi o domande sul funzionamento di alcune parti di codice, basta aprire un issue e cercherò di rispondere il prima possibile).
 5. Fare commit e push.
 6. Creare una **pull request** aggiungendo informazioni se necessario.
+7. Ammirare il proprio nome inserito in questa meravigliosa lista che viene aggiornata automaticamente.
 
 Proposta feature:
 1. Aprire un issue spiegando in cosa consiste la feature da aggiungere.
@@ -168,7 +169,9 @@ Proposta feature:
 <!-- readme: contributors -end -->
 
 ### Roadmap
-Features da aggiungere e sviluppi futuri:
+<details>
+<summary>Features da aggiungere e sviluppi futuri:</summary>
+
 - [x] aggiungere la scelta degli argomenti
 - [x] impostazioni persistenti
 - [x] download domande aggiornate
@@ -190,6 +193,8 @@ Features da aggiungere e sviluppi futuri:
 - [ ] mobile: aggiungere possibilità di caricare un file domande personalizzato
 - [ ] cambiare il controllo per le domande nuove e farlo in base alla data di modifica o ad un numero di versione
 - [ ] aggiungere template per le issue: es [Desktop]/[Mobile] in base a da dove viene cliccato il link
+
+</details>
 
 ### Built With
 #### Desktop
