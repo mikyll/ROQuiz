@@ -11,8 +11,6 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +20,6 @@ public class QuestionRepository implements IQuestionRepository {
 	public static final Charset questionsEncoding = StandardCharsets.UTF_8;
 	
 	private static final String regexTopic = "[^a-zA-ZÀ-ÿ\\s]+";
-	
-	private LocalDate lastUpdate;
-	private int fileLength;
 	
 	private List<Question> questions;
 	private List<String> topics;
@@ -50,15 +45,6 @@ public class QuestionRepository implements IQuestionRepository {
 			
 			if(lineNum == 1)
 			{
-				if(line.startsWith("#")) // last update date is present
-				{
-					// read date
-					lastUpdate = LocalDate.parse(line.replace("#", ""));
-					
-					lineNum++;
-					if((line = reader.readLine()) == null)
-						throw new BadFileFormatException(lineNum, "il file è troppo corto");
-				}
 				if(line.startsWith("@"))
 				{
 					this.topicsPresent = true;
@@ -123,18 +109,13 @@ public class QuestionRepository implements IQuestionRepository {
 			else continue;
 			
 		}
-		fileLength = lineNum;
 		
 		System.out.println("Domande lette dal file: " + totQuest);
 		if(this.topicsPresent)
 		{
 			this.qNumPerTopics.add(numPerTopic);
 			
-			/*System.out.println("Argomenti:");
-			for(int i = 0; i < this.qNumPerTopics.size(); i++)
-			{
-				System.out.println("-" + this.topics.get(i) + " (num domande: " + this.qNumPerTopics.get(i) + ")");
-			}*/
+			//System.out.println(this.toStringTopics());
 		}
 	}
 	
@@ -184,6 +165,7 @@ public class QuestionRepository implements IQuestionRepository {
 		}
 	}
 	
+	/*
 	// check which file is longer. -1 file1 is longer, 0 they're equal, 1 file2 is longer.
 	public boolean isLonger(String filename)
 	{
@@ -233,6 +215,18 @@ public class QuestionRepository implements IQuestionRepository {
 			System.out.println("Il file scaricato non contiene la data. Errore: " + e.getMessage());
 			result = -1;
 		}
+		return result;
+	}*/
+	
+	public String toStringTopics()
+	{
+		String result = "Argomenti:\n";
+		
+		for(int i = 0; i < this.qNumPerTopics.size(); i++)
+		{
+			result += "-" + this.topics.get(i) + " (num domande: " + this.qNumPerTopics.get(i) + ")\n";
+		}
+		
 		return result;
 	}
 }

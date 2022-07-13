@@ -9,6 +9,4 @@ public interface IQuestionRepository {
 	public List<String> getTopics();
 	public List<Integer> getqNumPerTopics();
 	public boolean hasTopics();
-	public boolean isLonger(String filename);
-	public int compareDate(String filename);
 }

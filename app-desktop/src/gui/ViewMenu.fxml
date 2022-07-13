@@ -229,7 +229,7 @@
                                     <Font size="18.0" />
                                  </font>
                                  <tooltip>
-                                    <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
+                                    <Tooltip maxWidth="400.0" text="Mescolare le risposte nel quiz può essere utile per evitare di memorizzarne la posizione" wrapText="true">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -244,7 +244,7 @@
                                  <children>
                                     <CheckBox fx:id="checkBoxShuffleAnswers" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0">
                                        <tooltip>
-                                          <Tooltip maxWidth="400.0" text="Mescolare le risposte può essere utile per evitare di memorizzarne la posizione" wrapText="true">
+                                          <Tooltip maxWidth="400.0" text="Mescolare le risposte nel quiz può essere utile per evitare di memorizzarne la posizione" wrapText="true">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>

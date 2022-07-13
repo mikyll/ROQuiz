@@ -2,6 +2,7 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import model.Answer;
 import model.Question;
+import model.Settings;
 import persistence.*;
 
 public class ControllerMenu {
@@ -98,6 +100,45 @@ public class ControllerMenu {
 					+ this.qRepo.getQuestions().size() + "\nDomande necessarie: " + SettingsManager.DEFAULT_QUESTION_NUMBER);
 			System.exit(1);
 		}
+		
+		if(!this.isSettingsValid(settings, qNum))
+		{
+			System.out.println("Warning: il file delle impostazioni contiene impostazioni non valide e verrà ripristinato.");
+			settings.resetSettings(".settings.json");
+		}
+		
+		// update components based on QuestionRepository and Settings
+		this.updateQuestionRepositoryInfo(qNum);
+		this.updateSettingsComponents(qNum);
+		
+		// setup vbox and panels
+		this.vboxMain.setVisible(true);
+		this.vboxSettingsInfo.setVisible(true);
+		this.vboxBack.setVisible(false);
+		this.vboxTopics.setVisible(false);
+		this.vboxQuestions.setVisible(false);
+		this.vboxSettings.setVisible(false);
+		this.vboxInfo.setVisible(false);
+		this.vboxCredits.setVisible(false);
+		
+		this.labelVersion.setText("ROQuiz v" + SettingsManager.VERSION_NUMBER);
+	}
+	
+	private boolean isSettingsValid(SettingsManager s, int nQuestions)
+	{
+		boolean result = false;
+		
+		try {
+			result = Long.parseLong(s.getQuestionFileDate().replaceAll("[-|T|:|Z]", "")) < Long.parseLong(LocalDateTime.now().toString().substring(0, 19).replaceAll("[-|T|:|Z]", "")) &&
+			s.getQuestionNumber() >= 8 && s.getQuestionNumber() <= nQuestions &&
+			s.getTimer() >= 9 && s.getTimer() <= nQuestions * 2;
+		} catch(Exception e) {}
+		
+		return result;
+	}
+	
+	private void updateQuestionRepositoryInfo(int qNum)
+	{
 		this.labelLoadedQ.setText("" + qNum);
 		
 		if(this.qRepo.hasTopics())
@@ -112,18 +153,10 @@ public class ControllerMenu {
 			this.buttonTopics.setDisable(true);
 			this.labelTopicsWarning.setVisible(true);
 		}
-		
-		// setup vbox and panels
-		this.vboxMain.setVisible(true);
-		this.vboxSettingsInfo.setVisible(true);
-		this.vboxBack.setVisible(false);
-		this.vboxTopics.setVisible(false);
-		this.vboxQuestions.setVisible(false);
-		this.vboxSettings.setVisible(false);
-		this.vboxInfo.setVisible(false);
-		this.vboxCredits.setVisible(false);
-
-		// updating settings components
+	}
+	
+	private void updateSettingsComponents(int qNum)
+	{
 		this.spinnerQuestionNumQuiz.setValueFactory(new IntegerSpinnerValueFactory(
 				SettingsManager.DEFAULT_QUESTION_NUMBER / 2, qNum, settings.getQuestionNumber()));
 		this.spinnerTimerMin.setValueFactory(new IntegerSpinnerValueFactory(
@@ -131,8 +164,7 @@ public class ControllerMenu {
 		this.checkBoxShuffleAnswers.setSelected(settings.isShuffleAnswers());
 		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
 		this.checkBoxUpdateQuestions.setSelected(settings.isCheckQuestionsUpdate());
-		
-		this.labelVersion.setText("ROQuiz v" + SettingsManager.VERSION_NUMBER);
+		this.checkBoxUpdateApp.setSelected(settings.isCheckAppUpdate());
 	}
 	
 	@FXML
@@ -321,11 +353,10 @@ public class ControllerMenu {
 	{
 		System.out.println("Selezione: indietro.");
 		
-		if(this.vboxSettings.isVisible() &&	(settings.getQuestionNumber() != this.spinnerQuestionNumQuiz.getValue() || 
-				settings.getTimer() != this.spinnerTimerMin.getValue() ||
-				settings.isShuffleAnswers() != this.checkBoxShuffleAnswers.isSelected() ||
-				settings.isDarkTheme() != this.checkBoxDarkTheme.isSelected() ||
-				settings.isCheckQuestionsUpdate() != this.checkBoxUpdateQuestions.isSelected()))
+		Settings currentSettings = new Settings("", this.spinnerQuestionNumQuiz.getValue(), this.spinnerTimerMin.getValue(),
+				this.checkBoxShuffleAnswers.isSelected(), this.checkBoxDarkTheme.isSelected(),
+				this.checkBoxUpdateQuestions.isSelected(), this.checkBoxUpdateApp.isSelected());
+		if(this.vboxSettings.isVisible() && !settings.equals(currentSettings))
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.setTitle("Finestra di dialogo");
@@ -387,45 +418,99 @@ public class ControllerMenu {
 	{
 		System.out.println("Controllo domande aggiornate...");
 		
-		// download "Domande.txt" from the GitHub repository
-		boolean res = QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "tmp.txt");
-		
-		if(res)
+		if(settings.checkQuestionUpdates()) // a new file has been found.
 		{
-			// a new file has been found.
-			if(this.qRepo.isLonger("tmp.txt"))
+			System.out.println("È stata trovata una versione più recente del file contenente le domande.");
+			
+			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+			alert.setTitle("Finestra di dialogo");
+			alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
+			alert.setContentText("Questa azione sovrascriverà il file " + SettingsManager.QUESTIONS_FILENAME + " attualmente presente.");
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+			alert.showAndWait();
+			
+			if (alert.getResult() == ButtonType.YES)
 			{
-				System.out.println("È stata trovata una versione più recente del file contenente le domande.");
-				Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
-				alert.setTitle("Finestra di dialogo");
-				alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
-				alert.setContentText("Questa azione sovrascriverà il file " + SettingsManager.QUESTIONS_FILENAME + " attualmente presente.");
-				alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
-				alert.showAndWait();
-				
-				if (alert.getResult() == ButtonType.YES)
+				// download "Domande.txt" from the GitHub repository
+				if(!QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "tmp.txt"))
 				{
-					// update Domande.txt with DomandeNew.txt
-					new File(SettingsManager.QUESTIONS_FILENAME).delete();
+					System.out.println("Errore durante il download del file.");
 					
-					new File("tmp.txt").renameTo(new File(SettingsManager.QUESTIONS_FILENAME));
+					Alert alert2 = new Alert(AlertType.WARNING, "", ButtonType.OK);
+					alert2.setTitle("Warning");
+					alert2.setHeaderText("Errore durante il download del file aggiornato");
+					alert2.setContentText("Non è stato possibile scaricare il file delle domande aggiornato");
+					alert2.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+					alert2.show();
+					
+					return;
 				}
-				if (alert.getResult() == ButtonType.NO)
-				{
-					new File("tmp.txt").delete();
-				}
+				
+				// update Domande.txt with DomandeNew.txt
+				new File(SettingsManager.QUESTIONS_FILENAME).delete();
+				
+				new File("tmp.txt").renameTo(new File(SettingsManager.QUESTIONS_FILENAME));
+				
+				new File("tmp.txt").delete();
+				
+				// update settings date
+				settings.setQuestionFileDate(settings.getQuestionFileLastUpdate());
+				settings.saveSettings(".settings.json");
+				
+				// update qRepo
+				this.qRepo = QuestionRepository.getQuestionRepositoryFromFile(SettingsManager.QUESTIONS_FILENAME);
+				
+				int qNum = this.qRepo.getQuestions().size();
+				this.updateQuestionRepositoryInfo(qNum);
+				this.updateSettingsComponents(qNum);
 			}
-			else {
-				System.out.println("Non sono state trovate nuove domande.");
-				
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setHeaderText("Non sono state trovate nuove domande.");
-				alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
-				
-				alert.showAndWait();
+			if (alert.getResult() == ButtonType.NO)
+			{
+				new File("tmp.txt").delete();
 			}
 		}
-		new File("tmp.txt").delete();
+		else
+		{
+			System.out.println("Non sono state trovate nuove domande.");
+			
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setHeaderText("Non sono state trovate nuove domande.");
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+			
+			alert.showAndWait();
+		}
+	}
+	
+	@FXML
+	private void checkForAppUpdates(ActionEvent event)
+	{
+		System.out.println("Controllo aggiornamenti app...");
+		
+		if(settings.checkAppUpdates()) // a new version is available
+		{
+			System.out.println("È stata trovata una versione più recente dell'app.");
+			
+			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+			alert.setTitle("Finestra di dialogo");
+			alert.setHeaderText("È stata trovata una versione più recente dell'app. Scaricarla?");
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+			
+			alert.showAndWait();
+			if (alert.getResult() == ButtonType.YES)
+			{
+				this.hostServices.showDocument("https://github.com/mikyll/ROQuiz/releases/latest");
+			}
+		}
+		else
+		{
+			System.out.println("Non sono state trovate versioni più recenti dell'app.");
+			
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setHeaderText("Non sono state trovate versioni più recenti dell'app.");
+			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
+			
+			alert.showAndWait();
+		}
 	}
 	
 	@FXML 
@@ -460,6 +545,7 @@ public class ControllerMenu {
 		this.checkBoxShuffleAnswers.setSelected(SettingsManager.DEFAULT_SHUFFLE_ANSWERS);
 		this.checkBoxDarkTheme.setSelected(SettingsManager.DEFAULT_DARK_THEME);
 		this.checkBoxUpdateQuestions.setSelected(SettingsManager.DEFAULT_CHECK_QUESTIONS_UPDATE);
+		this.checkBoxUpdateApp.setSelected(SettingsManager.DEFAULT_CHECK_APP_UPDATE);
 		
 		this.changeTheme(new ActionEvent());
 	}
@@ -467,22 +553,24 @@ public class ControllerMenu {
 	private void saveSettingsChanges()
 	{
 		int sqnq, stm;
-		boolean sa, dm, cqu;
+		boolean sa, dm, cqu, cau;
 		sqnq = this.spinnerQuestionNumQuiz.getValue();
 		stm = this.spinnerTimerMin.getValue();
 		sa = this.checkBoxShuffleAnswers.isSelected();
 		dm = this.checkBoxDarkTheme.isSelected();
 		cqu = this.checkBoxUpdateQuestions.isSelected();
+		cau = this.checkBoxUpdateApp.isSelected();
 		
 		System.out.println("Modifiche alle impostazioni salvate\nNumero domande per quiz: " +
 				sqnq + "\nTimer (minuti): " + stm + "\nRisposte mescolate: " + sa + "\nModalità scura: " + dm
-				+ "\nControllo aggiornamento domande: " + cqu);
+				+ "\nControllo aggiornamento domande: " + cqu + "\nControllo aggiornamenti app: " + cau);
 		
 		settings.setQuestionNumber(sqnq);
 		settings.setTimer(stm);
 		settings.setShuffleAnswers(sa);
 		settings.setDarkTheme(dm);
 		settings.setCheckQuestionsUpdate(cqu);
+		settings.setCheckAppUpdate(cau);
 		
 		if(this.qRepo.hasTopics())
 		{
@@ -508,6 +596,7 @@ public class ControllerMenu {
 		this.checkBoxShuffleAnswers.setSelected(settings.isShuffleAnswers());
 		this.checkBoxDarkTheme.setSelected(settings.isDarkTheme());
 		this.checkBoxUpdateQuestions.setSelected(settings.isCheckQuestionsUpdate());
+		this.checkBoxUpdateApp.setSelected(settings.isCheckAppUpdate());
 		
 		this.changeTheme(new ActionEvent());
 	}
@@ -538,36 +627,6 @@ public class ControllerMenu {
 			this.hostServices.showDocument("https://icons8.com");
 	}
 	
-	@FXML
-	private void checkForAppUpdates(ActionEvent event)
-	{
-		if(settings.checkAppUpdates()) // a new version is available
-		{
-			System.out.println("È stata trovata una versione più recente dell'app.");
-			
-			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
-			alert.setTitle("Finestra di dialogo");
-			alert.setHeaderText("È stata trovata una versione più recente dell'app. Scaricarla?");
-			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
-			
-			alert.showAndWait();
-			if (alert.getResult() == ButtonType.YES)
-			{
-				this.hostServices.showDocument("https://github.com/mikyll/ROQuiz/releases/latest");
-			}
-		}
-		else
-		{
-			System.out.println("Non sono state trovate versioni più recenti dell'app.");
-			
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setHeaderText("Non sono state trovate versioni più recenti dell'app.");
-			alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(this.checkBoxDarkTheme.isSelected()));
-			
-			alert.showAndWait();
-		}
-	}
-	
 	private void initCheckBoxes()
 	{
 		this.checkBoxesTopics = new ArrayList<CheckBox>();
@@ -577,6 +636,7 @@ public class ControllerMenu {
 		this.labelSelectedQ.setText("" + qNum);
 		this.labelQuizQNum.setText("" + settings.getQuestionNumber());
 		
+		this.vboxCheckBoxes.getChildren().clear();
 		for(int i = 0; i < this.qRepo.getTopics().size(); i++) // dynamically generates the hbox containing the checkboxed
 		{
 			HBox hbox = new HBox();

@@ -1,7 +1,9 @@
 {
+  "questionFileDate": "2022-06-22T15:54:09Z",
   "questionNumber": 16,
   "timer": 18,
   "shuffleAnswers": true,
   "darkTheme": false,
-  "checkQuestionsUpdate": true
+  "checkQuestionsUpdate": true,
+  "checkAppUpdate": true
 }

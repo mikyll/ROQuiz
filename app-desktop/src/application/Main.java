@@ -18,24 +18,6 @@ import javafx.scene.layout.AnchorPane;
 public class Main extends Application {
 	private SettingsManager settings;
 	
-	/*
-	// To load directly the quiz
-	@Override
-	public void start(Stage stage)
-	{
-		try {
-			FXMLLoader loader = new FXMLLoader(Main.class.getResource("/gui/ViewQuiz.fxml"));
-			AnchorPane quiz = (AnchorPane) loader.load();			
-			Scene scene = new Scene(quiz);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			stage.setTitle("ROQuiz");
-			stage.setScene(scene);
-			stage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}*/
-	
 	@Override
 	public void start(Stage stage)
 	{
@@ -44,9 +26,35 @@ public class Main extends Application {
 		settings = SettingsManager.getInstance();
 		settings.loadSettings(".settings.json");
 		
+		// if automatic "check for app updates" is enabled
+		if(settings.isCheckAppUpdate())
+		{
+			System.out.println("Controllo aggiornamenti app...");
+			
+			if(settings.checkAppUpdates()) // a new version is available
+			{
+				System.out.println("È stata trovata una versione più recente dell'app.");
+				
+				Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+				alert.setTitle("Finestra di dialogo");
+				alert.setHeaderText("È stata trovata una versione più recente dell'app. Scaricarla?");
+				alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(settings.isDarkTheme()));
+				
+				alert.showAndWait();
+				if (alert.getResult() == ButtonType.YES)
+				{
+					this.getHostServices().showDocument("https://github.com/mikyll/ROQuiz/releases/latest");
+				}
+			}
+			else
+			{
+				System.out.println("Non sono state trovate versioni più recenti dell'app.");
+			}
+		}
+		
 		// load question repository from file
-		IQuestionRepository qRepo = QuestionRepository.getQuestionRepositoryFromFile("Domande.txt");
-		if(qRepo == null)
+		IQuestionRepository qRepo = QuestionRepository.getQuestionRepositoryFromFile(SettingsManager.QUESTIONS_FILENAME);
+		if(qRepo == null) // questions file missing or not valid
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
 			alert.setTitle("Finestra di dialogo");
@@ -61,7 +69,7 @@ public class Main extends Application {
 					System.exit(1);
 				}
 				
-				qRepo = QuestionRepository.getQuestionRepositoryFromFile("Domande.txt");
+				qRepo = QuestionRepository.getQuestionRepositoryFromFile(SettingsManager.QUESTIONS_FILENAME);
 			}
 			if (alert.getResult() == ButtonType.NO)
 			{
@@ -72,45 +80,58 @@ public class Main extends Application {
 		}
 		else
 		{
-			// check if the automatic "check for updates" setting is selected
+			// if automatic "check for question updates" setting is selected
 			if(settings.isCheckQuestionsUpdate())
 			{
 				System.out.println("Controllo domande aggiornate...");
 				
-				// download "Domande.txt" from the GitHub repository
-				boolean res = QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "tmp.txt");
-				
-				if(res)
+				if(settings.checkQuestionUpdates()) // a new file has been found.
 				{
-					// a new file has been found.
-					if(qRepo.isLonger("tmp.txt"))
+					System.out.println("È stata trovata una versione più recente del file contenente le domande.");
+					
+					Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+					alert.setTitle("Finestra di dialogo");
+					alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
+					alert.setContentText("Questa azione sovrascriverà il file " + SettingsManager.QUESTIONS_FILENAME + " attualmente presente.");
+					alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(settings.isDarkTheme()));
+					alert.showAndWait();
+					
+					if (alert.getResult() == ButtonType.YES)
 					{
-						System.out.println("È stata trovata una versione più recente del file contenente le domande.");
-						
-						Alert alert = new Alert(AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
-						alert.setTitle("Finestra di dialogo");
-						alert.setHeaderText("È stata trovata una versione più recente del file contenente le domande. Scaricarla?");
-						alert.setContentText("Questa azione sovrascriverà il file " + SettingsManager.QUESTIONS_FILENAME + " attualmente presente.");
-						alert.getDialogPane().getStylesheets().add(SettingsManager.getStyle(settings.isDarkTheme()));
-						alert.showAndWait();
-						
-						if (alert.getResult() == ButtonType.YES)
+						if(!QuestionRepository.downloadFile("https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt", "tmp.txt"))
 						{
-							// update Domande.txt with DomandeNew.txt
-							new File(SettingsManager.QUESTIONS_FILENAME).delete();
+							System.out.println("Errore durante il download del file.");
 							
-							new File("tmp.txt").renameTo(new File(SettingsManager.QUESTIONS_FILENAME));
+							Alert alert2 = new Alert(AlertType.WARNING, "", ButtonType.OK);
+							alert2.setTitle("Warning");
+							alert2.setHeaderText("Errore durante il download del file aggiornato");
+							alert2.setContentText("Non è stato possibile scaricare il file delle domande aggiornato");
+							alert2.getDialogPane().getStylesheets().add(SettingsManager.getStyle(settings.isDarkTheme()));
+							alert2.show();
+							
+							return;
 						}
-						if (alert.getResult() == ButtonType.NO)
-						{
-							new File("tmp.txt").delete();
-						}
+						
+						// update Domande.txt with DomandeNew.txt
+						new File(SettingsManager.QUESTIONS_FILENAME).delete();
+						
+						new File("tmp.txt").renameTo(new File(SettingsManager.QUESTIONS_FILENAME));
+						
+						new File("tmp.txt").delete();
+						
+						// update settings date
+						settings.setQuestionFileDate(settings.getQuestionFileLastUpdate());
+						settings.saveSettings(".settings.json");
 					}
-					else {
-						System.out.println("Non sono state trovate nuove domande.");
+					if (alert.getResult() == ButtonType.NO)
+					{
+						new File("tmp.txt").delete();
 					}
 				}
-				new File("tmp.txt").delete();
+				else
+				{
+					System.out.println("Non sono state trovate nuove domande.");
+				}
 			}
 		}
 		
