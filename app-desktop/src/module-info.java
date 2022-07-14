@@ -8,7 +8,6 @@ module roquiz {
 	requires org.apache.httpcomponents.httpcore;
 	requires java.net.http;
 	
-	
 	opens gui;
 	opens model to com.google.gson;
 	

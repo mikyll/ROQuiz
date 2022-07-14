@@ -134,7 +134,7 @@ public class SettingsManager {
 		return result;
 	}
 	
-	public boolean checkQuestionUpdates()
+	public boolean checkQuestionUpdates() throws Exception
 	{
 		boolean result = false;
 		
@@ -147,7 +147,7 @@ public class SettingsManager {
 		return result;
 	}
 	
-	public boolean checkAppUpdates()
+	public boolean checkAppUpdates() throws Exception
 	{
 		String url, latestVersion;
 		int currentV, latestV;
@@ -156,20 +156,20 @@ public class SettingsManager {
 		url = "https://api.github.com/repos/mikyll/ROQuiz/releases/latest";
 		latestVersion = VERSION_NUMBER;
 
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet(url);
+		request.addHeader("content-type", "application/json");
+		CloseableHttpResponse response = httpClient.execute(request);
+		
+		String json = EntityUtils.toString(response.getEntity(), "UTF-8");
+		
+		int iStart, iEnd;
+		iStart = json.indexOf("tag_name") + 12;
+		json = json.substring(iStart);
+		iEnd = json.indexOf("\"");
+		latestVersion = json.substring(0, iEnd);
+		
 		try {
-			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-			HttpGet request = new HttpGet(url);
-			request.addHeader("content-type", "application/json");
-			CloseableHttpResponse response = httpClient.execute(request);
-			
-			String json = EntityUtils.toString(response.getEntity(), "UTF-8");
-			
-			int iStart, iEnd;
-			iStart = json.indexOf("tag_name") + 12;
-			json = json.substring(iStart);
-			iEnd = json.indexOf("\"");
-			latestVersion = json.substring(0, iEnd);
-			
 			currentV = Integer.parseInt(VERSION_NUMBER.replaceAll("\\.", ""));
 			latestV = Integer.parseInt(latestVersion.replaceAll("\\.", ""));
 			
@@ -177,55 +177,53 @@ public class SettingsManager {
 			{
 				result = true;
 			}
-		} catch (Exception e) {
-			result = false;
-		}
+		} catch(NumberFormatException e) {}
 		
 		return result;
 	}
 	
-	public String getQuestionFileLastUpdate()
+	public String getQuestionFileLastUpdate() throws Exception
 	{
 		String url;
 		String result = "ERROR";
 		
 		url = "https://api.github.com/repos/mikyll/ROQuiz/commits?path=Domande.txt&page=1&per_page=1";
 		
-		try {
-			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-			HttpGet request = new HttpGet(url);
-			request.addHeader("content-type", "application/json");
-			CloseableHttpResponse response = httpClient.execute(request);
-			
-			String json = EntityUtils.toString(response.getEntity(), "UTF-8");
-			
-			int iStart, iEnd;
-			iStart = json.indexOf("date") + 7;
-			json = json.substring(iStart);
-			iEnd = json.indexOf("\"");
-			result = json.substring(0, iEnd);
-
-		} catch (Exception e) {
-			result = "ERROR";
-		}
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet(url);
+		request.addHeader("content-type", "application/json");
+		CloseableHttpResponse response = httpClient.execute(request);
+		
+		String json = EntityUtils.toString(response.getEntity(), "UTF-8");
+		
+		int iStart, iEnd;
+		iStart = json.indexOf("date") + 7;
+		json = json.substring(iStart);
+		iEnd = json.indexOf("\"");
+		result = json.substring(0, iEnd);
 		
 		return result;
 	}
 	
+	/*
+	 * Compares date1 with date2
+	 * 
+	 * @return -1 if date1 > date2
+	 */
 	private int compareDates(String date1, String date2)
 	{
 		long d1, d2;
 		int result = -1;
 		
 		try {
-		d1 = Long.parseLong(date1.replaceAll("[-|T|:|Z]", ""));
-		d2 = Long.parseLong(date2.replaceAll("[-|T|:|Z]", ""));
-		
-		if(d1 > d2)
-			result = -1;
-		else if(d1 == d2)
-			result = 0;
-		else result = 1;
+			d1 = Long.parseLong(date1.replaceAll("[-|T|:|Z]", ""));
+			d2 = Long.parseLong(date2.replaceAll("[-|T|:|Z]", ""));
+			
+			if(d1 > d2)
+				result = -1;
+			else if(d1 == d2)
+				result = 0;
+			else result = 1;
 		}
 		catch (Exception e) {}
 		
