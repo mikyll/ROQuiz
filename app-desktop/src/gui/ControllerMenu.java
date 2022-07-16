@@ -2,7 +2,6 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +100,7 @@ public class ControllerMenu {
 			System.exit(1);
 		}
 		
-		if(!this.isSettingsValid(settings, qNum))
+		if(!settings.isSettingsValid(qNum))
 		{
 			System.out.println("Warning: il file delle impostazioni contiene impostazioni non valide e verrà ripristinato.");
 			settings.resetSettings(".settings.json");
@@ -122,19 +121,6 @@ public class ControllerMenu {
 		this.vboxCredits.setVisible(false);
 		
 		this.labelVersion.setText("ROQuiz v" + SettingsManager.VERSION_NUMBER);
-	}
-	
-	private boolean isSettingsValid(SettingsManager s, int nQuestions)
-	{
-		boolean result = false;
-		
-		try {
-			result = Long.parseLong(s.getQuestionFileDate().replaceAll("[-|T|:|Z]", "")) < Long.parseLong(LocalDateTime.now().toString().substring(0, 19).replaceAll("[-|T|:|Z]", "")) &&
-			s.getQuestionNumber() >= 8 && s.getQuestionNumber() <= nQuestions &&
-			s.getTimer() >= 9 && s.getTimer() <= nQuestions * 2;
-		} catch(Exception e) {}
-		
-		return result;
 	}
 	
 	private void updateQuestionRepositoryInfo(int qNum)

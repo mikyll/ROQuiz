@@ -3,12 +3,11 @@ package persistence;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +18,8 @@ import model.Settings;
 
 public class SettingsManager {
 	public final static String VERSION_NUMBER = "1.5";
+	
+	private final static String REGEX_DATETIME = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T[0-5][0-9]:[0-5][0-9]:[0-5][0-9]Z";
 	
 	public final static String DEFAULT_QUESTION_FILE_DATE = "1999-01-01T00:00:00Z";
 	public final static int DEFAULT_QUESTION_NUMBER = 16;
@@ -123,6 +124,23 @@ public class SettingsManager {
 		}
 	}
 	
+	public boolean isSettingsValid(int nQuestions)
+	{
+		boolean result = false;
+		
+		try {
+			String currentFileDate = settings.getQuestionFileDate();
+			String nowDate = LocalDateTime.now().toString().substring(0, 19);
+			
+			result = currentFileDate.matches(REGEX_DATETIME)
+					&& Long.parseLong(currentFileDate.replaceAll("[-|T|:|Z]", "")) < Long.parseLong(nowDate.replaceAll("[-|T|:|Z]", ""))
+					&& settings.getQuestionNumber() >= 8 && settings.getQuestionNumber() <= nQuestions
+					&& settings.getTimer() >= 9 && settings.getTimer() <= nQuestions * 2;
+		} catch(Exception e) {}
+		
+		return result;
+	}
+	
 	public static String getStyle(boolean dark)
 	{
 		String result;
@@ -156,12 +174,11 @@ public class SettingsManager {
 		url = "https://api.github.com/repos/mikyll/ROQuiz/releases/latest";
 		latestVersion = VERSION_NUMBER;
 
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(url);
-		request.addHeader("content-type", "application/json");
-		CloseableHttpResponse response = httpClient.execute(request);
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-type", "application/json").build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		
-		String json = EntityUtils.toString(response.getEntity(), "UTF-8");
+		String json = response.body();
 		
 		int iStart, iEnd;
 		iStart = json.indexOf("tag_name") + 12;
@@ -189,12 +206,11 @@ public class SettingsManager {
 		
 		url = "https://api.github.com/repos/mikyll/ROQuiz/commits?path=Domande.txt&page=1&per_page=1";
 		
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(url);
-		request.addHeader("content-type", "application/json");
-		CloseableHttpResponse response = httpClient.execute(request);
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-type", "application/json").build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		
-		String json = EntityUtils.toString(response.getEntity(), "UTF-8");
+		String json = response.body();
 		
 		int iStart, iEnd;
 		iStart = json.indexOf("date") + 7;
