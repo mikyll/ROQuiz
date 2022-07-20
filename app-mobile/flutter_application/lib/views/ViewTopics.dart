@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/QuestionRepository.dart';
 import 'package:roquiz/model/Settings.dart';
 
+import 'ViewQuestions.dart';
+
 class ViewTopics extends StatefulWidget {
   ViewTopics(
       {Key? key,
@@ -209,12 +211,11 @@ class ViewTopicsState extends State<ViewTopics> {
                             icon: const Icon(Icons.arrow_forward_ios,
                                 color: Colors.grey),
                             onPressed: () {
-                              /*
-                              // coming in v1.5
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewQuestions()));*/
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewQuestions(
+                                          qRepo: widget.qRepo, iTopic: index)));
                             },
                           ),
                         ],

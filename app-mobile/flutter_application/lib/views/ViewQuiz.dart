@@ -141,9 +141,6 @@ class _ViewQuizState extends State<ViewQuiz> {
           _loadQuestion();
           _dragDirectionDX = 0;
         },
-        /*onHorizontalDragEnd: (_) {
-          print("ciao");
-        },*/
         child: Scaffold(
           backgroundColor: Colors.indigo[900],
           appBar: AppBar(
@@ -208,7 +205,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                   BorderRadius.all(Radius.circular(30))),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            // QUESIO
+                            // QUESTION
                             child: Text(_currentQuestion,
                                 style: const TextStyle(
                                     color: Colors.black, fontSize: 16)),
@@ -261,14 +258,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(children: [
                                     // current answers
-                                    Text(
-                                        Answer.values[index]
-                                                .toString()
-                                                .substring(Answer.values[index]
-                                                        .toString()
-                                                        .indexOf('.') +
-                                                    1) +
-                                            ") ",
+                                    Text(Answer.values[index].name + ") ",
                                         style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold)),
