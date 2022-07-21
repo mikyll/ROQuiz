@@ -205,7 +205,7 @@
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0">
                            <children>
-                              <Spinner fx:id="spinnerQuestionNumQuiz" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0">
+                              <Spinner fx:id="spinnerQuestionNumQuiz" editable="true" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0">
                                  <tooltip>
                                     <Tooltip maxWidth="400.0" text="Modifica il numero di domande che verranno pescate per ciascun quiz. Le domande sono scelte casualmente dall'insieme di domande caricato, considerando solo gli argomenti selezionati" wrapText="true">
                                        <font>
@@ -241,7 +241,7 @@
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0">
                            <children>
-                              <Spinner fx:id="spinnerTimerMin" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0">
+                              <Spinner fx:id="spinnerTimerMin" editable="true" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0">
                                  <tooltip>
                                     <Tooltip maxWidth="400.0" text="Modifica il tempo di durata complessivo del quiz" wrapText="true">
                                        <font>
