@@ -61,6 +61,9 @@ public class ControllerMenu {
 	@FXML private Label labelTopic;
 	
 	@FXML private Label labelTopicsWarning;
+	@FXML private Label labelQuizQuestions;
+	@FXML private Label labelQuizTimer;
+	
 	@FXML private Label labelLoadedQ;
 	@FXML private Label labelSelectedQ;
 	@FXML private Label labelQuizQNum;
@@ -107,6 +110,7 @@ public class ControllerMenu {
 		}
 		
 		// update components based on QuestionRepository and Settings
+		this.updateQuizInfo(qNum);
 		this.updateQuestionRepositoryInfo(qNum);
 		this.updateSettingsComponents(qNum);
 		
@@ -121,6 +125,56 @@ public class ControllerMenu {
 		this.vboxCredits.setVisible(false);
 		
 		this.labelVersion.setText("ROQuiz v" + SettingsManager.VERSION_NUMBER);
+	}
+	
+	private void initCheckBoxes()
+	{
+		this.checkBoxesTopics = new ArrayList<CheckBox>();
+		
+		// check if there are enough questions. In case there aren't, the checkbox are disabled
+		int qNum = this.qRepo.getQuestions().size();
+		this.labelSelectedQ.setText("" + qNum);
+		this.labelQuizQNum.setText("" + settings.getQuestionNumber());
+		
+		this.vboxCheckBoxes.getChildren().clear();
+		for(int i = 0; i < this.qRepo.getTopics().size(); i++) // dynamically generates the hbox containing the checkboxed
+		{
+			HBox hbox = new HBox();
+			hbox.setPrefWidth(350);
+			hbox.setPrefHeight(30);
+			hbox.setAlignment(Pos.CENTER);
+			
+			CheckBox cb = new CheckBox();
+			cb.setPrefWidth(300);
+			cb.setPrefHeight(20);
+			cb.setText(this.qRepo.getTopics().get(i) + " (" + this.qRepo.getqNumPerTopics().get(i) + ")");
+			cb.setOnAction(this::setTopics);
+			cb.setSelected(true);
+			
+			Button b = new Button();
+			b.setId("showQuestions");
+			b.setPrefWidth(25);
+			b.setPrefHeight(25);
+			b.setOnAction(this::showQuestions);
+			
+			Tooltip t = new Tooltip("Visualizza la lista delle domande per questo argomento");
+			t.setFont(Font.font("System", FontWeight.NORMAL, 14.0));
+			t.setMaxWidth(400);
+			t.setWrapText(true);
+			b.setTooltip(t);
+			
+			this.checkBoxesTopics.add(cb);
+			hbox.getChildren().addAll(cb, b);
+			
+			this.vboxCheckBoxes.getChildren().add(hbox);
+		}
+		this.setDisableCheckBoxes();
+	}
+	
+	private void updateQuizInfo(int qNum)
+	{
+		this.labelQuizQuestions.setText("Domande: " + settings.getQuestionNumber() + " su " + qNum);
+		this.labelQuizTimer.setText("Tempo: " + settings.getTimer() + " minuti");
 	}
 	
 	private void updateQuestionRepositoryInfo(int qNum)
@@ -573,8 +627,9 @@ public class ControllerMenu {
 	
 	private void saveSettingsChanges()
 	{
-		int sqnq, stm;
+		int qNum, sqnq, stm;
 		boolean sa, dm, cqu, cau;
+		qNum = this.qRepo.getQuestions().size();
 		sqnq = this.spinnerQuestionNumQuiz.getValue();
 		stm = this.spinnerTimerMin.getValue();
 		sa = this.checkBoxShuffleAnswers.isSelected();
@@ -593,15 +648,8 @@ public class ControllerMenu {
 		settings.setCheckQuestionsUpdate(cqu);
 		settings.setCheckAppUpdate(cau);
 		
-		if(this.qRepo.hasTopics())
-		{
-			this.labelSelectedQ.setText("" + this.qRepo.getQuestions().size());
-			this.labelQuizQNum.setText("" + sqnq);
-			
-			for(CheckBox cb : this.checkBoxesTopics)
-				cb.setSelected(true);
-			this.setDisableCheckBoxes();
-		}
+		this.updateQuizInfo(qNum);
+		this.updateQuestionRepositoryInfo(qNum);
 		
 		this.changeTheme(new ActionEvent());
 		
@@ -646,50 +694,6 @@ public class ControllerMenu {
 			this.hostServices.showDocument("https://github.com/filippoveronesi");
 		else if(hl.getText().equalsIgnoreCase("Icons8"))
 			this.hostServices.showDocument("https://icons8.com");
-	}
-	
-	private void initCheckBoxes()
-	{
-		this.checkBoxesTopics = new ArrayList<CheckBox>();
-		
-		// check if there are enough questions. In case there aren't, the checkbox are disabled
-		int qNum = this.qRepo.getQuestions().size();
-		this.labelSelectedQ.setText("" + qNum);
-		this.labelQuizQNum.setText("" + settings.getQuestionNumber());
-		
-		this.vboxCheckBoxes.getChildren().clear();
-		for(int i = 0; i < this.qRepo.getTopics().size(); i++) // dynamically generates the hbox containing the checkboxed
-		{
-			HBox hbox = new HBox();
-			hbox.setPrefWidth(350);
-			hbox.setPrefHeight(30);
-			hbox.setAlignment(Pos.CENTER);
-			
-			CheckBox cb = new CheckBox();
-			cb.setPrefWidth(300);
-			cb.setPrefHeight(20);
-			cb.setText(this.qRepo.getTopics().get(i) + " (" + this.qRepo.getqNumPerTopics().get(i) + ")");
-			cb.setOnAction(this::setTopics);
-			cb.setSelected(true);
-			
-			Button b = new Button();
-			b.setId("showQuestions");
-			b.setPrefWidth(25);
-			b.setPrefHeight(25);
-			b.setOnAction(this::showQuestions);
-			
-			Tooltip t = new Tooltip("Visualizza la lista delle domande per questo argomento");
-			t.setFont(Font.font("System", FontWeight.NORMAL, 14.0));
-			t.setMaxWidth(400);
-			t.setWrapText(true);
-			b.setTooltip(t);
-			
-			this.checkBoxesTopics.add(cb);
-			hbox.getChildren().addAll(cb, b);
-			
-			this.vboxCheckBoxes.getChildren().add(hbox);
-		}
-		this.setDisableCheckBoxes();
 	}
 	
 	private void setDisableCheckBoxes()

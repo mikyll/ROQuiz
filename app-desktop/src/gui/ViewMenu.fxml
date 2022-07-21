@@ -22,7 +22,7 @@
             <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
-      <VBox fx:id="vboxMain" alignment="BOTTOM_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0" visible="false">
+      <VBox fx:id="vboxMain" alignment="TOP_CENTER" layoutX="184.0" layoutY="100.0" prefHeight="330.0" prefWidth="400.0">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Menu Principale">
                <font>
@@ -46,19 +46,56 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Button>
+            <Separator prefHeight="10.0" prefWidth="400.0" visible="false" />
+            <HBox alignment="CENTER" prefHeight="25.0" prefWidth="400.0">
+               <children>
+                  <HBox alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="200.0">
+                     <children>
+                        <Label id="questions" prefHeight="20.0" prefWidth="20.0" textAlignment="CENTER" />
+                        <Label fx:id="labelQuizQuestions" maxWidth="150.0" prefHeight="25.0" text="Domande: # su #" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="20.0" left="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="25.0" prefWidth="200.0">
+                     <children>
+                        <Label id="timer" prefHeight="20.0" prefWidth="20.0" textAlignment="CENTER" />
+                        <Label fx:id="labelQuizTimer" maxWidth="150.0" prefHeight="25.0" text="Tempo: # minuti">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <padding>
+                              <Insets bottom="20.0" left="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </HBox>
          </children>
-         <padding>
-            <Insets bottom="40.0" />
-         </padding>
       </VBox>
-      <VBox fx:id="vboxSettingsInfo" alignment="TOP_CENTER" layoutX="700.0" layoutY="370.0" prefHeight="90.0" prefWidth="50.0">
+      <VBox fx:id="vboxSettingsInfo" alignment="TOP_CENTER" layoutX="700.0" layoutY="370.0" prefHeight="90.0" prefWidth="50.0" visible="false">
          <children>
             <Button id="settings" fx:id="buttonSettings" mnemonicParsing="false" onAction="#selectSettings" prefHeight="40.0" prefWidth="40.0" />
             <Separator prefHeight="10.0" prefWidth="50.0" visible="false" />
             <Button id="info" fx:id="buttonInfo" mnemonicParsing="false" onAction="#selectInfo" prefHeight="40.0" prefWidth="40.0" />
          </children>
       </VBox>
-      <VBox fx:id="vboxBack" alignment="CENTER" layoutX="49.0" layoutY="370.0" prefHeight="90.0" prefWidth="50.0" visible="false">
+      <VBox fx:id="vboxBack" alignment="CENTER" layoutX="49.0" layoutY="370.0" prefHeight="90.0" prefWidth="50.0">
          <children>
             <Button id="back" fx:id="buttonBack" mnemonicParsing="false" onAction="#selectBack" prefHeight="40.0" prefWidth="40.0" />
          </children>
@@ -82,7 +119,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelLoadedQ" prefHeight="30.0" prefWidth="30.0" text="85">
+                  <Label fx:id="labelLoadedQ" prefHeight="30.0" prefWidth="30.0" text="#">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -96,7 +133,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelSelectedQ" minHeight="30.0" prefHeight="30.0" prefWidth="30.0" text="20">
+                  <Label fx:id="labelSelectedQ" minHeight="30.0" prefHeight="30.0" prefWidth="30.0" text="#">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -106,7 +143,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelQuizQNum" minHeight="30.0" prefHeight="30.0" prefWidth="30.0" text="16">
+                  <Label fx:id="labelQuizQNum" minHeight="30.0" prefHeight="30.0" prefWidth="30.0" text="#">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -138,7 +175,7 @@
             <ListView fx:id="listViewQuestions" focusTraversable="false" prefHeight="260.0" prefWidth="400.0" />
          </children>
       </VBox>
-      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="134.0" layoutY="100.0" prefHeight="350.0" prefWidth="500.0">
+      <VBox fx:id="vboxSettings" alignment="TOP_CENTER" layoutX="134.0" layoutY="100.0" prefHeight="350.0" prefWidth="500.0" visible="false">
          <children>
             <Label alignment="CENTER" minHeight="40.0" minWidth="150.0" text="Impostazioni">
                <font>

@@ -12,9 +12,23 @@
 	-fx-border-width: 2px;
 }
 
+#questions {
+	-fx-background-image: url('../gfx/icon_questions_dark.png');
+	-fx-background-size: 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 0%;
+}
+
+#timer {
+	-fx-background-image: url('../gfx/icon_timer_dark.png');
+	-fx-background-size: 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 0%;
+}
+
 #star {
 	-fx-background-image: url('../gfx/icon_star_dark.png');
-	-fx-background-size: 25px;
+	-fx-background-size: 20px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: 0%;
 }

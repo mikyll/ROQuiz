@@ -76,6 +76,20 @@ Button Background: #404040
 	-fx-text-fill: black;
 }
 
+#questions {
+	-fx-background-image: url('../gfx/icon_questions_light.png');
+	-fx-background-size: 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 0%;
+}
+
+#timer {
+	-fx-background-image: url('../gfx/icon_timer_light.png');
+	-fx-background-size: 20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 0%;
+}
+
 #star {
 	-fx-background-image: url('../gfx/icon_star_light.png');
 	-fx-background-size: 25px;
