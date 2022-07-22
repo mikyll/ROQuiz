@@ -19,7 +19,6 @@ class QuestionRepository {
     try {
       int numPerTopic = 0, totQuest = 0;
       String fileText = await rootBundle.loadString(filePath);
-      // print(fileText); // test
 
       LineSplitter ls = const LineSplitter();
       List<String> lines = ls.convert(fileText);
@@ -83,12 +82,6 @@ class QuestionRepository {
         }
       }
 
-      /*
-      // test
-      for (int i = 0; i < questions.length; i++) {
-        print(questions[i].question);
-        print(questions[i].answers);
-      }*/
       if (topicsPresent) {
         qNumPerTopic.add(numPerTopic);
 
@@ -120,22 +113,20 @@ class QuestionRepository {
   bool hasTopics() {
     return topicsPresent;
   }
-  /*late List<Question> questions;
-  late List<String> topics;
-  late List<int> questionsPerTopic; // how many questions are in a topic
 
-  QuestionRepository(String filename) {
-    final file = File(filename);
-    Stream<String> lines =
-        file.openRead().transform(utf8.decoder).transform(LineSplitter());
-      try {
-        await for (String l in lines) {
-          
-        }
-      }
-      catch (e) {
-        print("Error: $e");
-      }
-  }*/
+  @override
+  String toString() {
+    String res = "";
+    for (int i = 0; i < questions.length; i++) {
+      res += "Q${i + 1}) " + questions[i].question + "\n";
 
+      for (int j = 0; j < questions[i].answers.length; j++) {
+        res +=
+            Answer.values[j].toString() + ". " + questions[i].answers[j] + "\n";
+      }
+      res += "\n";
+    }
+
+    return res;
+  }
 }

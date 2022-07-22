@@ -13,22 +13,24 @@ class ViewSettings extends StatefulWidget {
 
   final QuestionRepository qRepo;
   final Settings settings;
-  final Function(int, int) saveSettings;
+  final Function(int, int, bool, bool) saveSettings;
 
   @override
   State<StatefulWidget> createState() => ViewSettingsState();
 }
 
 class ViewSettingsState extends State<ViewSettings> {
-  int _questionNumber = 0;
-  int _timer = 0;
+  int _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
+  int _timer = Settings.DEFAULT_TIMER;
+  bool _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
+  bool _darkTheme = Settings.DEFAULT_DARK_THEME;
 
   bool _isPressedQI = false;
   bool _isPressedQD = false;
   bool _isPressedTI = false;
   bool _isPressedTD = false;
 
-  void increaseQuestionNumber(int v) {
+  void _increaseQuestionNumber(int v) {
     setState(() {
       _questionNumber + v <= widget.qRepo.questions.length
           ? _questionNumber += v
@@ -36,15 +38,15 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  void decreaseQuestionNumber(int v) {
+  void _decreaseQuestionNumber(int v) {
     setState(() {
-      _questionNumber - v >= widget.settings.DEFAULT_QUESTION_NUMBER / 2
+      _questionNumber - v >= Settings.DEFAULT_QUESTION_NUMBER / 2
           ? _questionNumber -= v
-          : _questionNumber = widget.settings.DEFAULT_QUESTION_NUMBER ~/ 2;
+          : _questionNumber = Settings.DEFAULT_QUESTION_NUMBER ~/ 2;
     });
   }
 
-  void increaseTimer(int v) {
+  void _increaseTimer(int v) {
     setState(() {
       _timer + v <= widget.qRepo.questions.length * 2
           ? _timer += v
@@ -52,18 +54,32 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  void decreaseTimer(int v) {
+  void _decreaseTimer(int v) {
     setState(() {
-      _timer - v >= widget.settings.DEFAULT_TIMER / 2
+      _timer - v >= Settings.DEFAULT_TIMER / 2
           ? _timer -= v
-          : _timer = widget.settings.DEFAULT_TIMER ~/ 2;
+          : _timer = Settings.DEFAULT_TIMER ~/ 2;
+    });
+  }
+
+  void _selectShuffleAnswer(bool value) {
+    setState(() {
+      _shuffleAnswers = value;
+    });
+  }
+
+  void _selectDarkTheme(bool value) {
+    setState(() {
+      _darkTheme = value;
     });
   }
 
   void _reset() {
     setState(() {
-      _questionNumber = widget.settings.DEFAULT_QUESTION_NUMBER;
-      _timer = widget.settings.DEFAULT_TIMER;
+      _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
+      _timer = Settings.DEFAULT_TIMER;
+      _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
+      _darkTheme = Settings.DEFAULT_DARK_THEME;
     });
   }
 
@@ -74,6 +90,8 @@ class ViewSettingsState extends State<ViewSettings> {
     setState(() {
       _questionNumber = widget.settings.questionNumber;
       _timer = widget.settings.timer;
+      _shuffleAnswers = widget.settings.shuffleAnswers;
+      _darkTheme = widget.settings.darkTheme;
     });
   }
 
@@ -105,6 +123,7 @@ class ViewSettingsState extends State<ViewSettings> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // SETTING: QUESTIONS NUMBER
               Row(
                 children: [
                   const Expanded(
@@ -113,12 +132,12 @@ class ViewSettingsState extends State<ViewSettings> {
                   // DECREASE QUESTION NUMBER
                   GestureDetector(
                     onTap: () {
-                      decreaseQuestionNumber(1);
+                      _decreaseQuestionNumber(1);
                     },
                     onLongPressStart: (_) async {
                       _isPressedQD = true;
                       do {
-                        decreaseQuestionNumber(10);
+                        _decreaseQuestionNumber(10);
                         await Future.delayed(const Duration(milliseconds: 500));
                       } while (_isPressedQD);
                     },
@@ -143,19 +162,23 @@ class ViewSettingsState extends State<ViewSettings> {
                   ),
                   // POOL SIZE COUNTER
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text("$_questionNumber",
-                        style: const TextStyle(fontSize: 20)),
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 35.0,
+                      child: Text("$_questionNumber",
+                          style: const TextStyle(fontSize: 20)),
+                    ),
                   ),
                   // INCREASE POOL SIZE
                   GestureDetector(
                     onTap: () {
-                      increaseQuestionNumber(1);
+                      _increaseQuestionNumber(1);
                     },
                     onLongPressStart: (_) async {
                       _isPressedQI = true;
                       do {
-                        increaseQuestionNumber(10);
+                        _increaseQuestionNumber(10);
                         await Future.delayed(const Duration(milliseconds: 500));
                       } while (_isPressedQI);
                     },
@@ -181,91 +204,127 @@ class ViewSettingsState extends State<ViewSettings> {
                 ],
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  const Expanded(
-                      child: Text("Timer (minuti): ",
-                          style: TextStyle(fontSize: 20))),
-                  // DECREASE TIMER
-                  GestureDetector(
-                    onTap: () {
-                      decreaseTimer(1);
-                    },
-                    onLongPressStart: (_) async {
-                      _isPressedTD = true;
-                      do {
-                        decreaseTimer(10);
-                        await Future.delayed(const Duration(milliseconds: 500));
-                      } while (_isPressedTD);
-                    },
-                    onLongPressEnd: (_) =>
-                        {setState(() => _isPressedTD = false)},
-                    child: InkWell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 40,
-                        height: 40,
-                        decoration: const BoxDecoration(
-                            gradient: kPrimaryGradient,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        child: const Icon(
-                          Icons.remove,
-                          size: 35,
-                          color: Colors.black,
-                        ),
+              // SETTING: TIMER
+              Row(children: [
+                const Expanded(
+                    child: Text("Timer (minuti): ",
+                        style: TextStyle(fontSize: 20))),
+                // DECREASE TIMER
+
+                GestureDetector(
+                  onTap: () {
+                    _decreaseTimer(1);
+                  },
+                  onLongPressStart: (_) async {
+                    _isPressedTD = true;
+                    do {
+                      _decreaseTimer(10);
+                      await Future.delayed(const Duration(milliseconds: 500));
+                    } while (_isPressedTD);
+                  },
+                  onLongPressEnd: (_) => {setState(() => _isPressedTD = false)},
+                  child: InkWell(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                          gradient: kPrimaryGradient,
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      child: const Icon(
+                        Icons.remove,
+                        size: 35,
+                        color: Colors.black,
                       ),
                     ),
                   ),
-                  // TIMER COUNTER
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                ),
+                // TIMER COUNTER
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 35.0,
                     child:
                         Text("$_timer", style: const TextStyle(fontSize: 20)),
                   ),
-                  // INCREASE TIMER
-                  GestureDetector(
-                    onTap: () {
-                      increaseTimer(1);
-                    },
-                    onLongPressStart: (_) async {
-                      _isPressedTI = true;
-                      do {
-                        increaseTimer(10);
-                        await Future.delayed(const Duration(milliseconds: 500));
-                      } while (_isPressedTI);
-                    },
-                    onLongPressEnd: (_) =>
-                        {setState(() => _isPressedTI = false)},
-                    child: InkWell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 40,
-                        height: 40,
-                        decoration: const BoxDecoration(
-                            gradient: kPrimaryGradient,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        child: const Icon(
-                          Icons.add_rounded,
-                          size: 35,
-                          color: Colors.black,
-                        ),
+                ),
+                // INCREASE TIMER
+                GestureDetector(
+                  onTap: () {
+                    _increaseTimer(1);
+                  },
+                  onLongPressStart: (_) async {
+                    _isPressedTI = true;
+                    do {
+                      _increaseTimer(10);
+                      await Future.delayed(const Duration(milliseconds: 500));
+                    } while (_isPressedTI);
+                  },
+                  onLongPressEnd: (_) => {setState(() => _isPressedTI = false)},
+                  child: InkWell(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                          gradient: kPrimaryGradient,
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      child: const Icon(
+                        Icons.add_rounded,
+                        size: 35,
+                        color: Colors.black,
                       ),
                     ),
+                  ),
+                ),
+              ]),
+
+              const SizedBox(height: 20),
+              // SETTING: SHUFFLE ANSWERS
+              Row(
+                children: [
+                  const Expanded(
+                      child: Text("Mescola risposte: ",
+                          style: TextStyle(fontSize: 20))),
+                  SizedBox(
+                    width: 120.0,
+                    child: Checkbox(
+                        checkColor: Colors.black,
+                        value: _shuffleAnswers,
+                        onChanged: (bool? value) =>
+                            _selectShuffleAnswer(value!)),
+                  )
+                ],
+              ),
+              const SizedBox(height: 20),
+              // SETTING: DARK THEME
+              Row(
+                children: [
+                  const Expanded(
+                      child:
+                          Text("Tema scuro: ", style: TextStyle(fontSize: 20))),
+                  SizedBox(
+                    width: 120.0,
+                    child: Checkbox(
+                        checkColor: Colors.black,
+                        value: _darkTheme,
+                        onChanged: (bool? value) => _selectDarkTheme(value!)),
                   ),
                 ],
               ),
             ],
           ),
         ),
+        // BUTTONS: Save, Cancel, Restore
         persistentFooterButtons: [
           Row(
             children: [
               InkWell(
                 enableFeedback: true,
                 onTap: () {
-                  widget.saveSettings(_questionNumber, _timer);
+                  widget.saveSettings(
+                      _questionNumber, _timer, _shuffleAnswers, _darkTheme);
                   Navigator.pop(context);
                 },
                 child: Container(

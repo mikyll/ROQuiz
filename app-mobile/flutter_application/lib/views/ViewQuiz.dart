@@ -5,27 +5,24 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
+import 'package:roquiz/model/Quiz.dart';
 import 'package:roquiz/model/Settings.dart';
 
 class ViewQuiz extends StatefulWidget {
-  const ViewQuiz(
-      {Key? key,
-      required this.questions,
-      required this.settings,
-      required this.resetTopics})
+  const ViewQuiz({Key? key, required this.questions, required this.settings})
       : super(key: key);
 
   final List<Question> questions;
   final Settings settings;
-  final Function() resetTopics;
 
   @override
   State<StatefulWidget> createState() => _ViewQuizState();
 }
 
 class _ViewQuizState extends State<ViewQuiz> {
-  bool _isOver = false;
+  Quiz quiz = Quiz();
 
+  bool _isOver = false;
   int _qIndex = 0;
   int _correctAnswers = 0;
 
@@ -54,15 +51,15 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   void _loadQuestion() {
     setState(() {
-      _currentQuestion = widget.questions[_qIndex].question;
-      _currentAnswers = widget.questions[_qIndex].answers;
+      _currentQuestion = quiz.questions[_qIndex].question;
+      _currentAnswers = quiz.questions[_qIndex].answers;
     });
   }
 
   void _setUserAnswer(int answer) {
     setState(() {
       _userAnswers[_qIndex] = Answer.values[answer];
-      if (Answer.values[answer] == widget.questions[_qIndex].correctAnswer) {}
+      if (Answer.values[answer] == quiz.questions[_qIndex].correctAnswer) {}
     });
   }
 
@@ -72,7 +69,7 @@ class _ViewQuizState extends State<ViewQuiz> {
       _timer.cancel();
     });
     for (int i = 0; i < widget.settings.questionNumber; i++) {
-      if (_userAnswers[i] == widget.questions[i].correctAnswer) {
+      if (_userAnswers[i] == quiz.questions[i].correctAnswer) {
         _correctAnswers++;
       }
     }
@@ -97,13 +94,14 @@ class _ViewQuizState extends State<ViewQuiz> {
       for (int i = 0; i < widget.settings.questionNumber; i++) {
         _userAnswers.add(Answer.NONE);
       }
-      widget.questions.shuffle();
+      quiz.resetQuiz(widget.questions, widget.questions.length,
+          widget.settings.shuffleAnswers);
 
       _qIndex = 0;
       _correctAnswers = 0;
       _isOver = false;
-      _currentQuestion = widget.questions[_qIndex].question;
-      _currentAnswers = widget.questions[_qIndex].answers;
+      _currentQuestion = quiz.questions[_qIndex].question;
+      _currentAnswers = quiz.questions[_qIndex].answers;
 
       _timerCounter = widget.settings.timer * 60;
     });
@@ -114,6 +112,8 @@ class _ViewQuizState extends State<ViewQuiz> {
   void initState() {
     super.initState();
 
+    quiz.resetQuiz(widget.questions, widget.questions.length,
+        widget.settings.shuffleAnswers);
     _resetQuiz();
   }
 
@@ -123,7 +123,6 @@ class _ViewQuizState extends State<ViewQuiz> {
       // this enables us to catch the "hard back" from device
       onWillPop: () async {
         _endQuiz(); // end quiz and stop timer
-        widget.resetTopics();
         return true; // "return true" pops the element from the stack (== Navigator.pop())
       },
       child: GestureDetector(
@@ -152,7 +151,6 @@ class _ViewQuizState extends State<ViewQuiz> {
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 _endQuiz();
-                widget.resetTopics();
                 Navigator.pop(context);
               },
             ),

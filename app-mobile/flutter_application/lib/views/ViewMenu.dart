@@ -14,7 +14,7 @@ class ViewMenu extends StatefulWidget {
   ViewMenu({Key? key}) : super(key: key);
 
   final QuestionRepository qRepo = QuestionRepository();
-  Settings settings = Settings(16, 18, false, false);
+  Settings settings = Settings();
   List<Question> questions = [];
 
   @override
@@ -57,6 +57,7 @@ class ViewMenuState extends State<ViewMenu> {
         j += widget.qRepo.getQuestionNumPerTopic()[i];
       }
     }
+
     return res;
   }
 
@@ -66,10 +67,13 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void saveSettings(int q, int t) {
+  void saveSettings(int qNum, int timer, bool shuffle, bool dTheme) {
     setState(() {
-      widget.settings.questionNumber = q;
-      widget.settings.timer = t;
+      widget.settings.questionNumber = qNum;
+      widget.settings.timer = timer;
+      widget.settings.shuffleAnswers = shuffle;
+      widget.settings.darkTheme = dTheme;
+      widget.settings.saveSettings();
       resetTopics();
     });
   }
@@ -77,10 +81,14 @@ class ViewMenuState extends State<ViewMenu> {
   @override
   void initState() {
     super.initState();
+
+    widget.settings.loadSettings();
     widget.qRepo.loadFile("assets/Domande.txt").then((value) => {
           _initTopics(),
           setState(() {
             _topicsPresent = widget.qRepo.hasTopics();
+
+            //print("\n\nqRepo caricato: \n\n" + widget.qRepo.toString());
           })
         });
   }
@@ -115,7 +123,7 @@ class ViewMenuState extends State<ViewMenu> {
                     fontWeight: FontWeight.bold, /*fontStyle: FontStyle.italic*/
                   )),
               Text(
-                "v${widget.settings.VERSION_NUMBER}${widget.settings.VERSION_SUFFIX}",
+                "v${Settings.VERSION_NUMBER}${Settings.VERSION_SUFFIX}",
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -132,7 +140,6 @@ class ViewMenuState extends State<ViewMenu> {
                           builder: (context) => ViewQuiz(
                                 questions: _getPoolFromSelected(),
                                 settings: widget.settings,
-                                resetTopics: resetTopics,
                               )));
                 },
                 child: Padding(

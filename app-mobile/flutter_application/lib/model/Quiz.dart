@@ -2,22 +2,25 @@ import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Question.dart';
 
 class Quiz {
-  late List<Question> quiz;
-  late List<Answer> answers; // user answers (selected or unselected)
-  late int givenAnswers; // total given answers
-  late int correctAnswer; // total correct answers
+  List<Question> questions = [];
+  List<Answer> answers = []; // user answers (selected or unselected)
+  int givenAnswers = 0; // total given answers
+  int correctAnswer = 0; // total correct answers
 
-  Quiz(List<Question> questions, int qNum) {
-    _resetQuiz(questions, qNum);
-  }
+  /*Quiz(List<Question> questions, int qNum, bool shuffleAnswers) {
+    _resetQuiz(questions, qNum, shuffleAnswers);
+  }*/
 
-  void _resetQuiz(List<Question> questions, int qNum) {
-    quiz = List<Question>.empty();
+  void resetQuiz(List<Question> questions, int qNum, bool shuffleAnswers) {
+    this.questions = [];
+    answers = [];
 
     // reset Questions
     questions.shuffle();
     for (int i = 0; i < qNum; i++) {
-      quiz.add(questions[i]);
+      if (shuffleAnswers) questions[i].shuffleAnswers();
+
+      this.questions.add(questions[i]);
       answers.add(Answer.NONE);
     }
 

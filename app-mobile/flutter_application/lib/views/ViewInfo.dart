@@ -72,7 +72,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
             children: [
               const Spacer(flex: 1),
               Text(
-                  "ROQuiz v${widget.settings.VERSION_NUMBER}${widget.settings.VERSION_SUFFIX}",
+                  "ROQuiz v${Settings.VERSION_NUMBER}${Settings.VERSION_SUFFIX}",
                   style: const TextStyle(
                       fontSize: 48, fontWeight: FontWeight.bold)),
               const SizedBox(height: 50),
