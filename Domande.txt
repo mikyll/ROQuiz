@@ -699,3 +699,11 @@ C. è risolvibile mediante la programmazione dinamica.
 D. non esiste algoritmo pseudo-polinomiale.
 E. Nessuna di queste.
 C
+
+Il problema di knapsack
+A. è sempre risolvibile in tempo polinomiale
+B. è sempre risolvibile tramite albero ad altezza esponenziale
+C. è sempre risolvibile con un albero ad altezza polinomiale
+D. non è mai risolvibile con un albero pseudo polinomiale
+E. Nessuna di queste
+D
