@@ -223,8 +223,9 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * [JavaFX CSS Docs](https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html)
 * [Fix puntini bianchi](https://stackoverflow.com/questions/44169273/javafx-unwanted-white-corner-textarea) negli angoli della TextArea, usando il tema scuro
 * [StackOverflow GitHub latest version](https://stackoverflow.com/questions/34745526/java-get-latest-github-release)
-* [Download asset Flutter](https://pub.dev/packages/download_assets)
 * [Richieste HTTP con java.net](https://www.baeldung.com/java-http-response-body-as-string)
+* [Download asset Flutter](https://pub.dev/packages/download_assets)
+* [LongPress Widget](https://stackoverflow.com/questions/52128572/flutter-execute-method-so-long-the-button-pressed)
 
 <div align="center">
   
