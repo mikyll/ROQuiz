@@ -2,11 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Quiz.dart';
 import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/widget/icon_button_widget.dart';
+
+import '../widget/change_theme_button_widget.dart';
 
 class ViewQuiz extends StatefulWidget {
   const ViewQuiz({Key? key, required this.questions, required this.settings})
@@ -119,6 +124,8 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   @override
   Widget build(BuildContext context) {
+    final _themeProvider = Provider.of<ThemeProvider>(context);
+
     return WillPopScope(
       // this enables us to catch the "hard back" from device
       onWillPop: () async {
@@ -141,11 +148,9 @@ class _ViewQuizState extends State<ViewQuiz> {
           _dragDirectionDX = 0;
         },
         child: Scaffold(
-          backgroundColor: Colors.indigo[900],
           appBar: AppBar(
             title: const Text("Quiz"),
             centerTitle: true,
-            backgroundColor: Colors.transparent,
             automaticallyImplyLeading: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
@@ -189,7 +194,6 @@ class _ViewQuizState extends State<ViewQuiz> {
                     //margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Column(
@@ -198,15 +202,13 @@ class _ViewQuizState extends State<ViewQuiz> {
                           alignment: Alignment.center,
                           width: double.infinity,
                           decoration: const BoxDecoration(
-                              color: Colors.white,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30))),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             // QUESTION
                             child: Text(_currentQuestion,
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 16)),
+                                style: const TextStyle(fontSize: 16)),
                           ),
                         ),
                         // ANSWERS
@@ -285,70 +287,50 @@ class _ViewQuizState extends State<ViewQuiz> {
           persistentFooterButtons: [
             Row(
               children: [
-                InkWell(
-                  enableFeedback: true,
+                IconButtonWidget(
+                  lightPalette: MyThemes.lightIconButtonPalette,
+                  darkPalette: MyThemes.darkIconButtonPalette,
                   onTap: () {
                     _previousQuestion();
                     _loadQuestion();
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 50,
-                    height: 50,
-                    decoration: const BoxDecoration(
-                        gradient: kPrimaryGradient,
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: const Icon(
-                      Icons.arrow_back_ios_rounded,
-                      size: 35,
-                      color: Colors.black,
-                    ),
-                  ),
+                  width: 50.0,
+                  height: 50.0,
+                  icon: Icons.arrow_back_ios_rounded,
+                  iconSize: 35,
                 ),
                 const SizedBox(width: 20),
-                InkWell(
-                  enableFeedback: true,
+                IconButtonWidget(
+                  lightPalette: MyThemes.lightIconButtonPalette,
+                  darkPalette: MyThemes.darkIconButtonPalette,
                   onTap: () {
                     _nextQuestion();
                     _loadQuestion();
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 50, // fix: fit <->
-                    height: 50,
-                    decoration: const BoxDecoration(
-                        gradient: kPrimaryGradient,
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 35,
-                      color: Colors.black,
-                    ),
-                  ),
+                  width: 50.0,
+                  height: 50.0,
+                  icon: Icons.arrow_forward_ios_rounded,
+                  iconSize: 35,
                 ),
                 const Spacer(flex: 5),
-                InkWell(
-                  enableFeedback: true,
-                  onTap: () {
+                ElevatedButton(
+                  onPressed: () {
                     !_isOver ? _endQuiz() : _resetQuiz();
                   },
                   child: Container(
                     alignment: Alignment.center,
                     height: 50,
                     decoration: const BoxDecoration(
-                        gradient: kPrimaryGradient,
                         borderRadius: BorderRadius.all(Radius.circular(30))),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15.0, vertical: 10.0),
                       child: Text(!_isOver ? "Termina" : "Riavvia",
                           style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold)),
+                              fontSize: 24, fontWeight: FontWeight.bold)),
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ],

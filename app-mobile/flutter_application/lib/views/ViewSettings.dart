@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:roquiz/constants.dart';
-import 'package:roquiz/model/QuestionRepository.dart';
+import 'package:provider/provider.dart';
+import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/widget/change_theme_button_widget.dart';
+import 'package:roquiz/widget/icon_button_widget.dart';
 
 class ViewSettings extends StatefulWidget {
   ViewSettings({
@@ -68,12 +71,6 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  void _selectDarkTheme(bool value) {
-    setState(() {
-      _darkTheme = value;
-    });
-  }
-
   void _reset() {
     setState(() {
       _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
@@ -97,17 +94,17 @@ class ViewSettingsState extends State<ViewSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final _themeProvider = Provider.of<ThemeProvider>(context);
+
     return WillPopScope(
       onWillPop: () async {
         // ask for save / discard ?
         return true;
       },
       child: Scaffold(
-        backgroundColor: Colors.indigo[900],
         appBar: AppBar(
           title: const Text("Impostazioni"),
           centerTitle: true,
-          backgroundColor: Colors.transparent,
           automaticallyImplyLeading: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
@@ -130,35 +127,16 @@ class ViewSettingsState extends State<ViewSettings> {
                       child: Text("Numero domande per quiz: ",
                           style: TextStyle(fontSize: 20))),
                   // DECREASE QUESTION NUMBER
-                  GestureDetector(
-                    onTap: () {
+                  IconButtonLongPressWidget(
+                    onUpdate: () {
                       _decreaseQuestionNumber(1);
                     },
-                    onLongPressStart: (_) async {
-                      _isPressedQD = true;
-                      do {
-                        _decreaseQuestionNumber(10);
-                        await Future.delayed(const Duration(milliseconds: 500));
-                      } while (_isPressedQD);
-                    },
-                    onLongPressEnd: (_) =>
-                        {setState(() => _isPressedQD = false)},
-                    child: InkWell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 40,
-                        height: 40,
-                        decoration: const BoxDecoration(
-                            gradient: kPrimaryGradient,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        child: const Icon(
-                          Icons.remove,
-                          size: 35,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
+                    lightPalette: MyThemes.lightIconButtonPalette,
+                    darkPalette: MyThemes.darkIconButtonPalette,
+                    width: 40.0,
+                    height: 40.0,
+                    icon: Icons.remove,
+                    iconSize: 35,
                   ),
                   // POOL SIZE COUNTER
                   Padding(
@@ -171,35 +149,16 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                   ),
                   // INCREASE POOL SIZE
-                  GestureDetector(
-                    onTap: () {
+                  IconButtonLongPressWidget(
+                    onUpdate: () {
                       _increaseQuestionNumber(1);
                     },
-                    onLongPressStart: (_) async {
-                      _isPressedQI = true;
-                      do {
-                        _increaseQuestionNumber(10);
-                        await Future.delayed(const Duration(milliseconds: 500));
-                      } while (_isPressedQI);
-                    },
-                    onLongPressEnd: (_) =>
-                        {setState(() => _isPressedQI = false)},
-                    child: InkWell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 40,
-                        height: 40,
-                        decoration: const BoxDecoration(
-                            gradient: kPrimaryGradient,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        child: const Icon(
-                          Icons.add_rounded,
-                          size: 35,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
+                    lightPalette: MyThemes.lightIconButtonPalette,
+                    darkPalette: MyThemes.darkIconButtonPalette,
+                    width: 40.0,
+                    height: 40.0,
+                    icon: Icons.add,
+                    iconSize: 35,
                   ),
                 ],
               ),
@@ -210,34 +169,16 @@ class ViewSettingsState extends State<ViewSettings> {
                     child: Text("Timer (minuti): ",
                         style: TextStyle(fontSize: 20))),
                 // DECREASE TIMER
-
-                GestureDetector(
-                  onTap: () {
+                IconButtonLongPressWidget(
+                  onUpdate: () {
                     _decreaseTimer(1);
                   },
-                  onLongPressStart: (_) async {
-                    _isPressedTD = true;
-                    do {
-                      _decreaseTimer(10);
-                      await Future.delayed(const Duration(milliseconds: 500));
-                    } while (_isPressedTD);
-                  },
-                  onLongPressEnd: (_) => {setState(() => _isPressedTD = false)},
-                  child: InkWell(
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                          gradient: kPrimaryGradient,
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      child: const Icon(
-                        Icons.remove,
-                        size: 35,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+                  lightPalette: MyThemes.lightIconButtonPalette,
+                  darkPalette: MyThemes.darkIconButtonPalette,
+                  width: 40.0,
+                  height: 40.0,
+                  icon: Icons.remove,
+                  iconSize: 35,
                 ),
                 // TIMER COUNTER
                 Padding(
@@ -250,33 +191,16 @@ class ViewSettingsState extends State<ViewSettings> {
                   ),
                 ),
                 // INCREASE TIMER
-                GestureDetector(
-                  onTap: () {
+                IconButtonLongPressWidget(
+                  onUpdate: () {
                     _increaseTimer(1);
                   },
-                  onLongPressStart: (_) async {
-                    _isPressedTI = true;
-                    do {
-                      _increaseTimer(10);
-                      await Future.delayed(const Duration(milliseconds: 500));
-                    } while (_isPressedTI);
-                  },
-                  onLongPressEnd: (_) => {setState(() => _isPressedTI = false)},
-                  child: InkWell(
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                          gradient: kPrimaryGradient,
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      child: const Icon(
-                        Icons.add_rounded,
-                        size: 35,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+                  lightPalette: MyThemes.lightIconButtonPalette,
+                  darkPalette: MyThemes.darkIconButtonPalette,
+                  width: 40.0,
+                  height: 40.0,
+                  icon: Icons.add,
+                  iconSize: 35,
                 ),
               ]),
 
@@ -288,13 +212,14 @@ class ViewSettingsState extends State<ViewSettings> {
                       child: Text("Mescola risposte: ",
                           style: TextStyle(fontSize: 20))),
                   SizedBox(
-                    width: 120.0,
-                    child: Checkbox(
-                        checkColor: Colors.black,
-                        value: _shuffleAnswers,
-                        onChanged: (bool? value) =>
-                            _selectShuffleAnswer(value!)),
-                  )
+                      width: 120.0,
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                            value: _shuffleAnswers,
+                            onChanged: (bool? value) =>
+                                _selectShuffleAnswer(value!)),
+                      ))
                 ],
               ),
               const SizedBox(height: 20),
@@ -306,10 +231,7 @@ class ViewSettingsState extends State<ViewSettings> {
                           Text("Tema scuro: ", style: TextStyle(fontSize: 20))),
                   SizedBox(
                     width: 120.0,
-                    child: Checkbox(
-                        checkColor: Colors.black,
-                        value: _darkTheme,
-                        onChanged: (bool? value) => _selectDarkTheme(value!)),
+                    child: ChangeThemeButtonWidget(value: _darkTheme),
                   ),
                 ],
               ),
@@ -320,70 +242,55 @@ class ViewSettingsState extends State<ViewSettings> {
         persistentFooterButtons: [
           Row(
             children: [
-              InkWell(
-                enableFeedback: true,
-                onTap: () {
-                  widget.saveSettings(
-                      _questionNumber, _timer, _shuffleAnswers, _darkTheme);
+              ElevatedButton(
+                onPressed: () {
+                  widget.saveSettings(_questionNumber, _timer, _shuffleAnswers,
+                      _themeProvider.isDarkMode);
                   Navigator.pop(context);
                 },
                 child: Container(
                   alignment: Alignment.center,
                   height: 50,
-                  decoration: const BoxDecoration(
-                      gradient: kPrimaryGradient,
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Salva",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    "Salva",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
-              InkWell(
-                enableFeedback: true,
-                onTap: () {
+              ElevatedButton(
+                onPressed: () {
                   Navigator.pop(context);
                 },
                 child: Container(
                   alignment: Alignment.center,
                   height: 50,
-                  decoration: const BoxDecoration(
-                      gradient: kPrimaryGradient,
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Cancella",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    "Cancella",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
               const Spacer(flex: 5),
-              InkWell(
-                enableFeedback: true,
-                onTap: () {
+              ElevatedButton(
+                onPressed: () {
                   _reset();
                 },
                 child: Container(
                   alignment: Alignment.center,
                   height: 50,
-                  decoration: const BoxDecoration(
-                      gradient: kPrimaryGradient,
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Ripristina",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    "Ripristina",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

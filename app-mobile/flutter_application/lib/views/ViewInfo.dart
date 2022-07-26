@@ -1,9 +1,10 @@
-import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/widget/change_theme_button_widget.dart';
+import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const DEFAULT_SIZE = 50.0;
@@ -18,21 +19,17 @@ class ViewInfo extends StatefulWidget {
 }
 
 class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
-  dynamic _time;
-  double _size = DEFAULT_SIZE;
-  double _maxSize = 0.0;
-  bool _isPressedStar = false;
+  double _screenWidth = 0.0;
+  double _screenHeight = 0.0;
 
-  void _increaseSize(int v) {
+  double _size = DEFAULT_SIZE;
+
+  double _increment = 1.0;
+
+  void _increaseSize() {
     setState(() {
-      if (_size < _maxSize) {
-        _size +=
-            v * pow((DateTime.now().millisecondsSinceEpoch - _time) / 250, 2);
-      } else {
-        _size = DEFAULT_SIZE;
-        _isPressedStar = false;
-        _launchInBrowser("https://github.com/mikyll/ROQuiz");
-      }
+      _size += _increment;
+      _increment *= 1.1;
     });
   }
 
@@ -48,14 +45,19 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _screenWidth = (window.physicalSize.shortestSide / window.devicePixelRatio);
+    _screenHeight = (window.physicalSize.longestSide / window.devicePixelRatio);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo[900],
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text("Info"),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: true,
         leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
@@ -122,7 +124,8 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                 ),
                 InkWell(
                   onTap: () {
-                    _launchInBrowser("https://github.com/mikyll/ROQuiz/issues");
+                    _launchInBrowser(
+                        "https://github.com/mikyll/ROQuiz/issues/new?title=[Mobile]+Titolo+Problema&body=Descrivi+qui+il+problema%2C+possibilmente+aggiungendo+una+o+pi%C3%B9+etichette.");
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
@@ -137,7 +140,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
               ]),
               const SizedBox(height: 50),
               Container(
-                color: Colors.indigo[700],
+                color: Colors.indigo.withOpacity(0.35),
                 height: 60,
                 alignment: Alignment.center,
                 child: const Padding(
@@ -156,37 +159,26 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
       ),
       // CAGATE
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          _launchInBrowser("https://github.com/mikyll/ROQuiz");
+      floatingActionButton: IconButtonLongPressWidget(
+        onUpdate: () {
+          if (_size == 0.0) {
+            return;
+          }
+          if (_size < _screenWidth - 100.0) {
+            _increaseSize();
+          } else {
+            _size = 1.0;
+            _increment = 0.0;
+            _launchInBrowser("https://github.com/mikyll/ROQuiz");
+          }
         },
-        onLongPressStart: (_) async {
-          _isPressedStar = true;
-          _time = DateTime.now().millisecondsSinceEpoch;
-          _maxSize = MediaQuery.of(context).size.width - 50.0;
-          do {
-            _increaseSize(1);
-            await Future.delayed(const Duration(milliseconds: 40));
-          } while (_isPressedStar);
-        },
-        onLongPressEnd: (_) => {
-          setState(() => {_isPressedStar = false})
-        },
-        child: InkWell(
-          child: Container(
-            alignment: Alignment.center,
-            width: _size,
-            height: _size,
-            decoration: BoxDecoration(
-                gradient: kPrimaryGradient,
-                borderRadius: BorderRadius.all(Radius.circular(_size))),
-            child: Icon(
-              Icons.star,
-              size: _size,
-              color: Colors.yellow,
-            ),
-          ),
-        ),
+        width: _size,
+        height: _size,
+        icon: Icons.star,
+        iconSize: _size * 0.8,
+        iconColor: Colors.yellow,
+        lightPalette: MyThemes.lightIconButtonPalette,
+        darkPalette: MyThemes.darkIconButtonPalette,
       ),
     );
   }

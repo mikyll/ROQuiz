@@ -1,60 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:roquiz/constants.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/model/Question.dart';
-import 'package:roquiz/model/QuestionRepository.dart';
+import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/model/Settings.dart';
 import 'package:roquiz/views/ViewQuiz.dart';
 import 'package:roquiz/views/ViewSettings.dart';
 import 'package:roquiz/views/ViewTopics.dart';
 import 'package:roquiz/views/ViewInfo.dart';
+import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 //import 'package:websafe_svg/websafe_svg.dart';
 
 class ViewMenu extends StatefulWidget {
-  ViewMenu({Key? key}) : super(key: key);
-
-  final QuestionRepository qRepo = QuestionRepository();
-  Settings settings = Settings();
-  List<Question> questions = [];
+  const ViewMenu({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ViewMenuState();
 }
 
 class ViewMenuState extends State<ViewMenu> {
+  final QuestionRepository qRepo = QuestionRepository();
+  final Settings _settings = Settings();
   bool _topicsPresent = false;
-  List<bool> selectedTopics = [];
-  int quizPool = 0;
+  final List<bool> _selectedTopics = [];
+  int _quizPool = 0;
 
   void _initTopics() {
     setState(() {
-      for (int i = 0; i < widget.qRepo.topics.length; i++) {
-        selectedTopics.add(true);
-        quizPool += widget.qRepo.qNumPerTopic[i];
+      for (int i = 0; i < qRepo.topics.length; i++) {
+        _selectedTopics.add(true);
+        _quizPool += qRepo.qNumPerTopic[i];
       }
     });
   }
 
   void resetTopics() {
     setState(() {
-      for (int i = 0; i < selectedTopics.length; i++) {
-        selectedTopics[i] = true;
+      for (int i = 0; i < _selectedTopics.length; i++) {
+        _selectedTopics[i] = true;
       }
-      quizPool = widget.qRepo.questions.length;
+      _quizPool = qRepo.questions.length;
     });
   }
 
   List<Question> _getPoolFromSelected() {
     List<Question> res = [];
-    for (int i = 0, j = 0; i < selectedTopics.length; i++) {
-      if (selectedTopics[i]) {
-        for (int k = 0;
-            k < widget.qRepo.getQuestionNumPerTopic()[i];
-            j++, k++) {
-          res.add(widget.qRepo.getQuestions()[j]);
+    for (int i = 0, j = 0; i < _selectedTopics.length; i++) {
+      if (_selectedTopics[i]) {
+        for (int k = 0; k < qRepo.getQuestionNumPerTopic()[i]; j++, k++) {
+          res.add(qRepo.getQuestions()[j]);
         }
       } else {
-        j += widget.qRepo.getQuestionNumPerTopic()[i];
+        j += qRepo.getQuestionNumPerTopic()[i];
       }
     }
 
@@ -63,17 +61,17 @@ class ViewMenuState extends State<ViewMenu> {
 
   void updateQuizPool(int v) {
     setState(() {
-      quizPool = v;
+      _quizPool = v;
     });
   }
 
   void saveSettings(int qNum, int timer, bool shuffle, bool dTheme) {
     setState(() {
-      widget.settings.questionNumber = qNum;
-      widget.settings.timer = timer;
-      widget.settings.shuffleAnswers = shuffle;
-      widget.settings.darkTheme = dTheme;
-      widget.settings.saveSettings();
+      _settings.questionNumber = qNum;
+      _settings.timer = timer;
+      _settings.shuffleAnswers = shuffle;
+      _settings.darkTheme = dTheme;
+      _settings.saveSettings();
       resetTopics();
     });
   }
@@ -82,13 +80,11 @@ class ViewMenuState extends State<ViewMenu> {
   void initState() {
     super.initState();
 
-    widget.settings.loadSettings();
-    widget.qRepo.loadFile("assets/Domande.txt").then((value) => {
+    _settings.loadSettings();
+    qRepo.loadFile("assets/Domande.txt").then((value) => {
           _initTopics(),
           setState(() {
-            _topicsPresent = widget.qRepo.hasTopics();
-
-            //print("\n\nqRepo caricato: \n\n" + widget.qRepo.toString());
+            _topicsPresent = qRepo.hasTopics();
           })
         });
   }
@@ -107,7 +103,6 @@ class ViewMenuState extends State<ViewMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo[900],
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -124,86 +119,64 @@ class ViewMenuState extends State<ViewMenu> {
                   )),
               Text(
                 "v${Settings.VERSION_NUMBER}${Settings.VERSION_SUFFIX}",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[500],
                 ),
               ),
               const Spacer(flex: 1),
-              // Buttons
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ViewQuiz(
-                                questions: _getPoolFromSelected(),
-                                settings: widget.settings,
-                              )));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              // BUTTONS
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ViewQuiz(
+                                  questions: _getPoolFromSelected(),
+                                  settings: _settings,
+                                )));
+                  },
                   child: Container(
                     alignment: Alignment.center,
-                    width: double.infinity, // fix: fit <->
                     height: 60,
-                    decoration: const BoxDecoration(
-                        gradient: kPrimaryGradient,
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
                     child: const Text(
                       "Avvia",
                       style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              InkWell(
-                enableFeedback: true,
-                onTap: _topicsPresent
-                    ? () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ViewTopics(
-                                      qRepo: widget.qRepo,
-                                      settings: widget.settings,
-                                      updateQuizPool: updateQuizPool,
-                                      selectedTopics: selectedTopics,
-                                    )));
-                      }
-                    : null,
-                splashColor: _topicsPresent ? Colors.transparent : null,
-                hoverColor: _topicsPresent ? Colors.transparent : null,
-                highlightColor: _topicsPresent ? Colors.transparent : null,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: ElevatedButton(
+                  onPressed: _topicsPresent
+                      ? () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewTopics(
+                                        qRepo: qRepo,
+                                        settings: _settings,
+                                        updateQuizPool: updateQuizPool,
+                                        selectedTopics: _selectedTopics,
+                                      )));
+                        }
+                      : null,
                   child: Container(
                     alignment: Alignment.center,
-                    width: double.infinity, // fix: fit <->
                     height: 60,
-                    decoration: _topicsPresent
-                        ? const BoxDecoration(
-                            gradient: kPrimaryGradient,
-                            borderRadius: BorderRadius.all(Radius.circular(30)))
-                        : const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Color(0x8846A0AE), Color(0x8800FFCB)],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
                     child: const Text(
                       "Argomenti",
                       style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -215,36 +188,34 @@ class ViewMenuState extends State<ViewMenu> {
                   children: [
                     const Icon(
                       Icons.format_list_numbered_rounded,
-                      color: Colors.grey,
                     ),
-                    Text(
-                        "Domande: ${widget.settings.questionNumber} su $quizPool"),
+                    Text("Domande: ${_settings.questionNumber} su $_quizPool"),
                     const SizedBox(width: 20),
                     const Icon(
                       Icons.timer_rounded,
-                      color: Colors.grey,
                     ),
-                    Text("Tempo: ${widget.settings.timer} min"),
+                    Text("Tempo: ${_settings.timer} min"),
                   ]),
               const SizedBox(height: 50),
               InkWell(
-                  onTap: () {
-                    _launchInBrowser("https://github.com/mikyll/ROQuiz");
-                  },
-                  child: Container(
-                    color: Colors.indigo[700],
-                    height: 120,
-                    alignment: Alignment.center,
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                          "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                          )),
-                    ),
-                  )),
+                onTap: () {
+                  _launchInBrowser("https://github.com/mikyll/ROQuiz");
+                },
+                child: Container(
+                  color: Colors.indigo.withOpacity(0.35),
+                  height: 120,
+                  alignment: Alignment.center,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                        "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                        )),
+                  ),
+                ),
+              ),
               const Spacer(flex: 5),
             ],
           ),
@@ -253,53 +224,38 @@ class ViewMenuState extends State<ViewMenu> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          InkWell(
+          IconButtonWidget(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ViewSettings(
-                            qRepo: widget.qRepo,
-                            settings: widget.settings,
+                            qRepo: qRepo,
+                            settings: _settings,
                             saveSettings: saveSettings,
                           )));
             },
-            child: Container(
-              alignment: Alignment.center,
-              width: 60, // fix: fit <->
-              height: 60,
-              decoration: const BoxDecoration(
-                  gradient: kPrimaryGradient,
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              child: const Icon(
-                Icons.settings,
-                size: 40,
-                color: Colors.black,
-              ),
-            ),
+            width: 60.0,
+            height: 60.0,
+            lightPalette: MyThemes.lightIconButtonPalette,
+            darkPalette: MyThemes.darkIconButtonPalette,
+            icon: Icons.settings,
+            iconSize: 40,
           ),
-          const SizedBox(height: 20),
-          InkWell(
+          const SizedBox(height: 10.0),
+          IconButtonWidget(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ViewInfo(settings: widget.settings)));
+                      builder: (context) => ViewInfo(settings: _settings)));
             },
-            child: Container(
-              alignment: Alignment.center,
-              width: 60, // fix: fit <->
-              height: 60,
-              decoration: const BoxDecoration(
-                  gradient: kPrimaryGradient,
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              child: const Icon(
-                Icons.info,
-                size: 40,
-                color: Colors.black,
-              ),
-            ),
+            width: 60.0,
+            height: 60.0,
+            lightPalette: MyThemes.lightIconButtonPalette,
+            darkPalette: MyThemes.darkIconButtonPalette,
+            icon: Icons.info,
+            iconSize: 40,
           ),
         ],
       ),

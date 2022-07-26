@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/QuestionRepository.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/views/ViewMenu.dart';
-import 'dart:io';
+
+import 'package:roquiz/widget/Themes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,11 +12,17 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ROquiz',
-      theme: ThemeData.dark(),
-      home: ViewMenu(),
-    );
-  }
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      builder: (context, _) {
+        final themeProvider = Provider.of<ThemeProvider>(context);
+
+        return MaterialApp(
+          title: 'ROquiz',
+          themeMode: themeProvider.themeMode,
+          theme: MyThemes.themeLight2,
+          darkTheme: MyThemes.themeDark2,
+          home: const ViewMenu(),
+        );
+      });
 }

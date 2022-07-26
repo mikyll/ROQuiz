@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings {
-  static final double VERSION_NUMBER = 1.4;
+  static final double VERSION_NUMBER = 1.5;
   static final String VERSION_SUFFIX = ""; //"-mobile_beta";
   static final int DEFAULT_QUESTION_NUMBER = 16;
   static final int DEFAULT_TIMER = 18;

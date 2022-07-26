@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Question.dart';
-import 'package:roquiz/model/QuestionRepository.dart';
+import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/model/Settings.dart';
 
 class ViewQuestions extends StatefulWidget {
@@ -46,11 +46,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
           return true;
         },
         child: Scaffold(
-          backgroundColor: Colors.indigo[900],
           appBar: AppBar(
             title: Text(widget.qRepo.topics[widget.iTopic]),
             centerTitle: true,
-            backgroundColor: Colors.transparent,
             automaticallyImplyLeading: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
