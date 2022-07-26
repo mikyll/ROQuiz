@@ -3,9 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:roquiz/widget/Themes.dart';
 
 class ChangeThemeButtonWidget extends StatelessWidget {
-  ChangeThemeButtonWidget({Key? key, this.value}) : super(key: key);
-
-  bool? value;
+  const ChangeThemeButtonWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +14,6 @@ class ChangeThemeButtonWidget extends StatelessWidget {
         onChanged: (v) {
           final provider = Provider.of<ThemeProvider>(context, listen: false);
 
-          value = themeProvider.isDarkMode;
           provider.toggleTheme(v);
         });
   }

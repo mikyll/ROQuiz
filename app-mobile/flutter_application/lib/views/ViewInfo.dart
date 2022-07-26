@@ -2,8 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/views/ViewCredits.dart';
+import 'package:roquiz/views/ViewLicenses.dart';
 import 'package:roquiz/widget/Themes.dart';
-import 'package:roquiz/widget/change_theme_button_widget.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,12 +25,12 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
 
   double _size = DEFAULT_SIZE;
 
-  double _increment = 1.0;
+  double _increment = 0.1;
 
   void _increaseSize() {
     setState(() {
       _size += _increment;
-      _increment *= 1.1;
+      _increment *= 1.2;
     });
   }
 
@@ -100,6 +101,26 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
               const SizedBox(height: 10),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Expanded(
+                    child: Text("In collaborazione con:",
+                        style: TextStyle(fontSize: 18))),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ViewCredits()));
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("contributors",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 18,
+                            decoration: TextDecoration.underline)),
+                  ),
+                ),
+              ]),
+              const SizedBox(height: 10),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                const Expanded(
                     child: Text("Repository GitHub:",
                         style: TextStyle(fontSize: 18))),
                 InkWell(
@@ -109,6 +130,27 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text("mikyll/ROQuiz",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 18,
+                            decoration: TextDecoration.underline)),
+                  ),
+                ),
+              ]),
+              const SizedBox(height: 10),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                const Expanded(
+                    child: Text("Licenze:", style: TextStyle(fontSize: 18))),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ViewLicenses()));
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("Visualizza le licenze",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,

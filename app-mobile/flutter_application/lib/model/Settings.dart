@@ -7,17 +7,17 @@ class Settings {
   static final int DEFAULT_TIMER = 18;
   static final bool DEFAULT_SHUFFLE_ANSWERS = true;
   static final bool DEFAULT_DARK_THEME = false;
-  final bool DEFAULT_CHECK_QUESTIONS_UPDATE = false;
-  final bool DEFAULT_CHECK_APP_UPDATE = false;
+  static final bool DEFAULT_CHECK_QUESTIONS_UPDATE = false;
+  static final bool DEFAULT_CHECK_APP_UPDATE = false;
 
   static final int DEFAULT_ANSWER_NUMBER = 5;
 
-  int questionNumber = -1;
-  int timer = -1;
-  bool shuffleAnswers = true;
-  bool darkTheme = false;
-  bool checkQuestionsUpdate = false;
-  bool checkAppUpdate = false;
+  late int questionNumber = DEFAULT_QUESTION_NUMBER;
+  late int timer = DEFAULT_TIMER;
+  late bool shuffleAnswers = DEFAULT_SHUFFLE_ANSWERS;
+  late bool darkTheme = DEFAULT_DARK_THEME;
+  late bool checkQuestionsUpdate = DEFAULT_CHECK_QUESTIONS_UPDATE;
+  late bool checkAppUpdate = DEFAULT_CHECK_APP_UPDATE;
 
   void loadSettings() async {
     final prefs = await SharedPreferences.getInstance();

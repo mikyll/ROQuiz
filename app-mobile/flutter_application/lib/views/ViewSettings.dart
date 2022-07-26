@@ -71,12 +71,13 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  void _reset() {
+  void _reset(ThemeProvider _themeProvider) {
     setState(() {
       _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
       _timer = Settings.DEFAULT_TIMER;
       _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
-      _darkTheme = Settings.DEFAULT_DARK_THEME;
+
+      _themeProvider.toggleTheme(Settings.DEFAULT_DARK_THEME);
     });
   }
 
@@ -94,7 +95,7 @@ class ViewSettingsState extends State<ViewSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final _themeProvider = Provider.of<ThemeProvider>(context);
+    final _themeProvider = Provider.of<ThemeProvider>(context, listen: true);
 
     return WillPopScope(
       onWillPop: () async {
@@ -109,6 +110,7 @@ class ViewSettingsState extends State<ViewSettings> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
+              _themeProvider.toggleTheme(_darkTheme);
               // discard
               Navigator.pop(context);
             },
@@ -225,13 +227,13 @@ class ViewSettingsState extends State<ViewSettings> {
               const SizedBox(height: 20),
               // SETTING: DARK THEME
               Row(
-                children: [
-                  const Expanded(
+                children: const [
+                  Expanded(
                       child:
                           Text("Tema scuro: ", style: TextStyle(fontSize: 20))),
                   SizedBox(
                     width: 120.0,
-                    child: ChangeThemeButtonWidget(value: _darkTheme),
+                    child: ChangeThemeButtonWidget(),
                   ),
                 ],
               ),
@@ -242,54 +244,66 @@ class ViewSettingsState extends State<ViewSettings> {
         persistentFooterButtons: [
           Row(
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  widget.saveSettings(_questionNumber, _timer, _shuffleAnswers,
-                      _themeProvider.isDarkMode);
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50,
-                  child: const Text(
-                    "Salva",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: ElevatedButton(
+                  onPressed: () {
+                    widget.saveSettings(_questionNumber, _timer,
+                        _shuffleAnswers, _themeProvider.isDarkMode);
+                    _darkTheme = _themeProvider.isDarkMode;
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    child: const Text(
+                      "Salva",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50,
-                  child: const Text(
-                    "Cancella",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _themeProvider.toggleTheme(_darkTheme);
+
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    child: const Text(
+                      "Cancella",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
               const Spacer(flex: 5),
-              ElevatedButton(
-                onPressed: () {
-                  _reset();
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50,
-                  child: const Text(
-                    "Ripristina",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _reset(_themeProvider);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    child: const Text(
+                      "Ripristina",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

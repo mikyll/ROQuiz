@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:provider/provider.dart';
-import 'package:roquiz/constants.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Quiz.dart';
@@ -157,6 +155,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                 Navigator.pop(context);
               },
             ),
+            //actions: const [ChangeThemeButtonWidget()],
           ),
           body: SafeArea(
             child: Padding(
