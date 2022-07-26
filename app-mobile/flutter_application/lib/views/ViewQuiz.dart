@@ -124,8 +124,6 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   @override
   Widget build(BuildContext context) {
-    final _themeProvider = Provider.of<ThemeProvider>(context);
-
     return WillPopScope(
       // this enables us to catch the "hard back" from device
       onWillPop: () async {
@@ -194,8 +192,10 @@ class _ViewQuizState extends State<ViewQuiz> {
                     //margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
+                        color: Colors.cyan.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                        border:
+                            Border.all(color: Colors.indigo.withOpacity(0.5))),
                     child: Column(
                       children: [
                         Container(
@@ -227,33 +227,27 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 alignment: Alignment.centerLeft,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                    color: !_isOver &&
-                                            _userAnswers[_qIndex] ==
-                                                Answer.values[index]
-                                        ? Colors.cyan[900]
+                                    color: !_isOver && _userAnswers[_qIndex] == Answer.values[index]
+                                        ? Colors.indigo.withOpacity(0.5)
                                         : (!_isOver
-                                            ? Colors.cyan
-                                            : (widget.questions[_qIndex]
-                                                            .correctAnswer ==
+                                            ? Colors.indigo.withOpacity(0.2)
+                                            : (widget.questions[_qIndex].correctAnswer ==
                                                         Answer.values[index] &&
-                                                    (_userAnswers[_qIndex] ==
-                                                            Answer.NONE ||
+                                                    (_userAnswers[_qIndex] == Answer.NONE ||
                                                         _userAnswers[_qIndex] !=
                                                             widget
                                                                 .questions[
                                                                     _qIndex]
                                                                 .correctAnswer)
-                                                ? Colors.green[900]
-                                                : (widget.questions[_qIndex]
-                                                            .correctAnswer ==
-                                                        Answer.values[index]
-                                                    ? Colors.green
-                                                    : (_userAnswers[_qIndex] ==
-                                                            Answer.values[index]
-                                                        ? Colors.red
-                                                        : Colors.cyan)))),
-                                    borderRadius:
-                                        const BorderRadius.all(Radius.circular(15))),
+                                                ? const Color.fromARGB(255, 27, 94, 32)
+                                                    .withOpacity(0.8)
+                                                : (widget.questions[_qIndex].correctAnswer == Answer.values[index]
+                                                    ? const Color.fromARGB(255, 42, 255, 49)
+                                                        .withOpacity(0.8)
+                                                    : (_userAnswers[_qIndex] == Answer.values[index]
+                                                        ? Colors.red.withOpacity(0.8)
+                                                        : Colors.indigo.withOpacity(0.2))))),
+                                    borderRadius: const BorderRadius.all(Radius.circular(10))),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(children: [
