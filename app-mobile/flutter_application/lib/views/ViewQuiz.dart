@@ -8,6 +8,7 @@ import 'package:roquiz/model/Quiz.dart';
 import 'package:roquiz/model/Settings.dart';
 import 'package:roquiz/widget/Themes.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
+import 'package:roquiz/widget/question.dart';
 
 import '../widget/change_theme_button_widget.dart';
 
@@ -186,6 +187,22 @@ class _ViewQuizState extends State<ViewQuiz> {
                     ],
                   ),
                   const SizedBox(height: 10),
+                  /*QuestionWidget(
+                    questionText: _currentQuestion,
+                    answers: _currentAnswers,
+                    isOver: _isOver,
+                    userAnswer: _userAnswers[_qIndex],
+                    correctAnswer: widget.questions[_qIndex].correctAnswer,
+                    onTapAnswer: (int index) => _setUserAnswer(index), // lancia un'eccezione perché chiama setState() ???
+                    backgroundQuizColor: Colors.cyan.withOpacity(0.1),
+                    defaultAnswerColor: Colors.indigo.withOpacity(0.2),
+                    selectedAnswerColor: Colors.indigo.withOpacity(0.5),
+                    correctAnswerColor:
+                        const Color.fromARGB(255, 42, 255, 49).withOpacity(0.5),
+                    correctNotSelectedAnswerColor:
+                        const Color.fromARGB(255, 27, 94, 32).withOpacity(0.8),
+                    wrongAnswerColor: Colors.red.withOpacity(0.8),
+                  ),*/
                   // QUIZ
                   Container(
                     //margin: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -242,7 +259,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                                     .withOpacity(0.8)
                                                 : (widget.questions[_qIndex].correctAnswer == Answer.values[index]
                                                     ? const Color.fromARGB(255, 42, 255, 49)
-                                                        .withOpacity(0.8)
+                                                        .withOpacity(0.5)
                                                     : (_userAnswers[_qIndex] == Answer.values[index]
                                                         ? Colors.red.withOpacity(0.8)
                                                         : Colors.indigo.withOpacity(0.2))))),
