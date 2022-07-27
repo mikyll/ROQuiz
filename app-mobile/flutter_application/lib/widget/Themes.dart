@@ -29,7 +29,7 @@ class MyThemes {
       iconColor: const Color.fromARGB(255, 12, 40, 120),
       splashColor: const Color.fromARGB(255, 103, 124, 193));
 
-  static final themeLight2 = ThemeData(
+  static final themeLight = ThemeData(
     colorSchemeSeed: Colors.indigo[900],
     brightness: Brightness.light,
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -46,7 +46,7 @@ class MyThemes {
     ),
   );
 
-  static final themeDark2 = ThemeData(
+  static final themeDark = ThemeData(
     brightness: Brightness.dark,
     colorSchemeSeed: Colors.indigo[100],
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -68,9 +68,9 @@ class MyThemes {
     ),
   );
 
-  static final themeOriginal = ThemeData();
+  /*static final themeOriginal = ThemeData();
 
-  static final themeLight = ThemeData(
+  static final themeLight2 = ThemeData(
       brightness: Brightness.light,
       colorScheme: const ColorScheme(
         primaryContainer: Colors.cyan,
@@ -99,8 +99,8 @@ class MyThemes {
       //colorScheme: ColorScheme.dark(),
       );
 
-  static final themeDark = ThemeData(
+  static final themeDark2 = ThemeData(
     brightness: Brightness.dark,
     colorSchemeSeed: Colors.blue,
-  );
+  );*/
 }

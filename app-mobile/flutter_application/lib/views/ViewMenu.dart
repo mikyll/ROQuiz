@@ -86,7 +86,7 @@ class ViewMenuState extends State<ViewMenu> {
     super.initState();
 
     _settings.loadSettings();
-    qRepo.loadFile("domande.txt").then(
+    qRepo.loadFile("assets/domande.txt").then(
           (value) => {
             _initTopics(),
             setState(
@@ -156,16 +156,19 @@ class ViewMenuState extends State<ViewMenu> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30.0),
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ViewQuiz(
-                                                  questions:
-                                                      _getPoolFromSelected(),
-                                                  settings: _settings,
-                                                )));
-                                  },
+                                  onPressed: qRepo.questions.isEmpty
+                                      ? null
+                                      : () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ViewQuiz(
+                                                        questions:
+                                                            _getPoolFromSelected(),
+                                                        settings: _settings,
+                                                      )));
+                                        },
                                   child: Container(
                                     alignment: Alignment.center,
                                     height: 60,
