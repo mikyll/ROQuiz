@@ -169,31 +169,35 @@ class ViewTopicsState extends State<ViewTopics> {
           ),
         ),
         persistentFooterButtons: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
+          Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.refresh,
+                  size: 40.0,
+                ),
                 onPressed: () {
                   _resetTopics();
                   _updatePool();
                   _updateEnabledTopics();
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                    child: Text("Ripristina",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                label: const Text(
+                  "Ripristina",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          )
+            ),
+          ),
         ],
       ),
     );

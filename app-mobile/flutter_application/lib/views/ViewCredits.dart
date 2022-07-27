@@ -35,81 +35,94 @@ class ViewCredits extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const Expanded(
-                    child: Text("Build macOS e iOS:",
-                        style: TextStyle(fontSize: 18)),
-                  ),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          _launchInBrowser("https://github.com/TryKatChup");
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("TryKatChup",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  decoration: TextDecoration.underline)),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Expanded(
+                          child: Text("Build macOS e iOS:",
+                              style: TextStyle(fontSize: 18)),
                         ),
-                      ),
-                      const Text("&", style: TextStyle(fontSize: 18)),
-                      InkWell(
-                        onTap: () {
-                          _launchInBrowser("https://github.com/Federicoand98");
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("Federyeeco",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  decoration: TextDecoration.underline)),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    _launchInBrowser(
+                                        "https://github.com/TryKatChup");
+                                  },
+                                  child: const Text("TryKatChup",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          decoration:
+                                              TextDecoration.underline)),
+                                ),
+                                const Text(" &",
+                                    style: TextStyle(fontSize: 18)),
+                              ],
+                            ),
+                            InkWell(
+                              onTap: () {
+                                _launchInBrowser(
+                                    "https://github.com/Federicoand98");
+                              },
+                              child: const Text("Federyeeco",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      decoration: TextDecoration.underline)),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ]),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const Expanded(
-                    child: Text("Spiegazione domande:",
-                        style: TextStyle(fontSize: 18)),
-                  ),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          _launchInBrowser("https://github.com/lollofred");
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("LolloFred",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  decoration: TextDecoration.underline)),
+                      ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Expanded(
+                          child: Text("Spiegazione domande:",
+                              style: TextStyle(fontSize: 18)),
                         ),
-                      ),
-                      const Text("&", style: TextStyle(fontSize: 18)),
-                      InkWell(
-                        onTap: () {
-                          _launchInBrowser(
-                              "https://github.com/filippoveronesi");
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("filovero98",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  decoration: TextDecoration.underline)),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    _launchInBrowser(
+                                        "https://github.com/lollofred");
+                                  },
+                                  child: const Text("LolloFred",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          decoration:
+                                              TextDecoration.underline)),
+                                ),
+                                const Text(" &",
+                                    style: TextStyle(fontSize: 18)),
+                              ],
+                            ),
+                            InkWell(
+                              onTap: () {
+                                _launchInBrowser(
+                                    "https://github.com/filippoveronesi");
+                              },
+                              child: const Text("filovero98",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      decoration: TextDecoration.underline)),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ]),
+                      ]),
+                ),
               ]),
         ),
       ),

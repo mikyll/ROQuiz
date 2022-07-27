@@ -79,107 +79,114 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   style: const TextStyle(
                       fontSize: 48, fontWeight: FontWeight.bold)),
               const SizedBox(height: 50),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const Expanded(
-                  child: Text("Applicazione sviluppata da:",
-                      style: TextStyle(fontSize: 18)),
-                ),
-                InkWell(
-                  onTap: () {
-                    _launchInBrowser("https://github.com/mikyll");
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("mikyll",
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Expanded(
+                    child: Text("Applicazione sviluppata da:",
+                        style: TextStyle(fontSize: 18)),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _launchInBrowser("https://github.com/mikyll");
+                    },
+                    child: const Text("mikyll",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
                             decoration: TextDecoration.underline)),
                   ),
-                ),
-              ]),
+                ]),
+              ),
               const SizedBox(height: 10),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const Expanded(
-                    child: Text("In collaborazione con:",
-                        style: TextStyle(fontSize: 18))),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ViewCredits()));
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("contributors",
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Expanded(
+                      child: Text("In collaborazione con:",
+                          style: TextStyle(fontSize: 18))),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewCredits()));
+                    },
+                    child: const Text("contributors",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
                             decoration: TextDecoration.underline)),
                   ),
-                ),
-              ]),
+                ]),
+              ),
               const SizedBox(height: 10),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const Expanded(
-                    child: Text("Repository GitHub:",
-                        style: TextStyle(fontSize: 18))),
-                InkWell(
-                  onTap: () {
-                    _launchInBrowser("https://github.com/mikyll/ROQuiz");
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("mikyll/ROQuiz",
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Expanded(
+                      child: Text("Repository GitHub:",
+                          style: TextStyle(fontSize: 18))),
+                  InkWell(
+                    onTap: () {
+                      _launchInBrowser("https://github.com/mikyll/ROQuiz");
+                    },
+                    child: const Text("mikyll/ROQuiz",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
                             decoration: TextDecoration.underline)),
                   ),
-                ),
-              ]),
+                ]),
+              ),
               const SizedBox(height: 10),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const Expanded(
-                    child: Text("Licenze:", style: TextStyle(fontSize: 18))),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewLicenses()));
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("Visualizza le licenze",
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Expanded(
+                      child: Text("Licenze:", style: TextStyle(fontSize: 18))),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewLicenses()));
+                    },
+                    child: const Text("Visualizza le licenze",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
                             decoration: TextDecoration.underline)),
                   ),
-                ),
-              ]),
+                ]),
+              ),
               const SizedBox(height: 10),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const Expanded(
-                  child: Text("Problemi con l'app?",
-                      style: TextStyle(fontSize: 18)),
-                ),
-                InkWell(
-                  onTap: () {
-                    _launchInBrowser(
-                        "https://github.com/mikyll/ROQuiz/issues/new?title=[Mobile]+Titolo+Problema&body=Descrivi+qui+il+problema%2C+possibilmente+aggiungendo+una+o+pi%C3%B9+etichette.");
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("Apri una issue",
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Expanded(
+                    child: Text("Problemi con l'app?",
+                        style: TextStyle(fontSize: 18)),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _launchInBrowser(
+                          "https://github.com/mikyll/ROQuiz/issues/new?title=[Mobile]+Titolo+Problema&body=Descrivi+qui+il+problema%2C+possibilmente+aggiungendo+una+o+pi%C3%B9+etichette.");
+                    },
+                    child: const Text("Apri una issue",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
                             decoration: TextDecoration.underline)),
                   ),
-                ),
-                const Text("su GitHub!", style: TextStyle(fontSize: 18)),
-              ]),
+                  const Text(" su GitHub!", style: TextStyle(fontSize: 18)),
+                ]),
+              ),
               const SizedBox(height: 50),
               Container(
                 color: Colors.indigo.withOpacity(0.35),
