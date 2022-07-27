@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
-import 'package:roquiz/model/Settings.dart';
 import 'package:roquiz/widget/question.dart';
 
 class ViewQuestions extends StatefulWidget {
@@ -61,65 +60,32 @@ class ViewQuestionsState extends State<ViewQuestions> {
             },
           ),
         ),
-        body: ListView.builder(
-          itemCount: questions.length,
-          itemBuilder: (_, iQuestion) => Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: QuestionWidget(
-              questionNumber: iQuestion + offset + 1,
-              questionText: questions[iQuestion].question,
-              alignmentQuestion: Alignment.centerLeft,
-              answers: questions[iQuestion].answers,
-              isOver: true,
-              userAnswer: Answer.NONE,
-              onTapAnswer: (_) => null,
-              correctAnswer: questions[iQuestion].correctAnswer,
-              backgroundQuizColor: Colors.cyan.withOpacity(0.1),
-              defaultAnswerColor: Colors.indigo.withOpacity(0.2),
-              selectedAnswerColor: Colors.indigo.withOpacity(0.5),
-              correctAnswerColor:
-                  const Color.fromARGB(255, 42, 255, 49).withOpacity(0.5),
-              correctNotSelectedAnswerColor:
-                  const Color.fromARGB(255, 27, 94, 32).withOpacity(0.8),
-              wrongAnswerColor: Colors.red.withOpacity(0.8),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemCount: questions.length,
+            itemBuilder: (_, iQuestion) => Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: QuestionWidget(
+                questionNumber: iQuestion + offset + 1,
+                questionText: questions[iQuestion].question,
+                alignmentQuestion: Alignment.centerLeft,
+                answers: questions[iQuestion].answers,
+                isOver: true,
+                userAnswer: Answer.NONE,
+                onTapAnswer: (_) => null,
+                correctAnswer: questions[iQuestion].correctAnswer,
+                backgroundQuizColor: Colors.cyan.withOpacity(0.1),
+                defaultAnswerColor: Colors.indigo.withOpacity(0.2),
+                selectedAnswerColor: Colors.indigo.withOpacity(0.5),
+                correctAnswerColor:
+                    const Color.fromARGB(255, 42, 255, 49).withOpacity(0.5),
+                correctNotSelectedAnswerColor:
+                    const Color.fromARGB(255, 27, 94, 32).withOpacity(0.8),
+                wrongAnswerColor: Colors.red.withOpacity(0.8),
+              ),
             ),
           ),
-          /*Column(
-            children: [
-              Text(
-                "Q${iQuestion + offset + 1}) ${questions[iQuestion].question}",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              ...List.generate(
-                questions[iQuestion].answers.length,
-                (iAnswer) => Row(
-                  children: [
-                    Text(
-                      Answer.values[iAnswer].name + ") ",
-                      style: TextStyle(
-                          color: Answer.values[iAnswer] ==
-                                  questions[iQuestion].correctAnswer
-                              ? Colors.green
-                              : Colors.white),
-                    ),
-                    Flexible(
-                      child: Text(
-                        questions[iQuestion].answers[iAnswer],
-                        style: TextStyle(
-                            color: Answer.values[iAnswer] ==
-                                    questions[iQuestion].correctAnswer
-                                ? Colors.green
-                                : Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              )
-            ],
-          ),*/
         ),
       ),
     );

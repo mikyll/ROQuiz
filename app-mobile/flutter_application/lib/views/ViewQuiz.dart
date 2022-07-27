@@ -8,9 +8,6 @@ import 'package:roquiz/model/Quiz.dart';
 import 'package:roquiz/model/Settings.dart';
 import 'package:roquiz/widget/Themes.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
-import 'package:roquiz/widget/question.dart';
-
-import '../widget/change_theme_button_widget.dart';
 
 class ViewQuiz extends StatefulWidget {
   const ViewQuiz({Key? key, required this.questions, required this.settings})
@@ -193,7 +190,10 @@ class _ViewQuizState extends State<ViewQuiz> {
                     isOver: _isOver,
                     userAnswer: _userAnswers[_qIndex],
                     correctAnswer: widget.questions[_qIndex].correctAnswer,
-                    onTapAnswer: (int index) => _setUserAnswer(index), // lancia un'eccezione perché chiama setState() ???
+                    onTapAnswer: !_isOver
+                        ? (int index) => _setUserAnswer(index)
+                        : (_) =>
+                            null, // lancia un'eccezione perché chiama setState() ???
                     backgroundQuizColor: Colors.cyan.withOpacity(0.1),
                     defaultAnswerColor: Colors.indigo.withOpacity(0.2),
                     selectedAnswerColor: Colors.indigo.withOpacity(0.5),
@@ -224,22 +224,26 @@ class _ViewQuizState extends State<ViewQuiz> {
                             padding: const EdgeInsets.all(8.0),
                             // QUESTION
                             child: Text(_currentQuestion,
+                                textAlign: TextAlign.center,
                                 style: const TextStyle(fontSize: 16)),
                           ),
                         ),
                         // ANSWERS
                         ...List.generate(
                           _currentAnswers.length,
-                          (index) => InkWell(
-                            enableFeedback: true,
-                            onTap: () {
-                              if (!_isOver) {
-                                _setUserAnswer(index);
-                              }
-                            },
-                            child: Column(children: [
-                              const SizedBox(height: 5),
-                              Container(
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 5.0),
+                            child: InkWell(
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              enableFeedback: true,
+                              onTap: !_isOver
+                                  ? () {
+                                      _setUserAnswer(index);
+                                    }
+                                  : null,
+                              child: Container(
                                 alignment: Alignment.centerLeft,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
@@ -279,7 +283,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                   ]),
                                 ),
                               ),
-                            ]),
+                            ),
                           ),
                         ),
                       ],

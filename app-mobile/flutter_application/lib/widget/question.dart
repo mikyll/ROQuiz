@@ -37,6 +37,21 @@ class QuestionWidget extends StatelessWidget {
   final Color correctNotSelectedAnswerColor;
   final Color wrongAnswerColor;
 
+  Color _getColor(int index) {
+    return !isOver && userAnswer == Answer.values[index]
+        ? selectedAnswerColor
+        : (!isOver
+            ? defaultAnswerColor
+            : (correctAnswer == Answer.values[index] &&
+                    (userAnswer == Answer.NONE || userAnswer != correctAnswer)
+                ? correctAnswerColor
+                : (correctAnswer == Answer.values[index]
+                    ? correctNotSelectedAnswerColor
+                    : (userAnswer == Answer.values[index]
+                        ? wrongAnswerColor
+                        : defaultAnswerColor))));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -65,46 +80,32 @@ class QuestionWidget extends StatelessWidget {
           // ANSWERS
           ...List.generate(
             answers.length,
-            (index) => InkWell(
-              enableFeedback: true,
-              onTap: onTapAnswer(index),
-              child: Column(
-                children: [
-                  const SizedBox(height: 5),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: !isOver && userAnswer == Answer.values[index]
-                            ? selectedAnswerColor
-                            : (!isOver
-                                ? defaultAnswerColor
-                                : (correctAnswer == Answer.values[index] &&
-                                        (userAnswer == Answer.NONE ||
-                                            userAnswer != correctAnswer)
-                                    ? correctAnswerColor
-                                    : (correctAnswer == Answer.values[index]
-                                        ? correctNotSelectedAnswerColor
-                                        : (userAnswer == Answer.values[index]
-                                            ? wrongAnswerColor
-                                            : defaultAnswerColor)))),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(children: [
-                        // current answers
-                        Text(Answer.values[index].name + ") ",
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        Flexible(
-                          child: Text(answers[index],
-                              style: const TextStyle(fontSize: 14)),
-                        ),
-                      ]),
-                    ),
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: InkWell(
+                enableFeedback: true,
+                onTap: onTapAnswer(index),
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: _getColor(index),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(children: [
+                      // current answers
+                      Text(Answer.values[index].name + ") ",
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      Flexible(
+                        child: Text(answers[index],
+                            style: const TextStyle(fontSize: 14)),
+                      ),
+                    ]),
                   ),
-                ],
+                ),
               ),
             ),
           ),

@@ -21,7 +21,7 @@ class ViewLicenses extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Info"),
+        title: const Text("Licenses"),
         centerTitle: true,
         automaticallyImplyLeading: true,
         leading: IconButton(
@@ -41,7 +41,7 @@ class ViewLicenses extends StatelessWidget {
                 return Center(child: CircularProgressIndicator());
               default:
                 if (snapshot.hasError) {
-                  return Center(child: Text('Some error occurred!'));
+                  return const Center(child: Text('Some error occurred!'));
                 } else {
                   return LicensesWidget(licenses: licenses!);
                 }

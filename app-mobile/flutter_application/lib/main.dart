@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'ROquiz',
             themeMode: themeProvider.themeMode,
-            theme: MyThemes.themeLight2,
-            darkTheme: MyThemes.themeDark2,
+            theme: MyThemes.themeLight,
+            darkTheme: MyThemes.themeDark,
             home: const ViewMenu(),
           );
         });

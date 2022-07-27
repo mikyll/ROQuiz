@@ -11,7 +11,7 @@ class LicensesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
-        padding: EdgeInsets.only(bottom: 24),
+        padding: const EdgeInsets.only(bottom: 24),
         itemCount: licenses.length,
         itemBuilder: (context, index) {
           final license = licenses[index];
@@ -21,12 +21,13 @@ class LicensesWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
                 license.title,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
             subtitle: Text(
               license.text,
-              style: TextStyle(fontSize: 18, color: Colors.black),
+              style: const TextStyle(fontSize: 18),
             ),
           );
         },
