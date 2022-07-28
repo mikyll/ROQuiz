@@ -301,10 +301,10 @@ class _ViewQuizState extends State<ViewQuiz> {
           persistentFooterButtons: [
             Row(
               children: [
-                IconButtonWidget(
+                IconButtonLongPressWidget(
                   lightPalette: MyThemes.lightIconButtonPalette,
                   darkPalette: MyThemes.darkIconButtonPalette,
-                  onTap: () {
+                  onUpdate: () {
                     _previousQuestion();
                     _loadQuestion();
                   },
@@ -314,10 +314,10 @@ class _ViewQuizState extends State<ViewQuiz> {
                   iconSize: 35,
                 ),
                 const SizedBox(width: 20),
-                IconButtonWidget(
+                IconButtonLongPressWidget(
                   lightPalette: MyThemes.lightIconButtonPalette,
                   darkPalette: MyThemes.darkIconButtonPalette,
-                  onTap: () {
+                  onUpdate: () {
                     _nextQuestion();
                     _loadQuestion();
                   },

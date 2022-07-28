@@ -136,33 +136,38 @@ class ViewTopicsState extends State<ViewTopics> {
                 color: Colors.indigo.withOpacity(0.35),
               ),
               const SizedBox(height: 25),
-              ...List.generate(
-                widget.qRepo.getTopics().length,
-                (index) => TopicWidget(
-                  onTap: () {
-                    if (_enabledTopics[index] ||
-                        !widget.selectedTopics[index]) {
-                      _selectTopic(index);
-                    }
-                  },
-                  checkBoxValue: widget.selectedTopics[index],
-                  onCheckBoxChanged: (_) =>
-                      _enabledTopics[index] || !widget.selectedTopics[index]
-                          ? _selectTopic(index)
-                          : null,
-                  onPressedButton: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewQuestions(
-                                qRepo: widget.qRepo, iTopic: index)));
-                  },
-                  text:
-                      " ${widget.qRepo.topics[index]} (${widget.qRepo.qNumPerTopic[index]})",
-                  textSize: 20.0,
-                  lightTextColor: Colors.black,
-                  darkTextColor: Colors.white,
-                  disabled: !_enabledTopics[index],
+              Expanded(
+                child: ListView.builder(
+                  itemCount: widget.qRepo.getTopics().length,
+                  itemBuilder: (_, index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: TopicWidget(
+                      onTap: () {
+                        if (_enabledTopics[index] ||
+                            !widget.selectedTopics[index]) {
+                          _selectTopic(index);
+                        }
+                      },
+                      checkBoxValue: widget.selectedTopics[index],
+                      onCheckBoxChanged: (_) =>
+                          _enabledTopics[index] || !widget.selectedTopics[index]
+                              ? _selectTopic(index)
+                              : null,
+                      onPressedButton: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ViewQuestions(
+                                    qRepo: widget.qRepo, iTopic: index)));
+                      },
+                      text: " ${widget.qRepo.topics[index]}",
+                      questionNum: widget.qRepo.getQuestionNumPerTopic()[index],
+                      textSize: 20.0,
+                      lightTextColor: Colors.black,
+                      darkTextColor: Colors.white,
+                      disabled: !_enabledTopics[index],
+                    ),
+                  ),
                 ),
               ),
             ],

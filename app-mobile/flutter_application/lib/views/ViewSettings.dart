@@ -287,7 +287,8 @@ class ViewSettingsState extends State<ViewSettings> {
                   },
                   child: Container(
                     alignment: Alignment.center,
-                    height: 50,
+                    height: 50.0,
+                    width: 100.0,
                     child: const Text(
                       "Salva",
                       style: TextStyle(
@@ -309,7 +310,8 @@ class ViewSettingsState extends State<ViewSettings> {
                   },
                   child: Container(
                     alignment: Alignment.center,
-                    height: 50,
+                    height: 50.0,
+                    width: 100.0,
                     child: const Text(
                       "Cancella",
                       style: TextStyle(

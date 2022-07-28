@@ -64,6 +64,7 @@ class TopicWidget extends StatelessWidget {
     required this.onCheckBoxChanged,
     required this.onPressedButton,
     required this.text,
+    required this.questionNum,
     required this.textSize,
     this.lightTextColor,
     this.darkTextColor,
@@ -75,6 +76,7 @@ class TopicWidget extends StatelessWidget {
   final bool checkBoxValue;
   final Function(bool?) onCheckBoxChanged;
   final String text;
+  final int questionNum;
   final double textSize;
   final Color? lightTextColor;
   final Color? darkTextColor;
@@ -90,37 +92,45 @@ class TopicWidget extends StatelessWidget {
       hoverColor: disabled ? Colors.transparent : null,
       enableFeedback: true,
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 5.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Checkbox(
-              value: checkBoxValue,
-              onChanged: onCheckBoxChanged,
-            ),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: textSize,
-                  color: _themeProvider.isDarkMode
-                      ? (darkTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
-                          Colors.white.withOpacity(disabled ? 0.3 : 1.0))
-                      : (lightTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
-                          Colors.black.withOpacity(disabled ? 0.3 : 1.0)),
-                ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Checkbox(
+            value: checkBoxValue,
+            onChanged: onCheckBoxChanged,
+          ),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: textSize,
+                color: _themeProvider.isDarkMode
+                    ? (darkTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
+                        Colors.white.withOpacity(disabled ? 0.3 : 1.0))
+                    : (lightTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
+                        Colors.black.withOpacity(disabled ? 0.3 : 1.0)),
               ),
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.arrow_forward_ios,
-              ),
-              onPressed: onPressedButton,
+          ),
+          Text(
+            "($questionNum)",
+            style: TextStyle(
+              fontSize: textSize,
+              color: _themeProvider.isDarkMode
+                  ? (darkTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
+                      Colors.white.withOpacity(disabled ? 0.3 : 1.0))
+                  : (lightTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
+                      Colors.black.withOpacity(disabled ? 0.3 : 1.0)),
             ),
-          ],
-        ),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.arrow_forward_ios,
+            ),
+            onPressed: onPressedButton,
+          ),
+        ],
       ),
     );
   }
