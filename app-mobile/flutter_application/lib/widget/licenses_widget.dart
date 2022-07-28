@@ -19,13 +19,13 @@ class LicensesWidget extends StatelessWidget {
           return ListTile(
             title: Container(
               padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Text(
+              child: SelectableText(
                 license.title,
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-            subtitle: Text(
+            subtitle: SelectableText(
               license.text,
               style: const TextStyle(fontSize: 18),
             ),

@@ -73,7 +73,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Spacer(flex: 1),
+              const SizedBox(height: 50),
               Text(
                   "ROQuiz v${Settings.VERSION_NUMBER}${Settings.VERSION_SUFFIX}",
                   style: const TextStyle(
@@ -187,7 +187,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   const Text(" su GitHub!", style: TextStyle(fontSize: 18)),
                 ]),
               ),
-              const SizedBox(height: 50),
+              const Spacer(flex: 1),
               Container(
                 color: Colors.indigo.withOpacity(0.35),
                 height: 60,
@@ -201,7 +201,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                       )),
                 ),
               ),
-              const Spacer(flex: 3)
+              const SizedBox(height: 50),
             ],
           ),
         ),
