@@ -48,12 +48,14 @@
 #### Mobile
 <table style="border: none">
   <tr align="center">
-    <td><img width=50% src="./gfx/[GIF] MobileInstall.gif" alt="InstallMobileGIF"/></td>
-    <td><img width=50% src="./gfx/[GIF] MobileUsage.gif" alt="MobileUsageGIF"/></td>
+    <td><img width=50% src="./gfx/[GIF] MobileDemo.gif" alt="DemoMobileGIF"/></td>
+    <td><img width=50% src="./gfx/[GIF] MobileQuestionList.gif" alt="QuestionListGIF"/></td>
+	<td><img width=50% src="./gfx/[GIF] MobileSettings.gif" alt="SettingsMobileGIF"/></td>
   </tr>
   <tr align="center">
-    <td>Installazione versione mobile</td>
-    <td>Terminazione quiz</td>
+    <td>Demo Quiz</td>
+	<td>Lista Domande</td>
+    <td>Impostazioni</td>
   </tr>
 </table>
 

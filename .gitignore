@@ -26,6 +26,9 @@ hs_err_pid*
 *.mkv
 *.mp4
 
+#old gifs
+*[OLD_GIFS]*
+
 # link
 *.url
 
