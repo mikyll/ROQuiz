@@ -7,7 +7,7 @@ import 'package:roquiz/widget/change_theme_button_widget.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 
 class ViewSettings extends StatefulWidget {
-  ViewSettings({
+  const ViewSettings({
     Key? key,
     required this.qRepo,
     required this.settings,
@@ -79,6 +79,18 @@ class ViewSettingsState extends State<ViewSettings> {
 
       _themeProvider.toggleTheme(Settings.DEFAULT_DARK_THEME);
     });
+  }
+
+  bool _isDefault() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    if (_questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
+        _timer == Settings.DEFAULT_TIMER &&
+        _shuffleAnswers == Settings.DEFAULT_SHUFFLE_ANSWERS &&
+        themeProvider.isDarkMode == Settings.DEFAULT_DARK_THEME) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -251,9 +263,11 @@ class ViewSettingsState extends State<ViewSettings> {
               Icons.refresh,
               size: 40.0,
             ),
-            onPressed: () {
-              _reset(_themeProvider);
-            },
+            onPressed: _isDefault()
+                ? null
+                : () {
+                    _reset(_themeProvider);
+                  },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),

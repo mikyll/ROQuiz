@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/Settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ViewCredits extends StatelessWidget {
+  const ViewCredits({Key? key}) : super(key: key);
+
   Future<void> _launchInBrowser(String url) async {
     if (!await launch(
       url,

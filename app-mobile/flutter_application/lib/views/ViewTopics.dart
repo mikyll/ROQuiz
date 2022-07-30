@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/model/Settings.dart';
-import 'package:roquiz/model/Themes.dart';
-import 'package:roquiz/widget/change_theme_button_widget.dart';
 import 'package:roquiz/widget/topics_widget.dart';
 
 import 'ViewQuestions.dart';
@@ -46,6 +43,14 @@ class ViewTopicsState extends State<ViewTopics> {
         widget.selectedTopics[i] = true;
       }
     });
+  }
+
+  bool _isDefault() {
+    for (int i = 0; i < widget.selectedTopics.length; i++) {
+      if (!widget.selectedTopics[i]) return false;
+    }
+
+    return true;
   }
 
   void _updateEnabledTopics() {
@@ -183,11 +188,13 @@ class ViewTopicsState extends State<ViewTopics> {
                   Icons.refresh,
                   size: 40.0,
                 ),
-                onPressed: () {
-                  _resetTopics();
-                  _updatePool();
-                  _updateEnabledTopics();
-                },
+                onPressed: _isDefault()
+                    ? null
+                    : () {
+                        _resetTopics();
+                        _updatePool();
+                        _updateEnabledTopics();
+                      },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
