@@ -333,15 +333,12 @@ class _ViewQuizState extends State<ViewQuiz> {
                   },
                   child: Container(
                     alignment: Alignment.center,
-                    height: 50,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 10.0),
-                      child: Text(!_isOver ? "Termina" : "Riavvia",
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold)),
+                    height: 50.0,
+                    width: 100.0,
+                    child: Text(
+                      !_isOver ? "Termina" : "Riavvia",
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
                 )
