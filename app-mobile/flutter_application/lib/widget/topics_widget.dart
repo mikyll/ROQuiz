@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/model/Themes.dart';
 
 class TopicsInfoWidget extends StatelessWidget {
   const TopicsInfoWidget({

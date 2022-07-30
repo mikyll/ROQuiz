@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/model/Themes.dart';
 
 class ChangeThemeButtonWidget extends StatelessWidget {
   const ChangeThemeButtonWidget({Key? key}) : super(key: key);

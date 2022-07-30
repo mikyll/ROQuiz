@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/Settings.dart';
 import 'package:roquiz/views/ViewCredits.dart';
 import 'package:roquiz/views/ViewLicenses.dart';
-import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 

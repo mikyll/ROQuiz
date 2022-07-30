@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/model/Settings.dart';
-import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/change_theme_button_widget.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 

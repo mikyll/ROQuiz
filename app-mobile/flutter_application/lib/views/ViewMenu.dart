@@ -7,7 +7,7 @@ import 'package:roquiz/views/ViewQuiz.dart';
 import 'package:roquiz/views/ViewSettings.dart';
 import 'package:roquiz/views/ViewTopics.dart';
 import 'package:roquiz/views/ViewInfo.dart';
-import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';

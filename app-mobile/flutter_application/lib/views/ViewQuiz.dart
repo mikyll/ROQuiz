@@ -6,7 +6,7 @@ import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Quiz.dart';
 import 'package:roquiz/model/Settings.dart';
-import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 
 class ViewQuiz extends StatefulWidget {

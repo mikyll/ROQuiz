@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
-import 'package:roquiz/widget/question.dart';
+import 'package:roquiz/widget/question_widget.dart';
 
 class ViewQuestions extends StatefulWidget {
   const ViewQuestions({Key? key, required this.qRepo, required this.iTopic});

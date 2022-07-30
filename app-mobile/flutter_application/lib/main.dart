@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:roquiz/model/Settings.dart';
 import 'package:roquiz/views/ViewMenu.dart';
 
-import 'package:roquiz/widget/Themes.dart';
+import 'package:roquiz/model/Themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
