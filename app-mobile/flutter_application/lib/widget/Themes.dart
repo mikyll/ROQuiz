@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/palette.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode themeMode = ThemeMode.light;
 
+  ThemeProvider(bool darkThemeOn) {
+    themeMode = darkThemeOn ? ThemeMode.dark : ThemeMode.light;
+  }
+
   bool get isDarkMode => themeMode == ThemeMode.dark;
 
-  void toggleTheme(bool isOn) async {
-    themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+  void toggleTheme(bool darkThemeOn) async {
+    themeMode = darkThemeOn ? ThemeMode.dark : ThemeMode.light;
 
     notifyListeners();
   }

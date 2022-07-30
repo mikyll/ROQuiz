@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:roquiz/model/Settings.dart';
 import 'package:roquiz/views/ViewMenu.dart';
 
 import 'package:roquiz/widget/Themes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences.getInstance().then((prefs) {
+    // read from the SharedPreferences
+    var isDarkTheme = prefs.getBool("darkTheme") ?? Settings.DEFAULT_DARK_THEME;
+
+    return runApp(
+      ChangeNotifierProvider<ThemeProvider>(
+        child: const MyApp(),
+        create: (BuildContext context) {
+          return ThemeProvider(isDarkTheme);
+        },
+      ),
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -13,19 +29,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ThemeProvider(),
-        builder: (context, _) {
-          final themeProvider =
-              Provider.of<ThemeProvider>(context, listen: true);
-
-          return MaterialApp(
-            title: 'ROquiz',
-            themeMode: themeProvider.themeMode,
-            theme: MyThemes.themeLight,
-            darkTheme: MyThemes.themeDark,
-            home: const ViewMenu(),
-          );
-        });
+    return Consumer<ThemeProvider>(builder: (context, value, child) {
+      return MaterialApp(
+        title: 'ROquiz',
+        themeMode: value.themeMode,
+        theme: MyThemes.themeLight,
+        darkTheme: MyThemes.themeDark,
+        home: const ViewMenu(),
+      );
+    });
   }
 }

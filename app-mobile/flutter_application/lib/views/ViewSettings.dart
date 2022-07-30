@@ -26,7 +26,7 @@ class ViewSettingsState extends State<ViewSettings> {
   int _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
   int _timer = Settings.DEFAULT_TIMER;
   bool _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
-  bool _darkTheme = Settings.DEFAULT_DARK_THEME;
+  bool _darkTheme = Settings.DEFAULT_DARK_THEME; // previous value
 
   bool _isPressedQI = false;
   bool _isPressedQD = false;
@@ -99,6 +99,8 @@ class ViewSettingsState extends State<ViewSettings> {
 
     return WillPopScope(
       onWillPop: () async {
+        _themeProvider.toggleTheme(_darkTheme);
+
         // ask for save / discard ?
         return true;
       },
@@ -111,6 +113,7 @@ class ViewSettingsState extends State<ViewSettings> {
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
               _themeProvider.toggleTheme(_darkTheme);
+
               // discard
               Navigator.pop(context);
             },
@@ -276,6 +279,7 @@ class ViewSettingsState extends State<ViewSettings> {
                     widget.saveSettings(_questionNumber, _timer,
                         _shuffleAnswers, _themeProvider.isDarkMode);
                     _darkTheme = _themeProvider.isDarkMode;
+
                     Navigator.pop(context);
                   },
                   child: Container(
