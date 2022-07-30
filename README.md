@@ -50,11 +50,11 @@
   <tr align="center">
     <td><img width=50% src="./gfx/[GIF] MobileDemo.gif" alt="DemoMobileGIF"/></td>
     <td><img width=50% src="./gfx/[GIF] MobileQuestionList.gif" alt="QuestionListGIF"/></td>
-	<td><img width=50% src="./gfx/[GIF] MobileSettings.gif" alt="SettingsMobileGIF"/></td>
+    <td><img width=50% src="./gfx/[GIF] MobileSettings.gif" alt="SettingsMobileGIF"/></td>
   </tr>
   <tr align="center">
     <td>Demo Quiz</td>
-	<td>Lista Domande</td>
+    <td>Lista Domande</td>
     <td>Impostazioni</td>
   </tr>
 </table>
