@@ -205,7 +205,6 @@ class _ViewQuizState extends State<ViewQuiz> {
                   ),*/
                   // QUIZ
                   Container(
-                    //margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                         color: Colors.cyan.withOpacity(0.1),
@@ -271,12 +270,13 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(children: [
-                                    // current answers
+                                    // Answer letter
                                     Text(Answer.values[index].name + ") ",
                                         style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold)),
                                     Flexible(
+                                      // Answer text
                                       child: Text(_currentAnswers[index],
                                           style: const TextStyle(fontSize: 14)),
                                     ),
@@ -301,6 +301,7 @@ class _ViewQuizState extends State<ViewQuiz> {
           persistentFooterButtons: [
             Row(
               children: [
+                // Show previous question
                 IconButtonLongPressWidget(
                   lightPalette: MyThemes.lightIconButtonPalette,
                   darkPalette: MyThemes.darkIconButtonPalette,
@@ -314,6 +315,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                   iconSize: 35,
                 ),
                 const SizedBox(width: 20),
+                // Show next question
                 IconButtonLongPressWidget(
                   lightPalette: MyThemes.lightIconButtonPalette,
                   darkPalette: MyThemes.darkIconButtonPalette,
@@ -327,6 +329,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                   iconSize: 35,
                 ),
                 const Spacer(flex: 5),
+                // End/Restart quiz
                 ElevatedButton(
                   onPressed: () {
                     !_isOver ? _endQuiz() : _resetQuiz();

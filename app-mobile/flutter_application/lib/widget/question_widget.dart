@@ -23,12 +23,13 @@ class QuestionWidget extends StatelessWidget {
   final String questionText;
   final List<String> answers;
 
-  final int? questionNumber;
+  final int? questionNumber; // Index of the current question
   final Alignment alignmentQuestion;
   final bool isOver;
-  final Answer userAnswer;
-  final Answer correctAnswer;
-  final Function(int) onTapAnswer;
+  final Answer userAnswer; // User answer for that question (can be NONE)
+  final Answer correctAnswer; // Correct answer
+  final Function(int)
+      onTapAnswer; // Callback which updates the user selected answer
 
   final Color backgroundQuizColor;
   final Color defaultAnswerColor;
@@ -55,7 +56,6 @@ class QuestionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //margin: const EdgeInsets.symmetric(horizontal: 10.0),
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
           color: backgroundQuizColor,
@@ -70,7 +70,7 @@ class QuestionWidget extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(30))),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              // QUESTION
+              // Question text
               child: Text(
                   (questionNumber != null ? "Q$questionNumber) " : "") +
                       questionText,
@@ -95,11 +95,12 @@ class QuestionWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(children: [
-                      // current answers
+                      // Answer letter
                       Text(Answer.values[index].name + ") ",
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       Flexible(
+                        // Answer text
                         child: Text(answers[index],
                             style: const TextStyle(fontSize: 14)),
                       ),
