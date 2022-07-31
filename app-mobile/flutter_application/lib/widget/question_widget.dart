@@ -84,7 +84,7 @@ class QuestionWidget extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 5.0),
               child: InkWell(
                 enableFeedback: true,
-                onTap: onTapAnswer(index),
+                onTap: () => onTapAnswer(index),
                 child: Container(
                   alignment: Alignment.centerLeft,
                   width: double.infinity,
