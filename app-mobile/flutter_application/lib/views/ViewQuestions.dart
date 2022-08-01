@@ -72,7 +72,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 alignmentQuestion: Alignment.centerLeft,
                 answers: questions[iQuestion].answers,
                 isOver: true,
-                userAnswer: Answer.NONE,
+                userAnswer: questions[iQuestion].correctAnswer,
                 onTapAnswer: (_) => null,
                 correctAnswer: questions[iQuestion].correctAnswer,
                 backgroundQuizColor: Colors.cyan.withOpacity(0.1),
@@ -81,8 +81,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 correctAnswerColor:
                     const Color.fromARGB(255, 42, 255, 49).withOpacity(0.5),
                 correctNotSelectedAnswerColor:
-                    const Color.fromARGB(255, 27, 94, 32).withOpacity(0.8),
-                wrongAnswerColor: Colors.red.withOpacity(0.8),
+                    const Color.fromARGB(255, 42, 255, 49).withOpacity(0.5),
               ),
             ),
           ),

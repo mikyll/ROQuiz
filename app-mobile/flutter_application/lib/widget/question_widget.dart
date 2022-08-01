@@ -15,8 +15,8 @@ class QuestionWidget extends StatelessWidget {
     required this.backgroundQuizColor,
     required this.defaultAnswerColor,
     this.selectedAnswerColor = Colors.transparent,
-    required this.correctAnswerColor,
-    required this.correctNotSelectedAnswerColor,
+    this.correctAnswerColor = Colors.transparent,
+    this.correctNotSelectedAnswerColor = Colors.transparent,
     this.wrongAnswerColor = Colors.transparent,
   }) : super(key: key);
 
@@ -38,19 +38,44 @@ class QuestionWidget extends StatelessWidget {
   final Color correctNotSelectedAnswerColor;
   final Color wrongAnswerColor;
 
+  // Returns the color of the answer identified by #index
   Color _getColor(int index) {
-    return !isOver && userAnswer == Answer.values[index]
-        ? selectedAnswerColor
-        : (!isOver
-            ? defaultAnswerColor
-            : (correctAnswer == Answer.values[index] &&
-                    (userAnswer == Answer.NONE || userAnswer != correctAnswer)
-                ? correctAnswerColor
-                : (correctAnswer == Answer.values[index]
-                    ? correctNotSelectedAnswerColor
-                    : (userAnswer == Answer.values[index]
-                        ? wrongAnswerColor
-                        : defaultAnswerColor))));
+    // Quiz terminated
+    if (!isOver) {
+      // User selected this answer
+      if (userAnswer == Answer.values[index]) {
+        return selectedAnswerColor;
+      }
+      // User did not select this answer
+      else {
+        return defaultAnswerColor;
+      }
+    }
+    // Quiz not terminated
+    else {
+      // This answer is the correct one
+      if (correctAnswer == Answer.values[index]) {
+        // User selected this answer
+        if (userAnswer == correctAnswer) {
+          return correctAnswerColor;
+        }
+        // User did not select this answer
+        else {
+          return correctNotSelectedAnswerColor;
+        }
+      }
+      // This answer is not the correct one
+      else {
+        // User selected this answer
+        if (userAnswer == Answer.values[index]) {
+          return wrongAnswerColor;
+        }
+        // User did not select this answer
+        else {
+          return defaultAnswerColor;
+        }
+      }
+    }
   }
 
   @override
