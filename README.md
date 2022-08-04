@@ -173,28 +173,69 @@ Proposta feature:
 ### Roadmap
 <details>
 <summary>Features da aggiungere e sviluppi futuri:</summary>
-
-- [x] aggiungere la scelta degli argomenti
-- [x] impostazioni persistenti
-- [x] download domande aggiornate
-- [x] impostazione per abilitare/disabilitare il controllo delle domande aggiornate
-- [x] deploy su MacOS
-- [x] aggiornamento automatico del Readme quando vengono aggiunte nuove domande (GitHub actions)
-- [ ] aggiungere bottone per visualizzare l'elenco delle domande, dagli argomenti
-- [ ] fare il porting su mobile
-  - [x] [Android](https://github.com/mikyll/ROQuiz/releases/tag/v1.3-mobile_beta)
-  - [ ] iOS
-- [ ] aggiungere test domande duplicate
-- [ ] verifica aggiornamenti app
-- [ ] creare tool per inserire domande nuove (che sfrutta il test per le domande duplicate)
-- [ ] desktop: aggiungere impostazione dark mode ([riferimento utile](https://stackoverflow.com/questions/49159286/make-a-dark-mode-with-javafx))
-- [x] desktop: aggiungere impostazione per mescolare le risposte
-- [x] desktop: aggiungere dei tooltips
-- [x] mobile: fare refactor e sistemare le classi (usare classe Quiz)
-- [x] mobile: aggiungere scelta argomenti
-- [ ] mobile: aggiungere possibilità di caricare un file domande personalizzato
-- [ ] cambiare il controllo per le domande nuove e farlo in base alla data di modifica o ad un numero di versione
-- [ ] aggiungere template per le issue: es [Desktop]/[Mobile] in base a da dove viene cliccato il link
+<br/>
+<table>
+  <tr align="center">
+    <td><b>Obbiettivo</b></td>
+    <td width="5%">🖥️</td>
+    <td width="5%">📱</td>
+  </tr>
+  <tr align="center">
+    <td>Possibilità di modificare il file domande</td>
+    <td>✔️</td>
+    <td>❌</td>
+  </tr>
+  <tr align="center">
+    <td>Scelta degli argomenti</td>
+    <td>✔️</td>
+    <td>✔️</td>
+  </tr>
+  <tr align="center">
+    <td>Impostazioni persistenti</td>
+    <td>✔️</td>
+    <td>✔️</td>
+  </tr>
+  <tr align="center">
+    <td>Dark theme</td>
+    <td>✔️</td>
+    <td>✔️</td>
+  </tr>
+  <tr align="center">
+    <td>Verifica aggiornamento domande + download</td>
+    <td>✔️</td>
+    <td>❌</td>
+  </tr>
+  <tr align="center">
+    <td>Verifica aggiornamento app</td>
+    <td>✔️</td>
+    <td>❌</td>
+  </tr>
+  <tr align="center">
+    <td>Deploy su sistemi Android</td>
+    <td> - </td>
+    <td>✔️</td>
+  </tr>
+  <tr align="center">
+    <td>Deploy su sistemi Apple</td>
+    <td>✔️</td>
+    <td>❌</td>
+  </tr>
+  <tr align="center">
+    <td>Test domande duplicate</td>
+    <td>❌</td>
+    <td>❌</td>
+  </tr>
+  <tr align="center">
+    <td>Strumento per inserire nuove domande</td>
+    <td>❌</td>
+    <td>❌</td>
+  </tr>
+  <tr align="center">
+    <td>Template per pubblicare una issue</td>
+    <td>✔️</td>
+    <td>✔️</td>
+  </tr>
+</table>
 
 </details>
 
