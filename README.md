@@ -181,6 +181,11 @@ Proposta feature:
     <td width="5%">📱</td>
   </tr>
   <tr align="center">
+    <td>Visualizzazione lista domande in-app</td>
+    <td>❌</td>
+    <td>✔️</td>
+  </tr>
+  <tr align="center">
     <td>Possibilità di modificare il file domande</td>
     <td>✔️</td>
     <td>❌</td>
