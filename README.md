@@ -61,7 +61,7 @@
 
 ### Download
 #### Versione Desktop
-1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.5/ROQuizDeployWindows.zip), [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.5/ROQuizDeployLinux.tar.gz) o [MacOS](https://github.com/mikyll/ROQuiz/releases/download/v1.5/ROQuizDeployMac.tar.gz)) ed estrarre il contenuto.
+1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.5/ROQuizDeployWindows_x64.zip), [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.5/ROQuizDeployLinux.tar.gz) o [MacOS](https://github.com/mikyll/ROQuiz/releases/download/v1.5/ROQuizDeployMac_ARMx64.zip)) ed estrarre il contenuto.
 2. Eseguire Launcher con doppioclick.
 
 #### Versione Mobile
