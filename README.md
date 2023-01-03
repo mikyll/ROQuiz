@@ -13,7 +13,7 @@
 [![flutter][flutter-shield]][flutter-url]
 
 <h1> ROQuiz</h1>
-<h3> Applicazione multipiattaforma per esercitarsi con i quiz del corso Ricerca Operativa M.</h3>
+<h3> Applicazione multipiattaforma per esercitarsi con i quiz del corso <a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2022/467997">Ricerca Operativa M</a>.</h3>
 <hr class="rounded">
 </div>
 
