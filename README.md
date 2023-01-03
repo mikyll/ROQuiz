@@ -65,7 +65,7 @@
 2. Eseguire Launcher con doppioclick.
 
 #### Versione Mobile
-1. Scaricare l'[apk](https://github.com/mikyll/ROQuiz/releases/download/v1.4/roquiz-mobile.apk).
+1. Scaricare l'[apk](https://github.com/mikyll/ROQuiz/releases/download/v1.5/roquiz-mobile.apk).
 2. Selezionare ```INSTALLA``` e ```INSTALLA COMUNQUE```.
 
 ### Formattazione domande
