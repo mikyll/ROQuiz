@@ -118,8 +118,8 @@ Aggiunta domande o feature al progetto:
 2. Clonare la repository in locale.
 3. (Opzionale) Creare un nuovo branch.
 4. Aggiungere le modifiche:
-  * Per aggiungere nuove domande: modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi. NB: in caso non si sappia sotto quale argomento inserire una somanda, scriverlo successivamente in un commento nella pull request.<br/>
-  * Per aggiungere delle feature, basta implementarle e integrarle col resto dell'applicazione (in caso di dubbi o domande sul funzionamento di alcune parti di codice, basta aprire un issue e cercherò di rispondere il prima possibile).
+  * Per aggiungere nuove domande: modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi. NB: in caso non si sappia sotto quale argomento inserire una domanda, scriverlo successivamente in un commento nella pull request.<br/>
+  * Per aggiungere delle feature: basta implementarle e integrarle col resto dell'applicazione.
 5. Fare commit e push.
 6. Creare una **pull request** aggiungendo informazioni se necessario.
 7. Ammirare il proprio nome inserito in questa meravigliosa lista che viene aggiornata automaticamente.
