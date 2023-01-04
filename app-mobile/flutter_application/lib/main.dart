@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(builder: (context, value, child) {
       return MaterialApp(
-        title: 'ROquiz',
+        title: Settings.APP_TITLE,
         themeMode: value.themeMode,
         theme: MyThemes.themeLight,
         darkTheme: MyThemes.themeDark,

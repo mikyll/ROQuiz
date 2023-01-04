@@ -142,9 +142,9 @@ class ViewMenuState extends State<ViewMenu> {
                                     fontWeight: FontWeight
                                         .bold, /*fontStyle: FontStyle.italic*/
                                   )),
-                              Text(
-                                "v${Settings.VERSION_NUMBER}${Settings.VERSION_SUFFIX}",
-                                style: const TextStyle(
+                              const Text(
+                                "v${Settings.VERSION_NUMBER}",
+                                style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                 ),

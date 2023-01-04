@@ -74,10 +74,8 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              Text(
-                  "ROQuiz v${Settings.VERSION_NUMBER}${Settings.VERSION_SUFFIX}",
-                  style: const TextStyle(
-                      fontSize: 48, fontWeight: FontWeight.bold)),
+              const Text("${Settings.APP_TITLE} v${Settings.VERSION_NUMBER}",
+                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.all(8.0),

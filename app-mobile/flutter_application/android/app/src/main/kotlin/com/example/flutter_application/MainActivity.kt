@@ -1,4 +1,4 @@
-package com.example.flutter_application
+package it.unibo.roquiz
 
 import io.flutter.embedding.android.FlutterActivity
 
