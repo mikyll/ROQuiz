@@ -42,6 +42,7 @@ public class ControllerMenu {
 	private IQuestionRepository qRepo;
 	
 	private List<CheckBox> checkBoxesTopics;
+	private int qPoolNum = 0;
 	
 	@FXML private VBox vboxMain;
 	@FXML private VBox vboxTopics;
@@ -110,9 +111,9 @@ public class ControllerMenu {
 		}
 		
 		// update components based on QuestionRepository and Settings
-		this.updateQuizInfo(qNum);
 		this.updateQuestionRepositoryInfo(qNum);
 		this.updateSettingsComponents(qNum);
+		this.updateQuizInfo();
 		
 		// setup vbox and panels
 		this.vboxMain.setVisible(true);
@@ -133,6 +134,8 @@ public class ControllerMenu {
 		
 		// check if there are enough questions. In case there aren't, the checkbox are disabled
 		int qNum = this.qRepo.getQuestions().size();
+		qPoolNum = qNum;
+		
 		this.labelSelectedQ.setText("" + qNum);
 		this.labelQuizQNum.setText("" + settings.getQuestionNumber());
 		
@@ -171,9 +174,9 @@ public class ControllerMenu {
 		this.setDisableCheckBoxes();
 	}
 	
-	private void updateQuizInfo(int qNum)
+	private void updateQuizInfo()
 	{
-		this.labelQuizQuestions.setText("Domande: " + settings.getQuestionNumber() + " su " + qNum);
+		this.labelQuizQuestions.setText("Domande: " + settings.getQuestionNumber() + " su " + qPoolNum);
 		this.labelQuizTimer.setText("Tempo: " + settings.getTimer() + " minuti");
 	}
 	
@@ -240,6 +243,9 @@ public class ControllerMenu {
 			
 			this.checkBoxesTopics.get(i).setDisable(disableCheckBox);
 		}
+		
+		this.qPoolNum = currentTotQuestNum;
+		this.updateQuizInfo();
 	}
 	
 	private void showQuestions(ActionEvent event)
@@ -648,7 +654,7 @@ public class ControllerMenu {
 		settings.setCheckQuestionsUpdate(cqu);
 		settings.setCheckAppUpdate(cau);
 		
-		this.updateQuizInfo(qNum);
+		this.updateQuizInfo();
 		this.updateQuestionRepositoryInfo(qNum);
 		
 		this.changeTheme(new ActionEvent());
