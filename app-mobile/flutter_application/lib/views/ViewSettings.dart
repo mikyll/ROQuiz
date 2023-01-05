@@ -28,11 +28,6 @@ class ViewSettingsState extends State<ViewSettings> {
   bool _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
   bool _darkTheme = Settings.DEFAULT_DARK_THEME; // previous value
 
-  bool _isPressedQI = false;
-  bool _isPressedQD = false;
-  bool _isPressedTI = false;
-  bool _isPressedTD = false;
-
   void _increaseQuestionNumber(int v) {
     setState(() {
       _questionNumber + v <= widget.qRepo.questions.length
