@@ -240,6 +240,11 @@ Proposta feature:
     <td>✔️</td>
     <td>✔️</td>
   </tr>
+  <tr align="center">
+    <td>Strumento di ricerca delle domande nella lista per argomento</td>
+    <td>❌</td>
+    <td>❌</td>
+  </tr>
 </table>
 
 </details>
