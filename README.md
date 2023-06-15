@@ -245,6 +245,11 @@ Proposta feature:
     <td>❌</td>
     <td>❌</td>
   </tr>
+  <tr align="center">
+    <td>Pipeline CI/CD per build e deploy</td>
+    <td>❌</td>
+    <td>❌</td>
+  </tr>
 </table>
 
 </details>
@@ -280,6 +285,7 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * [Using jlink to Build Java Runtimes for non-Modular Applications](https://medium.com/azulsystems/using-jlink-to-build-java-runtimes-for-non-modular-applications-9568c5e70ef4)
 * [Download asset Flutter](https://pub.dev/packages/download_assets)
 * [LongPress Widget](https://stackoverflow.com/questions/52128572/flutter-execute-method-so-long-the-button-pressed)
+* [Flutter CI/CD using GitHub Actions](https://blog.logrocket.com/flutter-ci-cd-using-github-actions/)
 
 <div align="center">
   
