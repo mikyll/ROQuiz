@@ -23,7 +23,7 @@
 
 ### Funzionalità
 - L'app **simula un quiz d'esame**, pescando in modo casuale delle domande a risposta multipla a cui l'utente deve rispondere entro il tempo limite definito da un timer.
-- Pool di <span id="domande">87</span> domande differenti, divise per argomento (elenco aggiornato al _25 gennaio 2022_).
+- Pool di <span id="domande">104</span> domande differenti, divise per argomento (elenco aggiornato al _25 gennaio 2022_).
 - Possibilità di scelta di argomenti specifici per le domande da includere nel quiz.
 - Possibilità di personalizzare le impostazioni dell'app in modo persistente:
   - Scelta di un numero specifico di domande (default: 16, selezionate casualmente).
@@ -301,7 +301,7 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 [downloads-url]: https://github.com/mikyll/ROQuiz/releases/latest
 [contributors-shield]: https://img.shields.io/github/contributors/mikyll/ROQuiz
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
-[domande-shield]: https://img.shields.io/static/v1?label=domande&message=87&color=green
+[domande-shield]: https://img.shields.io/static/v1?label=domande&message=104&color=green
 [domande-url]: https://github.com/mikyll/ROQuiz/blob/main/Domande.txt
 [validazione-shield]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml/badge.svg
 [validazione-url]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml
