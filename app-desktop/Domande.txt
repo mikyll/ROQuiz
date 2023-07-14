@@ -39,6 +39,22 @@ D. è un intorno esatto
 E. è il complemento di S
 C
 
+Sia dato un problema di programmazione convessa. Si ha allora che un ottimo locale rispetto alla distanza euclidea
+A. Non gode di particolari proprietà
+B. è spesso un ottimo globale
+C. Può essere un ottimo globale se soddisfa determinate condizioni
+D. è sempre un ottimo globale
+E. Coincide con l'origine
+D
+
+Si considerino una funzione f convessa definita su un insieme S convesso ed un valore di soglia q. Si ha allora che il sottoinsieme di punti x di S in cui f(x) <= q
+A. è un intorno esatto
+B. è il complemento di S
+C. Coincide con S
+D. è convesso
+E. è concavo
+D
+
 @Programmazione Lineare ================================================================================
 Un insieme di colonne di una matrice intera A m x n non è linearmente indipendente se:
 A. la loro combinazione lineare che produce il vettore nullo ha tutti i coefficienti nulli
@@ -216,6 +232,30 @@ D. La regione ammissibile di un LP è un politopo.
 E. Nessuna di queste.
 B
 
+La definizione di politopo (convesso) è:
+A. Intersezione di un numero qualunque di semispazi
+B. Intersezione di un numero finito di semipiani purchè limitata
+C. Intersezione di un numero qualsiasi di semipiani
+D. Intersezione di un numero finito di semipiani purchè limitata e non vuota
+E. Intersezione di un numero finito si semipiani purchè non vuota
+D
+
+Sia B una base di un sistema Ax=b. Qualunque colonna non appartentente a B può essere espressa come:
+A. Combinazione lineare delle colonne di B, con coefficienti non negativi
+B. Combinazione convessa delle colonne di B, con coefficienti positivi
+C. Combinazione convessa delle colonne di B, con coefficienti non negativi
+D. Combinazione lineare delle colonne di B, con coefficienti positivi
+E. combinazione lineare delle colonne di B, con coefficienti di segno qualunque
+E
+
+In un politopo (convesso)  di dimensione d, uno spigolo è
+A. Una faccia di dimensione d - 1
+B. Una faccia di dimensione 0
+C. Una faccia di dimensione 1
+D. Una faccia di dimensione d
+E. Una faccia di dimensione d + 1
+C
+
 @Algoritmo del Simplesso ===============================================================================
 Se yij è minore o uguale a 0 per ogni i, in relazione a theta, cosa succede?
 A. Viene violata assunzione 0 (forma standard con m<n).
@@ -369,6 +409,46 @@ D. gli elementi della riga 0, colonne da 1 a n, sono tutti non negativi.
 E. Nessuna di queste.
 D
 
+Si consideri un tableau dell'algoritmo del simplesso primale. I costi relativi si trovano:
+A. In nessuna di queste posizioni
+B. Nella riga 0, nelle colonne corrispondenti alla base
+C. Nella riga 0, nelle colonne non corrispondenti alla base
+D. Nella colonna 0, nelle righe corrispondenti alla base
+E. Nella colonna 0, nelle righe non corrispondenti alla base
+C
+
+Si consideri una sottomatrice B di ordine m di una matrice A m x n. La soluzione base corrispondente a B:
+A. è ammissibile per il corrispondente problema in forma standard solo se x = 0 per ogni variabile non base
+B. è sempre ammissibile per il corrispondene problema in forma standard
+C. Non è mai ammissibile per il corrispondente problema in forma standard
+D. è ammissibile per il corrispondente problema in forma standard solo se x >= 0
+E. Nessuna di queste
+D
+
+Si consideri un tableau dell'algoritmo del simplesso primale. Gli elementi della riga 0 corrispondenti alle colonne della base
+A. Nessuna di queste
+B. Possono avere segno qualunque
+C. Sono tutti nulli
+D. Contengono i costi relativi
+E. Valgono tutti 1
+C
+
+Sia A_j una colonna corrispondente ad un costo relativo negativo nell'algoritmo del simplesso primale. Se tutti i coefficienti della colonna sono negativi o nulli, ciò implica che:
+A. Il problema ha soluzione illimitata
+B. Il sistema Ax = b è ridondante
+C. Nessuna di queste
+D. La soluzione attuale è ottima
+E. La regione ammissibile è vuota
+A
+
+Si consideri un tableau dell'algoritmo del simplesso primale. Il costo relativo di una variabile fuori base fornisce:
+A. La diminuzione unitaria del valore della soluzione se tale variabile entra in base
+B. La variazione unitaria del valore della soluzione se tale variabile esce dalla base
+C. La diminuzione unitaria del valore della soluzione se tale variabile esce dalla base
+D. La variazione unitaria del valore della soluzione se tale variabile entra in base
+E. Nessuna di queste
+D
+
 @Dualità ===============================================================================================
 Ad una variabile primale non negativa corrisponde
 A. nessuna di queste
@@ -514,6 +594,30 @@ D. Il pivoting deve portare il valore 0 in y0s .
 E. Nessuna di queste.
 B
 
+Nell'operazione di pivoting dell'algoritmo del simplesso duale:
+A. Nessuna di queste.
+B. La colonna del pivot viene moltiplicata per il pivot
+C. La riga del pivot viene moltiplicata per il pivot
+D. La colonna del pivot viene divisa per il pivot
+E. La riga del pivot viene divisa per il pivot
+E
+
+Nel duale di un problema di minimizzazione in forma standard
+A. Le variabili possono assumere solo valori non positivi
+B. Le variabili possono assumere solo valori non negativi
+C. Le variabili possono assumere solo valori positivi
+D. Le variabili possono assumere qualunque valore
+E. Nessuna di queste
+D
+
+La situazione in cui il primale è impossibile e il corrispondente duale è impossibile
+A. Si verifica sempre
+B. Può verificarsi
+C. Non può mai verificarsi
+D. Dipende dal gradiente della funzione obiettivo del duale
+E. Dipende dai gradienti delle due funzioni obiettivo
+B
+
 @Programmazione Lineare Intera =========================================================================
 Relativamente ad un problema ILP e il suo rilassamento continuo LP
 A. z(ILP) >= z(LP)
@@ -611,6 +715,30 @@ D. Si generano tutti i figli del nodo attuale, si calcolano i loro lower bound, 
 E. Nessuna di queste
 D
 
+Sia L il lower bound del nodo corrente in un algoritmo branch-and-bound per un problema di minimizzazione, il nodo viene ucciso se:
+A. L è minore o uguale al valore della soluzione ottima corrente
+B. L è minore o uguale al valore della soluzione ottima finale
+C. L è maggiore o uguale al valore della soluzione ottima corrente
+D. L è maggiore o uguale al valore della soluzione ottima finale
+E. Nessuna di queste.
+C
+
+Sia x la soluzione del rilassamento continuo di un problema di programmazione lineare intera di massimizzazione. Se si arrotonda ogni x_j frazionario all'intero più prossimo,
+A. Si ottiene una soluzione ammissibile ma non ottima per il problema ILP
+B. Si ottiene una soluzione ottima del problema ILP
+C. Si ottiene un upper bound per il problema ILP
+D. Si ottiene una soluzione intera priva di particolari proprietà
+E. Nessuna di queste
+D
+
+Sia P un problema di programmazione lineare intera e L(P) il suo rilassamento continuo. Allora:
+A. La regione ammissibile di L(P) è contenuta nella regione ammissibile di P
+B. La regione ammissibile di P e quella di L(P) non hanno nessuna relazione
+C. La regione ammissibile di P è contenuta nella regione ammissibile di L(P)
+D. L'intersezione fra la regione ammissibile di P e quella di L(P) è vuota
+E. Nessuna di queste
+C
+
 @Complessità ===========================================================================================
 Cosa è un'istanza di un problema?
 A. Un possibile algoritmo per risolverlo.
@@ -699,3 +827,11 @@ C. è risolvibile mediante la programmazione dinamica.
 D. non esiste algoritmo pseudo-polinomiale.
 E. Nessuna di queste.
 C
+
+Un problema P è NP-completo se:
+A. Qualunque problema della classe NP si può trasformare in P in tempo polinomiale
+B. Si può trasformare in tempo polinomiale in qualunque problema della classe NP
+C. è risolubile mediante un albero decisionale di altezza polinomiale
+D. è risolubile mediante un algoritmo di programmazione dinamica
+E. Nessuna di queste
+A
