@@ -7,6 +7,7 @@ import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Quiz.dart';
 import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/model/Themes.dart';
+import 'package:roquiz/widget/confirmation_alert.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:roquiz/widget/question_widget.dart';
 
@@ -109,6 +110,19 @@ class _ViewQuizState extends State<ViewQuiz> {
     _startTimer();
   }
 
+  void _showConfirmationDialog(BuildContext context, String title,
+      String content, void Function()? onCancel, void Function()? onConfirm) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ConfirmationAlert(
+              title: title,
+              content: content,
+              onCancel: onCancel,
+              onConfirm: onConfirm);
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -123,7 +137,14 @@ class _ViewQuizState extends State<ViewQuiz> {
     return WillPopScope(
       // this enables us to catch the "hard back" from device
       onWillPop: () async {
-        _endQuiz(); // end quiz and stop timer
+        _showConfirmationDialog(
+            context, "Conferma", "Sei sicuro di voler uscire dal quiz?", () {
+          Navigator.pop(context);
+        }, () {
+          _endQuiz(); // end quiz and stop timer
+          Navigator.pop(context);
+          Navigator.pop(context);
+        });
         return true; // "return true" pops the element from the stack (== Navigator.pop())
       },
       child: GestureDetector(
@@ -149,8 +170,15 @@ class _ViewQuizState extends State<ViewQuiz> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
-                _endQuiz();
-                Navigator.pop(context);
+                _showConfirmationDialog(
+                    context, "Conferma", "Sei sicuro di voler uscire dal quiz?",
+                    () {
+                  Navigator.pop(context);
+                }, () {
+                  _endQuiz(); // end quiz and stop timer
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                });
               },
             ),
           ),
@@ -244,7 +272,27 @@ class _ViewQuizState extends State<ViewQuiz> {
                 // End/Restart quiz
                 ElevatedButton(
                   onPressed: () {
-                    !_isOver ? _endQuiz() : _resetQuiz();
+                    if (_isOver) {
+                      _resetQuiz();
+                    } else {
+                      String unanswered = "";
+                      for (int i = 0; i < _userAnswers.length; i++) {
+                        if (_userAnswers[i] == Answer.NONE) {
+                          unanswered += unanswered.isNotEmpty ? ", " : "";
+                          unanswered += "${i + 1}";
+                        }
+                      }
+                      if (unanswered.isNotEmpty) {
+                        _showConfirmationDialog(context, "Terminare il quiz?",
+                            "Non hai risposto alle seguenti domande: $unanswered",
+                            () {
+                          Navigator.pop(context);
+                        }, () {
+                          _endQuiz();
+                          Navigator.pop(context);
+                        });
+                      }
+                    }
                   },
                   child: Container(
                     alignment: Alignment.center,

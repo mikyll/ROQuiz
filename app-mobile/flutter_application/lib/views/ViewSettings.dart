@@ -4,6 +4,7 @@ import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/change_theme_button_widget.dart';
+import 'package:roquiz/widget/confirmation_alert.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 
 class ViewSettings extends StatefulWidget {
@@ -88,6 +89,26 @@ class ViewSettingsState extends State<ViewSettings> {
     return false;
   }
 
+  bool _isChanged() {
+    return _questionNumber != widget.settings.questionNumber ||
+        _timer != widget.settings.timer ||
+        _shuffleAnswers != widget.settings.shuffleAnswers ||
+        _darkTheme != widget.settings.darkTheme;
+  }
+
+  void _showConfirmationDialog(BuildContext context, String title,
+      String content, void Function()? onCancel, void Function()? onConfirm) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ConfirmationAlert(
+              title: title,
+              content: content,
+              onCancel: onCancel,
+              onConfirm: onConfirm);
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -106,9 +127,15 @@ class ViewSettingsState extends State<ViewSettings> {
 
     return WillPopScope(
       onWillPop: () async {
-        _themeProvider.toggleTheme(_darkTheme);
-
-        // ask for save / discard ?
+        _showConfirmationDialog(
+            context, "Modifiche Non Salvate", "Uscire senza salvare?", () {
+          Navigator.pop(context);
+        }, () {
+          Navigator.pop(context);
+          // discard
+          Navigator.pop(context);
+          _themeProvider.toggleTheme(_darkTheme);
+        });
         return true;
       },
       child: Scaffold(
@@ -119,10 +146,16 @@ class ViewSettingsState extends State<ViewSettings> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              _themeProvider.toggleTheme(_darkTheme);
-
-              // discard
-              Navigator.pop(context);
+              _showConfirmationDialog(
+                  context, "Modifiche Non Salvate", "Uscire senza salvare?",
+                  () {
+                Navigator.pop(context);
+              }, () {
+                _themeProvider.toggleTheme(_darkTheme);
+                Navigator.pop(context);
+                // discard
+                Navigator.pop(context);
+              });
             },
           ),
         ),
