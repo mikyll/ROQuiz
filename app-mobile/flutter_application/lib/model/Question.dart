@@ -12,8 +12,8 @@ class Question {
     if (answers.length == Settings.DEFAULT_ANSWER_NUMBER) {
       throw Exception("Answer number excedeed.");
     }
-    int index = answers.length;
-    Answer a = Answer.values[index];
+    //int index = answers.length;
+    //Answer a = Answer.values[index];
     answers.add(answer);
   }
 

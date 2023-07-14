@@ -32,7 +32,6 @@ class ViewMenuState extends State<ViewMenu> {
 
   late Future<int> _quizQuestionNumber;
   late Future<int> _timer;
-  late Future<bool> _darkTheme;
 
   void _initTopics() {
     setState(() {
@@ -114,9 +113,8 @@ class ViewMenuState extends State<ViewMenu> {
             )
           },
         )
-        .onError((error, stackTrace) => {
-              setState(() => {_qRepoLoadingError = error.toString()})
-            });
+        .onError((error, stackTrace) =>
+            {setState(() => _qRepoLoadingError = error.toString())});
 
     _quizQuestionNumber = _prefs.then((SharedPreferences prefs) {
       return prefs.getInt("questionNumber") ?? -1;

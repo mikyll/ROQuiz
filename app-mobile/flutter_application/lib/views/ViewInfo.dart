@@ -8,8 +8,6 @@ import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'ViewMenu.dart';
-
 const DEFAULT_SIZE = 50.0;
 
 class ViewInfo extends StatefulWidget {
@@ -23,7 +21,7 @@ class ViewInfo extends StatefulWidget {
 
 class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
   double _screenWidth = 0.0;
-  double _screenHeight = 0.0;
+  //double _screenHeight = 0.0;
 
   double _size = DEFAULT_SIZE;
 
@@ -37,12 +35,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
   }
 
   Future<void> _launchInBrowser(String url) async {
-    if (!await launch(
-      url,
-      forceSafariVC: false,
-      forceWebView: false,
-      headers: <String, String>{'my_header_key': 'my_header_value'},
-    )) {
+    if (!await launchUrl(Uri.parse(url))) {
       throw 'Could not launch $url';
     }
   }
@@ -50,8 +43,14 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _screenWidth = (window.physicalSize.shortestSide / window.devicePixelRatio);
-    _screenHeight = (window.physicalSize.longestSide / window.devicePixelRatio);
+
+    FlutterView view = PlatformDispatcher.instance.views.first;
+    double physicalWidth = view.physicalSize.width;
+    //double physicalHeight = view.physicalSize.height;
+
+    double devicePixelRatio = view.devicePixelRatio;
+    _screenWidth = physicalWidth / devicePixelRatio;
+    //_screenHeight = physicalHeight / devicePixelRatio;
   }
 
   @override

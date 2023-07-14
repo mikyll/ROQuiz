@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/widget/question_widget.dart';
