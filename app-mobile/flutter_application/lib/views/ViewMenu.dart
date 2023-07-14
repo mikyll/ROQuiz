@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
-import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/views/ViewQuiz.dart';
 import 'package:roquiz/views/ViewSettings.dart';
 import 'package:roquiz/views/ViewTopics.dart';
@@ -10,6 +10,7 @@ import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ViewMenu extends StatefulWidget {
   const ViewMenu({Key? key}) : super(key: key);
@@ -21,6 +22,9 @@ class ViewMenu extends StatefulWidget {
 class ViewMenuState extends State<ViewMenu> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final QuestionRepository qRepo = QuestionRepository();
+
+  String _qRepoLoadingError = "";
+
   final Settings _settings = Settings();
   bool _topicsPresent = false;
   final List<bool> _selectedTopics = [];
@@ -84,9 +88,24 @@ class ViewMenuState extends State<ViewMenu> {
   void initState() {
     super.initState();
 
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      print(packageInfo.appName);
+      print(packageInfo.packageName);
+      setState(
+        () {
+          Settings.VERSION_NUMBER = packageInfo.version;
+        },
+      );
+
+      print(Settings.VERSION_NUMBER);
+      print(packageInfo.buildNumber);
+    });
+
     _settings.loadSettings();
-    qRepo.loadFile("assets/domande.txt").then(
-          (value) => {
+    qRepo
+        .loadFile("assets/domande.txt")
+        .then(
+          (_) => {
             _initTopics(),
             setState(
               () {
@@ -94,7 +113,10 @@ class ViewMenuState extends State<ViewMenu> {
               },
             )
           },
-        );
+        )
+        .onError((error, stackTrace) => {
+              setState(() => {_qRepoLoadingError = error.toString()})
+            });
 
     _quizQuestionNumber = _prefs.then((SharedPreferences prefs) {
       return prefs.getInt("questionNumber") ?? -1;
@@ -142,9 +164,9 @@ class ViewMenuState extends State<ViewMenu> {
                                     fontWeight: FontWeight
                                         .bold, /*fontStyle: FontStyle.italic*/
                                   )),
-                              const Text(
+                              Text(
                                 "v${Settings.VERSION_NUMBER}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -231,7 +253,15 @@ class ViewMenuState extends State<ViewMenu> {
                                     ),
                                     Text("Tempo: ${_settings.timer} min"),
                                   ]),
-                              const SizedBox(height: 50),
+                              _qRepoLoadingError.isNotEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Text(
+                                        _qRepoLoadingError,
+                                        style:
+                                            const TextStyle(color: Colors.red),
+                                      ))
+                                  : const SizedBox(height: 50),
                               InkWell(
                                 onTap: () {
                                   _launchInBrowser(

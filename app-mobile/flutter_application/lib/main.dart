@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/views/ViewMenu.dart';
 
 import 'package:roquiz/model/Themes.dart';

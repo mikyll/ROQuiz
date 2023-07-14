@@ -1,12 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/views/ViewCredits.dart';
 import 'package:roquiz/views/ViewLicenses.dart';
 import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'ViewMenu.dart';
 
 const DEFAULT_SIZE = 50.0;
 
@@ -74,8 +76,9 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              const Text("${Settings.APP_TITLE} v${Settings.VERSION_NUMBER}",
-                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+              Text("${Settings.APP_TITLE} v${Settings.VERSION_NUMBER}",
+                  style: const TextStyle(
+                      fontSize: 48, fontWeight: FontWeight.bold)),
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.all(8.0),

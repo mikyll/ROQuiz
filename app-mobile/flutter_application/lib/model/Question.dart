@@ -1,5 +1,5 @@
 import 'package:roquiz/model/Answer.dart';
-import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/persistence/Settings.dart';
 
 class Question {
   String question = "";

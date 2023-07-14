@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
-import 'package:roquiz/model/Settings.dart';
+import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/widget/topics_widget.dart';
 
 import 'ViewQuestions.dart';

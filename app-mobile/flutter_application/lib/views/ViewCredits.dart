@@ -124,6 +124,50 @@ class ViewCredits extends StatelessWidget {
                         ),
                       ]),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Expanded(
+                          child: Text("Nuove domande:",
+                              style: TextStyle(fontSize: 18)),
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    _launchInBrowser(
+                                        "https://github.com/RedDuality");
+                                  },
+                                  child: const Text("RedDuality",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          decoration:
+                                              TextDecoration.underline)),
+                                ),
+                                //const Text(" &",
+                                //    style: TextStyle(fontSize: 18)),
+                              ],
+                            ),
+                            /*InkWell(
+                              onTap: () {
+                                _launchInBrowser(
+                                    "https://github.com/filippoveronesi");
+                              },
+                              child: const Text("filovero98",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      decoration: TextDecoration.underline)),
+                            ),*/
+                          ],
+                        ),
+                      ]),
+                ),
               ]),
         ),
       ),

@@ -182,7 +182,7 @@ Proposta feature:
   </tr>
   <tr align="center">
     <td>Visualizzazione lista domande in-app</td>
-    <td>❌</td>
+    <td>✔️</td>
     <td>✔️</td>
   </tr>
   <tr align="center">
