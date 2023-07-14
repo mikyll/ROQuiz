@@ -27,6 +27,22 @@ jobs:
           if [[ "${charset^^}" = "$codifica" ]]
           then
             echo "✔️ DEUBG: Codifica OK ($charset)"
+            
+            cp "$file_domande" "app-desktop/Domande.txt"
+            cp "$file_domande" "app-mobile/flutter_application/assets/domande.txt"
+            
+            # Check if there are changes
+            if [[ -n $(git status -s) ]]
+            then
+              # Commit & Push changes
+              git add "app-desktop/Domande.txt"
+              git add "app-mobile/flutter_application/assets/domande.txt"
+              git commit -m "Update file domande"
+              git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
+              echo "✔️ File domande aggiornati!"
+            else
+              echo "Nessuna modifica necessaria."
+            fi
           else
             echo "❌ ERRORE: Codifica file \"$file_domande\" errata ($charset)"
             exit 1
