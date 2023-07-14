@@ -35,8 +35,8 @@ jobs:
             if [[ -n $(git status -s) ]]
             then
               # Commit & Push changes
-              git add "app-desktop/Domande.txt"
-              git add "app-mobile/flutter_application/assets/domande.txt"
+              git add -f "app-desktop/Domande.txt"
+              git add -f "app-mobile/flutter_application/assets/domande.txt"
               git commit -m "Update file domande"
               git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
               echo "✔️ File domande aggiornati!"
