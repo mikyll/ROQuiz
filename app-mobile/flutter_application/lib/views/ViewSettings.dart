@@ -102,7 +102,7 @@ class ViewSettingsState extends State<ViewSettings> {
     return _questionNumber != widget.settings.questionNumber ||
         _timer != widget.settings.timer ||
         _shuffleAnswers != widget.settings.shuffleAnswers ||
-        _confirmAlerts != widget.settings.shuffleAnswers ||
+        _confirmAlerts != widget.settings.confirmAlerts ||
         _darkTheme != widget.settings.darkTheme;
   }
 
