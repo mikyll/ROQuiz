@@ -72,11 +72,13 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void saveSettings(int qNum, int timer, bool shuffle, bool dTheme) {
+  void saveSettings(
+      int qNum, int timer, bool shuffle, bool confirmAlerts, bool dTheme) {
     setState(() {
       _settings.questionNumber = qNum;
       _settings.timer = timer;
       _settings.shuffleAnswers = shuffle;
+      _settings.confirmAlerts = confirmAlerts;
       _settings.darkTheme = dTheme;
       _settings.saveSettings();
       resetTopics();
@@ -88,16 +90,16 @@ class ViewMenuState extends State<ViewMenu> {
     super.initState();
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      print(packageInfo.appName);
-      print(packageInfo.packageName);
+      //print(packageInfo.appName);
+      //print(packageInfo.packageName);
       setState(
         () {
           Settings.VERSION_NUMBER = packageInfo.version;
         },
       );
 
-      print(Settings.VERSION_NUMBER);
-      print(packageInfo.buildNumber);
+      //print(Settings.VERSION_NUMBER);
+      //print(packageInfo.buildNumber);
     });
 
     _settings.loadSettings();
@@ -125,12 +127,8 @@ class ViewMenuState extends State<ViewMenu> {
   }
 
   Future<void> _launchInBrowser(String url) async {
-    if (!await launch(
-      url,
-      forceSafariVC: false,
-      forceWebView: false,
-      headers: <String, String>{'my_header_key': 'my_header_value'},
-    )) {
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $url';
     }
   }

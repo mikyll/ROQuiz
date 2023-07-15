@@ -111,7 +111,7 @@ class _ViewQuizState extends State<ViewQuiz> {
   }
 
   void _showConfirmationDialog(BuildContext context, String title,
-      String content, void Function()? onCancel, void Function()? onConfirm) {
+      String content, void Function()? onConfirm, void Function()? onCancel) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -137,14 +137,25 @@ class _ViewQuizState extends State<ViewQuiz> {
     return WillPopScope(
       // this enables us to catch the "hard back" from device
       onWillPop: () async {
-        _showConfirmationDialog(
-            context, "Conferma", "Sei sicuro di voler uscire dal quiz?", () {
+        if (widget.settings.confirmAlerts) {
+          _showConfirmationDialog(
+            context,
+            "Conferma",
+            "Sei sicuro di voler uscire dal quiz?",
+            () {
+              _endQuiz(); // end quiz and stop timer
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            () {
+              Navigator.pop(context);
+            },
+          );
+        } else {
+          _endQuiz();
           Navigator.pop(context);
-        }, () {
-          _endQuiz(); // end quiz and stop timer
-          Navigator.pop(context);
-          Navigator.pop(context);
-        });
+        }
+
         return true; // "return true" pops the element from the stack (== Navigator.pop())
       },
       child: GestureDetector(
@@ -170,15 +181,24 @@ class _ViewQuizState extends State<ViewQuiz> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
-                _showConfirmationDialog(
-                    context, "Conferma", "Sei sicuro di voler uscire dal quiz?",
+                if (widget.settings.confirmAlerts) {
+                  _showConfirmationDialog(
+                    context,
+                    "Conferma",
+                    "Sei sicuro di voler uscire dal quiz?",
                     () {
+                      _endQuiz(); // end quiz and stop timer
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    () {
+                      Navigator.pop(context);
+                    },
+                  );
+                } else {
+                  _endQuiz();
                   Navigator.pop(context);
-                }, () {
-                  _endQuiz(); // end quiz and stop timer
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                });
+                }
               },
             ),
           ),
@@ -283,14 +303,18 @@ class _ViewQuizState extends State<ViewQuiz> {
                         }
                       }
                       if (unanswered.isNotEmpty) {
-                        _showConfirmationDialog(context, "Terminare il quiz?",
-                            "Non hai risposto alle seguenti domande: $unanswered",
-                            () {
-                          Navigator.pop(context);
-                        }, () {
-                          _endQuiz();
-                          Navigator.pop(context);
-                        });
+                        _showConfirmationDialog(
+                          context,
+                          "Terminare il quiz?",
+                          "Non hai risposto alle seguenti domande: $unanswered",
+                          () {
+                            _endQuiz();
+                            Navigator.pop(context);
+                          },
+                          () {
+                            Navigator.pop(context);
+                          },
+                        );
                       }
                     }
                   },

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/license.dart';
 import 'package:roquiz/widget/licenses_widget.dart';
@@ -40,7 +39,7 @@ class ViewLicenses extends StatelessWidget {
 
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               default:
                 if (snapshot.hasError) {
                   return const Center(child: Text('Some error occurred!'));

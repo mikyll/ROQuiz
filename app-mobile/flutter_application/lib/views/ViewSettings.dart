@@ -17,7 +17,7 @@ class ViewSettings extends StatefulWidget {
 
   final QuestionRepository qRepo;
   final Settings settings;
-  final Function(int, int, bool, bool) saveSettings;
+  final Function(int, int, bool, bool, bool) saveSettings;
 
   @override
   State<StatefulWidget> createState() => ViewSettingsState();
@@ -27,6 +27,7 @@ class ViewSettingsState extends State<ViewSettings> {
   int _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
   int _timer = Settings.DEFAULT_TIMER;
   bool _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
+  bool _confirmAlerts = Settings.DEFAULT_CONFIRM_ALERTS;
   bool _darkTheme = Settings.DEFAULT_DARK_THEME; // previous value
 
   void _increaseQuestionNumber(int v) {
@@ -67,11 +68,18 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
+  void _selectConfirmAlerts(bool value) {
+    setState(() {
+      _confirmAlerts = value;
+    });
+  }
+
   void _reset(ThemeProvider _themeProvider) {
     setState(() {
       _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
       _timer = Settings.DEFAULT_TIMER;
       _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
+      _confirmAlerts = Settings.DEFAULT_CONFIRM_ALERTS;
 
       _themeProvider.toggleTheme(Settings.DEFAULT_DARK_THEME);
     });
@@ -83,6 +91,7 @@ class ViewSettingsState extends State<ViewSettings> {
     if (_questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
         _timer == Settings.DEFAULT_TIMER &&
         _shuffleAnswers == Settings.DEFAULT_SHUFFLE_ANSWERS &&
+        _confirmAlerts == Settings.DEFAULT_CONFIRM_ALERTS &&
         themeProvider.isDarkMode == Settings.DEFAULT_DARK_THEME) {
       return true;
     }
@@ -93,19 +102,20 @@ class ViewSettingsState extends State<ViewSettings> {
     return _questionNumber != widget.settings.questionNumber ||
         _timer != widget.settings.timer ||
         _shuffleAnswers != widget.settings.shuffleAnswers ||
+        _confirmAlerts != widget.settings.shuffleAnswers ||
         _darkTheme != widget.settings.darkTheme;
   }
 
   void _showConfirmationDialog(BuildContext context, String title,
-      String content, void Function()? onCancel, void Function()? onConfirm) {
+      String content, void Function()? onConfirm, void Function()? onCancel) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return ConfirmationAlert(
               title: title,
               content: content,
-              onCancel: onCancel,
-              onConfirm: onConfirm);
+              onConfirm: onConfirm,
+              onCancel: onCancel);
         });
   }
 
@@ -117,6 +127,7 @@ class ViewSettingsState extends State<ViewSettings> {
       _questionNumber = widget.settings.questionNumber;
       _timer = widget.settings.timer;
       _shuffleAnswers = widget.settings.shuffleAnswers;
+      _confirmAlerts = widget.settings.confirmAlerts;
       _darkTheme = widget.settings.darkTheme;
     });
   }
@@ -127,15 +138,25 @@ class ViewSettingsState extends State<ViewSettings> {
 
     return WillPopScope(
       onWillPop: () async {
-        _showConfirmationDialog(
-            context, "Modifiche Non Salvate", "Uscire senza salvare?", () {
-          Navigator.pop(context);
-        }, () {
-          Navigator.pop(context);
-          // discard
-          Navigator.pop(context);
+        if (_isChanged() && widget.settings.confirmAlerts) {
+          _showConfirmationDialog(
+            context,
+            "Modifiche Non Salvate",
+            "Uscire senza salvare?",
+            () {
+              // Discard
+              Navigator.pop(context);
+              Navigator.pop(context);
+              _themeProvider.toggleTheme(_darkTheme);
+            },
+            () {
+              Navigator.pop(context);
+            },
+          );
+        } else {
           _themeProvider.toggleTheme(_darkTheme);
-        });
+        }
+
         return true;
       },
       child: Scaffold(
@@ -146,16 +167,25 @@ class ViewSettingsState extends State<ViewSettings> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              _showConfirmationDialog(
-                  context, "Modifiche Non Salvate", "Uscire senza salvare?",
+              if (_isChanged() && widget.settings.confirmAlerts) {
+                _showConfirmationDialog(
+                  context,
+                  "Modifiche Non Salvate",
+                  "Uscire senza salvare?",
                   () {
+                    // Discard (Confirm)
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    _themeProvider.toggleTheme(_darkTheme);
+                  },
+                  () {
+                    Navigator.pop(context);
+                  },
+                );
+              } else {
                 Navigator.pop(context);
-              }, () {
                 _themeProvider.toggleTheme(_darkTheme);
-                Navigator.pop(context);
-                // discard
-                Navigator.pop(context);
-              });
+              }
             },
           ),
         ),
@@ -267,9 +297,27 @@ class ViewSettingsState extends State<ViewSettings> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // SETTING: DARK THEME
+                // SETTING: CONFIRM ALERTS
                 Row(
-                  children: const [
+                  children: [
+                    const Expanded(
+                        child: Text("Alert di conferma: ",
+                            style: TextStyle(fontSize: 20))),
+                    SizedBox(
+                        width: 120.0,
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                              value: _confirmAlerts,
+                              onChanged: (bool? value) =>
+                                  _selectConfirmAlerts(value!)),
+                        ))
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // SETTING: DARK THEME
+                const Row(
+                  children: [
                     Expanded(
                         child: Text("Tema scuro: ",
                             style: TextStyle(fontSize: 20))),
@@ -310,7 +358,7 @@ class ViewSettingsState extends State<ViewSettings> {
             ),
           ),
         ),
-        // BUTTONS: Save, Cancel, Restore
+        // BUTTONS: Save, Cancel
         persistentFooterButtons: [
           Row(
             children: [
@@ -318,8 +366,12 @@ class ViewSettingsState extends State<ViewSettings> {
                 fit: BoxFit.fitWidth,
                 child: ElevatedButton(
                   onPressed: () {
-                    widget.saveSettings(_questionNumber, _timer,
-                        _shuffleAnswers, _themeProvider.isDarkMode);
+                    widget.saveSettings(
+                        _questionNumber,
+                        _timer,
+                        _shuffleAnswers,
+                        _confirmAlerts,
+                        _themeProvider.isDarkMode);
                     _darkTheme = _themeProvider.isDarkMode;
 
                     Navigator.pop(context);

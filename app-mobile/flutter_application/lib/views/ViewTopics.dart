@@ -130,7 +130,7 @@ class ViewTopicsState extends State<ViewTopics> {
                 color: Colors.indigo.withOpacity(0.35),
               ),
               TopicsInfoWidget(
-                text: "Dimensione Pool Corrente: ",
+                text: "Pool Corrente: ",
                 textWeight: FontWeight.bold,
                 value: _currentQuizPool,
                 color: Colors.indigo.withOpacity(0.35),

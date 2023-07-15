@@ -5,12 +5,8 @@ class ViewCredits extends StatelessWidget {
   const ViewCredits({Key? key}) : super(key: key);
 
   Future<void> _launchInBrowser(String url) async {
-    if (!await launch(
-      url,
-      forceSafariVC: false,
-      forceWebView: false,
-      headers: <String, String>{'my_header_key': 'my_header_value'},
-    )) {
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $url';
     }
   }

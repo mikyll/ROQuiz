@@ -35,7 +35,8 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
   }
 
   Future<void> _launchInBrowser(String url) async {
-    if (!await launchUrl(Uri.parse(url))) {
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $url';
     }
   }
