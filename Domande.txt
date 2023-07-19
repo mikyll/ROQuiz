@@ -32,28 +32,36 @@ E. sta al di sotto della funzione o è con essa coincidente.
 D
 
 Dati una funzione convessa definita su un insieme S convesso ed una soglia t, il sottoinsieme di punti x di S in cui f(x) <= t :
-A. è concavo
-B. è un intorno euclideo
-C. è convesso
-D. è un intorno esatto
-E. è il complemento di S
+A. È concavo
+B. È un intorno euclideo
+C. È convesso
+D. È un intorno esatto
+E. È il complemento di S
 C
 
 Sia dato un problema di programmazione convessa. Si ha allora che un ottimo locale rispetto alla distanza euclidea
 A. Non gode di particolari proprietà
-B. è spesso un ottimo globale
+B. È spesso un ottimo globale
 C. Può essere un ottimo globale se soddisfa determinate condizioni
-D. è sempre un ottimo globale
+D. È sempre un ottimo globale
 E. Coincide con l'origine
 D
 
 Si considerino una funzione f convessa definita su un insieme S convesso ed un valore di soglia q. Si ha allora che il sottoinsieme di punti x di S in cui f(x) <= q
-A. è un intorno esatto
-B. è il complemento di S
+A. È un intorno esatto
+B. È il complemento di S
 C. Coincide con S
-D. è convesso
-E. è concavo
+D. È convesso
+E. È concavo
 D
+
+Si consideri una famiglia di insiemi convessi. Vale che
+A. La loro unione è sempre un insieme convesso
+B. La loro intersezione è un insieme convesso solo se valgono opportune condizioni
+C. La loro unione è sempre un insieme concavo
+D. La loro intersezione è sempre un insieme concavo
+E. La loro intersezione è sempre un insieme convesso
+E
 
 @Programmazione Lineare ================================================================================
 Un insieme di colonne di una matrice intera A m x n non è linearmente indipendente se:
@@ -449,6 +457,14 @@ D. La variazione unitaria del valore della soluzione se tale variabile entra in 
 E. Nessuna di queste
 D
 
+Se al termine della Fase 1 dell'algoritmo del simplesso la soluzione vale 0 ma ci sono variabili artificiali in base
+A. Si è trovata la soluzione ottima del problema originale
+B. Significa che il problema originale è impossibile
+C. Significa che la soluzione ottima è illimitata
+D. Significa che il sistema dei vincoli del problema originale è ridondante
+E. Non di può dire, occorrono ulteriori iterazioni
+E
+
 @Dualità ===============================================================================================
 Ad una variabile primale non negativa corrisponde
 A. nessuna di queste
@@ -757,11 +773,11 @@ E. Nessuna di queste.
 C
 
 Se un problema appartiene alla classe NP
-A. è risolubile solo mediante un albero decisionale di altezza esponenziale
-B. è sempre risolubile mediante un algoritmo di programmazione dinamica
-C. è sempre risolubile in tempo polinomiale
-D. è sempre risolubile mediante un albero decisionale di altezza polinomiale
-E. è sempre risolubile in tempo pseudo-polinomiale
+A. È risolubile solo mediante un albero decisionale di altezza esponenziale
+B. È sempre risolubile mediante un algoritmo di programmazione dinamica
+C. È sempre risolubile in tempo polinomiale
+D. È sempre risolubile mediante un albero decisionale di altezza polinomiale
+E. È sempre risolubile in tempo pseudo-polinomiale
 B
 
 Un algoritmo polinomiale per un problema NP-completo:
@@ -813,17 +829,17 @@ E. Nessuna di queste
 B
 
 La programmazione lineare:
-A. è risolubile in tempo polinomiale, ma non dall'algoritmo del simplesso.
+A. È risolubile in tempo polinomiale, ma non dall'algoritmo del simplesso.
 B. non è risolubile in tempo polinomiale.
-C. è risolubile in tempo polinomiale dall'algoritmo del simplesso.
-D. è risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso.
+C. È risolubile in tempo polinomiale dall'algoritmo del simplesso.
+D. È risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso.
 E. Nessuna di queste.
 A
 
 Relativamente ad un problema KP-01:
-A. è risolvibile solo mediante un albero decisionale.
-B. è risolvibile in tempo polinomiale.
-C. è risolvibile mediante la programmazione dinamica.
+A. È risolvibile solo mediante un albero decisionale.
+B. È risolvibile in tempo polinomiale.
+C. È risolvibile mediante la programmazione dinamica.
 D. non esiste algoritmo pseudo-polinomiale.
 E. Nessuna di queste.
 C
@@ -835,3 +851,11 @@ C. è risolubile mediante un albero decisionale di altezza polinomiale
 D. è risolubile mediante un algoritmo di programmazione dinamica
 E. Nessuna di queste
 A
+
+Un problema Knapsack 0-1:
+A. Non può essere risolto in tempo pseudo-polinomiale
+B. È risolubile solo mediante un albero decisionale di altezza esponenziale
+C. È risolubile in tempo polinomiale
+D. È sempre risolubile mediante un albero decisionale di altezza polinomiale
+E. Nessuna di queste
+D
