@@ -5,12 +5,16 @@ class ConfirmationAlert extends StatelessWidget {
       {Key? key,
       this.onConfirm,
       this.onCancel,
+      this.buttonConfirmText = "Conferma",
+      this.buttonCancelText = "Annulla",
       required this.title,
       required this.content})
       : super(key: key);
 
   final String title;
   final String content;
+  final String buttonConfirmText;
+  final String buttonCancelText;
   final Function? onConfirm;
   final Function? onCancel;
 
@@ -21,7 +25,7 @@ class ConfirmationAlert extends StatelessWidget {
       content: Text(content),
       actions: [
         TextButton(
-          child: const Text("Conferma"),
+          child: Text(buttonConfirmText),
           onPressed: () {
             if (onConfirm != null) {
               onConfirm!();
@@ -29,7 +33,7 @@ class ConfirmationAlert extends StatelessWidget {
           },
         ),
         TextButton(
-          child: const Text("Annulla"),
+          child: Text(buttonCancelText),
           onPressed: () {
             if (onCancel != null) {
               onCancel!();
