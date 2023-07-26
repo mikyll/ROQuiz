@@ -30,6 +30,10 @@ class ViewSettingsState extends State<ViewSettings> {
   bool _confirmAlerts = Settings.DEFAULT_CONFIRM_ALERTS;
   bool _darkTheme = Settings.DEFAULT_DARK_THEME; // previous value
 
+  void _resetQuestionNumber() {
+    setState(() => _questionNumber = Settings.DEFAULT_QUESTION_NUMBER);
+  }
+
   void _increaseQuestionNumber(int v) {
     setState(() {
       _questionNumber + v <= widget.qRepo.questions.length
@@ -44,6 +48,10 @@ class ViewSettingsState extends State<ViewSettings> {
           ? _questionNumber -= v
           : _questionNumber = Settings.DEFAULT_QUESTION_NUMBER ~/ 2;
     });
+  }
+
+  void _resetTimer() {
+    setState(() => _timer = Settings.DEFAULT_TIMER);
   }
 
   void _increaseTimer(int v) {
@@ -62,10 +70,18 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  void _selectShuffleAnswer(bool value) {
+  void _resetShuffleAnswers() {
+    setState(() => _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS);
+  }
+
+  void _selectShuffleAnswers(bool value) {
     setState(() {
       _shuffleAnswers = value;
     });
+  }
+
+  void _resetConfirmAlerts() {
+    setState(() => _confirmAlerts = Settings.DEFAULT_CONFIRM_ALERTS);
   }
 
   void _selectConfirmAlerts(bool value) {
@@ -74,36 +90,34 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  void _reset(ThemeProvider _themeProvider) {
+  void _resetTheme(ThemeProvider themeProvider) {
     setState(() {
-      _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
-      _timer = Settings.DEFAULT_TIMER;
-      _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
-      _confirmAlerts = Settings.DEFAULT_CONFIRM_ALERTS;
-
-      _themeProvider.toggleTheme(Settings.DEFAULT_DARK_THEME);
+      themeProvider.toggleTheme(Settings.DEFAULT_DARK_THEME);
     });
   }
 
-  bool _isDefault() {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+  void _reset(ThemeProvider themeProvider) {
+    _resetQuestionNumber();
+    _resetTimer();
+    _resetShuffleAnswers();
+    _resetConfirmAlerts();
+    _resetTheme(themeProvider);
+  }
 
-    if (_questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
+  bool _isDefault(ThemeProvider themeProvider) {
+    return _questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
         _timer == Settings.DEFAULT_TIMER &&
         _shuffleAnswers == Settings.DEFAULT_SHUFFLE_ANSWERS &&
         _confirmAlerts == Settings.DEFAULT_CONFIRM_ALERTS &&
-        themeProvider.isDarkMode == Settings.DEFAULT_DARK_THEME) {
-      return true;
-    }
-    return false;
+        themeProvider.isDarkMode == Settings.DEFAULT_DARK_THEME;
   }
 
-  bool _isChanged() {
+  bool _isChanged(ThemeProvider themeProvider) {
     return _questionNumber != widget.settings.questionNumber ||
         _timer != widget.settings.timer ||
         _shuffleAnswers != widget.settings.shuffleAnswers ||
         _confirmAlerts != widget.settings.confirmAlerts ||
-        _darkTheme != widget.settings.darkTheme;
+        themeProvider.isDarkMode != widget.settings.darkTheme;
   }
 
   void _showConfirmationDialog(BuildContext context, String title,
@@ -134,11 +148,11 @@ class ViewSettingsState extends State<ViewSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final _themeProvider = Provider.of<ThemeProvider>(context, listen: true);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
 
     return WillPopScope(
       onWillPop: () async {
-        if (_isChanged() && widget.settings.confirmAlerts) {
+        if (_isChanged(themeProvider) && widget.settings.confirmAlerts) {
           _showConfirmationDialog(
             context,
             "Modifiche Non Salvate",
@@ -147,14 +161,14 @@ class ViewSettingsState extends State<ViewSettings> {
               // Discard
               Navigator.pop(context);
               Navigator.pop(context);
-              _themeProvider.toggleTheme(_darkTheme);
+              themeProvider.toggleTheme(_darkTheme);
             },
             () {
               Navigator.pop(context);
             },
           );
         } else {
-          _themeProvider.toggleTheme(_darkTheme);
+          themeProvider.toggleTheme(_darkTheme);
         }
 
         return true;
@@ -167,7 +181,7 @@ class ViewSettingsState extends State<ViewSettings> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              if (_isChanged() && widget.settings.confirmAlerts) {
+              if (_isChanged(themeProvider) && widget.settings.confirmAlerts) {
                 _showConfirmationDialog(
                   context,
                   "Modifiche Non Salvate",
@@ -176,7 +190,7 @@ class ViewSettingsState extends State<ViewSettings> {
                     // Discard (Confirm)
                     Navigator.pop(context);
                     Navigator.pop(context);
-                    _themeProvider.toggleTheme(_darkTheme);
+                    themeProvider.toggleTheme(_darkTheme);
                   },
                   () {
                     Navigator.pop(context);
@@ -184,7 +198,7 @@ class ViewSettingsState extends State<ViewSettings> {
                 );
               } else {
                 Navigator.pop(context);
-                _themeProvider.toggleTheme(_darkTheme);
+                themeProvider.toggleTheme(_darkTheme);
               }
             },
           ),
@@ -195,11 +209,20 @@ class ViewSettingsState extends State<ViewSettings> {
             child: ListView(
               shrinkWrap: true,
               children: [
+                // SETTING: QUIZ QUESTION NUMBER
                 Row(
                   children: [
-                    const Expanded(
-                        child: Text("Numero domande per quiz: ",
-                            style: TextStyle(fontSize: 20))),
+                    Expanded(
+                      child: InkWell(
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onDoubleTap: () {
+                            _resetQuestionNumber();
+                          },
+                          child: const Text("Numero domande per quiz: ",
+                              style: TextStyle(fontSize: 20))),
+                    ),
                     // DECREASE QUESTION NUMBER
                     IconButtonLongPressWidget(
                       onUpdate: () {
@@ -239,9 +262,17 @@ class ViewSettingsState extends State<ViewSettings> {
                 const SizedBox(height: 20),
                 // SETTING: TIMER
                 Row(children: [
-                  const Expanded(
-                      child: Text("Timer (minuti): ",
-                          style: TextStyle(fontSize: 20))),
+                  Expanded(
+                    child: InkWell(
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onDoubleTap: () {
+                          _resetTimer();
+                        },
+                        child: const Text("Timer (minuti): ",
+                            style: TextStyle(fontSize: 20))),
+                  ),
                   // DECREASE TIMER
                   IconButtonLongPressWidget(
                     onUpdate: () {
@@ -282,9 +313,17 @@ class ViewSettingsState extends State<ViewSettings> {
                 // SETTING: SHUFFLE ANSWERS
                 Row(
                   children: [
-                    const Expanded(
-                        child: Text("Mescola risposte: ",
-                            style: TextStyle(fontSize: 20))),
+                    Expanded(
+                      child: InkWell(
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onDoubleTap: () {
+                            _resetShuffleAnswers();
+                          },
+                          child: const Text("Mescola risposte: ",
+                              style: TextStyle(fontSize: 20))),
+                    ),
                     SizedBox(
                         width: 120.0,
                         child: Transform.scale(
@@ -292,7 +331,7 @@ class ViewSettingsState extends State<ViewSettings> {
                           child: Checkbox(
                               value: _shuffleAnswers,
                               onChanged: (bool? value) =>
-                                  _selectShuffleAnswer(value!)),
+                                  _selectShuffleAnswers(value!)),
                         ))
                   ],
                 ),
@@ -300,9 +339,17 @@ class ViewSettingsState extends State<ViewSettings> {
                 // SETTING: CONFIRM ALERTS
                 Row(
                   children: [
-                    const Expanded(
-                        child: Text("Alert di conferma: ",
-                            style: TextStyle(fontSize: 20))),
+                    Expanded(
+                      child: InkWell(
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onDoubleTap: () {
+                            _resetConfirmAlerts();
+                          },
+                          child: const Text("Alert di conferma: ",
+                              style: TextStyle(fontSize: 20))),
+                    ),
                     SizedBox(
                         width: 120.0,
                         child: Transform.scale(
@@ -316,12 +363,20 @@ class ViewSettingsState extends State<ViewSettings> {
                 ),
                 const SizedBox(height: 20),
                 // SETTING: DARK THEME
-                const Row(
+                Row(
                   children: [
                     Expanded(
-                        child: Text("Tema scuro: ",
-                            style: TextStyle(fontSize: 20))),
-                    SizedBox(
+                      child: InkWell(
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onDoubleTap: () {
+                            _resetTheme(themeProvider);
+                          },
+                          child: const Text("Tema scuro: ",
+                              style: TextStyle(fontSize: 20))),
+                    ),
+                    const SizedBox(
                       width: 120.0,
                       child: ChangeThemeButtonWidget(),
                     ),
@@ -339,10 +394,10 @@ class ViewSettingsState extends State<ViewSettings> {
               Icons.refresh,
               size: 40.0,
             ),
-            onPressed: _isDefault()
+            onPressed: _isDefault(themeProvider)
                 ? null
                 : () {
-                    _reset(_themeProvider);
+                    _reset(themeProvider);
                   },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -371,8 +426,8 @@ class ViewSettingsState extends State<ViewSettings> {
                         _timer,
                         _shuffleAnswers,
                         _confirmAlerts,
-                        _themeProvider.isDarkMode);
-                    _darkTheme = _themeProvider.isDarkMode;
+                        themeProvider.isDarkMode);
+                    _darkTheme = themeProvider.isDarkMode;
 
                     Navigator.pop(context);
                   },
@@ -395,7 +450,7 @@ class ViewSettingsState extends State<ViewSettings> {
                 fit: BoxFit.fitWidth,
                 child: ElevatedButton(
                   onPressed: () {
-                    _themeProvider.toggleTheme(_darkTheme);
+                    themeProvider.toggleTheme(_darkTheme);
 
                     Navigator.pop(context);
                   },
