@@ -14,7 +14,7 @@ class QuestionRepository {
 
   String error = "";
 
-  Future<void> loadFile(String filePath) async {
+  Future<void> load(String filePath) async {
     int numPerTopic = 0, totQuest = 0;
     String fileText = await rootBundle.loadString(filePath);
 
@@ -46,7 +46,7 @@ class QuestionRepository {
               "Riga ${i + 1}: divisione per argomenti non rilevata (non è presente l'argomento per le prime domande), ma ne è stato trovato uno comunque");
         }
 
-        Question q = Question(lines[i]);
+        Question q = Question(totQuest + 1, lines[i]);
 
         for (int j = 0; j < DEFAULT_ANSWER_NUMBER; j++) {
           i++;
@@ -70,9 +70,14 @@ class QuestionRepository {
           throw FileSystemException(
               "Riga ${i + 1}: risposta corretta non valida");
         }
+        q.setCorrectAnswerFromInt(value);
+
+        if (topicsPresent) {
+          q.setTopic(topics.last);
+        }
 
         questions.add(q);
-        q.setCorrectAnswerFromInt(value);
+
         totQuest++;
 
         if (topicsPresent) numPerTopic++;

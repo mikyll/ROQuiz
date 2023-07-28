@@ -6,6 +6,7 @@ import 'package:roquiz/model/Themes.dart';
 class IconButtonWidget extends StatelessWidget {
   const IconButtonWidget({
     Key? key,
+    this.borderRadius = 30,
     this.onTap,
     this.onDoubleTap,
     this.width,
@@ -18,6 +19,7 @@ class IconButtonWidget extends StatelessWidget {
 
   final IconData icon;
 
+  final double borderRadius;
   final IconButtonPalette? lightPalette;
   final IconButtonPalette? darkPalette;
   final VoidCallback? onTap;
@@ -28,32 +30,32 @@ class IconButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _themeProvider = Provider.of<ThemeProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Material(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(borderRadius),
       color:
-          _themeProvider.isDarkMode ? darkPalette!.color : lightPalette!.color,
+          themeProvider.isDarkMode ? darkPalette!.color : lightPalette!.color,
       child: InkWell(
         customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         onTap: onTap,
         onDoubleTap: onDoubleTap,
-        highlightColor: _themeProvider.isDarkMode
+        highlightColor: themeProvider.isDarkMode
             ? darkPalette!.highlightColor
             : lightPalette!.highlightColor,
-        hoverColor: _themeProvider.isDarkMode
+        hoverColor: themeProvider.isDarkMode
             ? darkPalette!.hoverColor
             : lightPalette!.hoverColor,
-        splashColor: _themeProvider.isDarkMode
+        splashColor: themeProvider.isDarkMode
             ? darkPalette!.splashColor
             : lightPalette!.splashColor,
         child: SizedBox(
           width: width,
           height: height,
           child: Icon(icon,
-              color: _themeProvider.isDarkMode
+              color: themeProvider.isDarkMode
                   ? darkPalette!.iconColor
                   : lightPalette!.iconColor,
               size: iconSize),
@@ -66,10 +68,11 @@ class IconButtonWidget extends StatelessWidget {
 class IconButtonLongPressWidget extends StatefulWidget {
   const IconButtonLongPressWidget({
     Key? key,
-    required this.onUpdate,
     this.minDelay = 50,
     this.initialDelay = 300,
     this.delaySteps = 5,
+    this.borderRadius = 1000,
+    this.onUpdate,
     this.width,
     this.height,
     this.lightPalette,
@@ -82,7 +85,7 @@ class IconButtonLongPressWidget extends StatefulWidget {
         super(key: key);
 
   final IconData icon;
-  final VoidCallback onUpdate;
+  final VoidCallback? onUpdate;
 
   final IconButtonPalette? lightPalette;
   final IconButtonPalette? darkPalette;
@@ -94,6 +97,7 @@ class IconButtonLongPressWidget extends StatefulWidget {
   final int minDelay;
   final int initialDelay;
   final int delaySteps;
+  final double borderRadius;
 
   @override
   State<StatefulWidget> createState() {
@@ -115,8 +119,8 @@ class _IconButtonLongPressWidgetState extends State<IconButtonLongPressWidget> {
         (widget.initialDelay - widget.minDelay).toDouble() / widget.delaySteps;
     var delay = widget.initialDelay.toDouble();
 
-    while (_holding) {
-      widget.onUpdate();
+    while (_holding && widget.onUpdate != null) {
+      widget.onUpdate!();
       await Future.delayed(Duration(milliseconds: delay.round()));
       if (delay > widget.minDelay) delay -= step;
     }
@@ -128,27 +132,27 @@ class _IconButtonLongPressWidgetState extends State<IconButtonLongPressWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final _themeProvider = Provider.of<ThemeProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Material(
-      borderRadius: BorderRadius.circular(1000),
-      color: _themeProvider.isDarkMode
+      borderRadius: BorderRadius.circular(widget.borderRadius),
+      color: themeProvider.isDarkMode
           ? widget.darkPalette!.color
           : widget.lightPalette!.color,
       child: InkWell(
         customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10000),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         onTap: () => _stopHolding(),
         onTapDown: (_) => _startHolding(),
         onTapCancel: () => _stopHolding(),
-        highlightColor: _themeProvider.isDarkMode
+        highlightColor: themeProvider.isDarkMode
             ? widget.darkPalette!.highlightColor
             : widget.lightPalette!.highlightColor,
-        hoverColor: _themeProvider.isDarkMode
+        hoverColor: themeProvider.isDarkMode
             ? widget.darkPalette!.hoverColor
             : widget.lightPalette!.hoverColor,
-        splashColor: _themeProvider.isDarkMode
+        splashColor: themeProvider.isDarkMode
             ? widget.darkPalette!.splashColor
             : widget.lightPalette!.splashColor,
         child: SizedBox(
@@ -156,7 +160,7 @@ class _IconButtonLongPressWidgetState extends State<IconButtonLongPressWidget> {
           height: widget.height,
           child: Icon(widget.icon,
               color: widget.iconColor ??
-                  (_themeProvider.isDarkMode
+                  (themeProvider.isDarkMode
                       ? widget.darkPalette!.iconColor
                       : widget.lightPalette!.iconColor),
               size: widget.iconSize),

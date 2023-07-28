@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/model/Answer.dart';
+import 'package:roquiz/model/Themes.dart';
 
 class QuestionWidget extends StatelessWidget {
   const QuestionWidget({
@@ -80,6 +82,8 @@ class QuestionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
+
     return Container(
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
@@ -96,10 +100,28 @@ class QuestionWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               // Question text
-              child: Text(
+              child: RichText(
+                text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: themeProvider.isDarkMode
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: (questionNumber != null
+                            ? "Q$questionNumber) "
+                            : ""),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: questionText),
+                    ]),
+              ),
+              /*Text(
                   (questionNumber != null ? "Q$questionNumber) " : "") +
                       questionText,
-                  style: const TextStyle(fontSize: 16)),
+                  style: const TextStyle(fontSize: 16)),*/
             ),
           ),
           // ANSWERS
@@ -121,7 +143,7 @@ class QuestionWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(children: [
                       // Answer letter
-                      Text(Answer.values[index].name + ") ",
+                      Text("${Answer.values[index].name}) ",
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       Flexible(

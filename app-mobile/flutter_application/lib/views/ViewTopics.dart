@@ -6,7 +6,7 @@ import 'package:roquiz/widget/topics_widget.dart';
 import 'ViewQuestions.dart';
 
 class ViewTopics extends StatefulWidget {
-  ViewTopics(
+  const ViewTopics(
       {Key? key,
       required this.qRepo,
       required this.settings,
@@ -18,7 +18,7 @@ class ViewTopics extends StatefulWidget {
   final Settings settings;
   final Function(int) updateQuizPool;
 
-  List<bool> selectedTopics;
+  final List<bool> selectedTopics;
 
   @override
   State<StatefulWidget> createState() => ViewTopicsState();
@@ -117,6 +117,20 @@ class ViewTopicsState extends State<ViewTopics> {
               Navigator.pop(context);
             },
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ViewQuestions(
+                              title: "Lista domande",
+                              qRepo: widget.qRepo,
+                            )));
+              },
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -163,7 +177,9 @@ class ViewTopicsState extends State<ViewTopics> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ViewQuestions(
-                                    qRepo: widget.qRepo, iTopic: index)));
+                                    title: widget.qRepo.topics[index],
+                                    qRepo: widget.qRepo,
+                                    iTopic: index)));
                       },
                       text: " ${widget.qRepo.topics[index]}",
                       questionNum: widget.qRepo.getQuestionNumPerTopic()[index],

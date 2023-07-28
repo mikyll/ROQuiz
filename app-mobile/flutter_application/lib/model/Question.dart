@@ -2,11 +2,13 @@ import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/persistence/Settings.dart';
 
 class Question {
+  int id = -1;
   String question = "";
   List<String> answers = [];
   Answer correctAnswer = Answer.NONE;
+  String topic = "";
 
-  Question(this.question);
+  Question(this.id, this.question);
 
   void addAnswer(String answer) {
     if (answers.length == Settings.DEFAULT_ANSWER_NUMBER) {
@@ -23,6 +25,10 @@ class Question {
 
   void setCorrectAnswerFromEnum(Answer correctAnswer) {
     this.correctAnswer = correctAnswer;
+  }
+
+  void setTopic(String topic) {
+    this.topic = topic;
   }
 
   void shuffleAnswers() {
