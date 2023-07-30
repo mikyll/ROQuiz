@@ -37,6 +37,7 @@ jobs:
               # Commit & Push changes
               git add -f "app-desktop/Domande.txt"
               git add -f "app-mobile/flutter_application/assets/domande.txt"
+              git config --global user.email "righi.michele98@gmail.com"
               git config --global user.name "mikyll"
               git commit -m "Update file domande"
               git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
