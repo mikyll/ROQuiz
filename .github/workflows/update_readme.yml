@@ -55,6 +55,7 @@ jobs:
           then
             # Commit & Push changes
             git add "$file_readme"
+            git config --global user.email "righi.michele98@gmail.com"
             git config --global user.name "mikyll"
             git commit -m "Update README.md"
             git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
