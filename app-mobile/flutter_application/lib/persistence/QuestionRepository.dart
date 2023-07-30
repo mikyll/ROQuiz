@@ -1,12 +1,20 @@
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:roquiz/model/PlatformType.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
+import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class QuestionRepository {
+  static final DateTime CUSTOM_DATE = DateTime.parse("1999-01-01T00:00:00Z");
+  static final DateTime DEFAULT_LAST_QUESTION_UPDATE =
+      DateTime.parse("2023-07-14T14:35:16Z");
   static const int DEFAULT_ANSWER_NUMBER = 5;
 
+  DateTime lastQuestionUpdate = DEFAULT_LAST_QUESTION_UPDATE;
   List<Question> questions = [];
   List<String> topics = [];
   List<int> qNumPerTopic = [];
@@ -14,12 +22,203 @@ class QuestionRepository {
 
   String error = "";
 
-  Future<void> load(String filePath) async {
+  late String _cachedNewContent;
+  late DateTime _cachedNewDate;
+
+  Future<void> load() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    lastQuestionUpdate = DateTime.parse(prefs.getString("lastQuestionUpdate") ??
+        DEFAULT_LAST_QUESTION_UPDATE.toString());
+
+    String content = "";
+
+    switch (getPlatformType()) {
+      // Mobile
+      case PlatformType.MOBILE:
+        Directory appDocDir = await getApplicationSupportDirectory();
+
+        String filePath = "${appDocDir.path}/Domande.txt";
+        File file = File(filePath);
+
+        // Check if file is present
+        if (!file.existsSync()) {
+          // If not create it and load from bundle
+          file.create();
+
+          String contentFromAsset =
+              await rootBundle.loadString("assets/domande.txt");
+          file.writeAsString(contentFromAsset);
+        }
+
+        String testContent = await file.readAsString();
+
+        if (isValid(testContent) > 0) {
+          String contentFromAsset =
+              await rootBundle.loadString("assets/domande.txt");
+          file.writeAsString(contentFromAsset);
+        }
+        content = testContent;
+
+        break;
+
+      // Desktop
+      /*case PlatformType.DESKTOP:
+        // TO-DO
+        Directory appDocDir = await getApplicationSupportDirectory();
+        print("test0: ${appDocDir.path}");
+
+        String filePath = "${appDocDir.path}\\data\\Domande.txt";
+        File file = File(filePath);
+
+        print("test1: ${Platform.resolvedExecutable}");
+
+        // Check if file is present
+        if (!file.existsSync()) {
+          print("test2.1: creation...");
+          // If not create it and load from bundle
+          await file.create();
+
+          String contentFromAsset =
+              await rootBundle.loadString("assets/domande.txt");
+          file.writeAsString(contentFromAsset);
+
+          print("test2.2: created...");
+        } else {
+          String tmp = await file.readAsString();
+          print("test3: $tmp");
+        }
+
+        break;*/
+
+      // Web & others
+      default:
+        content = await rootBundle.loadString("assets/domande.txt");
+    }
+
+    parse(content);
+  }
+
+  Future<DateTime> getLatestQuestionFileDate() async {
+    DateTime date;
+
+    http.Response response = await http.get(Uri.parse(
+        'https://api.github.com/repos/mikyll/ROQuiz/commits?path=Domande.txt&page=1&per_page=1'));
+
+    try {
+      List<dynamic> json = jsonDecode(response.body);
+      String dateString = json[0]['commit']['author']['date'];
+      date = DateTime.parse(dateString);
+
+      _cachedNewDate = date;
+
+      return date;
+    } catch (e) {
+      print("Error: $e");
+
+      return Future.error(e);
+    }
+  }
+
+  // Returns true if there is a more recent questions file
+  Future<(bool, DateTime, int)> checkQuestionUpdates() async {
+    DateTime date = await getLatestQuestionFileDate();
+    String content = await downloadFile();
+    int qNum = isValid(content);
+
+    _cachedNewDate = date;
+
+    return (date.isAfter(lastQuestionUpdate), date, qNum);
+  }
+
+  Future<String> downloadFile(
+      [url =
+          "https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt"]) async {
+    String result = "";
+
+    // Get file content from repo
+    http.Response response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      result = response.body;
+
+      _cachedNewContent = result;
+    }
+
+    return result;
+  }
+
+  void updateQuestionsDate([DateTime? newDate]) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    DateTime date;
+    if (newDate != null) {
+      date = newDate;
+    } else {
+      date = _cachedNewDate;
+    }
+
+    // Update shared preferences
+    prefs.setString("lastQuestionUpdate", date.toString());
+
+    // Load date to repository
+    lastQuestionUpdate = date;
+  }
+
+  Future<bool> updateQuestionsFile([String? newContent]) async {
+    String content;
+
+    // Check if it's valid
+    if (newContent != null) {
+      content = newContent;
+    } else {
+      content = _cachedNewContent;
+    }
+    if (QuestionRepository.isValid(content) < 0) {
+      return false;
+    }
+
+    // Update file
+    switch (getPlatformType()) {
+      // Mobile
+      case PlatformType.MOBILE:
+        Directory appDocDir = await getApplicationSupportDirectory();
+
+        String filePath = "${appDocDir.path}/Domande.txt";
+        File file = File(filePath);
+
+        file.writeAsString(content);
+
+        break;
+      /*case PlatformType.DESKTOP:
+        // TO-DO
+        break;*/
+      default:
+        print("TO-DO: implement");
+    }
+
+    // Load to repository
+    parse(content);
+
+    return true;
+  }
+
+  Future<void> update() async {
+    updateQuestionsDate();
+    await updateQuestionsFile();
+  }
+
+  void parse(String content) async {
+    questions.clear();
+    topics.clear();
+    qNumPerTopic.clear();
+    topicsPresent = false;
+    error = "";
+
     int numPerTopic = 0, totQuest = 0;
-    String fileText = await rootBundle.loadString(filePath);
 
     LineSplitter ls = const LineSplitter();
-    List<String> lines = ls.convert(fileText);
+    List<String> lines = ls.convert(content);
 
     // the question file can be subdivided by topics (i == line #)
     for (int i = 0; i < lines.length; i++) {
@@ -33,7 +232,7 @@ class QuestionRepository {
       }
 
       // next question
-      if (lines[i].isNotEmpty) {
+      if (lines.length > i && lines[i].isNotEmpty) {
         // next topic
         if (topicsPresent && lines[i].startsWith("@")) {
           qNumPerTopic.add(numPerTopic);
@@ -50,6 +249,10 @@ class QuestionRepository {
 
         for (int j = 0; j < DEFAULT_ANSWER_NUMBER; j++) {
           i++;
+          if (lines.length <= i) {
+            throw FileSystemException(
+                "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} mancante");
+          }
           List<String> splitted = lines[i].split(". ");
           if (splitted.length < 2 || splitted[1].isEmpty) {
             throw FileSystemException(
@@ -60,7 +263,7 @@ class QuestionRepository {
         }
         i++;
 
-        if (lines[i].length != 1) {
+        if (lines.length <= i || lines[i].length != 1) {
           throw FileSystemException("Riga ${i + 1}: risposta corretta assente");
         }
 
@@ -87,7 +290,6 @@ class QuestionRepository {
     if (topicsPresent) {
       qNumPerTopic.add(numPerTopic);
 
-      // test
       print("Tot domande: $totQuest");
       print("Argomenti: ");
       for (int i = 0; i < qNumPerTopic.length; i++) {
@@ -112,19 +314,105 @@ class QuestionRepository {
     return topicsPresent;
   }
 
+  static (int, String) isValidErrors(String content) {
+    LineSplitter ls = const LineSplitter();
+    List<String> lines = ls.convert(content);
+    bool topics = false;
+    int numQuestions = 0;
+
+    // the question file can be subdivided by topics (i == line #)
+    for (int i = 0; i < lines.length; i++) {
+      // if the first line starts with '@', then the file has topics
+      if (i == 0 && lines[i].startsWith("@")) {
+        topics = true;
+
+        continue;
+      }
+
+      // next question
+      if (lines.length > i && lines[i].isNotEmpty) {
+        // next topic
+        if (lines[i].startsWith("@")) {
+          if (topics) {
+            i++;
+          } else {
+            return (
+              -1,
+              "Riga ${i + 1}: divisione per argomenti non rilevata (non è presente l'argomento per le prime domande), ma ne è stato trovato uno comunque"
+            );
+          }
+        }
+
+        // answers
+        for (int j = 0; j < DEFAULT_ANSWER_NUMBER; j++) {
+          i++;
+          if (lines.length <= i) {
+            return (
+              -2,
+              "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} mancante"
+            );
+          }
+          List<String> splitted = lines[i].split(". ");
+          if (splitted.length < 2 || splitted[1].isEmpty) {
+            return (
+              -3,
+              "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} formata male"
+            );
+          }
+        }
+        i++;
+
+        if (lines.length <= i || lines[i].length != 1) {
+          return (-4, "Riga ${i + 1}: risposta corretta assente");
+        }
+
+        int asciiValue = lines[i].codeUnitAt(0);
+        int value = asciiValue - 65;
+        if (value < 0 || value > DEFAULT_ANSWER_NUMBER - 1) {
+          return (-5, "Riga ${i + 1}: risposta corretta non valida");
+        }
+
+        numQuestions++;
+      }
+    }
+    return (numQuestions, "OK");
+  }
+
+  static int isValid(String content) {
+    int res;
+    String err;
+    (res, err) = isValidErrors(content);
+
+    print(err);
+
+    return res;
+  }
+
+  static bool isValidBool(String content) {
+    return isValid(content) > 0;
+  }
+
   @override
   String toString() {
     String res = "";
     for (int i = 0; i < questions.length; i++) {
-      res += "Q${i + 1}) " + questions[i].question + "\n";
+      res += "Q${i + 1}) ${questions[i].question}\n";
 
       for (int j = 0; j < questions[i].answers.length; j++) {
-        res +=
-            Answer.values[j].toString() + ". " + questions[i].answers[j] + "\n";
+        res += "${Answer.values[j]}. ${questions[i].answers[j]}\n";
       }
       res += "\n";
     }
 
     return res;
+  }
+
+  // Auxiliary method for testing
+  Future<void> reloadFromAsset() async {
+    String content = await rootBundle.loadString("assets/domande.txt");
+
+    updateQuestionsDate(DEFAULT_LAST_QUESTION_UPDATE);
+    updateQuestionsFile(content);
+    parse(content);
   }
 }

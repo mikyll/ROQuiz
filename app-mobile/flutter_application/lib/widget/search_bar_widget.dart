@@ -420,3 +420,217 @@ class SearchBarWidgetState extends State<SearchBarWidget>
     );
   }
 }
+
+/*
+child: Stack(
+            children: [
+              ///Using Animated Positioned widget to expand and shrink the widget
+              AnimatedPositioned(
+                duration:
+                    Duration(milliseconds: widget.animationDurationInMilli),
+                top: 6.0,
+                right: 7.0,
+                curve: Curves.easeOut,
+                child: AnimatedOpacity(
+                  opacity: !isOpen ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      /// can add custom color or the color will be white
+                      color: widget.color,
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: AnimatedBuilder(
+                      builder: (context, widget) {
+                        ///Using Transform.rotate to rotate the suffix icon when it gets expanded
+                        return Transform.rotate(
+                          angle: _con.value * 2.0 * pi,
+                          child: widget,
+                        );
+                      },
+                      animation: _con,
+                      child: GestureDetector(
+                        onTap: () {
+                          try {
+                            ///trying to execute the onSuffixTap function
+                            if (widget.onClear != null) {
+                              widget.onClear!();
+                            }
+
+                            // * if field empty then the user trying to close bar
+                            if (textFieldValue == '') {
+                              unfocusKeyboard();
+                              setState(() {
+                                isOpen = false;
+
+                                if (widget.onClose != null) {
+                                  widget.onClose!();
+                                }
+                              });
+
+                              ///reverse == close
+                              _con.reverse();
+                            }
+
+                            // * why not clear textfield here?
+                            widget.textController.clear();
+                            textFieldValue = '';
+
+                            ///closeSearchOnSuffixTap will execute if it's true
+                            if (widget.closeSearchOnSuffixTap) {
+                              unfocusKeyboard();
+                              setState(() {
+                                isOpen = false;
+                              });
+                            }
+                          } catch (e) {
+                            ///print the error if the try block fails
+                            print(e);
+                          }
+                        },
+
+                        ///suffixIcon is of type Icon
+                        child: widget.suffixIcon ??
+                            Icon(
+                              Icons.close,
+                              size: 20.0,
+                              color: widget.textFieldIconColor,
+                            ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              AnimatedPositioned(
+                duration:
+                    Duration(milliseconds: widget.animationDurationInMilli),
+                left: !isOpen ? 20.0 : 40.0,
+                curve: Curves.easeOut,
+                top: 11.0,
+
+                ///Using Animated opacity to change the opacity of th textField while expanding
+                child: AnimatedOpacity(
+                  opacity: !isOpen ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 10),
+                    alignment: Alignment.topCenter,
+                    width: widget.width / 1.7,
+                    child: TextField(
+                      ///Text Controller. you can manipulate the text inside this textField by calling this controller.
+                      controller: widget.textController,
+                      inputFormatters: widget.inputFormatters,
+                      focusNode: focusNode,
+                      cursorRadius: const Radius.circular(10.0),
+                      cursorWidth: 2.0,
+                      onChanged: (value) {
+                        textFieldValue = value;
+                      },
+                      onSubmitted: (value) {
+                        widget.onSearch(value);
+                        if (widget.onClose != null) {
+                          widget.onClose!();
+                        }
+                        unfocusKeyboard();
+                        setState(() {
+                          isOpen = false;
+                        });
+                      },
+                      onEditingComplete: () {
+                        /// on editing complete the keyboard will be closed and the search bar will be closed
+                        unfocusKeyboard();
+                        setState(() {
+                          isOpen = false;
+                        });
+                      },
+
+                      ///style is of type TextStyle, the default is just a color black
+                      style: widget.style ??
+                          TextStyle(
+                              color: themeProvider.isDarkMode
+                                  ? widget.textFieldTextDarkColor
+                                  : widget.textFieldTextLightColor),
+                      cursorColor: themeProvider.isDarkMode
+                          ? widget.textFieldTextDarkColor
+                          : widget.textFieldTextLightColor,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(5.0),
+                        isDense: true,
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        labelText: widget.helpText,
+                        labelStyle: const TextStyle(
+                          color: Color(0xff5B5B5B),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        alignLabelWithHint: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              ///Using material widget here to get the ripple effect on the prefix icon
+              Material(
+                /// can add custom color or the color will be white
+                /// toggle button color based on toggle state
+                color: !isOpen
+                    ? widget.color
+                    : (themeProvider.isDarkMode
+                        ? widget.textFieldBackgroundDarkColor
+                        : widget.textFieldBackgroundLightColor),
+                borderRadius: BorderRadius.circular(30.0),
+                child: IconButton(
+                  splashRadius: 19.0,
+
+                  ///if toggle is 1, which means it's open. so show the back icon, which will close it.
+                  ///if the toggle is 0, which means it's closed, so tapping on it will expand the widget.
+                  ///prefixIcon is of type Icon
+                  icon: Icon(
+                    Icons.search,
+                    color: isOpen ? Colors.grey : widget.searchIconColor,
+                  ),
+                  onPressed: () {
+                    setState(
+                      () {
+                        if (!isOpen) {
+                          isOpen = true;
+
+                          if (widget.onOpen != null) {
+                            widget.onOpen!();
+                          }
+
+                          ///if the autoFocus is true, the keyboard will pop open, automatically
+                          if (widget.autoFocus) {
+                            FocusScope.of(context).requestFocus(focusNode);
+                          }
+
+                          // expand
+                          _con.forward();
+                        } else {
+                          isOpen = false;
+
+                          widget.onSearch(widget.textController.text);
+                          if (widget.onClose != null) {
+                            widget.onClose!();
+                          }
+
+                          ///if the autoFocus is true, the keyboard will close, automatically
+                          if (widget.autoFocus) unfocusKeyboard();
+
+                          // shrink
+                          _con.reverse();
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+*/

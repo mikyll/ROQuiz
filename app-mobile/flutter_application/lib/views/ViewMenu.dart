@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/Question.dart';
+import 'package:roquiz/model/Utils.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/views/ViewQuiz.dart';
@@ -7,10 +10,12 @@ import 'package:roquiz/views/ViewSettings.dart';
 import 'package:roquiz/views/ViewTopics.dart';
 import 'package:roquiz/views/ViewInfo.dart';
 import 'package:roquiz/model/Themes.dart';
+import 'package:roquiz/widget/confirmation_alert.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:http/http.dart' as http;
 
 class ViewMenu extends StatefulWidget {
   const ViewMenu({Key? key}) : super(key: key);
@@ -29,9 +34,6 @@ class ViewMenuState extends State<ViewMenu> {
   bool _topicsPresent = false;
   final List<bool> _selectedTopics = [];
   int _quizPool = 0;
-
-  late int _quizQuestionNumber;
-  late int _timer;
 
   void _initTopics() {
     setState(() {
@@ -72,17 +74,66 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void saveSettings(
-      int qNum, int timer, bool shuffle, bool confirmAlerts, bool dTheme) {
+  void saveSettings(bool qCheck, int qNum, int timer, bool shuffle,
+      bool confirmAlerts, bool dTheme) {
     setState(() {
+      _settings.checkQuestionsUpdate = qCheck;
       _settings.questionNumber = qNum;
       _settings.timer = timer;
       _settings.shuffleAnswers = shuffle;
       _settings.confirmAlerts = confirmAlerts;
       _settings.darkTheme = dTheme;
-      _settings.saveSettings();
+      _settings.saveToSharedPreferences();
       resetTopics();
     });
+  }
+
+  void _showConfirmationDialog(BuildContext context, String title,
+      String content, void Function()? onConfirm, void Function()? onCancel) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ConfirmationAlert(
+              title: title,
+              content: content,
+              buttonConfirmText: "Sì",
+              buttonCancelText: "No",
+              onConfirm: onConfirm,
+              onCancel: onCancel);
+        });
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<bool> _checkNewVersion() async {
+    http.Response response = await http.get(Uri.parse(
+        'https://api.github.com/repos/mikyll/ROQuiz/releases/latest'));
+
+    try {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      String tag_name = json['tag_name'];
+      List<String> repoVersion = tag_name.replaceAll("v", "").split(".");
+
+      int repoMajor = int.parse(repoVersion[0]);
+      int repoMinor = int.parse(repoVersion[1]);
+
+      List<String> currentVersion = Settings.VERSION_NUMBER.split(".");
+      int currentMajor = int.parse(currentVersion[0]) - 1;
+      int currentMinor = int.parse(currentVersion[1]);
+
+      if (currentMajor < repoMajor ||
+          (currentMajor == repoMajor && currentMinor < repoMinor)) {
+        return true;
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+    return false;
   }
 
   @override
@@ -90,19 +141,13 @@ class ViewMenuState extends State<ViewMenu> {
     super.initState();
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      //print(packageInfo.appName);
-      //print(packageInfo.packageName);
-      setState(
-        () {
-          Settings.VERSION_NUMBER = packageInfo.version;
-        },
-      );
-      //print(packageInfo.buildNumber);
+      setState(() => Settings.VERSION_NUMBER = packageInfo.version);
     });
 
-    _settings.loadSettings();
+    _settings.loadFromSharedPreferences();
+
     qRepo
-        .loadFile("assets/domande.txt")
+        .load()
         .then(
           (_) => {
             _initTopics(),
@@ -116,16 +161,32 @@ class ViewMenuState extends State<ViewMenu> {
         .onError((error, stackTrace) =>
             {setState(() => _qRepoLoadingError = error.toString())});
 
-    _prefs.then((value) => (SharedPreferences prefs) {
-          _quizQuestionNumber = prefs.getInt("questionNumber") ?? -1;
-          _timer = prefs.getInt("timer") ?? -1;
-        });
-  }
-
-  Future<void> _launchInBrowser(String url) async {
-    if (!await launchUrl(Uri.parse(url),
-        mode: LaunchMode.externalApplication)) {
-      throw 'Could not launch $url';
+    if (_settings.checkQuestionsUpdate) {
+      qRepo.checkQuestionUpdates().then((result) {
+        bool newQuestionsPresent = result.$1;
+        DateTime date = result.$2;
+        int qNum = result.$3;
+        if (newQuestionsPresent) {
+          _showConfirmationDialog(
+            context,
+            "Nuove Domande",
+            "È stata trovata una versione più recente del file contenente le domande.\n"
+                "Versione attuale: ${qRepo.questions.length} domande (${Utils.getParsedDateTime(qRepo.lastQuestionUpdate)}).\n"
+                "Nuova versione: $qNum domande (${Utils.getParsedDateTime(date)}).\n"
+                "Scaricare il nuovo file?",
+            () {
+              setState(() {
+                qRepo
+                    .update()
+                    .then((_) => updateQuizPool(qRepo.questions.length));
+                _quizPool = qRepo.questions.length;
+              });
+              Navigator.pop(context);
+            },
+            () => Navigator.pop(context),
+          );
+        }
+      });
     }
   }
 
@@ -166,7 +227,9 @@ class ViewMenuState extends State<ViewMenu> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0),
                         child: ElevatedButton(
-                          onPressed: qRepo.questions.isEmpty
+                          onPressed: qRepo.questions.isEmpty ||
+                                  qRepo.questions.length <
+                                      _settings.questionNumber
                               ? null
                               : () {
                                   Navigator.push(
@@ -230,12 +293,12 @@ class ViewMenuState extends State<ViewMenu> {
                               Icons.format_list_numbered_rounded,
                             ),
                             Text(
-                                "Domande: ${_settings.questionNumber} su $_quizPool"),
+                                " Domande: ${_settings.questionNumber} su $_quizPool"),
                             const SizedBox(width: 20),
                             const Icon(
                               Icons.timer_rounded,
                             ),
-                            Text("Tempo: ${_settings.timer} min"),
+                            Text(" Tempo: ${_settings.timer} min"),
                           ]),
                       _qRepoLoadingError.isNotEmpty
                           ? Padding(

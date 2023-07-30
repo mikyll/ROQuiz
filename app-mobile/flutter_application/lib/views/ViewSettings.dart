@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:roquiz/model/Utils.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/change_theme_button_widget.dart';
 import 'package:roquiz/widget/confirmation_alert.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
+import 'package:file_picker/file_picker.dart';
 
 class ViewSettings extends StatefulWidget {
   const ViewSettings({
@@ -17,18 +22,116 @@ class ViewSettings extends StatefulWidget {
 
   final QuestionRepository qRepo;
   final Settings settings;
-  final Function(int, int, bool, bool, bool) saveSettings;
+  final Function(bool, int, int, bool, bool, bool) saveSettings;
 
   @override
   State<StatefulWidget> createState() => ViewSettingsState();
 }
 
 class ViewSettingsState extends State<ViewSettings> {
+  bool _checkQuestionsUpdate = Settings.DEFAULT_CHECK_QUESTIONS_UPDATE;
   int _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
   int _timer = Settings.DEFAULT_TIMER;
   bool _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
   bool _confirmAlerts = Settings.DEFAULT_CONFIRM_ALERTS;
   bool _darkTheme = Settings.DEFAULT_DARK_THEME; // previous value
+
+  bool _isLoading = false;
+
+  void _resetCheckQuestionsUpdate() {
+    setState(
+        () => _checkQuestionsUpdate = Settings.DEFAULT_CHECK_QUESTIONS_UPDATE);
+  }
+
+  void _selectCheckQuestionsUpdate(bool value) {
+    setState(() {
+      _checkQuestionsUpdate = value;
+    });
+  }
+
+  void _loadQuestionFilePath() async {
+    setState(() {
+      _isLoading = true;
+    });
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ["txt"]);
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+
+      String content = await file.readAsString();
+
+      int res;
+      String err;
+      (res, err) = QuestionRepository.isValidErrors(content);
+      if (res > 0) {
+        widget.qRepo.updateQuestionsDate(QuestionRepository.CUSTOM_DATE);
+        await widget.qRepo.updateQuestionsFile(content);
+      }
+      _showConfirmationDialog(
+        context,
+        res > 0 ? "File Caricato" : "File Non Valido",
+        res > 0
+            ? "Il file domande personalizzato è stato caricato correttamente.\n"
+                "Numero domande: $res"
+            : err,
+        "",
+        "Ok",
+        null,
+        () => Navigator.pop(context),
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _checkNewQuestions() {
+    print("Versione corrente: ${widget.qRepo.lastQuestionUpdate}");
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    widget.qRepo.checkQuestionUpdates().then((result) {
+      setState(() {
+        _isLoading = false;
+      });
+      bool newQuestionsPresent = result.$1;
+      DateTime date = result.$2;
+      int qNum = result.$3;
+      if (newQuestionsPresent) {
+        _showConfirmationDialog(
+          context,
+          "Nuove Domande",
+          "È stata trovata una versione più recente del file contenente le domande.\n"
+              "Versione attuale: ${widget.qRepo.questions.length} domande (${Utils.getParsedDateTime(widget.qRepo.lastQuestionUpdate)}).\n"
+              "Nuova versione: $qNum domande (${Utils.getParsedDateTime(date)}).\n"
+              "Scaricare il nuovo file?",
+          "Sì",
+          "No",
+          () {
+            setState(() {
+              widget.qRepo.update();
+            });
+            Navigator.pop(context);
+          },
+          () => Navigator.pop(context),
+        );
+      } else {
+        _showConfirmationDialog(
+          context,
+          "Nessuna Nuova Domanda",
+          "Non sono state trovate nuove domande. Il file è aggiornato all'ultima versione (${Utils.getParsedDateTime(widget.qRepo.lastQuestionUpdate)}).",
+          "",
+          "Ok",
+          null,
+          () => Navigator.pop(context),
+        );
+      }
+    });
+  }
 
   void _resetQuestionNumber() {
     setState(() => _questionNumber = Settings.DEFAULT_QUESTION_NUMBER);
@@ -97,6 +200,7 @@ class ViewSettingsState extends State<ViewSettings> {
   }
 
   void _reset(ThemeProvider themeProvider) {
+    _resetCheckQuestionsUpdate();
     _resetQuestionNumber();
     _resetTimer();
     _resetShuffleAnswers();
@@ -105,7 +209,8 @@ class ViewSettingsState extends State<ViewSettings> {
   }
 
   bool _isDefault(ThemeProvider themeProvider) {
-    return _questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
+    return _checkQuestionsUpdate == Settings.DEFAULT_CHECK_QUESTIONS_UPDATE &&
+        _questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
         _timer == Settings.DEFAULT_TIMER &&
         _shuffleAnswers == Settings.DEFAULT_SHUFFLE_ANSWERS &&
         _confirmAlerts == Settings.DEFAULT_CONFIRM_ALERTS &&
@@ -113,21 +218,30 @@ class ViewSettingsState extends State<ViewSettings> {
   }
 
   bool _isChanged(ThemeProvider themeProvider) {
-    return _questionNumber != widget.settings.questionNumber ||
+    return _checkQuestionsUpdate != widget.settings.checkQuestionsUpdate ||
+        _questionNumber != widget.settings.questionNumber ||
         _timer != widget.settings.timer ||
         _shuffleAnswers != widget.settings.shuffleAnswers ||
         _confirmAlerts != widget.settings.confirmAlerts ||
         themeProvider.isDarkMode != widget.settings.darkTheme;
   }
 
-  void _showConfirmationDialog(BuildContext context, String title,
-      String content, void Function()? onConfirm, void Function()? onCancel) {
+  void _showConfirmationDialog(
+      BuildContext context,
+      String title,
+      String content,
+      String confirmButton,
+      String cancelButton,
+      void Function()? onConfirm,
+      void Function()? onCancel) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return ConfirmationAlert(
               title: title,
               content: content,
+              buttonConfirmText: confirmButton,
+              buttonCancelText: cancelButton,
               onConfirm: onConfirm,
               onCancel: onCancel);
         });
@@ -138,6 +252,7 @@ class ViewSettingsState extends State<ViewSettings> {
     super.initState();
 
     setState(() {
+      _checkQuestionsUpdate = widget.settings.checkQuestionsUpdate;
       _questionNumber = widget.settings.questionNumber;
       _timer = widget.settings.timer;
       _shuffleAnswers = widget.settings.shuffleAnswers;
@@ -157,8 +272,10 @@ class ViewSettingsState extends State<ViewSettings> {
             context,
             "Modifiche Non Salvate",
             "Uscire senza salvare?",
+            "Conferma",
+            "Annulla",
             () {
-              // Discard
+              // Discard settings (confirm)
               Navigator.pop(context);
               Navigator.pop(context);
               themeProvider.toggleTheme(_darkTheme);
@@ -186,8 +303,10 @@ class ViewSettingsState extends State<ViewSettings> {
                   context,
                   "Modifiche Non Salvate",
                   "Uscire senza salvare?",
+                  "Conferma",
+                  "Annulla",
                   () {
-                    // Discard (Confirm)
+                    // Discard settings (Confirm)
                     Navigator.pop(context);
                     Navigator.pop(context);
                     themeProvider.toggleTheme(_darkTheme);
@@ -209,6 +328,106 @@ class ViewSettingsState extends State<ViewSettings> {
             child: ListView(
               shrinkWrap: true,
               children: [
+                // SETTING: Questions File
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onDoubleTap: () {
+                            // TO-DO: reset
+                          },
+                          child: const Text("File domande: ",
+                              style: TextStyle(fontSize: 20))),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: SizedBox(
+                        width: 100.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Opacity(
+                              opacity: 0.5,
+                              child: IconButtonWidget(
+                                /*onTap:
+                                () {
+                                  print("TO-DO: Edit question file.");
+                                },*/
+                                lightPalette: MyThemes.lightIconButtonPalette,
+                                darkPalette: MyThemes.darkIconButtonPalette,
+                                width: 40.0,
+                                height: 40.0,
+                                icon: Icons.edit,
+                                iconSize: 35,
+                                borderRadius: 5,
+                              ),
+                            ),
+                            const Spacer(flex: 1),
+                            IconButtonWidget(
+                              onTap: _isLoading
+                                  ? null
+                                  : () {
+                                      _loadQuestionFilePath();
+                                    },
+                              lightPalette: MyThemes.lightIconButtonPalette,
+                              darkPalette: MyThemes.darkIconButtonPalette,
+                              width: 40.0,
+                              height: 40.0,
+                              icon: Icons.file_open_outlined,
+                              iconSize: 35,
+                              borderRadius: 5,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // SETTING: New Questions Check
+                Row(
+                  children: [
+                    IconButtonWidget(
+                      onTap: _isLoading
+                          ? null
+                          : () {
+                              _checkNewQuestions();
+                            },
+                      lightPalette: MyThemes.lightIconButtonPalette,
+                      darkPalette: MyThemes.darkIconButtonPalette,
+                      width: 40.0,
+                      height: 40.0,
+                      icon: Icons.sync_rounded,
+                      iconSize: 35,
+                      borderRadius: 5,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: InkWell(
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onDoubleTap: () {
+                            _resetCheckQuestionsUpdate();
+                          },
+                          child: const Text("Controllo nuove domande: ",
+                              softWrap: true, style: TextStyle(fontSize: 20))),
+                    ),
+                    SizedBox(
+                        width: 120.0,
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                              value: _checkQuestionsUpdate,
+                              onChanged: (bool? value) =>
+                                  _selectCheckQuestionsUpdate(value!)),
+                        ))
+                  ],
+                ),
+                const SizedBox(height: 20),
                 // SETTING: QUIZ QUESTION NUMBER
                 Row(
                   children: [
@@ -422,6 +641,7 @@ class ViewSettingsState extends State<ViewSettings> {
                 child: ElevatedButton(
                   onPressed: () {
                     widget.saveSettings(
+                        _checkQuestionsUpdate,
                         _questionNumber,
                         _timer,
                         _shuffleAnswers,

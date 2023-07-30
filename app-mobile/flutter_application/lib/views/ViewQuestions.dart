@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:roquiz/widget/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/Question.dart';
@@ -52,18 +54,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
     });
   }
 
-  (bool, String) _isFirstOfTopic(int index) {
-    if (widget.iTopic != null) {
-      return (false, "");
-    }
-    int qNum = 0;
-    for (int i = 0; i < widget.qRepo.qNumPerTopic.length; i++) {
-      if (index == qNum) {
-        return (true, widget.qRepo.topics[i]);
-      }
-      qNum += widget.qRepo.qNumPerTopic[i];
-    }
-    return (false, "");
+  double _getWidth() {
+    return PlatformDispatcher.instance.views.first.physicalSize.width /
+        PlatformDispatcher.instance.views.first.devicePixelRatio;
   }
 
   void _clearSearch() {
@@ -120,36 +113,34 @@ class ViewQuestionsState extends State<ViewQuestions> {
             },
           ),
           actions: [
-            widget.iTopic == null
-                ? SearchBarWidget(
-                    color: Colors.transparent,
-                    searchIconColor: Colors.white,
-                    boxShadow: false,
-                    width: 300,
-                    textController: _textController,
-                    onOpen: () {
-                      //print("open");
-                      setState(() => _searchBarOpen = true);
-                    },
-                    onSearch: (stringToSearch) {
-                      //print("search");
-                      _search(stringToSearch);
-                      if (questions.isEmpty) {
-                        _clearSearch();
-                        _textController.clear();
-                      }
-                    },
-                    onClear: () {
-                      //print("clear");
-                      _clearSearch();
-                      _textController.clear();
-                    },
-                    onClose: () {
-                      //print("close");
-                      setState(() => _searchBarOpen = false);
-                    },
-                  )
-                : const Text(""),
+            SearchBarWidget(
+              color: Colors.transparent,
+              searchIconColor: Colors.white,
+              boxShadow: false,
+              width: 300,
+              textController: _textController,
+              onOpen: () {
+                //print("open");
+                setState(() => _searchBarOpen = true);
+              },
+              onSearch: (stringToSearch) {
+                //print("search");
+                _search(stringToSearch);
+                if (questions.isEmpty) {
+                  _clearSearch();
+                  _textController.clear();
+                }
+              },
+              onClear: () {
+                //print("clear");
+                _clearSearch();
+                _textController.clear();
+              },
+              onClose: () {
+                //print("close");
+                setState(() => _searchBarOpen = false);
+              },
+            ),
           ],
         ),
         body: Scrollbar(

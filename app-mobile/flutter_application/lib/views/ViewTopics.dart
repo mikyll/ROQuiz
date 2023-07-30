@@ -138,10 +138,21 @@ class ViewTopicsState extends State<ViewTopics> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TopicsInfoWidget(
-                text: "Domande Totali: ",
-                value: widget.qRepo.questions.length,
-                color: Colors.indigo.withOpacity(0.35),
+              InkWell(
+                child: TopicsInfoWidget(
+                  text: "Domande Totali: ",
+                  value: widget.qRepo.questions.length,
+                  color: Colors.indigo.withOpacity(0.35),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ViewQuestions(
+                                title: "Lista domande",
+                                qRepo: widget.qRepo,
+                              )));
+                },
               ),
               TopicsInfoWidget(
                 text: "Pool Corrente: ",

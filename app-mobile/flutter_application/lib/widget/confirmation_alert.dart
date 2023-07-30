@@ -25,20 +25,20 @@ class ConfirmationAlert extends StatelessWidget {
       content: Text(content),
       actions: [
         TextButton(
+          onPressed: onConfirm != null
+              ? () {
+                  onConfirm!();
+                }
+              : null,
           child: Text(buttonConfirmText),
-          onPressed: () {
-            if (onConfirm != null) {
-              onConfirm!();
-            }
-          },
         ),
         TextButton(
+          onPressed: onCancel != null
+              ? () {
+                  onCancel!();
+                }
+              : null,
           child: Text(buttonCancelText),
-          onPressed: () {
-            if (onCancel != null) {
-              onCancel!();
-            }
-          },
         ),
       ],
     );
