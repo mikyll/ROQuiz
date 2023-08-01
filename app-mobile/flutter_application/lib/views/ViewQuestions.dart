@@ -7,12 +7,10 @@ import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/widget/question_widget.dart';
 
 class ViewQuestions extends StatefulWidget {
-  const ViewQuestions(
-      {Key? key, required this.title, required this.qRepo, this.iTopic});
+  const ViewQuestions({Key? key, required this.title, required this.questions});
 
   final String title;
-  final QuestionRepository qRepo;
-  final int? iTopic;
+  final List<Question> questions;
 
   @override
   State<StatefulWidget> createState() => ViewQuestionsState();
@@ -22,8 +20,10 @@ class ViewQuestionsState extends State<ViewQuestions> {
   ScrollController _scrollController = ScrollController();
   TextEditingController _textController = TextEditingController();
 
-  List<Question> questionsFullList = [];
-  List<Question> questions = [];
+  bool multipleTopics = false;
+
+  //List<Question> questionsFullList = [];
+  List<Question> displayedQuestions = [];
   int qNum = 0;
   int offset = 0;
 
@@ -34,52 +34,48 @@ class ViewQuestionsState extends State<ViewQuestions> {
     super.initState();
 
     setState(() {
-      qNum = widget.qRepo.questions.length;
-
-      if (widget.iTopic != null) {
-        // get starting offset
-        for (int i = 0;; i++) {
-          qNum = widget.qRepo.getQuestionNumPerTopic()[i];
-          if (i >= widget.iTopic!) break;
-          offset += qNum;
-        }
-      }
+      qNum = widget.questions.length;
 
       // get question list
       for (int i = offset; i < offset + qNum; i++) {
-        Question q = widget.qRepo.questions[i];
-        questionsFullList.add(q);
-        questions.add(q);
+        Question q = widget.questions[i];
+
+        if (i >= 1 && !multipleTopics) {
+          multipleTopics = widget.questions[i - 1].topic != q.topic;
+        }
+        displayedQuestions.add(q);
       }
     });
   }
 
-  double _getWidth() {
-    return PlatformDispatcher.instance.views.first.physicalSize.width /
-        PlatformDispatcher.instance.views.first.devicePixelRatio;
-  }
-
   void _clearSearch() {
-    questions.clear();
+    displayedQuestions.clear();
     setState(() {
-      for (int i = offset; i < questionsFullList.length; i++) {
-        questions.add(questionsFullList[i]);
+      for (int i = offset; i < widget.questions.length; i++) {
+        displayedQuestions.add(widget.questions[i]);
       }
     });
   }
 
   void _search(String value) {
+    value = value.toLowerCase();
+
     _scrollController.jumpTo(0.0);
     setState(() {
-      questions.clear();
-      for (int i = 0; i < questionsFullList.length; i++) {
-        if (questionsFullList[i].question.contains(value)) {
-          questions.add(questionsFullList[i]);
+      displayedQuestions.clear();
+
+      // Loop over the question list
+      for (int i = 0; i < widget.questions.length; i++) {
+        // Check if contained in question
+        if (widget.questions[i].question.toLowerCase().contains(value)) {
+          displayedQuestions.add(widget.questions[i]);
           continue;
         }
-        for (int j = 0; j < questionsFullList[i].answers.length; j++) {
-          if (questionsFullList[i].answers[j].contains(value)) {
-            questions.add(questionsFullList[i]);
+
+        // Check if contained in answers
+        for (int j = 0; j < widget.questions[i].answers.length; j++) {
+          if (widget.questions[i].answers[j].toLowerCase().contains(value)) {
+            displayedQuestions.add(widget.questions[i]);
             break;
           }
         }
@@ -126,7 +122,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
               onSearch: (stringToSearch) {
                 //print("search");
                 _search(stringToSearch);
-                if (questions.isEmpty) {
+                if (displayedQuestions.isEmpty) {
                   _clearSearch();
                   _textController.clear();
                 }
@@ -150,14 +146,14 @@ class ViewQuestionsState extends State<ViewQuestions> {
             padding: const EdgeInsets.all(8.0),
             child: ListView.builder(
                 controller: _scrollController,
-                itemCount: questions.length,
+                itemCount: displayedQuestions.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: widget.iTopic == null &&
+                    child: multipleTopics &&
                             (index == 0 ||
-                                questions[index].topic !=
-                                    questions[index - 1].topic)
+                                displayedQuestions[index].topic !=
+                                    displayedQuestions[index - 1].topic)
                         ? Column(
                             children: [
                               Padding(
@@ -168,7 +164,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                                       padding:
                                           const EdgeInsets.only(right: 10.0),
                                       child: Text(
-                                        questions[index].topic,
+                                        displayedQuestions[index].topic,
                                         style:
                                             const TextStyle(color: Colors.grey),
                                       ),
@@ -178,14 +174,17 @@ class ViewQuestionsState extends State<ViewQuestions> {
                                 ),
                               ),
                               QuestionWidget(
-                                questionNumber: questions[index].id,
-                                questionText: questions[index].question,
+                                questionNumber: displayedQuestions[index].id,
+                                questionText:
+                                    displayedQuestions[index].question,
                                 alignmentQuestion: Alignment.centerLeft,
-                                answers: questions[index].answers,
+                                answers: displayedQuestions[index].answers,
                                 isOver: true,
-                                userAnswer: questions[index].correctAnswer,
+                                userAnswer:
+                                    displayedQuestions[index].correctAnswer,
                                 onTapAnswer: (_) => null,
-                                correctAnswer: questions[index].correctAnswer,
+                                correctAnswer:
+                                    displayedQuestions[index].correctAnswer,
                                 backgroundQuizColor:
                                     Colors.cyan.withOpacity(0.1),
                                 defaultAnswerColor:
@@ -202,14 +201,15 @@ class ViewQuestionsState extends State<ViewQuestions> {
                             ],
                           )
                         : QuestionWidget(
-                            questionNumber: questions[index].id,
-                            questionText: questions[index].question,
+                            questionNumber: displayedQuestions[index].id,
+                            questionText: displayedQuestions[index].question,
                             alignmentQuestion: Alignment.centerLeft,
-                            answers: questions[index].answers,
+                            answers: displayedQuestions[index].answers,
                             isOver: true,
-                            userAnswer: questions[index].correctAnswer,
+                            userAnswer: displayedQuestions[index].correctAnswer,
                             onTapAnswer: (_) => null,
-                            correctAnswer: questions[index].correctAnswer,
+                            correctAnswer:
+                                displayedQuestions[index].correctAnswer,
                             backgroundQuizColor: Colors.cyan.withOpacity(0.1),
                             defaultAnswerColor: Colors.indigo.withOpacity(0.2),
                             selectedAnswerColor: Colors.indigo.withOpacity(0.5),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/widget/topics_widget.dart';
@@ -85,6 +86,36 @@ class ViewTopicsState extends State<ViewTopics> {
     });
   }
 
+  List<Question> _getTopicQuestions(int iTopic) {
+    List<Question> res = [];
+    String topic = widget.qRepo.topics[iTopic];
+
+    for (int i = 0; i < widget.qRepo.questions.length; i++) {
+      if (widget.qRepo.questions[i].topic == topic) {
+        res.add(widget.qRepo.questions[i]);
+      }
+    }
+
+    return res;
+  }
+
+  List<Question> _getPoolFromSelected() {
+    List<Question> res = [];
+    for (int i = 0, j = 0; i < widget.selectedTopics.length; i++) {
+      if (widget.selectedTopics[i]) {
+        for (int k = 0;
+            k < widget.qRepo.getQuestionNumPerTopic()[i];
+            j++, k++) {
+          res.add(widget.qRepo.getQuestions()[j]);
+        }
+      } else {
+        j += widget.qRepo.getQuestionNumPerTopic()[i];
+      }
+    }
+
+    return res;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -125,8 +156,9 @@ class ViewTopicsState extends State<ViewTopics> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ViewQuestions(
-                              title: "Lista domande",
-                              qRepo: widget.qRepo,
+                              title:
+                                  "Lista domande (${widget.qRepo.questions.length})",
+                              questions: widget.qRepo.questions,
                             )));
               },
             ),
@@ -139,26 +171,39 @@ class ViewTopicsState extends State<ViewTopics> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               InkWell(
-                child: TopicsInfoWidget(
-                  text: "Domande Totali: ",
-                  value: widget.qRepo.questions.length,
-                  color: Colors.indigo.withOpacity(0.35),
-                ),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ViewQuestions(
-                                title: "Lista domande",
-                                qRepo: widget.qRepo,
+                                title:
+                                    "Lista domande (${widget.qRepo.questions.length})",
+                                questions: widget.qRepo.questions,
                               )));
                 },
+                child: TopicsInfoWidget(
+                  text: "Domande Totali: ",
+                  value: widget.qRepo.questions.length,
+                  color: Colors.indigo.withOpacity(0.35),
+                ),
               ),
-              TopicsInfoWidget(
-                text: "Pool Corrente: ",
-                textWeight: FontWeight.bold,
-                value: _currentQuizPool,
-                color: Colors.indigo.withOpacity(0.35),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ViewQuestions(
+                                title:
+                                    "Pool corrente (${_getPoolFromSelected().length})",
+                                questions: _getPoolFromSelected(),
+                              )));
+                },
+                child: TopicsInfoWidget(
+                  text: "Pool Corrente: ",
+                  textWeight: FontWeight.bold,
+                  value: _currentQuizPool,
+                  color: Colors.indigo.withOpacity(0.35),
+                ),
               ),
               TopicsInfoWidget(
                 text: "Domande per Quiz: ",
@@ -188,9 +233,9 @@ class ViewTopicsState extends State<ViewTopics> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ViewQuestions(
-                                    title: widget.qRepo.topics[index],
-                                    qRepo: widget.qRepo,
-                                    iTopic: index)));
+                                      title: widget.qRepo.topics[index],
+                                      questions: _getTopicQuestions(index),
+                                    )));
                       },
                       text: " ${widget.qRepo.topics[index]}",
                       questionNum: widget.qRepo.getQuestionNumPerTopic()[index],

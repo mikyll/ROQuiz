@@ -68,6 +68,7 @@ class ViewSettingsState extends State<ViewSettings> {
         widget.qRepo.updateQuestionsDate(QuestionRepository.CUSTOM_DATE);
         await widget.qRepo.updateQuestionsFile(content);
       }
+
       _showConfirmationDialog(
         context,
         res > 0 ? "File Caricato" : "File Non Valido",
@@ -80,11 +81,10 @@ class ViewSettingsState extends State<ViewSettings> {
         null,
         () => Navigator.pop(context),
       );
-
-      setState(() {
-        _isLoading = false;
-      });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _checkNewQuestions() {
@@ -130,6 +130,19 @@ class ViewSettingsState extends State<ViewSettings> {
           () => Navigator.pop(context),
         );
       }
+    }).onError((error, stackTrace) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showConfirmationDialog(
+        context,
+        "Errore Durante il Controllo",
+        error.toString(),
+        "",
+        "Ok",
+        null,
+        () => Navigator.pop(context),
+      );
     });
   }
 
