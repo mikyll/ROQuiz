@@ -22,8 +22,8 @@ class IconButtonWidget extends StatelessWidget {
   final double borderRadius;
   final IconButtonPalette? lightPalette;
   final IconButtonPalette? darkPalette;
-  final VoidCallback? onTap;
-  final VoidCallback? onDoubleTap;
+  final Function()? onTap;
+  final Function()? onDoubleTap;
   final double? width;
   final double? height;
   final double? iconSize;
@@ -32,33 +32,36 @@ class IconButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return Material(
-      borderRadius: BorderRadius.circular(borderRadius),
-      color:
-          themeProvider.isDarkMode ? darkPalette!.color : lightPalette!.color,
-      child: InkWell(
-        customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        onTap: onTap,
-        onDoubleTap: onDoubleTap,
-        highlightColor: themeProvider.isDarkMode
-            ? darkPalette!.highlightColor
-            : lightPalette!.highlightColor,
-        hoverColor: themeProvider.isDarkMode
-            ? darkPalette!.hoverColor
-            : lightPalette!.hoverColor,
-        splashColor: themeProvider.isDarkMode
-            ? darkPalette!.splashColor
-            : lightPalette!.splashColor,
-        child: SizedBox(
-          width: width,
-          height: height,
-          child: Icon(icon,
-              color: themeProvider.isDarkMode
-                  ? darkPalette!.iconColor
-                  : lightPalette!.iconColor,
-              size: iconSize),
+    return Opacity(
+      opacity: onTap == null && onDoubleTap == null ? 0.5 : 1.0,
+      child: Material(
+        borderRadius: BorderRadius.circular(borderRadius),
+        color:
+            themeProvider.isDarkMode ? darkPalette!.color : lightPalette!.color,
+        child: InkWell(
+          customBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+          onTap: onTap,
+          onDoubleTap: onDoubleTap,
+          highlightColor: themeProvider.isDarkMode
+              ? darkPalette!.highlightColor
+              : lightPalette!.highlightColor,
+          hoverColor: themeProvider.isDarkMode
+              ? darkPalette!.hoverColor
+              : lightPalette!.hoverColor,
+          splashColor: themeProvider.isDarkMode
+              ? darkPalette!.splashColor
+              : lightPalette!.splashColor,
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Icon(icon,
+                color: themeProvider.isDarkMode
+                    ? darkPalette!.iconColor
+                    : lightPalette!.iconColor,
+                size: iconSize),
+          ),
         ),
       ),
     );

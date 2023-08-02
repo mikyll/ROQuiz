@@ -22,7 +22,8 @@ class ViewSettings extends StatefulWidget {
 
   final QuestionRepository qRepo;
   final Settings settings;
-  final Function(bool, int, int, bool, bool, bool) saveSettings;
+  final Function(bool? qCheck, int? qNum, int? timer, bool? shuffle,
+      bool? confirmAlerts, bool? dTheme) saveSettings;
 
   @override
   State<StatefulWidget> createState() => ViewSettingsState();
@@ -84,6 +85,18 @@ class ViewSettingsState extends State<ViewSettings> {
     }
     setState(() {
       _isLoading = false;
+
+      // If the new questions exceeds the Settings values bounds, update the settings
+      int? qNum, timer;
+      if (_questionNumber > widget.qRepo.questions.length) {
+        _questionNumber = widget.qRepo.questions.length;
+        qNum = _questionNumber;
+      }
+      if (_timer > widget.qRepo.questions.length * 2) {
+        _timer = widget.qRepo.questions.length * 2;
+        timer = _timer;
+      }
+      widget.saveSettings(null, qNum, timer, null, null, null);
     });
   }
 
@@ -338,127 +351,180 @@ class ViewSettingsState extends State<ViewSettings> {
         body: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Center(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                // SETTING: Questions File
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onDoubleTap: () {
-                            // TO-DO: reset
-                          },
-                          child: const Text("File domande: ",
-                              style: TextStyle(fontSize: 20))),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: SizedBox(
-                        width: 100.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Opacity(
-                              opacity: 0.5,
-                              child: IconButtonWidget(
-                                /*onTap:
-                                () {
-                                  print("TO-DO: Edit question file.");
-                                },*/
+            child: Scrollbar(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  // SETTING: Questions File
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onDoubleTap: () {
+                              // TO-DO: reset
+                            },
+                            child: const Text("File domande: ",
+                                style: TextStyle(fontSize: 20))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: SizedBox(
+                          width: 100.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Opacity(
+                                opacity: 0.5,
+                                child: IconButtonWidget(
+                                  onTap: true
+                                      ? null
+                                      : () {
+                                          print("TO-DO: Edit question file.");
+                                        },
+                                  lightPalette: MyThemes.lightIconButtonPalette,
+                                  darkPalette: MyThemes.darkIconButtonPalette,
+                                  width: 40.0,
+                                  height: 40.0,
+                                  icon: Icons.edit,
+                                  iconSize: 35,
+                                  borderRadius: 5,
+                                ),
+                              ),
+                              const Spacer(flex: 1),
+                              IconButtonWidget(
+                                onTap: _isLoading
+                                    ? null
+                                    : () {
+                                        _loadQuestionFilePath();
+                                      },
                                 lightPalette: MyThemes.lightIconButtonPalette,
                                 darkPalette: MyThemes.darkIconButtonPalette,
                                 width: 40.0,
                                 height: 40.0,
-                                icon: Icons.edit,
+                                icon: Icons.file_open_outlined,
                                 iconSize: 35,
                                 borderRadius: 5,
                               ),
-                            ),
-                            const Spacer(flex: 1),
-                            IconButtonWidget(
-                              onTap: _isLoading
-                                  ? null
-                                  : () {
-                                      _loadQuestionFilePath();
-                                    },
-                              lightPalette: MyThemes.lightIconButtonPalette,
-                              darkPalette: MyThemes.darkIconButtonPalette,
-                              width: 40.0,
-                              height: 40.0,
-                              icon: Icons.file_open_outlined,
-                              iconSize: 35,
-                              borderRadius: 5,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // SETTING: New Questions Check
-                Row(
-                  children: [
-                    IconButtonWidget(
-                      onTap: _isLoading
-                          ? null
-                          : () {
-                              _checkNewQuestions();
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // SETTING: New Questions Check
+                  Row(
+                    children: [
+                      IconButtonWidget(
+                        onTap: _isLoading
+                            ? null
+                            : () {
+                                _checkNewQuestions();
+                              },
+                        lightPalette: MyThemes.lightIconButtonPalette,
+                        darkPalette: MyThemes.darkIconButtonPalette,
+                        width: 40.0,
+                        height: 40.0,
+                        icon: Icons.sync_rounded,
+                        iconSize: 35,
+                        borderRadius: 5,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: InkWell(
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onDoubleTap: () {
+                              _resetCheckQuestionsUpdate();
                             },
-                      lightPalette: MyThemes.lightIconButtonPalette,
-                      darkPalette: MyThemes.darkIconButtonPalette,
-                      width: 40.0,
-                      height: 40.0,
-                      icon: Icons.sync_rounded,
-                      iconSize: 35,
-                      borderRadius: 5,
-                    ),
-                    const SizedBox(width: 10),
+                            child: const Text("Controllo nuove domande: ",
+                                softWrap: true,
+                                style: TextStyle(fontSize: 20))),
+                      ),
+                      SizedBox(
+                          width: 120.0,
+                          child: Transform.scale(
+                            scale: 1.5,
+                            child: Checkbox(
+                                value: _checkQuestionsUpdate,
+                                onChanged: (bool? value) =>
+                                    _selectCheckQuestionsUpdate(value!)),
+                          ))
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // SETTING: QUIZ QUESTION NUMBER
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onDoubleTap: () {
+                              _resetQuestionNumber();
+                            },
+                            child: const Text("Numero domande per quiz: ",
+                                style: TextStyle(fontSize: 20))),
+                      ),
+                      // DECREASE QUESTION NUMBER
+                      IconButtonLongPressWidget(
+                        onUpdate: () {
+                          _decreaseQuestionNumber(1);
+                        },
+                        lightPalette: MyThemes.lightIconButtonPalette,
+                        darkPalette: MyThemes.darkIconButtonPalette,
+                        width: 40.0,
+                        height: 40.0,
+                        icon: Icons.remove,
+                        iconSize: 35,
+                      ),
+                      // POOL SIZE COUNTER
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 35.0,
+                          child: Text("$_questionNumber",
+                              style: const TextStyle(fontSize: 20)),
+                        ),
+                      ),
+                      // INCREASE POOL SIZE
+                      IconButtonLongPressWidget(
+                        onUpdate: () {
+                          _increaseQuestionNumber(1);
+                        },
+                        lightPalette: MyThemes.lightIconButtonPalette,
+                        darkPalette: MyThemes.darkIconButtonPalette,
+                        width: 40.0,
+                        height: 40.0,
+                        icon: Icons.add,
+                        iconSize: 35,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // SETTING: TIMER
+                  Row(children: [
                     Expanded(
                       child: InkWell(
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           splashColor: Colors.transparent,
                           onDoubleTap: () {
-                            _resetCheckQuestionsUpdate();
+                            _resetTimer();
                           },
-                          child: const Text("Controllo nuove domande: ",
-                              softWrap: true, style: TextStyle(fontSize: 20))),
-                    ),
-                    SizedBox(
-                        width: 120.0,
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: Checkbox(
-                              value: _checkQuestionsUpdate,
-                              onChanged: (bool? value) =>
-                                  _selectCheckQuestionsUpdate(value!)),
-                        ))
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // SETTING: QUIZ QUESTION NUMBER
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onDoubleTap: () {
-                            _resetQuestionNumber();
-                          },
-                          child: const Text("Numero domande per quiz: ",
+                          child: const Text("Timer (minuti): ",
                               style: TextStyle(fontSize: 20))),
                     ),
-                    // DECREASE QUESTION NUMBER
+                    // DECREASE TIMER
                     IconButtonLongPressWidget(
                       onUpdate: () {
-                        _decreaseQuestionNumber(1);
+                        _decreaseTimer(1);
                       },
                       lightPalette: MyThemes.lightIconButtonPalette,
                       darkPalette: MyThemes.darkIconButtonPalette,
@@ -467,20 +533,20 @@ class ViewSettingsState extends State<ViewSettings> {
                       icon: Icons.remove,
                       iconSize: 35,
                     ),
-                    // POOL SIZE COUNTER
+                    // TIMER COUNTER
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: Container(
                         alignment: Alignment.center,
                         width: 35.0,
-                        child: Text("$_questionNumber",
+                        child: Text("$_timer",
                             style: const TextStyle(fontSize: 20)),
                       ),
                     ),
-                    // INCREASE POOL SIZE
+                    // INCREASE TIMER
                     IconButtonLongPressWidget(
                       onUpdate: () {
-                        _increaseQuestionNumber(1);
+                        _increaseTimer(1);
                       },
                       lightPalette: MyThemes.lightIconButtonPalette,
                       darkPalette: MyThemes.darkIconButtonPalette,
@@ -489,161 +555,100 @@ class ViewSettingsState extends State<ViewSettings> {
                       icon: Icons.add,
                       iconSize: 35,
                     ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // SETTING: TIMER
-                Row(children: [
-                  Expanded(
-                    child: InkWell(
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onDoubleTap: () {
-                          _resetTimer();
-                        },
-                        child: const Text("Timer (minuti): ",
-                            style: TextStyle(fontSize: 20))),
-                  ),
-                  // DECREASE TIMER
-                  IconButtonLongPressWidget(
-                    onUpdate: () {
-                      _decreaseTimer(1);
-                    },
-                    lightPalette: MyThemes.lightIconButtonPalette,
-                    darkPalette: MyThemes.darkIconButtonPalette,
-                    width: 40.0,
-                    height: 40.0,
-                    icon: Icons.remove,
-                    iconSize: 35,
-                  ),
-                  // TIMER COUNTER
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 35.0,
-                      child:
-                          Text("$_timer", style: const TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                  // INCREASE TIMER
-                  IconButtonLongPressWidget(
-                    onUpdate: () {
-                      _increaseTimer(1);
-                    },
-                    lightPalette: MyThemes.lightIconButtonPalette,
-                    darkPalette: MyThemes.darkIconButtonPalette,
-                    width: 40.0,
-                    height: 40.0,
-                    icon: Icons.add,
-                    iconSize: 35,
-                  ),
-                ]),
+                  ]),
 
-                const SizedBox(height: 20),
-                // SETTING: SHUFFLE ANSWERS
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onDoubleTap: () {
-                            _resetShuffleAnswers();
-                          },
-                          child: const Text("Mescola risposte: ",
-                              style: TextStyle(fontSize: 20))),
-                    ),
-                    SizedBox(
+                  const SizedBox(height: 20),
+                  // SETTING: SHUFFLE ANSWERS
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onDoubleTap: () {
+                              _resetShuffleAnswers();
+                            },
+                            child: const Text("Mescola risposte: ",
+                                style: TextStyle(fontSize: 20))),
+                      ),
+                      SizedBox(
+                          width: 120.0,
+                          child: Transform.scale(
+                            scale: 1.5,
+                            child: Checkbox(
+                                value: _shuffleAnswers,
+                                onChanged: (bool? value) =>
+                                    _selectShuffleAnswers(value!)),
+                          ))
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // SETTING: CONFIRM ALERTS
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onDoubleTap: () {
+                              _resetConfirmAlerts();
+                            },
+                            child: const Text("Alert di conferma: ",
+                                style: TextStyle(fontSize: 20))),
+                      ),
+                      SizedBox(
+                          width: 120.0,
+                          child: Transform.scale(
+                            scale: 1.5,
+                            child: Checkbox(
+                                value: _confirmAlerts,
+                                onChanged: (bool? value) =>
+                                    _selectConfirmAlerts(value!)),
+                          ))
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // SETTING: DARK THEME
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onDoubleTap: () {
+                              _resetTheme(themeProvider);
+                            },
+                            child: const Text("Tema scuro: ",
+                                style: TextStyle(fontSize: 20))),
+                      ),
+                      const SizedBox(
                         width: 120.0,
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: Checkbox(
-                              value: _shuffleAnswers,
-                              onChanged: (bool? value) =>
-                                  _selectShuffleAnswers(value!)),
-                        ))
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // SETTING: CONFIRM ALERTS
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onDoubleTap: () {
-                            _resetConfirmAlerts();
-                          },
-                          child: const Text("Alert di conferma: ",
-                              style: TextStyle(fontSize: 20))),
-                    ),
-                    SizedBox(
-                        width: 120.0,
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: Checkbox(
-                              value: _confirmAlerts,
-                              onChanged: (bool? value) =>
-                                  _selectConfirmAlerts(value!)),
-                        ))
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // SETTING: DARK THEME
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onDoubleTap: () {
-                            _resetTheme(themeProvider);
-                          },
-                          child: const Text("Tema scuro: ",
-                              style: TextStyle(fontSize: 20))),
-                    ),
-                    const SizedBox(
-                      width: 120.0,
-                      child: ChangeThemeButtonWidget(),
-                    ),
-                  ],
-                ),
-              ],
+                        child: ChangeThemeButtonWidget(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 50.0),
+                ],
+              ),
             ),
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: SizedBox(
-          height: 50,
-          child: ElevatedButton.icon(
-            icon: const Icon(
-              Icons.refresh,
-              size: 40.0,
-            ),
-            onPressed: _isDefault(themeProvider)
-                ? null
-                : () {
-                    _reset(themeProvider);
-                  },
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-            ),
-            label: const Text(
-              "Ripristina",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: IconButtonWidget(
+          onTap: _isDefault(themeProvider)
+              ? null
+              : () {
+                  _reset(themeProvider);
+                },
+          width: 60.0,
+          height: 60.0,
+          lightPalette: MyThemes.lightIconButtonPalette,
+          darkPalette: MyThemes.darkIconButtonPalette,
+          icon: Icons.refresh,
+          iconSize: 45,
         ),
         // BUTTONS: Save, Cancel
         persistentFooterButtons: [

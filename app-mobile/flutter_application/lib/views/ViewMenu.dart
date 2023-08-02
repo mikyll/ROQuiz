@@ -25,7 +25,6 @@ class ViewMenu extends StatefulWidget {
 }
 
 class ViewMenuState extends State<ViewMenu> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final QuestionRepository qRepo = QuestionRepository();
 
   String _qRepoLoadingError = "";
@@ -74,15 +73,27 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void saveSettings(bool qCheck, int qNum, int timer, bool shuffle,
-      bool confirmAlerts, bool dTheme) {
+  void saveSettings(bool? qCheck, int? qNum, int? timer, bool? shuffle,
+      bool? confirmAlerts, bool? dTheme) {
     setState(() {
-      _settings.checkQuestionsUpdate = qCheck;
-      _settings.questionNumber = qNum;
-      _settings.timer = timer;
-      _settings.shuffleAnswers = shuffle;
-      _settings.confirmAlerts = confirmAlerts;
-      _settings.darkTheme = dTheme;
+      if (qCheck != null) {
+        _settings.checkQuestionsUpdate = qCheck;
+      }
+      if (qNum != null) {
+        _settings.questionNumber = qNum;
+      }
+      if (timer != null) {
+        _settings.timer = timer;
+      }
+      if (shuffle != null) {
+        _settings.shuffleAnswers = shuffle;
+      }
+      if (confirmAlerts != null) {
+        _settings.confirmAlerts = confirmAlerts;
+      }
+      if (dTheme != null) {
+        _settings.darkTheme = dTheme;
+      }
       _settings.saveToSharedPreferences();
       resetTopics();
     });
