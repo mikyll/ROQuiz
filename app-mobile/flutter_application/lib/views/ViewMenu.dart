@@ -12,7 +12,6 @@ import 'package:roquiz/views/ViewInfo.dart';
 import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/confirmation_alert.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:http/http.dart' as http;
@@ -34,8 +33,9 @@ class ViewMenuState extends State<ViewMenu> {
   final List<bool> _selectedTopics = [];
   int _quizPool = 0;
 
-  void _initTopics() {
+  void loadTopics() {
     setState(() {
+      _selectedTopics.clear();
       for (int i = 0; i < qRepo.topics.length; i++) {
         _selectedTopics.add(true);
         _quizPool += qRepo.qNumPerTopic[i];
@@ -161,7 +161,7 @@ class ViewMenuState extends State<ViewMenu> {
         .load()
         .then(
           (_) => {
-            _initTopics(),
+            loadTopics(),
             setState(
               () {
                 _topicsPresent = qRepo.hasTopics();
@@ -325,7 +325,6 @@ class ViewMenuState extends State<ViewMenu> {
                         },
                         child: Container(
                           color: Colors.indigo.withOpacity(0.35),
-                          height: 120,
                           alignment: Alignment.center,
                           child: const Padding(
                             padding: EdgeInsets.all(8.0),
@@ -356,6 +355,7 @@ class ViewMenuState extends State<ViewMenu> {
                             qRepo: qRepo,
                             settings: _settings,
                             saveSettings: saveSettings,
+                            reloadTopics: loadTopics,
                           )));
             },
             width: 60.0,
@@ -364,6 +364,7 @@ class ViewMenuState extends State<ViewMenu> {
             darkPalette: MyThemes.darkIconButtonPalette,
             icon: Icons.settings,
             iconSize: 40,
+            shadow: true,
           ),
           const SizedBox(height: 10.0),
           IconButtonWidget(
@@ -379,6 +380,7 @@ class ViewMenuState extends State<ViewMenu> {
             darkPalette: MyThemes.darkIconButtonPalette,
             icon: Icons.info,
             iconSize: 40,
+            shadow: true,
           ),
         ],
       ),

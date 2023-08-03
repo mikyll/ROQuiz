@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:roquiz/widget/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/Question.dart';
-import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/widget/question_widget.dart';
 
 class ViewQuestions extends StatefulWidget {
@@ -17,8 +16,8 @@ class ViewQuestions extends StatefulWidget {
 }
 
 class ViewQuestionsState extends State<ViewQuestions> {
-  ScrollController _scrollController = ScrollController();
-  TextEditingController _textController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _textController = TextEditingController();
 
   bool multipleTopics = false;
 
@@ -142,87 +141,82 @@ class ViewQuestionsState extends State<ViewQuestions> {
         body: Scrollbar(
           interactive: true,
           controller: _scrollController,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-                controller: _scrollController,
-                itemCount: displayedQuestions.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: multipleTopics &&
-                            (index == 0 ||
-                                displayedQuestions[index].topic !=
-                                    displayedQuestions[index - 1].topic)
-                        ? Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10.0),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 10.0),
-                                      child: Text(
-                                        displayedQuestions[index].topic,
-                                        style:
-                                            const TextStyle(color: Colors.grey),
-                                      ),
+          child: ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              controller: _scrollController,
+              itemCount: displayedQuestions.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: multipleTopics &&
+                          (index == 0 ||
+                              displayedQuestions[index].topic !=
+                                  displayedQuestions[index - 1].topic)
+                      ? Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10.0),
+                                    child: Text(
+                                      displayedQuestions[index].topic,
+                                      style:
+                                          const TextStyle(color: Colors.grey),
                                     ),
-                                    const Expanded(child: Divider())
-                                  ],
-                                ),
+                                  ),
+                                  const Expanded(child: Divider())
+                                ],
                               ),
-                              QuestionWidget(
-                                questionNumber: displayedQuestions[index].id,
-                                questionText:
-                                    displayedQuestions[index].question,
-                                alignmentQuestion: Alignment.centerLeft,
-                                answers: displayedQuestions[index].answers,
-                                isOver: true,
-                                userAnswer:
-                                    displayedQuestions[index].correctAnswer,
-                                onTapAnswer: (_) => null,
-                                correctAnswer:
-                                    displayedQuestions[index].correctAnswer,
-                                backgroundQuizColor:
-                                    Colors.cyan.withOpacity(0.1),
-                                defaultAnswerColor:
-                                    Colors.indigo.withOpacity(0.2),
-                                selectedAnswerColor:
-                                    Colors.indigo.withOpacity(0.5),
-                                correctAnswerColor:
-                                    const Color.fromARGB(255, 42, 255, 49)
-                                        .withOpacity(0.5),
-                                correctNotSelectedAnswerColor:
-                                    const Color.fromARGB(255, 42, 255, 49)
-                                        .withOpacity(0.5),
-                              ),
-                            ],
-                          )
-                        : QuestionWidget(
-                            questionNumber: displayedQuestions[index].id,
-                            questionText: displayedQuestions[index].question,
-                            alignmentQuestion: Alignment.centerLeft,
-                            answers: displayedQuestions[index].answers,
-                            isOver: true,
-                            userAnswer: displayedQuestions[index].correctAnswer,
-                            onTapAnswer: (_) => null,
-                            correctAnswer:
-                                displayedQuestions[index].correctAnswer,
-                            backgroundQuizColor: Colors.cyan.withOpacity(0.1),
-                            defaultAnswerColor: Colors.indigo.withOpacity(0.2),
-                            selectedAnswerColor: Colors.indigo.withOpacity(0.5),
-                            correctAnswerColor:
-                                const Color.fromARGB(255, 42, 255, 49)
-                                    .withOpacity(0.5),
-                            correctNotSelectedAnswerColor:
-                                const Color.fromARGB(255, 42, 255, 49)
-                                    .withOpacity(0.5),
-                          ),
-                  );
-                }),
-          ),
+                            ),
+                            QuestionWidget(
+                              questionNumber: displayedQuestions[index].id,
+                              questionText: displayedQuestions[index].question,
+                              alignmentQuestion: Alignment.centerLeft,
+                              answers: displayedQuestions[index].answers,
+                              isOver: true,
+                              userAnswer:
+                                  displayedQuestions[index].correctAnswer,
+                              onTapAnswer: (_) => null,
+                              correctAnswer:
+                                  displayedQuestions[index].correctAnswer,
+                              backgroundQuizColor: Colors.cyan.withOpacity(0.1),
+                              defaultAnswerColor:
+                                  Colors.indigo.withOpacity(0.2),
+                              selectedAnswerColor:
+                                  Colors.indigo.withOpacity(0.5),
+                              correctAnswerColor:
+                                  const Color.fromARGB(255, 42, 255, 49)
+                                      .withOpacity(0.5),
+                              correctNotSelectedAnswerColor:
+                                  const Color.fromARGB(255, 42, 255, 49)
+                                      .withOpacity(0.5),
+                            ),
+                          ],
+                        )
+                      : QuestionWidget(
+                          questionNumber: displayedQuestions[index].id,
+                          questionText: displayedQuestions[index].question,
+                          alignmentQuestion: Alignment.centerLeft,
+                          answers: displayedQuestions[index].answers,
+                          isOver: true,
+                          userAnswer: displayedQuestions[index].correctAnswer,
+                          onTapAnswer: (_) => null,
+                          correctAnswer:
+                              displayedQuestions[index].correctAnswer,
+                          backgroundQuizColor: Colors.cyan.withOpacity(0.1),
+                          defaultAnswerColor: Colors.indigo.withOpacity(0.2),
+                          selectedAnswerColor: Colors.indigo.withOpacity(0.5),
+                          correctAnswerColor:
+                              const Color.fromARGB(255, 42, 255, 49)
+                                  .withOpacity(0.5),
+                          correctNotSelectedAnswerColor:
+                              const Color.fromARGB(255, 42, 255, 49)
+                                  .withOpacity(0.5),
+                        ),
+                );
+              }),
         ),
       ),
     );

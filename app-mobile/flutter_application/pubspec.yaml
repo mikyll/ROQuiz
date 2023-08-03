@@ -42,6 +42,7 @@ dependencies:
   package_info_plus: ^4.0.2
   path_provider: ^2.0.15
   file_picker: ^5.3.3
+  desktop_window: ^0.4.0
 
 dev_dependencies:
   flutter_test:

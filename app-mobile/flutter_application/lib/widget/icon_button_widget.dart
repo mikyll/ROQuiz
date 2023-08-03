@@ -14,6 +14,7 @@ class IconButtonWidget extends StatelessWidget {
     this.lightPalette,
     this.darkPalette,
     this.iconSize,
+    this.shadow = false,
     required this.icon,
   }) : super(key: key);
 
@@ -27,6 +28,7 @@ class IconButtonWidget extends StatelessWidget {
   final double? width;
   final double? height;
   final double? iconSize;
+  final bool shadow;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +36,23 @@ class IconButtonWidget extends StatelessWidget {
 
     return Opacity(
       opacity: onTap == null && onDoubleTap == null ? 0.5 : 1.0,
-      child: Material(
-        borderRadius: BorderRadius.circular(borderRadius),
-        color:
-            themeProvider.isDarkMode ? darkPalette!.color : lightPalette!.color,
+      child: Container(
+        decoration: BoxDecoration(
+          color: themeProvider.isDarkMode
+              ? darkPalette!.color
+              : lightPalette!.color,
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: shadow
+              ? const [
+                  BoxShadow(
+                    color: Colors.black,
+                    spreadRadius: 0.5,
+                    blurRadius: 2,
+                    offset: Offset(2, 2),
+                  ),
+                ]
+              : [],
+        ),
         child: InkWell(
           customBorder: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),

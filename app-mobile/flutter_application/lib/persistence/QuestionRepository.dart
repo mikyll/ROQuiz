@@ -11,14 +11,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class QuestionRepository {
   static final DateTime CUSTOM_DATE = DateTime.parse("1999-01-01T00:00:00Z");
   static final DateTime DEFAULT_LAST_QUESTION_UPDATE =
-      DateTime.parse("2023-07-14T14:35:16Z");
+      DateTime.parse("2023-07-19T20:18:08Z");
   static const int DEFAULT_ANSWER_NUMBER = 5;
 
   DateTime lastQuestionUpdate = DEFAULT_LAST_QUESTION_UPDATE;
   List<Question> questions = [];
+  bool topicsPresent = false;
   List<String> topics = [];
   List<int> qNumPerTopic = [];
-  bool topicsPresent = false;
 
   String error = "";
 
@@ -63,35 +63,33 @@ class QuestionRepository {
         break;
 
       // Desktop
-      /*case PlatformType.DESKTOP:
-        // TO-DO
-        Directory appDocDir = await getApplicationSupportDirectory();
-        print("test0: ${appDocDir.path}");
+      case PlatformType.DESKTOP:
+        // Check if data/ directory exists, create it otherwise
+        Directory dataDirectory = Directory.fromUri(Uri.directory('./data/'));
+        if (!dataDirectory.existsSync()) {
+          await dataDirectory.create(recursive: true);
+        }
 
-        String filePath = "${appDocDir.path}\\data\\Domande.txt";
-        File file = File(filePath);
-
-        print("test1: ${Platform.resolvedExecutable}");
-
-        // Check if file is present
+        // Check if questions file exists, copy it from asset otherwise
+        File file = File("${dataDirectory.absolute.path}/Domande.txt");
         if (!file.existsSync()) {
-          print("test2.1: creation...");
           // If not create it and load from bundle
           await file.create();
 
           String contentFromAsset =
               await rootBundle.loadString("assets/domande.txt");
           file.writeAsString(contentFromAsset);
-
-          print("test2.2: created...");
-        } else {
-          String tmp = await file.readAsString();
-          print("test3: $tmp");
+        } else if (isValid(file.readAsStringSync()) < 0) {
+          String contentFromAsset =
+              await rootBundle.loadString("assets/domande.txt");
+          file.writeAsString(contentFromAsset);
         }
 
-        break;*/
+        content = await file.readAsString();
 
-      // Web & others
+        break;
+
+      // Web & others (NB: web would have the asset always updated to the last version)
       default:
         content = await rootBundle.loadString("assets/domande.txt");
     }
@@ -174,7 +172,7 @@ class QuestionRepository {
     } else {
       content = _cachedNewContent;
     }
-    if (QuestionRepository.isValid(content) < 0) {
+    if (isValid(content) < 0) {
       return false;
     }
 
@@ -190,9 +188,13 @@ class QuestionRepository {
         file.writeAsString(content);
 
         break;
-      /*case PlatformType.DESKTOP:
-        // TO-DO
-        break;*/
+      case PlatformType.DESKTOP:
+        String filePath = "./data/Domande.txt";
+        File file = File(filePath);
+
+        file.writeAsString(content);
+
+        break;
       default:
         print("TO-DO: implement");
     }
@@ -383,8 +385,9 @@ class QuestionRepository {
     String err;
     (res, err) = isValidErrors(content);
 
-    print(err);
-
+    if (res < 0) {
+      print(err);
+    }
     return res;
   }
 

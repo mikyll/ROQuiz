@@ -5,9 +5,10 @@ import 'package:roquiz/model/Themes.dart';
 class TopicsInfoWidget extends StatelessWidget {
   const TopicsInfoWidget({
     Key? key,
-    required this.text,
+    this.onTap,
     this.textSize = 18.0,
     this.textWeight = FontWeight.normal,
+    required this.text,
     required this.value,
     required this.color,
   }) : super(key: key);
@@ -17,19 +18,36 @@ class TopicsInfoWidget extends StatelessWidget {
   final double textSize;
   final FontWeight textWeight;
   final Color color;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 2.0),
-      child: Row(children: [
-        Expanded(
-          child: Container(
+      child: InkWell(
+        onTap: onTap,
+        child: Row(children: [
+          Expanded(
+            child: Container(
+              color: color,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: textSize,
+                    fontWeight: textWeight,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
             color: color,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                text,
+                "$value",
                 style: TextStyle(
                   fontSize: textSize,
                   fontWeight: textWeight,
@@ -37,21 +55,8 @@ class TopicsInfoWidget extends StatelessWidget {
               ),
             ),
           ),
-        ),
-        Container(
-          color: color,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "$value",
-              style: TextStyle(
-                fontSize: textSize,
-                fontWeight: textWeight,
-              ),
-            ),
-          ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }

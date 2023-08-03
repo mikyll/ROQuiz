@@ -6,11 +6,15 @@ import 'package:roquiz/views/ViewMenu.dart';
 import 'package:roquiz/model/Themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:desktop_window/desktop_window.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
+  DesktopWindow.setWindowSize(const Size(800, 800));
+
   SharedPreferences.getInstance().then((prefs) {
-    // read from the SharedPreferences
+    // Read from the SharedPreferences
     var isDarkTheme = prefs.getBool("darkTheme") ?? Settings.DEFAULT_DARK_THEME;
 
     return runApp(

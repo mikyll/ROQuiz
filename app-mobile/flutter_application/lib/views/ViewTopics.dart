@@ -69,6 +69,9 @@ class ViewTopicsState extends State<ViewTopics> {
   }
 
   int _getPoolSize() {
+    print(widget.selectedTopics);
+    print(widget.qRepo.qNumPerTopic.length);
+
     int res = 0;
     for (int i = 0; i < widget.selectedTopics.length; i++) {
       res += widget.selectedTopics[i] ? widget.qRepo.qNumPerTopic[i] : 0;
@@ -170,7 +173,10 @@ class ViewTopicsState extends State<ViewTopics> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              InkWell(
+              TopicsInfoWidget(
+                text: "Domande Totali: ",
+                value: widget.qRepo.questions.length,
+                color: Colors.indigo.withOpacity(0.35),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -181,13 +187,12 @@ class ViewTopicsState extends State<ViewTopics> {
                                 questions: widget.qRepo.questions,
                               )));
                 },
-                child: TopicsInfoWidget(
-                  text: "Domande Totali: ",
-                  value: widget.qRepo.questions.length,
-                  color: Colors.indigo.withOpacity(0.35),
-                ),
               ),
-              InkWell(
+              TopicsInfoWidget(
+                text: "Pool Corrente: ",
+                textWeight: FontWeight.bold,
+                value: _currentQuizPool,
+                color: Colors.indigo.withOpacity(0.35),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -198,12 +203,6 @@ class ViewTopicsState extends State<ViewTopics> {
                                 questions: _getPoolFromSelected(),
                               )));
                 },
-                child: TopicsInfoWidget(
-                  text: "Pool Corrente: ",
-                  textWeight: FontWeight.bold,
-                  value: _currentQuizPool,
-                  color: Colors.indigo.withOpacity(0.35),
-                ),
               ),
               TopicsInfoWidget(
                 text: "Domande per Quiz: ",
@@ -250,39 +249,47 @@ class ViewTopicsState extends State<ViewTopics> {
             ],
           ),
         ),
-        persistentFooterButtons: [
-          Align(
-            alignment: Alignment.center,
-            child: SizedBox(
-              height: 50,
-              child: ElevatedButton.icon(
-                icon: const Icon(
-                  Icons.refresh,
-                  size: 40.0,
-                ),
-                onPressed: _isDefault()
-                    ? null
-                    : () {
-                        _resetTopics();
-                        _updatePool();
-                        _updateEnabledTopics();
-                      },
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              border: Border(
+                  top: BorderSide(color: Theme.of(context).disabledColor))),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              heightFactor: 1,
+              alignment: Alignment.center,
+              child: SizedBox(
+                height: 50,
+                child: ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.refresh,
+                    size: 40.0,
                   ),
-                ),
-                label: const Text(
-                  "Ripristina",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                  onPressed: _isDefault()
+                      ? null
+                      : () {
+                          _resetTopics();
+                          _updatePool();
+                          _updateEnabledTopics();
+                        },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                  label: const Text(
+                    "Ripristina",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

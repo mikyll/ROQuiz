@@ -7,8 +7,8 @@ class Settings {
 
   static const bool DEFAULT_CHECK_QUESTIONS_UPDATE = true;
   static const bool DEFAULT_CHECK_APP_UPDATE = false;
-  static const int DEFAULT_QUESTION_NUMBER = 16;
-  static const int DEFAULT_TIMER = 18;
+  static int DEFAULT_QUESTION_NUMBER = 16;
+  static int DEFAULT_TIMER = 18;
   static const bool DEFAULT_SHUFFLE_ANSWERS = true;
   static const bool DEFAULT_CONFIRM_ALERTS = true;
   static const bool DEFAULT_DARK_THEME = false;
