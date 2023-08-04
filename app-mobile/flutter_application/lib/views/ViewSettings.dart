@@ -45,6 +45,31 @@ class ViewSettingsState extends State<ViewSettings> {
       false; // to check if the user went back while choosing the questions file
   bool _isLoading = false;
 
+  void _updateDefaults() {
+    setState(() {
+      // If the new questions exceeds the Settings values bounds, update the settings
+      int? qNum, timer;
+      if (_questionNumber > widget.qRepo.questions.length) {
+        _questionNumber = widget.qRepo.questions.length;
+        qNum = _questionNumber;
+      }
+      if (_timer > widget.qRepo.questions.length * 2) {
+        _timer = widget.qRepo.questions.length * 2;
+        timer = _timer;
+      }
+      widget.saveSettings(null, qNum, timer, null, null, null);
+
+      print(widget.qRepo.questions.length);
+      if (widget.qRepo.questions.length < 16) {
+        Settings.DEFAULT_QUESTION_NUMBER = widget.qRepo.questions.length;
+        Settings.DEFAULT_TIMER = Settings.DEFAULT_QUESTION_NUMBER + 2;
+      } else {
+        Settings.DEFAULT_QUESTION_NUMBER = 16;
+        Settings.DEFAULT_TIMER = Settings.DEFAULT_QUESTION_NUMBER + 2;
+      }
+    });
+  }
+
   void _resetCheckQuestionsUpdate() {
     setState(
         () => _checkQuestionsUpdate = Settings.DEFAULT_CHECK_QUESTIONS_UPDATE);
@@ -98,25 +123,7 @@ class ViewSettingsState extends State<ViewSettings> {
     setState(() {
       _isLoading = false;
 
-      // If the new questions exceeds the Settings values bounds, update the settings
-      int? qNum, timer;
-      if (_questionNumber > widget.qRepo.questions.length) {
-        _questionNumber = widget.qRepo.questions.length;
-        qNum = _questionNumber;
-      }
-      if (_timer > widget.qRepo.questions.length * 2) {
-        _timer = widget.qRepo.questions.length * 2;
-        timer = _timer;
-      }
-      widget.saveSettings(null, qNum, timer, null, null, null);
-
-      if (widget.qRepo.questions.length < 16) {
-        Settings.DEFAULT_QUESTION_NUMBER = widget.qRepo.questions.length;
-        Settings.DEFAULT_TIMER = Settings.DEFAULT_QUESTION_NUMBER + 2;
-      } else {
-        Settings.DEFAULT_QUESTION_NUMBER = 16;
-        Settings.DEFAULT_TIMER = Settings.DEFAULT_QUESTION_NUMBER + 2;
-      }
+      _updateDefaults();
     });
   }
 
@@ -148,6 +155,7 @@ class ViewSettingsState extends State<ViewSettings> {
             setState(() {
               widget.qRepo.update();
             });
+            _updateDefaults();
             Navigator.pop(context);
           },
           () => Navigator.pop(context),
