@@ -59,7 +59,6 @@ class ViewSettingsState extends State<ViewSettings> {
       }
       widget.saveSettings(null, qNum, timer, null, null, null);
 
-      print(widget.qRepo.questions.length);
       if (widget.qRepo.questions.length < 16) {
         Settings.DEFAULT_QUESTION_NUMBER = widget.qRepo.questions.length;
         Settings.DEFAULT_TIMER = Settings.DEFAULT_QUESTION_NUMBER + 2;

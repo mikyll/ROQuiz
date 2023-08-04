@@ -69,9 +69,6 @@ class ViewTopicsState extends State<ViewTopics> {
   }
 
   int _getPoolSize() {
-    print(widget.selectedTopics);
-    print(widget.qRepo.qNumPerTopic.length);
-
     int res = 0;
     for (int i = 0; i < widget.selectedTopics.length; i++) {
       res += widget.selectedTopics[i] ? widget.qRepo.qNumPerTopic[i] : 0;

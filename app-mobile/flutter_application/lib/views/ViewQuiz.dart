@@ -85,7 +85,6 @@ class _ViewQuizState extends State<ViewQuiz> {
         if (_timerCounter > 0) {
           _timerCounter--;
         } else {
-          _timer.cancel();
           _endQuiz();
         }
       });
@@ -123,6 +122,12 @@ class _ViewQuizState extends State<ViewQuiz> {
               onCancel: onCancel,
               onConfirm: onConfirm);
         });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override

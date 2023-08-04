@@ -1,14 +1,15 @@
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/views/ViewCredits.dart';
 import 'package:roquiz/views/ViewLicenses.dart';
 import 'package:roquiz/model/Themes.dart';
-import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const DEFAULT_SIZE = 50.0;
+const DEFAULT_SIZE = 60.0;
 
 class ViewInfo extends StatefulWidget {
   const ViewInfo({Key? key, required this.settings}) : super(key: key);
@@ -20,19 +21,9 @@ class ViewInfo extends StatefulWidget {
 }
 
 class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
-  double _screenWidth = 0.0;
-  //double _screenHeight = 0.0;
-
-  double _size = DEFAULT_SIZE;
-
-  double _increment = 0.1;
-
-  void _increaseSize() {
-    setState(() {
-      _size += _increment;
-      _increment *= 1.2;
-    });
-  }
+  late final AnimationController _animationController;
+  late final Animation<double> _animation;
+  double _maxSize = 0.0;
 
   Future<void> _launchInBrowser(String url) async {
     if (!await launchUrl(Uri.parse(url),
@@ -47,15 +38,35 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
 
     FlutterView view = PlatformDispatcher.instance.views.first;
     double physicalWidth = view.physicalSize.width;
-    //double physicalHeight = view.physicalSize.height;
+    double physicalHeight = view.physicalSize.height;
 
     double devicePixelRatio = view.devicePixelRatio;
-    _screenWidth = physicalWidth / devicePixelRatio;
-    //_screenHeight = physicalHeight / devicePixelRatio;
+    double screenWidth = physicalWidth / devicePixelRatio;
+    double screenHeight = physicalHeight / devicePixelRatio;
+
+    _maxSize = (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.8;
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+      value: DEFAULT_SIZE,
+    );
+
+    _animation = Tween<double>(begin: DEFAULT_SIZE, end: _maxSize).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.ease));
+
+    _animationController.reset();
+
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _launchInBrowser("https://github.com/mikyll/ROQuiz");
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -169,7 +180,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                             InkWell(
                               onTap: () {
                                 _launchInBrowser(
-                                    "https://github.com/mikyll/ROQuiz/issues/new?title=[Mobile]+Titolo+Problema&body=Descrivi+qui+il+problema%2C+possibilmente+aggiungendo+una+o+pi%C3%B9+etichette.");
+                                    "https://github.com/mikyll/ROQuiz/issues/new/choose");
                               },
                               child: const Text("Apri una issue",
                                   style: TextStyle(
@@ -206,26 +217,37 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
       ),
       // CAGATE
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: IconButtonLongPressWidget(
-        onUpdate: () {
-          if (_size == 0.0) {
-            return;
-          }
-          if (_size < _screenWidth - 100.0) {
-            _increaseSize();
-          } else {
-            _size = 1.0;
-            _increment = 0.0;
-            _launchInBrowser("https://github.com/mikyll/ROQuiz");
-          }
+      floatingActionButton: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, _) {
+          return Container(
+            width: _animation.value,
+            height: _animation.value,
+            decoration: BoxDecoration(
+              color: themeProvider.isDarkMode
+                  ? MyThemes.darkIconButtonPalette.color
+                  : MyThemes.lightIconButtonPalette.color,
+              borderRadius: BorderRadius.circular(1000),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(1000),
+              onTapDown: (details) {
+                _animationController.forward();
+              },
+              onTapUp: (details) {
+                _animationController.reverse();
+              },
+              onTapCancel: () {
+                _animationController.reverse();
+              },
+              child: Icon(Icons.star,
+                  color: themeProvider.isDarkMode
+                      ? Colors.red[900]
+                      : Colors.yellow,
+                  size: _animation.value * 0.9),
+            ),
+          );
         },
-        width: _size,
-        height: _size,
-        icon: Icons.star,
-        iconSize: _size * 0.8,
-        iconColor: Colors.yellow,
-        lightPalette: MyThemes.lightIconButtonPalette,
-        darkPalette: MyThemes.darkIconButtonPalette,
       ),
     );
   }
