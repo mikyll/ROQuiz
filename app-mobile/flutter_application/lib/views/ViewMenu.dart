@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:roquiz/model/AppUpdater.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Utils.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
@@ -121,39 +122,50 @@ class ViewMenuState extends State<ViewMenu> {
     }
   }
 
-  Future<bool> _checkNewVersion() async {
-    http.Response response = await http.get(Uri.parse(
-        'https://api.github.com/repos/mikyll/ROQuiz/releases/latest'));
-
-    try {
-      Map<String, dynamic> json = jsonDecode(response.body);
-      String tag_name = json['tag_name'];
-      List<String> repoVersion = tag_name.replaceAll("v", "").split(".");
-
-      int repoMajor = int.parse(repoVersion[0]);
-      int repoMinor = int.parse(repoVersion[1]);
-
-      List<String> currentVersion = Settings.VERSION_NUMBER.split(".");
-      int currentMajor = int.parse(currentVersion[0]) - 1;
-      int currentMinor = int.parse(currentVersion[1]);
-
-      if (currentMajor < repoMajor ||
-          (currentMajor == repoMajor && currentMinor < repoMinor)) {
-        return true;
-      }
-    } catch (e) {
-      print("Error: $e");
+  Future<void> _checkNewVersionDialog(bool newVersionPresent, String newVersion,
+      String newVersionDownloadURL) async {
+    if (newVersionPresent) {
+      _showConfirmationDialog(
+        context,
+        "Nuova Versione App",
+        "È stata trovata una versione più recente dell'applicazione.\n"
+            "Versione attuale: ${Settings.VERSION_NUMBER}\n"
+            "Nuova versione: $newVersion\n"
+            "Scaricare la nuova versione?",
+        () {
+          _launchInBrowser(newVersionDownloadURL);
+          Navigator.pop(context);
+        },
+        () => Navigator.pop(context),
+      );
     }
-    return false;
+  }
+
+  Future<void> _checkNewQuestionsDialog(
+      bool newQuestionsPresent, DateTime date, int questionNumber) async {
+    if (newQuestionsPresent) {
+      _showConfirmationDialog(
+        context,
+        "Nuove Domande",
+        "È stata trovata una versione più recente del file contenente le domande.\n"
+            "Versione attuale: ${qRepo.questions.length} domande (${Utils.getParsedDateTime(qRepo.lastQuestionUpdate)}).\n"
+            "Nuova versione: $questionNumber domande (${Utils.getParsedDateTime(date)}).\n"
+            "Scaricare il nuovo file?",
+        () {
+          setState(() {
+            qRepo.update().then((_) => updateQuizPool(qRepo.questions.length));
+            _quizPool = qRepo.questions.length;
+          });
+          Navigator.pop(context);
+        },
+        () => Navigator.pop(context),
+      );
+    }
   }
 
   @override
   void initState() {
     super.initState();
-
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      setState(() => Settings.VERSION_NUMBER = packageInfo.version);
-    });
 
     _settings.loadFromSharedPreferences();
 
@@ -172,33 +184,24 @@ class ViewMenuState extends State<ViewMenu> {
         .onError((error, stackTrace) =>
             {setState(() => _qRepoLoadingError = error.toString())});
 
-    if (_settings.checkQuestionsUpdate) {
-      qRepo.checkQuestionUpdates().then((result) {
-        bool newQuestionsPresent = result.$1;
-        DateTime date = result.$2;
-        int qNum = result.$3;
-        if (newQuestionsPresent) {
-          _showConfirmationDialog(
-            context,
-            "Nuove Domande",
-            "È stata trovata una versione più recente del file contenente le domande.\n"
-                "Versione attuale: ${qRepo.questions.length} domande (${Utils.getParsedDateTime(qRepo.lastQuestionUpdate)}).\n"
-                "Nuova versione: $qNum domande (${Utils.getParsedDateTime(date)}).\n"
-                "Scaricare il nuovo file?",
-            () {
-              setState(() {
-                qRepo
-                    .update()
-                    .then((_) => updateQuizPool(qRepo.questions.length));
-                _quizPool = qRepo.questions.length;
-              });
-              Navigator.pop(context);
-            },
-            () => Navigator.pop(context),
-          );
-        }
-      });
-    }
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      setState(() => Settings.VERSION_NUMBER = packageInfo.version);
+
+      if (_settings.checkAppUpdate) {
+        AppUpdater.checkNewVersion(Settings.VERSION_NUMBER).then((result) {
+          _checkNewVersionDialog(result.$1, result.$2, result.$3);
+        }).onError((error, stackTrace) {
+          print("Error: $stackTrace");
+        });
+      }
+      if (_settings.checkQuestionsUpdate) {
+        qRepo.checkQuestionUpdates().then((result) {
+          _checkNewQuestionsDialog(result.$1, result.$2, result.$3);
+        }).onError((error, stackTrace) {
+          print("Error: $error");
+        });
+      }
+    });
   }
 
   @override

@@ -48,7 +48,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 600),
       value: DEFAULT_SIZE,
     );
 
@@ -211,6 +211,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roquiz/model/PlatformType.dart';
+import 'package:roquiz/model/AppUpdater.dart';
 import 'package:roquiz/model/Utils.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/persistence/Settings.dart';
@@ -11,6 +11,7 @@ import 'package:roquiz/widget/change_theme_button_widget.dart';
 import 'package:roquiz/widget/confirmation_alert.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewSettings extends StatefulWidget {
   const ViewSettings({
@@ -34,6 +35,7 @@ class ViewSettings extends StatefulWidget {
 class ViewSettingsState extends State<ViewSettings> {
   final ScrollController _scrollController = ScrollController();
 
+  bool _checkAppUpdate = Settings.DEFAULT_CHECK_APP_UPDATE;
   bool _checkQuestionsUpdate = Settings.DEFAULT_CHECK_QUESTIONS_UPDATE;
   int _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
   int _timer = Settings.DEFAULT_TIMER;
@@ -45,7 +47,7 @@ class ViewSettingsState extends State<ViewSettings> {
       false; // to check if the user went back while choosing the questions file
   bool _isLoading = false;
 
-  void _updateDefaults() {
+  void _updateQuizDefaults() {
     setState(() {
       // If the new questions exceeds the Settings values bounds, update the settings
       int? qNum, timer;
@@ -66,6 +68,136 @@ class ViewSettingsState extends State<ViewSettings> {
         Settings.DEFAULT_QUESTION_NUMBER = 16;
         Settings.DEFAULT_TIMER = Settings.DEFAULT_QUESTION_NUMBER + 2;
       }
+    });
+  }
+
+  void _checkNewVersion() {
+    print("Versione corrente: ${Settings.VERSION_NUMBER}");
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    AppUpdater.checkNewVersion(Settings.VERSION_NUMBER).then((result) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      bool newVersionPresent = result.$1;
+      String newVersion = result.$2;
+      String newVersionDownloadURL = result.$3;
+
+      if (newVersionPresent) {
+        _showConfirmationDialog(
+          context,
+          "Nuova Versione App",
+          "È stata trovata una versione più recente dell'applicazione.\n"
+              "Versione attuale: ${Settings.VERSION_NUMBER}\n"
+              "Nuova versione: $newVersion\n"
+              "Scaricare la nuova versione?",
+          "Sì",
+          "No",
+          () {
+            //_launchInBrowser("https://github.com/mikyll/ROQuiz/releases/latest");
+            _launchInBrowser(newVersionDownloadURL);
+            Navigator.pop(context);
+          },
+          () => Navigator.pop(context),
+        );
+      } else {
+        _showConfirmationDialog(
+          context,
+          "Nessuna Nuova Versione",
+          "L'applicazione è aggiornata all'ultima versione disponibile (${Settings.VERSION_NUMBER}).",
+          "",
+          "Ok",
+          null,
+          () => Navigator.pop(context),
+        );
+      }
+    }).onError((error, stackTrace) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showConfirmationDialog(
+        context,
+        "Errore Durante il Controllo",
+        error.toString(),
+        "",
+        "Ok",
+        null,
+        () => Navigator.pop(context),
+      );
+    });
+  }
+
+  void _resetCheckAppUpdate() {
+    setState(() => _checkAppUpdate = Settings.DEFAULT_CHECK_APP_UPDATE);
+  }
+
+  void _selectCheckAppUpdate(bool value) {
+    setState(() {
+      _checkAppUpdate = value;
+    });
+  }
+
+  void _checkNewQuestions() {
+    print("Versione corrente: ${widget.qRepo.lastQuestionUpdate}");
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    widget.qRepo.checkQuestionUpdates().then((result) {
+      setState(() {
+        _isLoading = false;
+      });
+      bool newQuestionsPresent = result.$1;
+      DateTime date = result.$2;
+      int qNum = result.$3;
+      if (newQuestionsPresent) {
+        _showConfirmationDialog(
+          context,
+          "Nuove Domande",
+          "È stata trovata una versione più recente del file contenente le domande.\n"
+              "Versione attuale: ${widget.qRepo.questions.length} domande (${Utils.getParsedDateTime(widget.qRepo.lastQuestionUpdate)}).\n"
+              "Nuova versione: $qNum domande (${Utils.getParsedDateTime(date)}).\n"
+              "Scaricare il nuovo file?",
+          "Sì",
+          "No",
+          () {
+            setState(() {
+              widget.qRepo.update();
+            });
+            _updateQuizDefaults();
+            Navigator.pop(context);
+          },
+          () => Navigator.pop(context),
+        );
+      } else {
+        _showConfirmationDialog(
+          context,
+          "Nessuna Nuova Domanda",
+          "Non sono state trovate nuove domande. Il file è aggiornato all'ultima versione (${Utils.getParsedDateTime(widget.qRepo.lastQuestionUpdate)}).",
+          "",
+          "Ok",
+          null,
+          () => Navigator.pop(context),
+        );
+      }
+    }).onError((error, stackTrace) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showConfirmationDialog(
+        context,
+        "Errore Durante il Controllo",
+        error.toString(),
+        "",
+        "Ok",
+        null,
+        () => Navigator.pop(context),
+      );
     });
   }
 
@@ -122,67 +254,7 @@ class ViewSettingsState extends State<ViewSettings> {
     setState(() {
       _isLoading = false;
 
-      _updateDefaults();
-    });
-  }
-
-  void _checkNewQuestions() {
-    print("Versione corrente: ${widget.qRepo.lastQuestionUpdate}");
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    widget.qRepo.checkQuestionUpdates().then((result) {
-      setState(() {
-        _isLoading = false;
-      });
-      bool newQuestionsPresent = result.$1;
-      DateTime date = result.$2;
-      int qNum = result.$3;
-      if (newQuestionsPresent) {
-        _showConfirmationDialog(
-          context,
-          "Nuove Domande",
-          "È stata trovata una versione più recente del file contenente le domande.\n"
-              "Versione attuale: ${widget.qRepo.questions.length} domande (${Utils.getParsedDateTime(widget.qRepo.lastQuestionUpdate)}).\n"
-              "Nuova versione: $qNum domande (${Utils.getParsedDateTime(date)}).\n"
-              "Scaricare il nuovo file?",
-          "Sì",
-          "No",
-          () {
-            setState(() {
-              widget.qRepo.update();
-            });
-            _updateDefaults();
-            Navigator.pop(context);
-          },
-          () => Navigator.pop(context),
-        );
-      } else {
-        _showConfirmationDialog(
-          context,
-          "Nessuna Nuova Domanda",
-          "Non sono state trovate nuove domande. Il file è aggiornato all'ultima versione (${Utils.getParsedDateTime(widget.qRepo.lastQuestionUpdate)}).",
-          "",
-          "Ok",
-          null,
-          () => Navigator.pop(context),
-        );
-      }
-    }).onError((error, stackTrace) {
-      setState(() {
-        _isLoading = false;
-      });
-      _showConfirmationDialog(
-        context,
-        "Errore Durante il Controllo",
-        error.toString(),
-        "",
-        "Ok",
-        null,
-        () => Navigator.pop(context),
-      );
+      _updateQuizDefaults();
     });
   }
 
@@ -249,6 +321,7 @@ class ViewSettingsState extends State<ViewSettings> {
   }
 
   void _reset(ThemeProvider themeProvider) {
+    _resetCheckAppUpdate();
     _resetCheckQuestionsUpdate();
     _resetQuestionNumber();
     _resetTimer();
@@ -258,7 +331,8 @@ class ViewSettingsState extends State<ViewSettings> {
   }
 
   bool _isDefault(ThemeProvider themeProvider) {
-    return _checkQuestionsUpdate == Settings.DEFAULT_CHECK_QUESTIONS_UPDATE &&
+    return _checkAppUpdate == Settings.DEFAULT_CHECK_APP_UPDATE &&
+        _checkQuestionsUpdate == Settings.DEFAULT_CHECK_QUESTIONS_UPDATE &&
         _questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
         _timer == Settings.DEFAULT_TIMER &&
         _shuffleAnswers == Settings.DEFAULT_SHUFFLE_ANSWERS &&
@@ -267,7 +341,8 @@ class ViewSettingsState extends State<ViewSettings> {
   }
 
   bool _isChanged(ThemeProvider themeProvider) {
-    return _checkQuestionsUpdate != widget.settings.checkQuestionsUpdate ||
+    return _checkAppUpdate != widget.settings.checkAppUpdate ||
+        _checkQuestionsUpdate != widget.settings.checkQuestionsUpdate ||
         _questionNumber != widget.settings.questionNumber ||
         _timer != widget.settings.timer ||
         _shuffleAnswers != widget.settings.shuffleAnswers ||
@@ -294,6 +369,13 @@ class ViewSettingsState extends State<ViewSettings> {
               onConfirm: onConfirm,
               onCancel: onCancel);
         });
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -382,47 +464,46 @@ class ViewSettingsState extends State<ViewSettings> {
             primary: false,
             children: [
               // SETTING: New App Version Check
-              /*Row(
-                    children: [
-                      IconButtonWidget(
-                        onTap: _isLoading
-                            ? null
-                            : () {
-                                _checkNewQuestions();
-                              },
-                        lightPalette: MyThemes.lightIconButtonPalette,
-                        darkPalette: MyThemes.darkIconButtonPalette,
-                        width: 40.0,
-                        height: 40.0,
-                        icon: Icons.sync_rounded,
-                        iconSize: 35,
-                        borderRadius: 5,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: InkWell(
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            onDoubleTap: () {
-                              _resetCheckQuestionsUpdate();
-                            },
-                            child: const Text("Controllo nuove versioni app: ",
-                                softWrap: true,
-                                style: TextStyle(fontSize: 20))),
-                      ),
-                      SizedBox(
-                          width: 120.0,
-                          child: Transform.scale(
-                            scale: 1.5,
-                            child: Checkbox(
-                                value: _checkQuestionsUpdate,
-                                onChanged: (bool? value) =>
-                                    _selectCheckQuestionsUpdate(value!)),
-                          ))
-                    ],
+              Row(
+                children: [
+                  IconButtonWidget(
+                    onTap: _isLoading
+                        ? null
+                        : () {
+                            _checkNewVersion();
+                          },
+                    lightPalette: MyThemes.lightIconButtonPalette,
+                    darkPalette: MyThemes.darkIconButtonPalette,
+                    width: 40.0,
+                    height: 40.0,
+                    icon: Icons.sync_rounded,
+                    iconSize: 35,
+                    borderRadius: 5,
                   ),
-                  const SizedBox(height: 20),*/
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: InkWell(
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onDoubleTap: () {
+                          _resetCheckAppUpdate();
+                        },
+                        child: const Text("Controllo nuove versioni app: ",
+                            softWrap: true, style: TextStyle(fontSize: 20))),
+                  ),
+                  SizedBox(
+                      width: 120.0,
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                            value: _checkAppUpdate,
+                            onChanged: (bool? value) =>
+                                _selectCheckAppUpdate(value!)),
+                      ))
+                ],
+              ),
+              const SizedBox(height: 20),
               // SETTING: New Questions Check
               Row(
                 children: [

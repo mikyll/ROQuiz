@@ -5,16 +5,16 @@ class Settings {
   static String VERSION_NUMBER = "";
   static const int DEFAULT_ANSWER_NUMBER = 5;
 
+  static const bool DEFAULT_CHECK_APP_UPDATE = true;
   static const bool DEFAULT_CHECK_QUESTIONS_UPDATE = true;
-  static const bool DEFAULT_CHECK_APP_UPDATE = false;
   static int DEFAULT_QUESTION_NUMBER = 16;
   static int DEFAULT_TIMER = 18;
   static const bool DEFAULT_SHUFFLE_ANSWERS = true;
   static const bool DEFAULT_CONFIRM_ALERTS = true;
   static const bool DEFAULT_DARK_THEME = false;
 
-  late bool checkQuestionsUpdate = DEFAULT_CHECK_QUESTIONS_UPDATE;
   late bool checkAppUpdate = DEFAULT_CHECK_APP_UPDATE;
+  late bool checkQuestionsUpdate = DEFAULT_CHECK_QUESTIONS_UPDATE;
   late int questionNumber = DEFAULT_QUESTION_NUMBER;
   late int timer = DEFAULT_TIMER;
   late bool shuffleAnswers = DEFAULT_SHUFFLE_ANSWERS;
@@ -24,10 +24,10 @@ class Settings {
   void loadFromSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
 
-    checkQuestionsUpdate =
-        prefs.getBool("checkQuestionsUpdate") ?? DEFAULT_CHECK_QUESTIONS_UPDATE;
     checkAppUpdate =
         prefs.getBool("checkAppUpdate") ?? DEFAULT_CHECK_APP_UPDATE;
+    checkQuestionsUpdate =
+        prefs.getBool("checkQuestionsUpdate") ?? DEFAULT_CHECK_QUESTIONS_UPDATE;
     questionNumber = prefs.getInt("questionNumber") ?? DEFAULT_QUESTION_NUMBER;
     timer = prefs.getInt("timer") ?? DEFAULT_TIMER;
     shuffleAnswers = prefs.getBool("shuffleAnswers") ?? DEFAULT_SHUFFLE_ANSWERS;
@@ -38,8 +38,8 @@ class Settings {
   void saveToSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setBool("checkQuestionsUpdate", checkQuestionsUpdate);
     prefs.setBool("checkAppUpdate", checkAppUpdate);
+    prefs.setBool("checkQuestionsUpdate", checkQuestionsUpdate);
     prefs.setInt("questionNumber", questionNumber);
     prefs.setInt("timer", timer);
     prefs.setBool("shuffleAnswers", shuffleAnswers);
@@ -50,8 +50,8 @@ class Settings {
   void resetDefault() async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setBool("checkQuestionsUpdate", DEFAULT_CHECK_QUESTIONS_UPDATE);
     prefs.setBool("checkAppUpdate", DEFAULT_CHECK_APP_UPDATE);
+    prefs.setBool("checkQuestionsUpdate", DEFAULT_CHECK_QUESTIONS_UPDATE);
     prefs.setInt("questionNumber", DEFAULT_QUESTION_NUMBER);
     prefs.setInt("timer", DEFAULT_TIMER);
     prefs.setBool("shuffleAnswers", DEFAULT_SHUFFLE_ANSWERS);
