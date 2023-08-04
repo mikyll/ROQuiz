@@ -359,6 +359,8 @@ class _ViewQuizState extends State<ViewQuiz> {
                               Navigator.pop(context);
                             },
                           );
+                        } else {
+                          _endQuiz();
                         }
                       }
                     },
