@@ -166,6 +166,13 @@ Proposta feature:
             <br />
             <sub><b>lollofred</b></sub>
         </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/RedDuality">
+            <img src="https://avatars.githubusercontent.com/u/61973885?v=4" width="100;" alt="RedDuality"/>
+            <br />
+            <sub><b>RedDuality</b></sub>
+        </a>
     </td></tr>
 </table>
 <!-- readme: contributors -end -->
