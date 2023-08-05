@@ -286,6 +286,7 @@ L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teor
 * [Download asset Flutter](https://pub.dev/packages/download_assets)
 * [LongPress Widget](https://stackoverflow.com/questions/52128572/flutter-execute-method-so-long-the-button-pressed)
 * [Flutter CI/CD using GitHub Actions](https://blog.logrocket.com/flutter-ci-cd-using-github-actions/)
+  
 
 <div align="center">
   
