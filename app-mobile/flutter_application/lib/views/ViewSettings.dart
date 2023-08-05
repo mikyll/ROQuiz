@@ -92,7 +92,7 @@ class ViewSettingsState extends State<ViewSettings> {
           context,
           "Nuova Versione App",
           "È stata trovata una versione più recente dell'applicazione.\n"
-              "Versione attuale: ${Settings.VERSION_NUMBER}\n"
+              "Versione attuale: v${Settings.VERSION_NUMBER}\n"
               "Nuova versione: $newVersion\n"
               "Scaricare la nuova versione?",
           "Sì",
