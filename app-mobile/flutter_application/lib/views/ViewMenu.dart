@@ -207,145 +207,132 @@ class ViewMenuState extends State<ViewMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: FutureBuilder<List>(
-          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return const CircularProgressIndicator();
-          default:
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              return Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Spacer(flex: 2),
-                      const Text("ROQuiz",
+      body: Center(
+          child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 2),
+                  const Text("ROQuiz",
+                      style: TextStyle(
+                        fontSize: 54,
+                        fontWeight:
+                            FontWeight.bold, /*fontStyle: FontStyle.italic*/
+                      )),
+                  Text(
+                    "v${Settings.VERSION_NUMBER}",
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Spacer(flex: 1),
+                  // BUTTONS
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: ElevatedButton(
+                      onPressed: qRepo.questions.isEmpty ||
+                              qRepo.questions.length < _settings.questionNumber
+                          ? null
+                          : () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewQuiz(
+                                            questions: _getPoolFromSelected(),
+                                            settings: _settings,
+                                          )));
+                            },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 60,
+                        child: const Text(
+                          "Avvia",
                           style: TextStyle(
-                            fontSize: 54,
-                            fontWeight:
-                                FontWeight.bold, /*fontStyle: FontStyle.italic*/
-                          )),
-                      Text(
-                        "v${Settings.VERSION_NUMBER}",
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Spacer(flex: 1),
-                      // BUTTONS
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                        child: ElevatedButton(
-                          onPressed: qRepo.questions.isEmpty ||
-                                  qRepo.questions.length <
-                                      _settings.questionNumber
-                              ? null
-                              : () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ViewQuiz(
-                                                questions:
-                                                    _getPoolFromSelected(),
-                                                settings: _settings,
-                                              )));
-                                },
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 60,
-                            child: const Text(
-                              "Avvia",
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                        child: ElevatedButton(
-                          onPressed: _topicsPresent
-                              ? () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ViewTopics(
-                                                qRepo: qRepo,
-                                                settings: _settings,
-                                                updateQuizPool: updateQuizPool,
-                                                selectedTopics: _selectedTopics,
-                                              )));
-                                }
-                              : null,
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 60,
-                            child: const Text(
-                              "Argomenti",
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: ElevatedButton(
+                      onPressed: _topicsPresent
+                          ? () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewTopics(
+                                            qRepo: qRepo,
+                                            settings: _settings,
+                                            updateQuizPool: updateQuizPool,
+                                            selectedTopics: _selectedTopics,
+                                          )));
+                            }
+                          : null,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 60,
+                        child: const Text(
+                          "Argomenti",
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.format_list_numbered_rounded,
-                            ),
-                            Text(
-                                " Domande: ${_settings.questionNumber} su $_quizPool"),
-                            const SizedBox(width: 20),
-                            const Icon(
-                              Icons.timer_rounded,
-                            ),
-                            Text(" Tempo: ${_settings.timer} min"),
-                          ]),
-                      _qRepoLoadingError.isNotEmpty
-                          ? Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Text(
-                                _qRepoLoadingError,
-                                style: const TextStyle(color: Colors.red),
-                              ))
-                          : const SizedBox(height: 50),
-                      InkWell(
-                        onTap: () {
-                          _launchInBrowser("https://github.com/mikyll/ROQuiz");
-                        },
-                        child: Container(
-                          color: Colors.indigo.withOpacity(0.35),
-                          alignment: Alignment.center,
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                                "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                )),
-                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.format_list_numbered_rounded,
                         ),
+                        Text(
+                            " Domande: ${_settings.questionNumber} su $_quizPool"),
+                        const SizedBox(width: 20),
+                        const Icon(
+                          Icons.timer_rounded,
+                        ),
+                        Text(" Tempo: ${_settings.timer} min"),
+                      ]),
+                  _qRepoLoadingError.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            _qRepoLoadingError,
+                            style: const TextStyle(color: Colors.red),
+                          ))
+                      : const SizedBox(height: 50),
+                  InkWell(
+                    onTap: () {
+                      _launchInBrowser("https://github.com/mikyll/ROQuiz");
+                    },
+                    child: Container(
+                      color: Colors.indigo.withOpacity(0.35),
+                      alignment: Alignment.center,
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                            "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                            )),
                       ),
-                      const Spacer(flex: 5),
-                    ],
-                  ));
-            }
-        }
-      })),
+                    ),
+                  ),
+                  const Spacer(flex: 5),
+                ],
+              ))),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
