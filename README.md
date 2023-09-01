@@ -85,7 +85,7 @@ Le domande sono caricate da un <a href="./Domande.txt">file di testo (.txt)</a> 
   - una riga per la risposta corretta (una lettera da A a E);
   - una riga vuota se non è l'ultima domanda (questa riga separa la domanda da quella successiva, o dall'argomento successivo).
 
-NB: non è importante la lettera con cui iniziano le risposte, basta che siano in ordine, altrimenti la risposta giusta e la lettera non corrispondono.
+**NB**: non è importante la lettera con cui iniziano le risposte, basta che siano in ordine, altrimenti la risposta giusta e la lettera non corrispondono.
 
 esempio (tre domande di due argomenti diversi nel file Domande.txt):
 <pre>
@@ -125,11 +125,13 @@ Aggiunta domande o feature al progetto:
 2. Clonare la repository in locale.
 3. (Opzionale) Creare un nuovo branch.
 4. Aggiungere le modifiche:
-  * Per aggiungere nuove domande: modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi. NB: in caso non si sappia sotto quale argomento inserire una domanda, scriverlo successivamente in un commento nella pull request.<br/>
-  * Per aggiungere delle feature: basta implementarle e integrarle col resto dell'applicazione.
+  - Per aggiungere nuove domande: modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi.<br/>
+    **NB**: in caso non si sappia sotto quale argomento inserire una domanda, farlo presente in un commento nella pull request.<br/>
+  - Per aggiungere delle feature: basta implementarle e integrarle col resto dell'applicazione.
 5. Fare commit e push.
 6. Creare una **pull request** aggiungendo informazioni se necessario.
-7. Ammirare il proprio nome inserito in questa meravigliosa lista che viene aggiornata automaticamente.
+7. Ammirare il proprio nome inserito in questa meravigliosa lista che viene aggiornata automaticamente.<br/>
+   **NB**: per far sì che il nome del contributor venga registrato correttamente nella lista, è necessario che l'autore del commit e della pull request corrispondano (stesso account, stessa e-mail).
 
 Proposta feature:
 1. Aprire un issue spiegando in cosa consiste la feature da aggiungere.
@@ -269,9 +271,16 @@ Proposta feature:
 </details>
 
 ## Built With
-IDE: VSCode v1.81.1
+- IDE: **VSCode** v1.81.1
+- Framework: **Flutter** v3.13.1
 
-Framework: Flutter v3.13.1
+<!--
+### Desktop (Old)
+Per l'implementazione dell'app desktop ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](./Project%20Setup.md).
+
+versione Java: JavaSE-11 (jdk-11.0.11)<br/>
+versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
+-->
 
 ## Setup Progetto
 
@@ -280,25 +289,11 @@ Framework: Flutter v3.13.1
 2. Assicurarsi di aver inserito la directory `bin/` alla variabile PATH.
   - Per controllare se l'installazione è andata a buon fine, aprire un terminale e lanciare il comando `flutter doctor`.<br/>
     Questo comando indica se ci sono problemi con l'SDK e fornisce informazioni sulle dipendenze necessarie per il suo funzionamento.
-3. 
+3. TO-DO
 
 ### Build e Run del Progetto
+Il progetto dell'applicazione flutter si trova nella directory [`app-mobile/flutter_application`](./app-mobile/flutter_application)
 TO-DO
-
-<!--
-### Desktop
-Per l'implementazione dell'app desktop ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](./Project%20Setup.md).
-
-versione Java: JavaSE-11 (jdk-11.0.11)<br/>
-versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
-
-### Mobile
-Per l'implementazione dell'app mobile ho utilizzato Flutter, come IDE Visual Studio Code (versione 1.64.2).
-
-versione Flutter: 2.8.1<br/>
-versione Dart: 2.15.1
-
--->
 
 ## Riferimenti
 <details>
