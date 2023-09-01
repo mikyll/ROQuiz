@@ -1,51 +1,32 @@
 <div align="center">
 
-[![Downloads][downloads-shield]][downloads-url]
-[![Domande][domande-shield]][domande-url]
-[![Validazione Domande][validazione-shield]][validazione-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Contributors][contributors-shield]][contributors-url]
-[![MIT License][license-shield]][license-url]
-[![Issues][issues-shield]][issues-url]
-<br />
-[![java][java-shield]][java-url]
-[![dart][dart-shield]][dart-url]
-[![flutter][flutter-shield]][flutter-url]
+  [![Downloads][downloads-shield]][downloads-url]
+  [![Domande][domande-shield]][domande-url]
+  [![Validazione Domande][validazione-shield]][validazione-url]
+  [![Stargazers][stars-shield]][stars-url]
+  [![Contributors][contributors-shield]][contributors-url]
+  [![MIT License][license-shield]][license-url]
+  [![Issues][issues-shield]][issues-url]
+  <br />
+  [![java][java-shield]][java-url]
+  [![dart][dart-shield]][dart-url]
+  [![flutter][flutter-shield]][flutter-url]
+  
+  <h1> ROQuiz</h1>
+  <h3> Applicazione multipiattaforma per esercitarsi con i quiz del corso <a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2022/467997">Ricerca Operativa M</a>.</h3>
+  
+  L'app permette di <b>simulare dei quiz d'esame</b>: vengono pescate, in modo casuale, delle domande a risposta multipla a cui l'utente deve rispondere entro un tempo limite, definito da un timer.<br/>
+  <b>Pool corrente</b>: <i><span id="domande">107</span></i> domande differenti (aggiornato al <i><span id="ultima_modifica">14 luglio 2023</span></i>).
 
-<h1> ROQuiz</h1>
-<h3> Applicazione multipiattaforma per esercitarsi con i quiz del corso <a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2022/467997">Ricerca Operativa M</a>.</h3>
-<hr class="rounded">
+  [Download](https://github.com/mikyll/ROQuiz/releases/latest)
+  ·
+  [Spiegazione Domande](./Domande%20RO%20con%20spiegazione.pdf)
+  ·
+  [Feature Request | Bug Report](https://github.com/mikyll/ROQuiz/issues/new/choose)
 </div>
 
-### Versioni Disponibili
-- Desktop (Windows, Linux e MacOS)
-- Mobile (Android)
-
-### Funzionalità
-- L'app **simula un quiz d'esame**, pescando in modo casuale delle domande a risposta multipla a cui l'utente deve rispondere entro il tempo limite definito da un timer.
-- Pool di <span id="domande">107</span> domande differenti, divise per argomento (elenco aggiornato al _14 luglio 2023_).
-- Possibilità di scelta di argomenti specifici per le domande da includere nel quiz.
-- Possibilità di personalizzare le impostazioni dell'app in modo persistente:
-  - Scelta di un numero specifico di domande (default: 16, selezionate casualmente).
-  - Modifica del tempo a disposizione per il quiz (default: 18 minuti).
-  - Controllo all'avvio dell'app se nella repository sono presenti nuove domande.
-  - Scelta del tema (chiaro/scuro)
-- Possibilità di inserimento di domande personalizzate (modificando il file Domande.txt e rispettando le regole di [formattazione](#formattazione-domande)).
-
-### Demo
-#### Desktop
-<table style="border: none">
-  <tr align="center">
-    <td><img src="./gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
-    <td><img src="./gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
-  </tr>
-  <tr align="center">
-    <td>Terminazione quiz</td>
-    <td>Tempo scaduto</td>
-  </tr>
-</table>
-
-#### Mobile
+## Demo
+### Mobile
 <table style="border: none">
   <tr align="center">
     <td><img width=50% src="./gfx/[GIF] MobileDemo.gif" alt="DemoMobileGIF"/></td>
@@ -59,20 +40,46 @@
   </tr>
 </table>
 
-### Download
-#### Versione Desktop
-1. Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest) ([Windows](https://github.com/mikyll/ROQuiz/releases/download/v1.7/ROQuizWindows_x64.zip), [Linux](https://github.com/mikyll/ROQuiz/releases/download/v1.5/ROQuizDeployLinux.tar.gz) o [MacOS](https://github.com/mikyll/ROQuiz/releases/download/v1.5/ROQuizDeployMac_ARMx64.zip)) ed estrarre il contenuto.
-2. Eseguire Launcher con doppioclick.
+### Desktop
+<table style="border: none">
+  <tr align="center">
+    <td><img src="./gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
+    <td><img src="./gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
+  </tr>
+  <tr align="center">
+    <td>Terminazione quiz</td>
+    <td>Tempo scaduto</td>
+  </tr>
+</table>
 
-#### Versione Mobile
-1. Scaricare l'[apk](https://github.com/mikyll/ROQuiz/releases/download/v1.7/ROQuizAndroid.apk).
-2. Selezionare ```INSTALLA``` e ```INSTALLA COMUNQUE```.
+### Desktop (Old)
+<details>
+  <summary>Versione Java funzionante ma non più supportata.</summary>
+  <br/>
+  
+  <table style="border: none">
+    <tr align="center">
+      <td><img src="./gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
+      <td><img src="./gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
+    </tr>
+    <tr align="center">
+      <td>Terminazione quiz</td>
+      <td>Tempo scaduto</td>
+    </tr>
+  </table>
+</details>
 
-### Formattazione domande
-Le domande sono caricate da un file "<a href="./Domande.txt">Domande.txt</a>" che ha il seguente formato:
+## Disclaimer
+L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teoria (molto meglio se dal libro, in quanto è completo ed esaustivo). <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
+
+## Download
+Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest), per il proprio dispositivo (desktop/mobile).
+
+## Formattazione domande
+Le domande sono caricate da un <a href="./Domande.txt">file di testo (.txt)</a> che ha il seguente formato:
 * (opzionale) Argomenti:
   - la riga di un argomento inizia col carattere speciale '@', seguito dal titolo dell'argomento (es: Complessità). Ogni riga di argomento è seguita dalle domande relative a quell'argomento, fino all'argomento successivo. Alla fine della riga dell'argomento possono essere usati caratteri non alfabetici (ad esempio '=') per separare visivamente le domande di argomenti differenti (tali caratteri verranno ignorati).
-* Domande: 
+* Domande:
   - una riga per la domanda;
   - 5 righe per le risposte (la riga inizia con una lettera maiuscola, seguita da un punto e dalla risposta);
   - una riga per la risposta corretta (una lettera da A a E);
@@ -109,10 +116,10 @@ E. Nessuna di queste.
 A
 </pre>
 
-### Spiegazione Domande
+## Spiegazione Domande
 [Questo documento](./Domande%20RO%20con%20spiegazione.pdf), a cura di [Lorenzo di Palma](https://github.com/lollofred) e [Filippo Veronesi](https://github.com/filippoveronesi), contiene la spiegazione alla maggior parte delle domande presenti nel quiz.
 
-### Contribuire
+## Come Contribuire
 Aggiunta domande o feature al progetto:
 1. Fare una **fork** della repository.
 2. Clonare la repository in locale.
@@ -128,7 +135,7 @@ Proposta feature:
 1. Aprire un issue spiegando in cosa consiste la feature da aggiungere.
 2. Possibilmente aggiungervi la label "enhancement".
 
-#### Contributors Attuali
+### Contributors Attuali
 <!-- readme: contributors -start -->
 <table>
 <tr>
@@ -177,122 +184,144 @@ Proposta feature:
 </table>
 <!-- readme: contributors -end -->
 
-### Roadmap
+## Roadmap
 <details>
-<summary>Features da aggiungere e sviluppi futuri:</summary>
-<br/>
-<table>
-  <tr align="center">
-    <td><b>Obbiettivo</b></td>
-    <td width="5%">🖥️</td>
-    <td width="5%">📱</td>
-  </tr>
-  <tr align="center">
-    <td>Visualizzazione lista domande in-app</td>
-    <td>✔️</td>
-    <td>✔️</td>
-  </tr>
-  <tr align="center">
-    <td>Possibilità di modificare il file domande</td>
-    <td>✔️</td>
-    <td>❌</td>
-  </tr>
-  <tr align="center">
-    <td>Scelta degli argomenti</td>
-    <td>✔️</td>
-    <td>✔️</td>
-  </tr>
-  <tr align="center">
-    <td>Impostazioni persistenti</td>
-    <td>✔️</td>
-    <td>✔️</td>
-  </tr>
-  <tr align="center">
-    <td>Dark theme</td>
-    <td>✔️</td>
-    <td>✔️</td>
-  </tr>
-  <tr align="center">
-    <td>Verifica aggiornamento domande + download</td>
-    <td>✔️</td>
-    <td>❌</td>
-  </tr>
-  <tr align="center">
-    <td>Verifica aggiornamento app</td>
-    <td>✔️</td>
-    <td>❌</td>
-  </tr>
-  <tr align="center">
-    <td>Deploy su sistemi Android</td>
-    <td> - </td>
-    <td>✔️</td>
-  </tr>
-  <tr align="center">
-    <td>Deploy su sistemi Apple</td>
-    <td>✔️</td>
-    <td>❌</td>
-  </tr>
-  <tr align="center">
-    <td>Test domande duplicate</td>
-    <td>❌</td>
-    <td>❌</td>
-  </tr>
-  <tr align="center">
-    <td>Strumento per inserire nuove domande</td>
-    <td>❌</td>
-    <td>❌</td>
-  </tr>
-  <tr align="center">
-    <td>Template per pubblicare una issue</td>
-    <td>✔️</td>
-    <td>✔️</td>
-  </tr>
-  <tr align="center">
-    <td>Strumento di ricerca delle domande nella lista per argomento</td>
-    <td>❌</td>
-    <td>❌</td>
-  </tr>
-  <tr align="center">
-    <td>Pipeline CI/CD per build e deploy</td>
-    <td>❌</td>
-    <td>❌</td>
-  </tr>
-</table>
-
+  <summary>Features da aggiungere e sviluppi futuri.</summary>
+  <br/>
+  
+  <table>
+    <tr align="center">
+      <td><b>Obbiettivo</b></td>
+      <td width="5%">🖥️</td>
+      <td width="5%">📱</td>
+    </tr>
+    <tr align="center">
+      <td>Visualizzazione lista domande in-app</td>
+      <td>✔️</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Possibilità di modificare il file domande</td>
+      <td>✔️</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Scelta degli argomenti</td>
+      <td>✔️</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Impostazioni persistenti</td>
+      <td>✔️</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Dark theme</td>
+      <td>✔️</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Verifica aggiornamento domande + download</td>
+      <td>✔️</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Verifica aggiornamento app</td>
+      <td>✔️</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Deploy su sistemi Android</td>
+      <td> - </td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Deploy su sistemi Apple</td>
+      <td>✔️</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Test domande duplicate</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Strumento per inserire nuove domande</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Template per pubblicare una issue</td>
+      <td>✔️</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Strumento di ricerca delle domande nella lista per argomento</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Pipeline CI/CD per build e deploy</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+  </table>
 </details>
 
-### Built With
-#### Desktop
+## Built With
+IDE: VSCode v1.81.1
+
+Framework: Flutter v3.13.1
+
+## Setup Progetto
+
+### Flutter Setup
+1. Scaricare l'SDK Flutter da [docs.flutter.dev](https://docs.flutter.dev/get-started/install).
+2. Assicurarsi di aver inserito la directory `bin/` alla variabile PATH.
+  - Per controllare se l'installazione è andata a buon fine, aprire un terminale e lanciare il comando `flutter doctor`.<br/>
+    Questo comando indica se ci sono problemi con l'SDK e fornisce informazioni sulle dipendenze necessarie per il suo funzionamento.
+3. 
+
+### Build e Run del Progetto
+TO-DO
+
+<!--
+### Desktop
 Per l'implementazione dell'app desktop ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](./Project%20Setup.md).
 
 versione Java: JavaSE-11 (jdk-11.0.11)<br/>
 versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 
-#### Mobile
+### Mobile
 Per l'implementazione dell'app mobile ho utilizzato Flutter, come IDE Visual Studio Code (versione 1.64.2).
 
 versione Flutter: 2.8.1<br/>
 versione Dart: 2.15.1
 
-### Disclaimer
-L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teoria (molto meglio se dal libro, in quanto è completo ed esaustivo). <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
+-->
 
-### Riferimenti
-* [Ciclo di vita](https://docs.oracle.com/javase/8/javafx/api/javafx/application/Application.html) della classe Application
-* Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
-* Lavorare coi moduli Java: [Java 9 Modules in Eclipse](https://blogs.oracle.com/java/post/how-to-develop-modules-with-eclipse-ide)
-* Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
-* JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
-* Soluzione per eccezione SSL handshake: [SSLHandshakeException: Received fatal alert: handshake_failure](https://stackoverflow.com/questions/54770538/received-fatal-alert-handshake-failure-in-jlinked-jre)
-* Gestione dei moduli (ad esempio Gson): [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}")](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
-* [JavaFX CSS Docs](https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html)
-* [Fix puntini bianchi](https://stackoverflow.com/questions/44169273/javafx-unwanted-white-corner-textarea) negli angoli della TextArea, usando il tema scuro
-* [StackOverflow GitHub latest version](https://stackoverflow.com/questions/34745526/java-get-latest-github-release)
-* [Richieste HTTP con java.net](https://www.baeldung.com/java-http-response-body-as-string)
-* [Using jlink to Build Java Runtimes for non-Modular Applications](https://medium.com/azulsystems/using-jlink-to-build-java-runtimes-for-non-modular-applications-9568c5e70ef4)
-* [Download asset Flutter](https://pub.dev/packages/download_assets)
-* [LongPress Widget](https://stackoverflow.com/questions/52128572/flutter-execute-method-so-long-the-button-pressed)
-* [Flutter CI/CD using GitHub Actions](https://blog.logrocket.com/flutter-ci-cd-using-github-actions/)
+## Riferimenti
+<details>
+  <summary>Link e risorse a cui ho fatto riferimento durante lo sviluppo dell'app.</summary>
+
+  * [Ciclo di vita](https://docs.oracle.com/javase/8/javafx/api/javafx/application/Application.html) della classe Application
+  * Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
+  * Lavorare coi moduli Java: [Java 9 Modules in Eclipse](https://blogs.oracle.com/java/post/how-to-develop-modules-with-eclipse-ide)
+  * Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
+  * JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
+  * Soluzione per eccezione SSL handshake: [SSLHandshakeException: Received fatal alert: handshake_failure](https://stackoverflow.com/questions/54770538/received-fatal-alert-handshake-failure-in-jlinked-jre)
+  * Gestione dei moduli (ad esempio Gson): [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}")](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
+  * [JavaFX CSS Docs](https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html)
+  * [Fix puntini bianchi](https://stackoverflow.com/questions/44169273/javafx-unwanted-white-corner-textarea) negli angoli della TextArea, usando il tema scuro
+  * [StackOverflow GitHub latest version](https://stackoverflow.com/questions/34745526/java-get-latest-github-release)
+  * [Richieste HTTP con java.net](https://www.baeldung.com/java-http-response-body-as-string)
+  * [Using jlink to Build Java Runtimes for non-Modular Applications](https://medium.com/azulsystems/using-jlink-to-build-java-runtimes-for-non-modular-applications-9568c5e70ef4)
+  * [Download asset Flutter](https://pub.dev/packages/download_assets)
+  * [LongPress Widget](https://stackoverflow.com/questions/52128572/flutter-execute-method-so-long-the-button-pressed)
+  * [Flutter CI/CD using GitHub Actions](https://blog.logrocket.com/flutter-ci-cd-using-github-actions/)
+
+</details>
+
   
 
 <div align="center">
