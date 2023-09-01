@@ -125,9 +125,9 @@ Aggiunta domande o feature al progetto:
 2. Clonare la repository in locale.
 3. (Opzionale) Creare un nuovo branch.
 4. Aggiungere le modifiche:
-  - Per aggiungere nuove domande: modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi.<br/>
-    **NB**: in caso non si sappia sotto quale argomento inserire una domanda, farlo presente in un commento nella pull request.<br/>
-  - Per aggiungere delle feature: basta implementarle e integrarle col resto dell'applicazione.
+    - Per aggiungere nuove domande: modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi.<br/>
+      **NB**: in caso non si sappia sotto quale argomento inserire una domanda, farlo presente in un commento nella pull request.<br/>
+    - Per aggiungere delle feature: basta implementarle e integrarle col resto dell'applicazione.
 5. Fare commit e push.
 6. Creare una **pull request** aggiungendo informazioni se necessario.
 7. Ammirare il proprio nome inserito in questa meravigliosa lista che viene aggiornata automaticamente.<br/>
@@ -287,8 +287,8 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 ### Flutter Setup
 1. Scaricare l'SDK Flutter da [docs.flutter.dev](https://docs.flutter.dev/get-started/install).
 2. Assicurarsi di aver inserito la directory `bin/` alla variabile PATH.
-  - Per controllare se l'installazione è andata a buon fine, aprire un terminale e lanciare il comando `flutter doctor`.<br/>
-    Questo comando indica se ci sono problemi con l'SDK e fornisce informazioni sulle dipendenze necessarie per il suo funzionamento.
+    - Per controllare se l'installazione è andata a buon fine, aprire un terminale e lanciare il comando `flutter doctor`.<br/>
+      Questo comando indica se ci sono problemi con l'SDK e fornisce informazioni sulle dipendenze necessarie per il suo funzionamento.
 3. TO-DO
 
 ### Build e Run del Progetto
@@ -299,21 +299,21 @@ TO-DO
 <details>
   <summary>Link e risorse a cui ho fatto riferimento durante lo sviluppo dell'app.</summary>
 
-  * [Ciclo di vita](https://docs.oracle.com/javase/8/javafx/api/javafx/application/Application.html) della classe Application
-  * Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
-  * Lavorare coi moduli Java: [Java 9 Modules in Eclipse](https://blogs.oracle.com/java/post/how-to-develop-modules-with-eclipse-ide)
-  * Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
-  * JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
-  * Soluzione per eccezione SSL handshake: [SSLHandshakeException: Received fatal alert: handshake_failure](https://stackoverflow.com/questions/54770538/received-fatal-alert-handshake-failure-in-jlinked-jre)
-  * Gestione dei moduli (ad esempio Gson): [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}")](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
-  * [JavaFX CSS Docs](https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html)
-  * [Fix puntini bianchi](https://stackoverflow.com/questions/44169273/javafx-unwanted-white-corner-textarea) negli angoli della TextArea, usando il tema scuro
-  * [StackOverflow GitHub latest version](https://stackoverflow.com/questions/34745526/java-get-latest-github-release)
-  * [Richieste HTTP con java.net](https://www.baeldung.com/java-http-response-body-as-string)
-  * [Using jlink to Build Java Runtimes for non-Modular Applications](https://medium.com/azulsystems/using-jlink-to-build-java-runtimes-for-non-modular-applications-9568c5e70ef4)
-  * [Download asset Flutter](https://pub.dev/packages/download_assets)
-  * [LongPress Widget](https://stackoverflow.com/questions/52128572/flutter-execute-method-so-long-the-button-pressed)
-  * [Flutter CI/CD using GitHub Actions](https://blog.logrocket.com/flutter-ci-cd-using-github-actions/)
+  - [Ciclo di vita](https://docs.oracle.com/javase/8/javafx/api/javafx/application/Application.html) della classe Application
+  - Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
+  - Lavorare coi moduli Java: [Java 9 Modules in Eclipse](https://blogs.oracle.com/java/post/how-to-develop-modules-with-eclipse-ide)
+  - Creare jre custom con JavaFX (jlink): [Custom jre with JavaFX 11](https://stackoverflow.com/questions/52966195/custom-jre-with-javafx-11) e [How to use jlink to create a Java image with javafx modules](https://github.com/javafxports/openjdk-jfx/issues/238)
+  - JavaFX ottenere HostService senza riferimento alla classe Application (Main extends Application): [Open a link in a browser without reference to Application](https://stackoverflow.com/questions/33094981/javafx-8-open-a-link-in-a-browser-without-reference-to-application)
+  - Soluzione per eccezione SSL handshake: [SSLHandshakeException: Received fatal alert: handshake_failure](https://stackoverflow.com/questions/54770538/received-fatal-alert-handshake-failure-in-jlinked-jre)
+  - Gestione dei moduli (ad esempio Gson): [InaccessibleObjectException ("Unable to make {member} accessible: module {A} does not 'opens {package}' to {B}")](https://stackoverflow.com/questions/41265266/how-to-solve-inaccessibleobjectexception-unable-to-make-member-accessible-m)
+  - [JavaFX CSS Docs](https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html)
+  - [Fix puntini bianchi](https://stackoverflow.com/questions/44169273/javafx-unwanted-white-corner-textarea) negli angoli della TextArea, usando il tema scuro
+  - [StackOverflow GitHub latest version](https://stackoverflow.com/questions/34745526/java-get-latest-github-release)
+  - [Richieste HTTP con java.net](https://www.baeldung.com/java-http-response-body-as-string)
+  - [Using jlink to Build Java Runtimes for non-Modular Applications](https://medium.com/azulsystems/using-jlink-to-build-java-runtimes-for-non-modular-applications-9568c5e70ef4)
+  - [Download asset Flutter](https://pub.dev/packages/download_assets)
+  - [LongPress Widget](https://stackoverflow.com/questions/52128572/flutter-execute-method-so-long-the-button-pressed)
+  - [Flutter CI/CD using GitHub Actions](https://blog.logrocket.com/flutter-ci-cd-using-github-actions/)
 
 </details>
 
