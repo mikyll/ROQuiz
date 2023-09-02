@@ -21,7 +21,6 @@ class ViewQuestionsState extends State<ViewQuestions> {
 
   bool multipleTopics = false;
 
-  //List<Question> questionsFullList = [];
   List<Question> displayedQuestions = [];
   int qNum = 0;
   int offset = 0;
@@ -95,7 +94,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
             curve: Curves.easeOutSine,
             duration: const Duration(milliseconds: 250),
             child: Text(
-              widget.title,
+              widget.questions.length == displayedQuestions.length
+                  ? widget.title
+                  : "Trovate: ${displayedQuestions.length}",
               maxLines: 1,
             ),
           ),
@@ -115,24 +116,20 @@ class ViewQuestionsState extends State<ViewQuestions> {
               width: 300,
               textController: _textController,
               onOpen: () {
-                //print("open");
                 setState(() => _searchBarOpen = true);
               },
               onSearch: (stringToSearch) {
-                //print("search");
                 _search(stringToSearch);
-                if (displayedQuestions.isEmpty) {
+                /*if (displayedQuestions.isEmpty) {
                   _clearSearch();
                   _textController.clear();
-                }
+                }*/
               },
               onClear: () {
-                //print("clear");
                 _clearSearch();
                 _textController.clear();
               },
               onClose: () {
-                //print("close");
                 setState(() => _searchBarOpen = false);
               },
             ),
