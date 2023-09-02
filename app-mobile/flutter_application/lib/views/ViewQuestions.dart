@@ -169,9 +169,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
                               alignmentQuestion: Alignment.centerLeft,
                               answers: displayedQuestions[index].answers,
                               highlightAnswer: true,
-                              onTapAnswer: null,
                               correctAnswer:
                                   displayedQuestions[index].correctAnswer,
+                              onTapAnswer: null,
                               backgroundQuizColor: Colors.cyan.withOpacity(0.1),
                               defaultAnswerColor:
                                   Colors.indigo.withOpacity(0.2),
@@ -192,10 +192,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
                           alignmentQuestion: Alignment.centerLeft,
                           answers: displayedQuestions[index].answers,
                           highlightAnswer: true,
-                          userAnswer: displayedQuestions[index].correctAnswer,
-                          onTapAnswer: (_) => null,
                           correctAnswer:
                               displayedQuestions[index].correctAnswer,
+                          onTapAnswer: null,
                           backgroundQuizColor: Colors.cyan.withOpacity(0.1),
                           defaultAnswerColor: Colors.indigo.withOpacity(0.2),
                           selectedAnswerColor: Colors.indigo.withOpacity(0.5),
