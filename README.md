@@ -290,7 +290,7 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 3. Aprire un terminale e lanciare `flutter doctor`.<br/>
    Questo comando indica se ci sono problemi con l'SDK e fornisce informazioni sulle dipendenze necessarie per il suo funzionamento.
 4. TO-DO
-5. Lanciare il comando `flutter run` per avviare l'applicazione. Flutter chiederà di selezionare il dispositivo (es. Chrome, Android). Si può specificare direttamente il device id con l'opzione `-d`, ad esempio:
+5. Lanciare il comando `flutter run` per avviare l'applicazione. Flutter chiederà di selezionare il dispositivo (es. Chrome, Android). Si può specificare direttamente il device id con l'opzione `-d`, ad esempio per la versione web con Microsoft Edge:
    ```
    flutter run -d edge
    ```
