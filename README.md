@@ -29,13 +29,13 @@
 ### Mobile
 <table style="border: none">
   <tr align="center">
-    <td><img width=50% src="./gfx/[GIF] MobileDemo.gif" alt="DemoMobileGIF"/></td>
-    <td><img width=50% src="./gfx/[GIF] MobileQuestionList.gif" alt="QuestionListGIF"/></td>
-    <td><img width=50% src="./gfx/[GIF] MobileSettings.gif" alt="SettingsMobileGIF"/></td>
+    <td><img width=50% src="./gfx/[GIF] Mobile_Quiz.gif" alt="DemoMobileGIF"/></td>
+    <td><img width=50% src="./gfx/[GIF] Mobile_TopicsQuestionList.gif" alt="TopicsAndQuestionListGIF"/></td>
+    <td><img width=50% src="./gfx/[GIF] Mobile_Settings.gif" alt="SettingsMobileGIF"/></td>
   </tr>
   <tr align="center">
-    <td>Demo Quiz</td>
-    <td>Lista Domande</td>
+    <td>Demo quiz</td>
+    <td>Argomenti e lista domande</td>
     <td>Impostazioni</td>
   </tr>
 </table>
@@ -43,12 +43,12 @@
 ### Desktop
 <table style="border: none">
   <tr align="center">
-    <td><img src="./gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
-    <td><img src="./gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
+    <td><img src="./gfx/[GIF] Desktop_Timeout.gif" alt="TimeoutGIF"/></td>
+    <td><img src="./gfx/[GIF] Desktop_Search.gif" alt="SearchGIF"/></td>
   </tr>
   <tr align="center">
-    <td>Terminazione quiz</td>
     <td>Tempo scaduto</td>
+    <td>Ricerca domanda</td>
   </tr>
 </table>
 
@@ -59,8 +59,8 @@
   
   <table style="border: none">
     <tr align="center">
-      <td><img src="./gfx/[GIF] DesktopEndQuiz.gif" alt="EndQuizGIF"/></td>
-      <td><img src="./gfx/[GIF] DesktopTimeout.gif" alt="TimeoutGIF"/></td>
+      <td><img src="./gfx/[GIF] DesktopOld_EndQuiz.gif" alt="EndQuizGIF"/></td>
+      <td><img src="./gfx/[GIF] DesktopOld_Timeout.gif" alt="TimeoutGIF"/></td>
     </tr>
     <tr align="center">
       <td>Terminazione quiz</td>
@@ -284,16 +284,29 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 
 ## Setup Progetto
 
-### Flutter Setup
-1. Scaricare l'SDK Flutter da [docs.flutter.dev](https://docs.flutter.dev/get-started/install).
-2. Assicurarsi di aver inserito la directory `bin/` alla variabile PATH.
-    - Per controllare se l'installazione è andata a buon fine, aprire un terminale e lanciare il comando `flutter doctor`.<br/>
-      Questo comando indica se ci sono problemi con l'SDK e fornisce informazioni sulle dipendenze necessarie per il suo funzionamento.
-3. TO-DO
+### Flutter Setup e Run del Progetto
+1. Scaricare l'SDK Flutter dal sito web [docs.flutter.dev](https://docs.flutter.dev/get-started/install).
+2. Assicurarsi di aver inserito la directory `bin/` alla variabile d'ambiente `PATH`.
+3. Aprire un terminale e lanciare `flutter doctor`.<br/>
+   Questo comando indica se ci sono problemi con l'SDK e fornisce informazioni sulle dipendenze necessarie per il suo funzionamento.
+4. TO-DO
+5. Lanciare il comando `flutter run` per avviare l'applicazione. Flutter chiederà di selezionare il dispositivo (es. Chrome, Android). Si può specificare direttamente il device id con l'opzione `-d`, ad esempio:
+   ```
+   flutter run -d edge
+   ```
 
-### Build e Run del Progetto
-Il progetto dell'applicazione flutter si trova nella directory [`app-mobile/flutter_application`](./app-mobile/flutter_application)
-TO-DO
+### Build
+Il progetto dell'applicazione flutter si trova nella directory [`app-mobile/flutter_application`](./app-mobile/flutter_application).
+
+#### Android
+```
+flutter build apk --split-per-abi
+```
+
+#### Windows
+```
+flutter build windows
+```
 
 ## Riferimenti
 <details>
