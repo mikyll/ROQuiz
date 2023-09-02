@@ -251,12 +251,12 @@ class _ViewQuizState extends State<ViewQuiz> {
                       child: QuestionWidget(
                         questionText: _currentQuestion,
                         answers: _currentAnswers,
-                        isOver: _isOver,
+                        highlightAnswer: _isOver,
                         userAnswer: _userAnswers[_qIndex],
                         correctAnswer: widget.questions[_qIndex].correctAnswer,
                         onTapAnswer: !_isOver
                             ? (int index) => _setUserAnswer(index)
-                            : (_) => null,
+                            : null,
                         backgroundQuizColor: Colors.cyan.withOpacity(0.1),
                         defaultAnswerColor: Colors.indigo.withOpacity(0.2),
                         selectedAnswerColor: Colors.indigo.withOpacity(0.5),

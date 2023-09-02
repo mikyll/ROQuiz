@@ -6,44 +6,47 @@ import 'package:roquiz/model/Themes.dart';
 class QuestionWidget extends StatelessWidget {
   const QuestionWidget({
     Key? key,
-    this.questionNumber,
     required this.questionText,
-    this.alignmentQuestion = Alignment.center,
     required this.answers,
-    required this.isOver,
-    required this.userAnswer,
+    // Correct answer
     required this.correctAnswer,
-    required this.onTapAnswer, // funzione vuota di default / null?
-    required this.backgroundQuizColor,
     required this.defaultAnswerColor,
+    // Callback that updates the user selected answer
+    required this.onTapAnswer,
+    // Question index
+    this.questionNumber,
+    // User selected answer for that question (can be NONE)
+    this.userAnswer = Answer.NONE,
+    this.highlightAnswer = false,
+    this.alignmentQuestion = Alignment.center,
     this.selectedAnswerColor = Colors.transparent,
     this.correctAnswerColor = Colors.transparent,
     this.correctNotSelectedAnswerColor = Colors.transparent,
     this.wrongAnswerColor = Colors.transparent,
+    this.backgroundQuizColor,
   }) : super(key: key);
 
   final String questionText;
   final List<String> answers;
 
-  final int? questionNumber; // Index of the current question
+  final int? questionNumber;
   final Alignment alignmentQuestion;
-  final bool isOver;
-  final Answer userAnswer; // User answer for that question (can be NONE)
-  final Answer correctAnswer; // Correct answer
-  final Function(int)
-      onTapAnswer; // Callback which updates the user selected answer
+  final bool highlightAnswer;
+  final Answer userAnswer;
+  final Answer correctAnswer;
+  final Function(int)? onTapAnswer;
 
-  final Color backgroundQuizColor;
   final Color defaultAnswerColor;
   final Color selectedAnswerColor;
   final Color correctAnswerColor;
   final Color correctNotSelectedAnswerColor;
   final Color wrongAnswerColor;
+  final Color? backgroundQuizColor;
 
   // Returns the color of the answer identified by #index
-  Color _getColor(int index) {
+  Color? _getColor(int index) {
     // Quiz terminated
-    if (!isOver) {
+    if (!highlightAnswer) {
       // User selected this answer
       if (userAnswer == Answer.values[index]) {
         return selectedAnswerColor;
@@ -118,10 +121,6 @@ class QuestionWidget extends StatelessWidget {
                       TextSpan(text: questionText),
                     ]),
               ),
-              /*Text(
-                  (questionNumber != null ? "Q$questionNumber) " : "") +
-                      questionText,
-                  style: const TextStyle(fontSize: 16)),*/
             ),
           ),
           // ANSWERS
@@ -131,7 +130,7 @@ class QuestionWidget extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 5.0),
               child: InkWell(
                 enableFeedback: true,
-                onTap: () => onTapAnswer(index),
+                onTap: onTapAnswer != null ? () => onTapAnswer!(index) : null,
                 child: Container(
                   alignment: Alignment.centerLeft,
                   width: double.infinity,

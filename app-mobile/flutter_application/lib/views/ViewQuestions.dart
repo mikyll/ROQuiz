@@ -120,10 +120,6 @@ class ViewQuestionsState extends State<ViewQuestions> {
               },
               onSearch: (stringToSearch) {
                 _search(stringToSearch);
-                /*if (displayedQuestions.isEmpty) {
-                  _clearSearch();
-                  _textController.clear();
-                }*/
               },
               onClear: () {
                 _clearSearch();
@@ -172,10 +168,8 @@ class ViewQuestionsState extends State<ViewQuestions> {
                               questionText: displayedQuestions[index].question,
                               alignmentQuestion: Alignment.centerLeft,
                               answers: displayedQuestions[index].answers,
-                              isOver: true,
-                              userAnswer:
-                                  displayedQuestions[index].correctAnswer,
-                              onTapAnswer: (_) => null,
+                              highlightAnswer: true,
+                              onTapAnswer: null,
                               correctAnswer:
                                   displayedQuestions[index].correctAnswer,
                               backgroundQuizColor: Colors.cyan.withOpacity(0.1),
@@ -197,7 +191,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                           questionText: displayedQuestions[index].question,
                           alignmentQuestion: Alignment.centerLeft,
                           answers: displayedQuestions[index].answers,
-                          isOver: true,
+                          highlightAnswer: true,
                           userAnswer: displayedQuestions[index].correctAnswer,
                           onTapAnswer: (_) => null,
                           correctAnswer:
