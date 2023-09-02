@@ -52,8 +52,9 @@ jobs:
           sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
 
           # Update date
-          echo "$(stat -c '%y' $file_domande | cut -f1 -d' ')"
-          #sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
+          date=$(curl -s "https://api.github.com/repos/mikyll/ROQuiz/commits?path=Domande.txt&page=1&per_page=1" | grep -m 1 \"date\" | xargs | cut -f2 -d' ' | cut -f1 -d'T')
+          echo $date
+          #sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$file_readme"
 
           # Check if there are changes
           if [[ -n $(git status -s) ]]
