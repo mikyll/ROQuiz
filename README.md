@@ -186,85 +186,94 @@ Proposta feature:
 </table>
 <!-- readme: contributors -end -->
 
-## Roadmap
+## Funzionalità
 <details>
   <summary>Features da aggiungere e sviluppi futuri.</summary>
   <br/>
   
   <table>
     <tr align="center">
-      <td><b>Obbiettivo</b></td>
-      <td width="5%">🖥️</td>
-      <td width="5%">📱</td>
+      <td><b>Feature</b></td>
+      <td width="15%">🖥️|📱</td>
     </tr>
     <tr align="center">
       <td>Visualizzazione lista domande in-app</td>
-      <td>✔️</td>
       <td>✔️</td>
     </tr>
     <tr align="center">
       <td>Possibilità di modificare il file domande</td>
       <td>✔️</td>
-      <td>❌</td>
     </tr>
     <tr align="center">
       <td>Scelta degli argomenti</td>
       <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Visualizzazione lista domande (totale, pool, per argomento)</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Strumento di ricerca delle domande per keystring</td>
       <td>✔️</td>
     </tr>
     <tr align="center">
       <td>Impostazioni persistenti</td>
       <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Impostazione: tema scuro</td>
       <td>✔️</td>
     </tr>
     <tr align="center">
-      <td>Dark theme</td>
-      <td>✔️</td>
-      <td>✔️</td>
-    </tr>
-    <tr align="center">
-      <td>Verifica aggiornamento domande + download</td>
-      <td>✔️</td>
-      <td>❌</td>
-    </tr>
-    <tr align="center">
-      <td>Verifica aggiornamento app</td>
-      <td>✔️</td>
-      <td>❌</td>
-    </tr>
-    <tr align="center">
-      <td>Deploy su sistemi Android</td>
-      <td> - </td>
+      <td>Impostazione: toggle controllo aggiornamenti app</td>
       <td>✔️</td>
     </tr>
     <tr align="center">
-      <td>Deploy su sistemi Apple</td>
+      <td>Impostazione: toggle controllo nuove domande</td>
       <td>✔️</td>
-      <td>❌</td>
     </tr>
     <tr align="center">
-      <td>Test domande duplicate</td>
-      <td>❌</td>
-      <td>❌</td>
+      <td>Impostazione: caricamento file domande esterno</td>
+      <td>✔️</td>
     </tr>
     <tr align="center">
-      <td>Strumento per inserire nuove domande</td>
-      <td>❌</td>
-      <td>❌</td>
+      <td>Impostazione: modifica del numero di domande del quiz</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Impostazione: modifica del timer del quiz</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Impostazione: toggle mescolamento delle risposte</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Impostazione: toggle alert di conferma</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Impostazione: toggle tema scuro</td>
+      <td>✔️</td>
     </tr>
     <tr align="center">
       <td>Template per pubblicare una issue</td>
       <td>✔️</td>
-      <td>✔️</td>
     </tr>
     <tr align="center">
-      <td>Strumento di ricerca delle domande nella lista per argomento</td>
+      <td>Controllo domande duplicate</td>
       <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Impostazione: modifica del file domande</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Unit/Function test</td>
       <td>❌</td>
     </tr>
     <tr align="center">
       <td>Pipeline CI/CD per build e deploy</td>
-      <td>❌</td>
       <td>❌</td>
     </tr>
   </table>
@@ -310,7 +319,7 @@ flutter build windows
 
 ## Riferimenti
 <details>
-  <summary>Link e risorse a cui ho fatto riferimento durante lo sviluppo dell'app.</summary>
+  <summary>Link e risorse a cui ho fatto riferimento durante lo sviluppo dell'app.</summary><br/>
 
   - [Ciclo di vita](https://docs.oracle.com/javase/8/javafx/api/javafx/application/Application.html) della classe Application
   - Guida a classe Timeline usata per realizzare il countdown: [Timers in JavaFX and ReactFX](https://tomasmikula.github.io/blog/2014/06/04/timers-in-javafx-and-reactfx.html)
