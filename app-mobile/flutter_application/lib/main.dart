@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:roquiz/model/PlatformType.dart';
 import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/views/ViewMenu.dart';
 
@@ -11,7 +12,9 @@ import 'package:desktop_window/desktop_window.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  DesktopWindow.setWindowSize(const Size(800, 800));
+  if (getPlatformType() == PlatformType.DESKTOP) {
+    DesktopWindow.setWindowSize(const Size(800, 800));
+  }
 
   SharedPreferences.getInstance().then((prefs) {
     // Read from the SharedPreferences
