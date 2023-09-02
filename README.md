@@ -291,31 +291,25 @@ versione Java: JavaSE-11 (jdk-11.0.11)<br/>
 versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 -->
 
-## Setup Progetto
+## Build
 
-### Flutter Setup e Run del Progetto
+### Setup Flutter e Run del Progetto
 1. Scaricare l'SDK Flutter dal sito web [docs.flutter.dev](https://docs.flutter.dev/get-started/install).
 2. Assicurarsi di aver inserito la directory `bin/` alla variabile d'ambiente `PATH`.
 3. Aprire un terminale e lanciare `flutter doctor`.<br/>
    Questo comando indica se ci sono problemi con l'SDK e fornisce informazioni sulle dipendenze necessarie per il suo funzionamento.
-4. TO-DO
-5. Lanciare il comando `flutter run` per avviare l'applicazione. Flutter chiederà di selezionare il dispositivo (es. Chrome, Android). Si può specificare direttamente il device id con l'opzione `-d`, ad esempio per la versione web con Microsoft Edge:
+4. Lanciare il comando `flutter run` per avviare l'applicazione. Flutter chiederà di selezionare il dispositivo (es. Chrome, Android). Si può specificare direttamente il device id con l'opzione `-d`, ad esempio per la versione web con Microsoft Edge:
    ```
    flutter run -d edge
    ```
 
-### Build
+### Compilazione Release
 Il progetto dell'applicazione flutter si trova nella directory [`app-mobile/flutter_application`](./app-mobile/flutter_application).
-
-#### Android
-```
-flutter build apk --split-per-abi
-```
-
-#### Windows
-```
-flutter build windows
-```
+Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato:
+- Android: `flutter build apk --split-per-abi`;
+- Windows: `flutter build windows`;
+- Linux: `flutter build linux`;
+- Web: `flutter build chrome`, `flutter build edge`.
 
 ## Riferimenti
 <details>
@@ -338,8 +332,6 @@ flutter build windows
   - [Flutter CI/CD using GitHub Actions](https://blog.logrocket.com/flutter-ci-cd-using-github-actions/)
 
 </details>
-
-  
 
 <div align="center">
   
