@@ -27,7 +27,13 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
+      
+      - name: Get Flutter version
+        id: get-flutter-version
+        uses: zgosalvez/github-actions-get-flutter-version-env@v2
+      
       - run: cd ${{ github.workspace }}
+      
       - name: Aggiornamento numero domande
         run: |
           file_questions="Domande.txt"
@@ -46,18 +52,25 @@ jobs:
 
           echo "Numero domande: $questions"
           
-          # Update README
-          # Update question shield
+          # Update README: question shield
           sed -i "s/message=[0-9]*/message=$questions/" "$file_readme"
           
-          # Update question number
+          # Update README: question number
           sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
-
+      
+      - name: Aggiornamento data ultimo aggiornamento
+        run: |
           # Update date
           date=$(curl -s "https://api.github.com/repos/mikyll/ROQuiz/commits?path=${file_questions}&page=1&per_page=1" | grep -m 1 \"date\" | xargs | cut -f2 -d' ' | cut -f1 -d'T')
           echo "$file_questions ultima modifica: $date"
           sed -i "s|<span id=\"ultima_modifica\">.*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$file_readme"
 
+      - name: Test Flutter version
+        run: |
+          echo ${{ steps.get-flutter-version.outputs.version }}
+      
+      - name: Commit e Push modifiche
+        run: |
           # Check if there are changes
           if [[ -n $(git status -s) ]]
           then
@@ -71,4 +84,3 @@ jobs:
           else
             echo "Nessuna modifica necessaria."
           fi
-  
