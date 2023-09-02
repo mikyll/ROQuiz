@@ -62,7 +62,9 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   void _setUserAnswer(int answer) {
     setState(() {
-      _userAnswers[_qIndex] = Answer.values[answer];
+      _userAnswers[_qIndex] = _userAnswers[_qIndex] != Answer.values[answer]
+          ? Answer.values[answer]
+          : Answer.NONE;
       if (Answer.values[answer] == quiz.questions[_qIndex].correctAnswer) {}
     });
   }
