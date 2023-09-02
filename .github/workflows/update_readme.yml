@@ -30,12 +30,6 @@ jobs:
           
       - run: cd ${{ github.workspace }}
       
-      - name: Get Flutter version
-        id: get-flutter-version
-        uses: zgosalvez/github-actions-get-flutter-version-env@v2
-        with:
-          pubspec-file-path: ./app-mobile/flutter_application/pubspec.yaml
-      
       - name: Aggiornamento numero domande
         run: |
           file_questions="Domande.txt"
@@ -66,10 +60,6 @@ jobs:
           date=$(curl -s "https://api.github.com/repos/mikyll/ROQuiz/commits?path=${file_questions}&page=1&per_page=1" | grep -m 1 \"date\" | xargs | cut -f2 -d' ' | cut -f1 -d'T')
           echo "$file_questions ultima modifica: $date"
           sed -i "s|<span id=\"ultima_modifica\">.*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$file_readme"
-
-      - name: Test Flutter version
-        run: |
-          echo ${{ steps.get-flutter-version.outputs.version }}
       
       - name: Commit e Push modifiche
         run: |
