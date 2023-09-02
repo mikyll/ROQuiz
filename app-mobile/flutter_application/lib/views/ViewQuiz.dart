@@ -232,7 +232,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                       ),
                       const Spacer(),
                       AutoSizeText(
-                        "Timer: ${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0 ${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt().toString()}",
+                        "Timer: ${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt()}",
                         maxLines: 1,
                         style: const TextStyle(
                           fontSize: 24,
