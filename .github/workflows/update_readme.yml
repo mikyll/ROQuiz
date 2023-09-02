@@ -45,11 +45,16 @@ jobs:
           done < "$file_domande"
           
           # Update README
-          # Update
-          sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
-          # Update shield
+          # Update question shield
           sed -i "s/message=[0-9]*/message=$questions/" "$file_readme"
           
+          # Update question number
+          sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
+
+          # Update date
+          echo "$(stat -c '%y' $file_domande | cut -f1 -d' ')"
+          #sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
+
           # Check if there are changes
           if [[ -n $(git status -s) ]]
           then
