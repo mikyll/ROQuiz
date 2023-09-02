@@ -24,8 +24,8 @@ class ViewSettings extends StatefulWidget {
 
   final QuestionRepository qRepo;
   final Settings settings;
-  final Function(bool? qCheck, int? qNum, int? timer, bool? shuffle,
-      bool? confirmAlerts, bool? dTheme) saveSettings;
+  final Function(bool? appCheck, bool? qCheck, int? qNum, int? timer,
+      bool? shuffle, bool? confirmAlerts, bool? dTheme) saveSettings;
   final Function() reloadTopics;
 
   @override
@@ -59,7 +59,7 @@ class ViewSettingsState extends State<ViewSettings> {
         _timer = widget.qRepo.questions.length * 2;
         timer = _timer;
       }
-      widget.saveSettings(null, qNum, timer, null, null, null);
+      widget.saveSettings(null, null, qNum, timer, null, null, null);
 
       if (widget.qRepo.questions.length < 16) {
         Settings.DEFAULT_QUESTION_NUMBER = widget.qRepo.questions.length;
@@ -406,7 +406,7 @@ class ViewSettingsState extends State<ViewSettings> {
             "Conferma",
             "Annulla",
             () {
-              // Discard settings (confirm)
+              // Discard settings (Confirm)
               setState(() => _wentBack = true);
               themeProvider.toggleTheme(_darkTheme);
               Navigator.pop(context);
@@ -417,7 +417,9 @@ class ViewSettingsState extends State<ViewSettings> {
             },
           );
         } else {
+          setState(() => _wentBack = true);
           themeProvider.toggleTheme(_darkTheme);
+          Navigator.pop(context);
         }
 
         return true;
@@ -812,6 +814,7 @@ class ViewSettingsState extends State<ViewSettings> {
                     child: ElevatedButton(
                       onPressed: () {
                         widget.saveSettings(
+                            _checkAppUpdate,
                             _checkQuestionsUpdate,
                             _questionNumber,
                             _timer,

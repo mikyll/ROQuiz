@@ -71,11 +71,14 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void saveSettings(bool? qCheck, int? qNum, int? timer, bool? shuffle,
-      bool? confirmAlerts, bool? dTheme) {
+  void saveSettings(bool? appUpdateCheck, bool? questionsUpdateCheck, int? qNum,
+      int? timer, bool? shuffle, bool? confirmAlerts, bool? dTheme) {
     setState(() {
-      if (qCheck != null) {
-        _settings.checkQuestionsUpdate = qCheck;
+      if (appUpdateCheck != null) {
+        _settings.checkAppUpdate = appUpdateCheck;
+      }
+      if (questionsUpdateCheck != null) {
+        _settings.checkQuestionsUpdate = questionsUpdateCheck;
       }
       if (qNum != null) {
         _settings.questionNumber = qNum;
