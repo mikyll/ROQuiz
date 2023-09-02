@@ -1,4 +1,4 @@
-name: Readme
+name: Update Readme
 on:
   push:
     branches:
@@ -20,7 +20,7 @@ jobs:
           commit_message: "update README.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  Update-Questions:
+  Update-Readme:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
