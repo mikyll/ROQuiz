@@ -131,7 +131,7 @@ Aggiunta domande o feature al progetto:
 5. Fare commit e push.
 6. Creare una **pull request** aggiungendo informazioni se necessario.
 7. Ammirare il proprio nome inserito in questa meravigliosa lista che viene aggiornata automaticamente.<br/>
-   **NB**: per far sì che il nome del contributor venga registrato correttamente nella lista, è necessario che l'autore del commit e della pull request corrispondano (stesso account, stessa e-mail).
+   **NB**: per far sì che il nome del contributor venga registrato correttamente nella lista, controllare che al commit corrispondano username ed e-mail del proprio account GitHub.
 
 Proposta feature:
 1. Aprire un issue spiegando in cosa consiste la feature da aggiungere.
