@@ -49,11 +49,11 @@ jobs:
           sed -i "s/message=[0-9]*/message=$questions/" "$file_readme"
           
           # Update question number
-          sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
+          sed -i "s|<span id=\"domande\">*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
 
           # Update date
           date=$(curl -s "https://api.github.com/repos/mikyll/ROQuiz/commits?path=${file_questions}&page=1&per_page=1" | grep -m 1 \"date\" | xargs | cut -f2 -d' ' | cut -f1 -d'T')
-          sed -i "s|<span id=\"ultima_modifica\">[0-9]*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$file_readme"
+          sed -i "s|<span id=\"ultima_modifica\">*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$file_readme"
 
           # Check if there are changes
           if [[ -n $(git status -s) ]]
