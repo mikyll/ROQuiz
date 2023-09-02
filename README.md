@@ -43,12 +43,12 @@
 ### Desktop
 <table style="border: none">
   <tr align="center">
-    <td><img src="./gfx/[GIF] Desktop_Timeout.gif" alt="TimeoutGIF"/></td>
-    <td><img src="./gfx/[GIF] Desktop_Search.gif" alt="SearchGIF"/></td>
+    <td><img src="./gfx/[GIF] Desktop_QuizEnding.gif" alt="TimeoutGIF"/></td>
+    <td><img src="./gfx/[GIF] Desktop_PlayingAround.gif" alt="PlayingAroundGIF"/></td>
   </tr>
   <tr align="center">
     <td>Tempo scaduto</td>
-    <td>Ricerca domanda</td>
+    <td>Demo app</td>
   </tr>
 </table>
 
