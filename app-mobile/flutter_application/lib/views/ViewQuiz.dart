@@ -232,7 +232,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                       ),
                       const Spacer(),
                       AutoSizeText(
-                        "Timer: ${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0" + (_timerCounter % 60).toInt().toString() : (_timerCounter % 60).toInt().toString()}",
+                        "Timer: ${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0 ${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt().toString()}",
                         maxLines: 1,
                         style: const TextStyle(
                           fontSize: 24,
@@ -316,10 +316,12 @@ class _ViewQuizState extends State<ViewQuiz> {
                   IconButtonLongPressWidget(
                     lightPalette: MyThemes.lightIconButtonPalette,
                     darkPalette: MyThemes.darkIconButtonPalette,
-                    onUpdate: () {
-                      _previousQuestion();
-                      _loadQuestion();
-                    },
+                    onUpdate: _qIndex > 0
+                        ? () {
+                            _previousQuestion();
+                            _loadQuestion();
+                          }
+                        : null,
                     width: 50.0,
                     height: 50.0,
                     icon: Icons.arrow_back_ios_rounded,
@@ -330,10 +332,12 @@ class _ViewQuizState extends State<ViewQuiz> {
                   IconButtonLongPressWidget(
                     lightPalette: MyThemes.lightIconButtonPalette,
                     darkPalette: MyThemes.darkIconButtonPalette,
-                    onUpdate: () {
-                      _nextQuestion();
-                      _loadQuestion();
-                    },
+                    onUpdate: _qIndex < widget.settings.questionNumber - 1
+                        ? () {
+                            _nextQuestion();
+                            _loadQuestion();
+                          }
+                        : null,
                     width: 50.0,
                     height: 50.0,
                     icon: Icons.arrow_forward_ios_rounded,

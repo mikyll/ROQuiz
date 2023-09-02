@@ -4,6 +4,8 @@ class Settings {
   static const String APP_TITLE = "ROQuiz";
   static String VERSION_NUMBER = "";
   static const int DEFAULT_ANSWER_NUMBER = 5;
+  static const int MIN_QUESTIONS = 1;
+  static const int MIN_TIMER = 2;
 
   static const bool DEFAULT_CHECK_APP_UPDATE = true;
   static const bool DEFAULT_CHECK_QUESTIONS_UPDATE = true;

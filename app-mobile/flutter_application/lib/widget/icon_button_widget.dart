@@ -103,7 +103,7 @@ class IconButtonLongPressWidget extends StatefulWidget {
         super(key: key);
 
   final IconData icon;
-  final VoidCallback? onUpdate;
+  final Function? onUpdate;
 
   final IconButtonPalette? lightPalette;
   final IconButtonPalette? darkPalette;
@@ -161,9 +161,9 @@ class _IconButtonLongPressWidgetState extends State<IconButtonLongPressWidget> {
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
-        onTap: () => _stopHolding(),
-        onTapDown: (_) => _startHolding(),
-        onTapCancel: () => _stopHolding(),
+        onTap: widget.onUpdate != null ? () => _stopHolding() : null,
+        onTapDown: widget.onUpdate != null ? (_) => _startHolding() : null,
+        onTapCancel: widget.onUpdate != null ? () => _stopHolding() : null,
         highlightColor: themeProvider.isDarkMode
             ? widget.darkPalette!.highlightColor
             : widget.lightPalette!.highlightColor,

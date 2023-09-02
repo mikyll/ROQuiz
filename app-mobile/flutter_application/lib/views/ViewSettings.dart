@@ -98,7 +98,9 @@ class ViewSettingsState extends State<ViewSettings> {
           "Sì",
           "No",
           () {
+            // Link for latest release
             //_launchInBrowser("https://github.com/mikyll/ROQuiz/releases/latest");
+            // Link to download specific version
             _launchInBrowser(newVersionDownloadURL);
             Navigator.pop(context);
           },
@@ -272,7 +274,9 @@ class ViewSettingsState extends State<ViewSettings> {
 
   void _decreaseQuestionNumber(int v) {
     setState(() {
-      _questionNumber - v >= 1 ? _questionNumber -= v : _questionNumber = 1;
+      _questionNumber - v >= Settings.MIN_QUESTIONS
+          ? _questionNumber -= v
+          : _questionNumber = 1;
     });
   }
 
@@ -290,7 +294,7 @@ class ViewSettingsState extends State<ViewSettings> {
 
   void _decreaseTimer(int v) {
     setState(() {
-      _timer - v >= 2 ? _timer -= v : _timer = 2;
+      _timer - v >= Settings.MIN_TIMER ? _timer -= v : _timer = 2;
     });
   }
 
@@ -621,11 +625,13 @@ class ViewSettingsState extends State<ViewSettings> {
                         child: const Text("Numero domande per quiz: ",
                             style: TextStyle(fontSize: 20))),
                   ),
-                  // DECREASE QUESTION NUMBER
+                  // DECREASE POOL SIZE (QUESTION NUMBER)
                   IconButtonLongPressWidget(
-                    onUpdate: () {
-                      _decreaseQuestionNumber(1);
-                    },
+                    onUpdate: _questionNumber - 1 >= Settings.MIN_QUESTIONS
+                        ? () {
+                            _decreaseQuestionNumber(1);
+                          }
+                        : null,
                     lightPalette: MyThemes.lightIconButtonPalette,
                     darkPalette: MyThemes.darkIconButtonPalette,
                     width: 40.0,
@@ -643,11 +649,14 @@ class ViewSettingsState extends State<ViewSettings> {
                           style: const TextStyle(fontSize: 20)),
                     ),
                   ),
-                  // INCREASE POOL SIZE
+                  // INCREASE POOL SIZE (QUESTION NUMBER)
                   IconButtonLongPressWidget(
-                    onUpdate: () {
-                      _increaseQuestionNumber(1);
-                    },
+                    onUpdate:
+                        _questionNumber + 1 <= widget.qRepo.questions.length
+                            ? () {
+                                _increaseQuestionNumber(1);
+                              }
+                            : null,
                     lightPalette: MyThemes.lightIconButtonPalette,
                     darkPalette: MyThemes.darkIconButtonPalette,
                     width: 40.0,
@@ -673,9 +682,11 @@ class ViewSettingsState extends State<ViewSettings> {
                 ),
                 // DECREASE TIMER
                 IconButtonLongPressWidget(
-                  onUpdate: () {
-                    _decreaseTimer(1);
-                  },
+                  onUpdate: _timer - 1 >= Settings.MIN_TIMER
+                      ? () {
+                          _decreaseTimer(1);
+                        }
+                      : null,
                   lightPalette: MyThemes.lightIconButtonPalette,
                   darkPalette: MyThemes.darkIconButtonPalette,
                   width: 40.0,
@@ -695,9 +706,11 @@ class ViewSettingsState extends State<ViewSettings> {
                 ),
                 // INCREASE TIMER
                 IconButtonLongPressWidget(
-                  onUpdate: () {
-                    _increaseTimer(1);
-                  },
+                  onUpdate: _timer + 1 <= widget.qRepo.questions.length * 2
+                      ? () {
+                          _increaseTimer(1);
+                        }
+                      : null,
                   lightPalette: MyThemes.lightIconButtonPalette,
                   darkPalette: MyThemes.darkIconButtonPalette,
                   width: 40.0,
