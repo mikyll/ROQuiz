@@ -30,7 +30,7 @@ jobs:
       - run: cd ${{ github.workspace }}
       - name: Aggiornamento numero domande
         run: |
-          file_domande="Domande.txt"
+          file_questions="Domande.txt"
           file_readme="README.md"
           
           # Count questions
@@ -42,7 +42,7 @@ jobs:
             then
               questions=$(expr $questions + 1)
             fi
-          done < "$file_domande"
+          done < "$file_questions"
           
           # Update README
           # Update question shield
@@ -52,8 +52,8 @@ jobs:
           sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$file_readme"
 
           # Update date
-          date=$(curl -s "https://api.github.com/repos/mikyll/ROQuiz/commits?path=Domande.txt&page=1&per_page=1" | grep -m 1 \"date\" | xargs | cut -f2 -d' ' | cut -f1 -d'T')
-          sed -i "s|<span id=\"ultima_modifica\">[0-9]*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$file_readme"
+          date=$(curl -s "https://api.github.com/repos/mikyll/ROQuiz/commits?path=${file_questions}&page=1&per_page=1" | grep -m 1 \"date\" | xargs | cut -f2 -d' ' | cut -f1 -d'T')
+          sed -i "s|<span id=\"ultima_modifica\">[0-9]*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$date"
 
           # Check if there are changes
           if [[ -n $(git status -s) ]]
