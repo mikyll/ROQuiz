@@ -54,8 +54,8 @@ class AppUpdater {
       rethrow;
     }
 
-    print(
-        "New version: $newVersionPresent\nVersion tag name: $newVersion\nVersion download URL: $newVersionDownloadURL");
+    // Test
+    //print("New version: $newVersionPresent\nVersion tag name: $newVersion\nVersion download URL: $newVersionDownloadURL");
 
     return (newVersionPresent, newVersion, newVersionDownloadURL);
   }

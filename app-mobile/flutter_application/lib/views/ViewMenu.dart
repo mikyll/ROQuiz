@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/AppUpdater.dart';
 import 'package:roquiz/model/Question.dart';
@@ -15,7 +13,6 @@ import 'package:roquiz/widget/confirmation_alert.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:http/http.dart' as http;
 
 class ViewMenu extends StatefulWidget {
   const ViewMenu({Key? key}) : super(key: key);
