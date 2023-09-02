@@ -101,9 +101,12 @@ class TopicWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Checkbox(
-            value: checkBoxValue,
-            onChanged: onCheckBoxChanged,
+          Transform.scale(
+            scale: 1.2,
+            child: Checkbox(
+              value: checkBoxValue,
+              onChanged: onCheckBoxChanged,
+            ),
           ),
           Expanded(
             child: Text(
