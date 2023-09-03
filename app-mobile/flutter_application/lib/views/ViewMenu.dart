@@ -218,8 +218,7 @@ class ViewMenuState extends State<ViewMenu> {
                   const Text("ROQuiz",
                       style: TextStyle(
                         fontSize: 54,
-                        fontWeight:
-                            FontWeight.bold, /*fontStyle: FontStyle.italic*/
+                        fontWeight: FontWeight.bold,
                       )),
                   Text(
                     "v${Settings.VERSION_NUMBER}",

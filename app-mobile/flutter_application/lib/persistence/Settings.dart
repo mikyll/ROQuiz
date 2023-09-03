@@ -58,6 +58,5 @@ class Settings {
     prefs.setInt("timer", DEFAULT_TIMER);
     prefs.setBool("shuffleAnswers", DEFAULT_SHUFFLE_ANSWERS);
     prefs.setBool("confirmAlerts", DEFAULT_CONFIRM_ALERTS);
-    prefs.setBool("darkTheme", DEFAULT_DARK_THEME);
   }
 }

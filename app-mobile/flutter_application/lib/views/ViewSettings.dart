@@ -318,12 +318,6 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  void _resetTheme(ThemeProvider themeProvider) {
-    setState(() {
-      themeProvider.toggleTheme(Settings.DEFAULT_DARK_THEME);
-    });
-  }
-
   void _reset(ThemeProvider themeProvider) {
     _resetCheckAppUpdate();
     _resetCheckQuestionsUpdate();
@@ -331,7 +325,6 @@ class ViewSettingsState extends State<ViewSettings> {
     _resetTimer();
     _resetShuffleAnswers();
     _resetConfirmAlerts();
-    _resetTheme(themeProvider);
   }
 
   bool _isDefault(ThemeProvider themeProvider) {
@@ -340,8 +333,7 @@ class ViewSettingsState extends State<ViewSettings> {
         _questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
         _timer == Settings.DEFAULT_TIMER &&
         _shuffleAnswers == Settings.DEFAULT_SHUFFLE_ANSWERS &&
-        _confirmAlerts == Settings.DEFAULT_CONFIRM_ALERTS &&
-        themeProvider.isDarkMode == Settings.DEFAULT_DARK_THEME;
+        _confirmAlerts == Settings.DEFAULT_CONFIRM_ALERTS;
   }
 
   bool _isChanged(ThemeProvider themeProvider) {
@@ -774,20 +766,12 @@ class ViewSettingsState extends State<ViewSettings> {
               ),
               const SizedBox(height: 20),
               // SETTING: DARK THEME
-              Row(
+              const Row(
                 children: [
                   Expanded(
-                    child: InkWell(
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onDoubleTap: () {
-                          _resetTheme(themeProvider);
-                        },
-                        child: const Text("Tema scuro: ",
-                            style: TextStyle(fontSize: 20))),
+                    child: Text("Tema scuro: ", style: TextStyle(fontSize: 20)),
                   ),
-                  const SizedBox(
+                  SizedBox(
                     width: 120.0,
                     child: ChangeThemeButtonWidget(),
                   ),
