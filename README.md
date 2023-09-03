@@ -188,7 +188,7 @@ Proposta feature:
 
 ## Funzionalità
 <details>
-  <summary>Features da aggiungere e sviluppi futuri.</summary>
+  <summary>Features dell'app e sviluppi futuri.</summary>
   <br/>
   
   <table>
@@ -274,6 +274,10 @@ Proposta feature:
     </tr>
     <tr align="center">
       <td>Pipeline CI/CD per build e deploy</td>
+      <td>❌</td>
+    </tr>
+    <tr align="center">
+      <td>Versione web ospitata su GitHub pages</td>
       <td>❌</td>
     </tr>
   </table>
