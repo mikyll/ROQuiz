@@ -265,7 +265,7 @@ Proposta feature:
       <td>❌</td>
     </tr>
     <tr align="center">
-      <td>Impostazione: modifica del file domande</td>
+      <td>Impostazione: modifica del file domande ([reference](https://api.flutter.dev/flutter/widgets/EditableText-class.html))</td>
       <td>❌</td>
     </tr>
     <tr align="center">
