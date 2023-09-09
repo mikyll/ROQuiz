@@ -288,21 +288,17 @@ class ViewMenuState extends State<ViewMenu> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.format_list_numbered_rounded,
-                        ),
-                        Text(
-                            " Domande: ${_settings.questionNumber} su $_quizPool"),
-                        const SizedBox(width: 20),
-                        const Icon(
-                          Icons.timer_rounded,
-                        ),
-                        Text(" Tempo: ${_settings.timer} min"),
-                      ]),
+                  Wrap(direction: Axis.horizontal, children: [
+                    const Icon(
+                      Icons.format_list_numbered_rounded,
+                    ),
+                    Text(" Domande: ${_settings.questionNumber} su $_quizPool"),
+                    const SizedBox(width: 20),
+                    const Icon(
+                      Icons.timer_rounded,
+                    ),
+                    Text(" Tempo: ${_settings.timer} min"),
+                  ]),
                   _qRepoLoadingError.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.all(15.0),
