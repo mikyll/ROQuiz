@@ -34,32 +34,43 @@ class ViewMenuState extends State<ViewMenu> {
   void loadTopics() {
     setState(() {
       _selectedTopics.clear();
-      for (int i = 0; i < qRepo.topics.length; i++) {
-        _selectedTopics.add(true);
-        _quizPool += qRepo.qNumPerTopic[i];
+      _topicsPresent = qRepo.topicsPresent;
+      if (_topicsPresent) {
+        for (int i = 0; i < qRepo.topics.length; i++) {
+          _selectedTopics.add(true);
+          _quizPool += qRepo.qNumPerTopic[i];
+        }
+      } else {
+        _quizPool = qRepo.questions.length;
       }
     });
   }
 
   void resetTopics() {
-    setState(() {
-      for (int i = 0; i < _selectedTopics.length; i++) {
-        _selectedTopics[i] = true;
-      }
-      _quizPool = qRepo.questions.length;
-    });
+    if (_topicsPresent) {
+      setState(() {
+        for (int i = 0; i < _selectedTopics.length; i++) {
+          _selectedTopics[i] = true;
+        }
+        _quizPool = qRepo.questions.length;
+      });
+    }
   }
 
   List<Question> _getPoolFromSelected() {
     List<Question> res = [];
-    for (int i = 0, j = 0; i < _selectedTopics.length; i++) {
-      if (_selectedTopics[i]) {
-        for (int k = 0; k < qRepo.getQuestionNumPerTopic()[i]; j++, k++) {
-          res.add(qRepo.getQuestions()[j]);
+    if (_topicsPresent) {
+      for (int i = 0, j = 0; i < _selectedTopics.length; i++) {
+        if (_selectedTopics[i]) {
+          for (int k = 0; k < qRepo.getQuestionNumPerTopic()[i]; j++, k++) {
+            res.add(qRepo.getQuestions()[j]);
+          }
+        } else {
+          j += qRepo.getQuestionNumPerTopic()[i];
         }
-      } else {
-        j += qRepo.getQuestionNumPerTopic()[i];
       }
+    } else {
+      res = qRepo.questions;
     }
 
     return res;
