@@ -245,7 +245,7 @@ class ViewMenuState extends State<ViewMenu> {
                                 BlendMode.srcIn),
                           ),
                           const Text(
-                            "SNQuiz",
+                            Settings.APP_TITLE,
                             style: TextStyle(
                               fontSize: 54,
                               fontWeight: FontWeight.bold,
@@ -253,7 +253,7 @@ class ViewMenuState extends State<ViewMenu> {
                           ),
                         ])
                       : const Text(
-                          "ROQuiz",
+                          Settings.APP_TITLE,
                           style: TextStyle(
                             fontSize: 54,
                             fontWeight: FontWeight.bold,
