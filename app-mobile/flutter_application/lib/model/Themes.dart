@@ -33,18 +33,64 @@ class MyThemes {
       splashColor: const Color.fromARGB(255, 103, 124, 193));
 
   static final themeLight = ThemeData(
-    colorSchemeSeed: Colors.indigo[900],
+    colorSchemeSeed: Colors.indigo[400],
     brightness: Brightness.light,
+    appBarTheme: const AppBarTheme(
+        titleTextStyle: TextStyle(
+            color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.w500),
+        color: Color.fromARGB(255, 77, 86, 175),
+        shadowColor: Colors.black,
+        elevation: 3.0),
+    iconButtonTheme: IconButtonThemeData(
+      style: ButtonStyle(
+          iconColor: MaterialStateProperty.all<Color>(Colors.white)),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30.0),
-    )))),
+      style: ButtonStyle(
+        splashFactory: InkSplash.splashFactory,
+        overlayColor: MaterialStateProperty.all<Color>(
+            const Color.fromARGB(255, 91, 99, 181)),
+        foregroundColor: MaterialStateProperty.resolveWith(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return const Color.fromARGB(150, 255, 255, 255);
+            } else {
+              return const Color.fromARGB(255, 255, 255, 255);
+            }
+          },
+        ),
+        backgroundColor: MaterialStateProperty.resolveWith(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return const Color.fromARGB(150, 77, 86, 175);
+            } else {
+              return const Color.fromARGB(255, 77, 86, 175);
+            }
+          },
+        ),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        ),
+      ),
+    ),
     checkboxTheme: CheckboxThemeData(
-      checkColor: MaterialStateProperty.all<Color>(
-          const Color.fromARGB(255, 255, 255, 255)),
-      fillColor: MaterialStateProperty.all<Color>(
+        checkColor: MaterialStateProperty.all<Color>(
+            const Color.fromARGB(255, 255, 255, 255)),
+        fillColor: MaterialStateProperty.resolveWith(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.selected)) {
+              return const Color.fromARGB(255, 77, 86, 175);
+            } else {
+              return const Color.fromARGB(255, 227, 225, 236);
+            }
+          },
+        ),
+        side: BorderSide(
+          width: 1.3,
+          color: Colors.grey[700]!,
+        )),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.all<Color>(
           const Color.fromARGB(255, 77, 86, 175)),
     ),
   );
@@ -52,17 +98,55 @@ class MyThemes {
   static final themeDark = ThemeData(
     brightness: Brightness.dark,
     colorSchemeSeed: Colors.indigo[100],
+    appBarTheme: const AppBarTheme(
+        titleTextStyle: TextStyle(
+            color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.w500),
+        color: Color.fromARGB(255, 35, 35, 35),
+        shadowColor: Colors.black,
+        elevation: 3.0),
     elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30.0),
-    )))),
+      splashFactory: InkSplash.splashFactory,
+      overlayColor: MaterialStateProperty.all<Color>(
+          const Color.fromARGB(255, 91, 99, 181)),
+      foregroundColor: MaterialStateProperty.resolveWith(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.disabled)) {
+            return const Color.fromARGB(150, 12, 40, 120);
+          } else {
+            return const Color.fromARGB(255, 12, 40, 120);
+          }
+        },
+      ),
+      backgroundColor: MaterialStateProperty.resolveWith(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.disabled)) {
+            return const Color.fromARGB(50, 182, 196, 255);
+          } else {
+            return const Color.fromARGB(255, 182, 196, 255);
+          }
+        },
+      ),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      ),
+    )),
     checkboxTheme: CheckboxThemeData(
-        checkColor: MaterialStateProperty.all<Color>(
-            const Color.fromARGB(255, 12, 40, 120)),
-        fillColor: MaterialStateProperty.all<Color>(
-            const Color.fromARGB(255, 182, 196, 255))),
+      checkColor: MaterialStateProperty.all<Color>(
+          const Color.fromARGB(255, 12, 40, 120)),
+      fillColor: MaterialStateProperty.resolveWith(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.selected)) {
+            return const Color.fromARGB(255, 182, 196, 255);
+          } else {
+            return const Color.fromARGB(100, 182, 196, 255);
+          }
+        },
+      ),
+      side: const BorderSide(
+        color: Color.fromARGB(100, 182, 196, 255),
+      ),
+    ),
     switchTheme: SwitchThemeData(
       thumbColor: MaterialStateProperty.all<Color>(
           const Color.fromARGB(255, 182, 196, 255)),

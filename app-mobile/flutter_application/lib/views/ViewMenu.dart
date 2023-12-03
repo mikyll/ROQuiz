@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/model/AppUpdater.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Utils.dart';
@@ -20,6 +22,8 @@ class ViewMenu extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => ViewMenuState();
 }
+
+const bool USE_LOGO = false;
 
 class ViewMenuState extends State<ViewMenu> {
   final QuestionRepository qRepo = QuestionRepository();
@@ -47,14 +51,14 @@ class ViewMenuState extends State<ViewMenu> {
   }
 
   void resetTopics() {
-    if (_topicsPresent) {
-      setState(() {
+    setState(() {
+      if (_topicsPresent) {
         for (int i = 0; i < _selectedTopics.length; i++) {
           _selectedTopics[i] = true;
         }
         _quizPool = qRepo.questions.length;
-      });
-    }
+      }
+    });
   }
 
   List<Question> _getPoolFromSelected() {
@@ -217,6 +221,7 @@ class ViewMenuState extends State<ViewMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     return Scaffold(
       body: Center(
           child: Padding(
@@ -226,11 +231,34 @@ class ViewMenuState extends State<ViewMenu> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Spacer(flex: 2),
-                  const Text("ROQuiz",
-                      style: TextStyle(
-                        fontSize: 54,
-                        fontWeight: FontWeight.bold,
-                      )),
+                  USE_LOGO
+                      ? Column(children: [
+                          SvgPicture.asset(
+                            'assets/icons/logo.svg',
+                            alignment: Alignment.center,
+                            fit: BoxFit.fitWidth,
+                            width: 200,
+                            colorFilter: ColorFilter.mode(
+                                themeProvider.isDarkMode
+                                    ? Colors.indigo[300]!
+                                    : Colors.indigo[600]!,
+                                BlendMode.srcIn),
+                          ),
+                          const Text(
+                            "SNQuiz",
+                            style: TextStyle(
+                              fontSize: 54,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ])
+                      : const Text(
+                          "ROQuiz",
+                          style: TextStyle(
+                            fontSize: 54,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                   Text(
                     "v${Settings.VERSION_NUMBER}",
                     style: const TextStyle(
@@ -242,27 +270,31 @@ class ViewMenuState extends State<ViewMenu> {
                   // BUTTONS
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: ElevatedButton(
-                      onPressed: qRepo.questions.isEmpty ||
-                              qRepo.questions.length < _settings.questionNumber
-                          ? null
-                          : () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ViewQuiz(
-                                            questions: _getPoolFromSelected(),
-                                            settings: _settings,
-                                          )));
-                            },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 60,
-                        child: const Text(
-                          "Avvia",
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: qRepo.questions.isEmpty ||
+                                qRepo.questions.length <
+                                    _settings.questionNumber
+                            ? null
+                            : () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ViewQuiz(
+                                              questions: _getPoolFromSelected(),
+                                              settings: _settings,
+                                            )));
+                              },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 50.0, vertical: 10.0),
+                          child: Text(
+                            "Avvia",
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -271,28 +303,31 @@ class ViewMenuState extends State<ViewMenu> {
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: ElevatedButton(
-                      onPressed: _topicsPresent
-                          ? () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ViewTopics(
-                                            qRepo: qRepo,
-                                            settings: _settings,
-                                            updateQuizPool: updateQuizPool,
-                                            selectedTopics: _selectedTopics,
-                                          )));
-                            }
-                          : null,
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 60,
-                        child: const Text(
-                          "Argomenti",
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _topicsPresent
+                            ? () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ViewTopics(
+                                              qRepo: qRepo,
+                                              settings: _settings,
+                                              updateQuizPool: updateQuizPool,
+                                              selectedTopics: _selectedTopics,
+                                            )));
+                              }
+                            : null,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 50.0, vertical: 10.0),
+                          child: Text(
+                            "Argomenti",
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),

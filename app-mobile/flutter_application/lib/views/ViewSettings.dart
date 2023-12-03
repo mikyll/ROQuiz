@@ -169,7 +169,9 @@ class ViewSettingsState extends State<ViewSettings> {
           "No",
           () {
             setState(() {
+              _isLoading = false;
               widget.qRepo.update();
+              widget.reloadTopics();
             });
             _updateQuizDefaults();
             Navigator.pop(context);
@@ -221,7 +223,7 @@ class ViewSettingsState extends State<ViewSettings> {
     FilePickerResult? result = await FilePicker.platform
         .pickFiles(type: FileType.custom, allowedExtensions: ["txt"]);
 
-    // For Desktop platform: when a user leaves the Settings page, and then uploads a questions file.
+    // For Desktop platform: when a user leaves the Settings page, and then still uploads a questions file (the file picker window was still open).
     if (_wentBack) {
       return;
     }

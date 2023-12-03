@@ -210,6 +210,7 @@ class QuestionRepository {
     await updateQuestionsFile();
   }
 
+  // Parse a string and save each question in the repository
   void parse(String content) async {
     questions.clear();
     topics.clear();
