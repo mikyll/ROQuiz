@@ -95,9 +95,9 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold)),
-              const Spacer(),
+              const Spacer(flex: 2),
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: ListView(
                   children: [
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -200,23 +200,22 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50.0),
-                child: Container(
-                  color: Colors.indigo.withOpacity(0.35),
-                  alignment: Alignment.center,
-                  child: const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text("Ti sfido a tenere premuta la stellina",
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                        )),
-                  ),
+              Spacer(),
+              Container(
+                color: Colors.indigo.withOpacity(0.35),
+                alignment: Alignment.center,
+                child: const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text("Ti sfido a tenere premuta la stellina",
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                      )),
                 ),
               ),
               const SizedBox(height: 20),
+              Spacer()
             ],
           ),
         ),

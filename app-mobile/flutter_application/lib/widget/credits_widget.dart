@@ -54,7 +54,7 @@ class CreditsWidgetState extends State<CreditsWidget> {
           children: [
             Expanded(
                 child: Text(!alreadyPresent ? "${contribution.task}: " : "",
-                    style: const TextStyle(fontSize: 18))),
+                    maxLines: 2, style: const TextStyle(fontSize: 18))),
             Row(
               children: [
                 Text(!alreadyPresent ? "" : "&  ",

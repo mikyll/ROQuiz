@@ -459,7 +459,7 @@ class ViewSettingsState extends State<ViewSettings> {
         ),
         body: Center(
           child: ListView(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(15.0),
             controller: _scrollController,
             shrinkWrap: true,
             primary: false,
