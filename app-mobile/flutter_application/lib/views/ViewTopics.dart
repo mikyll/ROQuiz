@@ -233,7 +233,7 @@ class ViewTopicsState extends State<ViewTopics> {
                                       questions: _getTopicQuestions(index),
                                     )));
                       },
-                      text: " ${widget.qRepo.topics[index]}",
+                      text: widget.qRepo.topics[index],
                       questionNum: widget.qRepo.getQuestionNumPerTopic()[index],
                       textSize: 20.0,
                       lightTextColor: Colors.black,
@@ -277,6 +277,7 @@ class ViewTopicsState extends State<ViewTopics> {
                   ),
                   label: const Text(
                     "Ripristina",
+                    maxLines: 1,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

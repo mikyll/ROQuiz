@@ -172,8 +172,8 @@ class ViewSettingsState extends State<ViewSettings> {
               _isLoading = false;
               widget.qRepo.update();
               widget.reloadTopics();
+              _updateQuizDefaults();
             });
-            _updateQuizDefaults();
             Navigator.pop(context);
           },
           () => Navigator.pop(context),
@@ -490,7 +490,9 @@ class ViewSettingsState extends State<ViewSettings> {
                           _resetCheckAppUpdate();
                         },
                         child: const Text("Controllo nuove versioni app: ",
-                            softWrap: true, style: TextStyle(fontSize: 20))),
+                            maxLines: 3,
+                            softWrap: true,
+                            style: TextStyle(fontSize: 20))),
                   ),
                   SizedBox(
                       width: 120.0,
@@ -531,7 +533,9 @@ class ViewSettingsState extends State<ViewSettings> {
                           _resetCheckQuestionsUpdate();
                         },
                         child: const Text("Controllo nuove domande: ",
-                            softWrap: true, style: TextStyle(fontSize: 20))),
+                            maxLines: 3,
+                            softWrap: true,
+                            style: TextStyle(fontSize: 20))),
                   ),
                   SizedBox(
                       width: 120.0,
@@ -557,7 +561,7 @@ class ViewSettingsState extends State<ViewSettings> {
                           // TO-DO: edit
                         },
                         child: const Text("File domande: ",
-                            style: TextStyle(fontSize: 20))),
+                            maxLines: 2, style: TextStyle(fontSize: 20))),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -617,7 +621,7 @@ class ViewSettingsState extends State<ViewSettings> {
                           _resetQuestionNumber();
                         },
                         child: const Text("Numero domande per quiz: ",
-                            style: TextStyle(fontSize: 20))),
+                            maxLines: 3, style: TextStyle(fontSize: 20))),
                   ),
                   // DECREASE POOL SIZE (QUESTION NUMBER)
                   IconButtonLongPressWidget(
@@ -672,7 +676,7 @@ class ViewSettingsState extends State<ViewSettings> {
                         _resetTimer();
                       },
                       child: const Text("Timer (minuti): ",
-                          style: TextStyle(fontSize: 20))),
+                          maxLines: 2, style: TextStyle(fontSize: 20))),
                 ),
                 // DECREASE TIMER
                 IconButtonLongPressWidget(
@@ -727,7 +731,7 @@ class ViewSettingsState extends State<ViewSettings> {
                           _resetShuffleAnswers();
                         },
                         child: const Text("Mescola risposte: ",
-                            style: TextStyle(fontSize: 20))),
+                            maxLines: 2, style: TextStyle(fontSize: 20))),
                   ),
                   SizedBox(
                       width: 120.0,
@@ -753,7 +757,7 @@ class ViewSettingsState extends State<ViewSettings> {
                           _resetConfirmAlerts();
                         },
                         child: const Text("Alert di conferma: ",
-                            style: TextStyle(fontSize: 20))),
+                            maxLines: 2, style: TextStyle(fontSize: 20))),
                   ),
                   SizedBox(
                       width: 120.0,
@@ -771,7 +775,11 @@ class ViewSettingsState extends State<ViewSettings> {
               const Row(
                 children: [
                   Expanded(
-                    child: Text("Tema scuro: ", style: TextStyle(fontSize: 20)),
+                    child: Text(
+                      "Tema scuro: ",
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
                   SizedBox(
                     width: 120.0,

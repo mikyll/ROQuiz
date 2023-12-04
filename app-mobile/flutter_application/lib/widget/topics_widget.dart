@@ -101,16 +101,20 @@ class TopicWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Transform.scale(
-            scale: 1.2,
-            child: Checkbox(
-              value: checkBoxValue,
-              onChanged: onCheckBoxChanged,
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Transform.scale(
+              scale: 1.2,
+              child: Checkbox(
+                value: checkBoxValue,
+                onChanged: onCheckBoxChanged,
+              ),
             ),
           ),
           Expanded(
             child: Text(
               text,
+              maxLines: 2,
               style: TextStyle(
                 fontSize: textSize,
                 color: _themeProvider.isDarkMode

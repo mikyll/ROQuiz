@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
 import 'package:roquiz/model/Quiz.dart';
@@ -126,6 +127,22 @@ class _ViewQuizState extends State<ViewQuiz> {
         });
   }
 
+  Color _getTimerColor(ThemeProvider themeProvider) {
+    Color res = themeProvider.isDarkMode ? Colors.white : Colors.black;
+
+    if (_timerCounter < widget.settings.timer * 60 / 6) {
+      res = themeProvider.isDarkMode ? Colors.yellow : Colors.yellow[700]!;
+    }
+    if (_timerCounter < widget.settings.timer * 60 / 9) {
+      res = themeProvider.isDarkMode ? Colors.orange : Colors.orange[700]!;
+    }
+    if (_timerCounter < widget.settings.timer * 60 / 18) {
+      res = Colors.red;
+    }
+
+    return res;
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -143,6 +160,7 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     return WillPopScope(
       // this enables us to catch the "hard back" from device
       onWillPop: () async {
@@ -222,7 +240,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                       top: 10.0, left: 10.0, right: 10.0, bottom: 20.0),
                   child: Row(
                     children: [
-                      AutoSizeText(
+                      Text(
                         "Question: ${_qIndex + 1}/${widget.settings.questionNumber}",
                         maxLines: 1,
                         style: const TextStyle(
@@ -231,14 +249,37 @@ class _ViewQuizState extends State<ViewQuiz> {
                         ),
                       ),
                       const Spacer(),
-                      AutoSizeText(
+                      RichText(
+                        maxLines: 2,
+                        text: TextSpan(
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: themeProvider.isDarkMode
+                                  ? Colors.white
+                                  : Colors.black),
+                          children: <TextSpan>[
+                            const TextSpan(text: 'Timer: '),
+                            TextSpan(
+                              text:
+                                  "${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt()}",
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: _getTimerColor(themeProvider),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      /*AutoSizeText(
                         "Timer: ${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt()}",
                         maxLines: 1,
-                        style: const TextStyle(
+                        style: TextStyle(
+                          color: _getTimerColor(),
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
@@ -292,9 +333,11 @@ class _ViewQuizState extends State<ViewQuiz> {
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Text(
-                                  "Risposte corrette: $_correctAnswers/${widget.settings.questionNumber}\n"
-                                  "Risposte errate: ${widget.settings.questionNumber - _correctAnswers}/${widget.settings.questionNumber}\n"
-                                  "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]"),
+                                "Risposte corrette: $_correctAnswers/${widget.settings.questionNumber}\n"
+                                "Risposte errate: ${widget.settings.questionNumber - _correctAnswers}/${widget.settings.questionNumber}\n"
+                                "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]",
+                                maxLines: 4,
+                              ),
                             ),
                           ),
                         ),

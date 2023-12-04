@@ -85,20 +85,25 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50.0),
-                child: Text("${Settings.APP_TITLE} v${Settings.VERSION_NUMBER}",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 48, fontWeight: FontWeight.bold)),
-              ),
+              const Spacer(),
+              const Text(Settings.APP_TITLE,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+              Text("v${Settings.VERSION_NUMBER}",
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)),
+              const Spacer(),
               Expanded(
+                flex: 3,
                 child: ListView(
                   children: [
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       const Expanded(
                         child: Text("Applicazione sviluppata da: ",
-                            style: TextStyle(fontSize: 18)),
+                            maxLines: 2, style: TextStyle(fontSize: 18)),
                       ),
                       InkWell(
                         onTap: () {
@@ -115,7 +120,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       const Expanded(
                           child: Text("In collaborazione con: ",
-                              style: TextStyle(fontSize: 18))),
+                              maxLines: 2, style: TextStyle(fontSize: 18))),
                       InkWell(
                         onTap: () {
                           Navigator.push(
@@ -134,7 +139,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       const Expanded(
                           child: Text("Repository GitHub: ",
-                              style: TextStyle(fontSize: 18))),
+                              maxLines: 2, style: TextStyle(fontSize: 18))),
                       InkWell(
                         onTap: () {
                           _launchInBrowser("https://github.com/mikyll/ROQuiz");
@@ -150,7 +155,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       const Expanded(
                           child: Text("Licenze: ",
-                              style: TextStyle(fontSize: 18))),
+                              maxLines: 1, style: TextStyle(fontSize: 18))),
                       InkWell(
                         onTap: () {
                           Navigator.push(
@@ -203,6 +208,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   child: const Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Text("Ti sfido a tenere premuta la stellina",
+                        maxLines: 2,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,

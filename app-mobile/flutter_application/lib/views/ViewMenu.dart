@@ -254,6 +254,7 @@ class ViewMenuState extends State<ViewMenu> {
                         ])
                       : const Text(
                           Settings.APP_TITLE,
+                          maxLines: 1,
                           style: TextStyle(
                             fontSize: 54,
                             fontWeight: FontWeight.bold,
@@ -261,8 +262,9 @@ class ViewMenuState extends State<ViewMenu> {
                         ),
                   Text(
                     "v${Settings.VERSION_NUMBER}",
+                    maxLines: 1,
                     style: const TextStyle(
-                      fontSize: 25,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -287,10 +289,10 @@ class ViewMenuState extends State<ViewMenu> {
                                             )));
                               },
                         child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 50.0, vertical: 10.0),
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: Text(
                             "Avvia",
+                            maxLines: 1,
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
@@ -320,10 +322,10 @@ class ViewMenuState extends State<ViewMenu> {
                               }
                             : null,
                         child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 50.0, vertical: 10.0),
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: Text(
                             "Argomenti",
+                            maxLines: 1,
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
@@ -364,6 +366,7 @@ class ViewMenuState extends State<ViewMenu> {
                         padding: EdgeInsets.all(8.0),
                         child: Text(
                             "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
+                            maxLines: 6,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18,
