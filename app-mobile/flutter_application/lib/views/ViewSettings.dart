@@ -395,33 +395,30 @@ class ViewSettingsState extends State<ViewSettings> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (_isChanged(themeProvider) && widget.settings.confirmAlerts) {
-          _showConfirmationDialog(
-            context,
-            "Modifiche Non Salvate",
-            "Uscire senza salvare?",
-            "Conferma",
-            "Annulla",
-            () {
-              // Discard settings (Confirm)
-              setState(() => _wentBack = true);
-              themeProvider.toggleTheme(_darkTheme);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            () {
-              Navigator.pop(context);
-            },
-          );
-        } else {
-          setState(() => _wentBack = true);
-          themeProvider.toggleTheme(_darkTheme);
-          Navigator.pop(context);
+    return PopScope(
+      canPop: !(_isChanged(themeProvider) && widget.settings.confirmAlerts),
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
         }
 
-        return true;
+        _showConfirmationDialog(
+          context,
+          "Modifiche Non Salvate",
+          "Uscire senza salvare?",
+          "Conferma",
+          "Annulla",
+          () {
+            // Discard settings (Confirm)
+            setState(() => _wentBack = true);
+            themeProvider.toggleTheme(_darkTheme);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          () {
+            Navigator.pop(context);
+          },
+        );
       },
       child: Scaffold(
         appBar: AppBar(

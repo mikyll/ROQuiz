@@ -131,10 +131,10 @@ class ViewTopicsState extends State<ViewTopics> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (_) {
         widget.updateQuizPool(_currentQuizPool);
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(

@@ -161,29 +161,26 @@ class _ViewQuizState extends State<ViewQuiz> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
-    return WillPopScope(
-      // this enables us to catch the "hard back" from device
-      onWillPop: () async {
-        if (widget.settings.confirmAlerts) {
-          _showConfirmationDialog(
-            context,
-            "Conferma",
-            "Sei sicuro di voler uscire dal quiz?",
-            () {
-              _endQuiz(); // end quiz and stop timer
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            () {
-              Navigator.pop(context);
-            },
-          );
-        } else {
-          _endQuiz();
-          Navigator.pop(context);
+    return PopScope(
+      canPop: !widget.settings.confirmAlerts,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
         }
 
-        return true; // "return true" pops the element from the stack (== Navigator.pop())
+        _showConfirmationDialog(
+          context,
+          "Conferma",
+          "Sei sicuro di voler uscire dal quiz?",
+          () {
+            _endQuiz(); // end quiz and stop timer
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          () {
+            Navigator.pop(context);
+          },
+        );
       },
       child: GestureDetector(
         onTapDown: (details) {},
