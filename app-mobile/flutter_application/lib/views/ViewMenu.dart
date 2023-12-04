@@ -40,22 +40,12 @@ class ViewMenuState extends State<ViewMenu> {
       _selectedTopics.clear();
       _topicsPresent = qRepo.topicsPresent;
       if (_topicsPresent) {
+        _quizPool = 0;
         for (int i = 0; i < qRepo.topics.length; i++) {
           _selectedTopics.add(true);
           _quizPool += qRepo.qNumPerTopic[i];
         }
       } else {
-        _quizPool = qRepo.questions.length;
-      }
-    });
-  }
-
-  void resetTopics() {
-    setState(() {
-      if (_topicsPresent) {
-        for (int i = 0; i < _selectedTopics.length; i++) {
-          _selectedTopics[i] = true;
-        }
         _quizPool = qRepo.questions.length;
       }
     });
@@ -111,7 +101,7 @@ class ViewMenuState extends State<ViewMenu> {
         _settings.darkTheme = dTheme;
       }
       _settings.saveToSharedPreferences();
-      resetTopics();
+      loadTopics();
     });
   }
 

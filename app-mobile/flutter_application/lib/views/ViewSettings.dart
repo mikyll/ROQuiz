@@ -170,9 +170,10 @@ class ViewSettingsState extends State<ViewSettings> {
           () {
             setState(() {
               _isLoading = false;
-              widget.qRepo.update();
-              widget.reloadTopics();
-              _updateQuizDefaults();
+              widget.qRepo.update().then((value) {
+                widget.reloadTopics();
+                _updateQuizDefaults();
+              });
             });
             Navigator.pop(context);
           },
