@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings {
   static const String APP_TITLE = "ROQuiz";
+  static const bool SHOW_APP_LOGO = true;
   static String VERSION_NUMBER = "";
   static const int DEFAULT_ANSWER_NUMBER = 5;
   static const int MIN_QUESTIONS = 1;

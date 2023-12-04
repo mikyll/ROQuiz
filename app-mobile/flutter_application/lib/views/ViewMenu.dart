@@ -23,8 +23,6 @@ class ViewMenu extends StatefulWidget {
   State<StatefulWidget> createState() => ViewMenuState();
 }
 
-const bool USE_LOGO = false;
-
 class ViewMenuState extends State<ViewMenu> {
   final QuestionRepository qRepo = QuestionRepository();
 
@@ -221,7 +219,7 @@ class ViewMenuState extends State<ViewMenu> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Spacer(flex: 2),
-                  USE_LOGO
+                  Settings.SHOW_APP_LOGO
                       ? Column(children: [
                           SvgPicture.asset(
                             'assets/icons/logo.svg',
@@ -237,7 +235,7 @@ class ViewMenuState extends State<ViewMenu> {
                           const Text(
                             Settings.APP_TITLE,
                             style: TextStyle(
-                              fontSize: 54,
+                              fontSize: 40,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
