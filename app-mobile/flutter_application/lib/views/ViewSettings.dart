@@ -102,9 +102,8 @@ class ViewSettingsState extends State<ViewSettings> {
             //_launchInBrowser("https://github.com/mikyll/ROQuiz/releases/latest");
             // Link to download specific version
             _launchInBrowser(newVersionDownloadURL);
-            Navigator.pop(context);
           },
-          () => Navigator.pop(context),
+          () {},
         );
       } else {
         _showConfirmationDialog(
@@ -114,7 +113,7 @@ class ViewSettingsState extends State<ViewSettings> {
           "",
           "Ok",
           null,
-          () => Navigator.pop(context),
+          () {},
         );
       }
     }).onError((error, stackTrace) {
@@ -128,7 +127,7 @@ class ViewSettingsState extends State<ViewSettings> {
         "",
         "Ok",
         null,
-        () => Navigator.pop(context),
+        () {},
       );
     });
   }
@@ -175,9 +174,8 @@ class ViewSettingsState extends State<ViewSettings> {
                 _updateQuizDefaults();
               });
             });
-            Navigator.pop(context);
           },
-          () => Navigator.pop(context),
+          () {},
         );
       } else {
         _showConfirmationDialog(
@@ -187,7 +185,7 @@ class ViewSettingsState extends State<ViewSettings> {
           "",
           "Ok",
           null,
-          () => Navigator.pop(context),
+          () {},
         );
       }
     }).onError((error, stackTrace) {
@@ -201,7 +199,7 @@ class ViewSettingsState extends State<ViewSettings> {
         "",
         "Ok",
         null,
-        () => Navigator.pop(context),
+        () {},
       );
     });
   }
@@ -253,7 +251,7 @@ class ViewSettingsState extends State<ViewSettings> {
         "",
         "Ok",
         null,
-        () => Navigator.pop(context),
+        () {},
       );
     }
     setState(() {
@@ -361,12 +359,23 @@ class ViewSettingsState extends State<ViewSettings> {
         context: context,
         builder: (BuildContext context) {
           return ConfirmationAlert(
-              title: title,
-              content: content,
-              buttonConfirmText: confirmButton,
-              buttonCancelText: cancelButton,
-              onConfirm: onConfirm,
-              onCancel: onCancel);
+            title: title,
+            content: content,
+            buttonConfirmText: confirmButton,
+            buttonCancelText: cancelButton,
+            onConfirm: onConfirm == null
+                ? null
+                : () {
+                    onConfirm();
+                    Navigator.pop(context);
+                  },
+            onCancel: onCancel == null
+                ? null
+                : () {
+                    onCancel();
+                    Navigator.pop(context);
+                  },
+          );
         });
   }
 
@@ -413,11 +422,8 @@ class ViewSettingsState extends State<ViewSettings> {
             setState(() => _wentBack = true);
             themeProvider.toggleTheme(_darkTheme);
             Navigator.pop(context);
-            Navigator.pop(context);
           },
-          () {
-            Navigator.pop(context);
-          },
+          () {},
         );
       },
       child: Scaffold(
@@ -440,11 +446,8 @@ class ViewSettingsState extends State<ViewSettings> {
                     setState(() => _wentBack = true);
                     themeProvider.toggleTheme(_darkTheme);
                     Navigator.pop(context);
-                    Navigator.pop(context);
                   },
-                  () {
-                    Navigator.pop(context);
-                  },
+                  () {},
                 );
               } else {
                 setState(() => _wentBack = true);

@@ -114,16 +114,28 @@ class _ViewQuizState extends State<ViewQuiz> {
     _startTimer();
   }
 
-  void _showConfirmationDialog(BuildContext context, String title,
-      String content, void Function()? onConfirm, void Function()? onCancel) {
+  void _showConfirmationDialog(
+      BuildContext context, String title, String content,
+      {void Function()? onConfirm, void Function()? onCancel}) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return ConfirmationAlert(
-              title: title,
-              content: content,
-              onCancel: onCancel,
-              onConfirm: onConfirm);
+            title: title,
+            content: content,
+            onConfirm: onConfirm == null
+                ? null
+                : () {
+                    onConfirm();
+                    Navigator.pop(context);
+                  },
+            onCancel: onCancel == null
+                ? null
+                : () {
+                    onCancel();
+                    Navigator.pop(context);
+                  },
+          );
         });
   }
 
@@ -172,14 +184,11 @@ class _ViewQuizState extends State<ViewQuiz> {
           context,
           "Conferma",
           "Sei sicuro di voler uscire dal quiz?",
-          () {
+          onConfirm: () {
             _endQuiz(); // end quiz and stop timer
             Navigator.pop(context);
-            Navigator.pop(context);
           },
-          () {
-            Navigator.pop(context);
-          },
+          onCancel: () {},
         );
       },
       child: GestureDetector(
@@ -211,14 +220,11 @@ class _ViewQuizState extends State<ViewQuiz> {
                     context,
                     "Conferma",
                     "Sei sicuro di voler uscire dal quiz?",
-                    () {
+                    onConfirm: () {
                       _endQuiz(); // end quiz and stop timer
                       Navigator.pop(context);
-                      Navigator.pop(context);
                     },
-                    () {
-                      Navigator.pop(context);
-                    },
+                    onCancel: () {},
                   );
                 } else {
                   _endQuiz();
@@ -402,13 +408,10 @@ class _ViewQuizState extends State<ViewQuiz> {
                             context,
                             "Terminare il quiz?",
                             "Non hai risposto alle seguenti domande: $unanswered",
-                            () {
+                            onConfirm: () {
                               _endQuiz();
-                              Navigator.pop(context);
                             },
-                            () {
-                              Navigator.pop(context);
-                            },
+                            onCancel: () {},
                           );
                         } else {
                           _endQuiz();

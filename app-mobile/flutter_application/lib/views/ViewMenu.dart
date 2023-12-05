@@ -103,18 +103,30 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void _showConfirmationDialog(BuildContext context, String title,
-      String content, void Function()? onConfirm, void Function()? onCancel) {
+  void _showConfirmationDialog(
+      BuildContext context, String title, String content,
+      {void Function()? onConfirm, void Function()? onCancel}) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return ConfirmationAlert(
-              title: title,
-              content: content,
-              buttonConfirmText: "Sì",
-              buttonCancelText: "No",
-              onConfirm: onConfirm,
-              onCancel: onCancel);
+            title: title,
+            content: content,
+            buttonConfirmText: "Sì",
+            buttonCancelText: "No",
+            onConfirm: onConfirm == null
+                ? null
+                : () {
+                    onConfirm();
+                    Navigator.pop(context);
+                  },
+            onCancel: onCancel == null
+                ? null
+                : () {
+                    onCancel();
+                    Navigator.pop(context);
+                  },
+          );
         });
   }
 
@@ -135,11 +147,9 @@ class ViewMenuState extends State<ViewMenu> {
             "Versione attuale: v${Settings.VERSION_NUMBER}\n"
             "Nuova versione: $newVersion\n"
             "Scaricare la nuova versione?",
-        () {
+        onConfirm: () {
           _launchInBrowser(newVersionDownloadURL);
-          Navigator.pop(context);
         },
-        () => Navigator.pop(context),
       );
     }
   }
@@ -154,14 +164,12 @@ class ViewMenuState extends State<ViewMenu> {
             "Versione attuale: ${qRepo.questions.length} domande (${Utils.getParsedDateTime(qRepo.lastQuestionUpdate)}).\n"
             "Nuova versione: $questionNumber domande (${Utils.getParsedDateTime(date)}).\n"
             "Scaricare il nuovo file?",
-        () {
+        onConfirm: () {
           setState(() {
             qRepo.update().then((_) => updateQuizPool(qRepo.questions.length));
             _quizPool = qRepo.questions.length;
           });
-          Navigator.pop(context);
         },
-        () => Navigator.pop(context),
       );
     }
   }
