@@ -128,16 +128,16 @@ class QuestionWidget extends StatelessWidget {
             answers.length,
             (index) => Padding(
               padding: const EdgeInsets.only(bottom: 5.0),
-              child: InkWell(
-                enableFeedback: true,
-                onTap: onTapAnswer != null ? () => onTapAnswer!(index) : null,
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: _getColor(index),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: _getColor(index),
+                    borderRadius: const BorderRadius.all(Radius.circular(10))),
+                child: InkWell(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  enableFeedback: true,
+                  onTap: onTapAnswer != null ? () => onTapAnswer!(index) : null,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(children: [
