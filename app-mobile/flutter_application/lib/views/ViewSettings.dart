@@ -49,9 +49,11 @@ class ViewSettingsState extends State<ViewSettings> {
   bool _isLoading = false;
 
   void _updateQuizDefaults() {
+    int? qNum, timer;
+
     setState(() {
       // If the new questions exceeds the Settings values bounds, update the settings
-      int? qNum, timer;
+
       if (_questionNumber > widget.qRepo.questions.length) {
         _questionNumber = widget.qRepo.questions.length;
         qNum = _questionNumber;
@@ -60,11 +62,16 @@ class ViewSettingsState extends State<ViewSettings> {
         _timer = widget.qRepo.questions.length * 2;
         timer = _timer;
       }
-      widget.saveSettings(null, null, qNum, timer, null, null, null);
+    });
 
+    widget.saveSettings(null, null, qNum, timer, null, null, null);
+
+    setState(() {
       if (widget.qRepo.questions.length < 16) {
         Settings.DEFAULT_QUESTION_NUMBER = widget.qRepo.questions.length;
-        Settings.DEFAULT_TIMER = Settings.DEFAULT_QUESTION_NUMBER + 2;
+        Settings.DEFAULT_TIMER = (2 *
+            Settings.DEFAULT_QUESTION_NUMBER ~/
+            Settings.DEFAULT_QUESTION_NUMBER);
       } else {
         Settings.DEFAULT_QUESTION_NUMBER = 16;
         Settings.DEFAULT_TIMER = Settings.DEFAULT_QUESTION_NUMBER + 2;

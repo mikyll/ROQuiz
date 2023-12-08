@@ -261,11 +261,15 @@ Proposta feature:
       <td>✔️</td>
     </tr>
     <tr align="center">
-      <td>Controllo domande duplicate</td>
+      <td>Impostazione: modifica del file domande (<a href="https://api.flutter.dev/flutter/widgets/EditableText-class.html">reference</a>)</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
+      <td>Modifica domande: scroll automatico alla riga dell'errore</td>
       <td>❌</td>
     </tr>
     <tr align="center">
-      <td>Impostazione: modifica del file domande ([reference](https://api.flutter.dev/flutter/widgets/EditableText-class.html))</td>
+      <td>Controllo domande duplicate</td>
       <td>❌</td>
     </tr>
     <tr align="center">

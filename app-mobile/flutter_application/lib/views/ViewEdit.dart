@@ -187,6 +187,7 @@ class ViewEditState extends State<ViewEdit> {
                 child: TextField(
                   controller: _textController,
                   maxLines: null,
+                  textAlign: TextAlign.start,
                   decoration: const InputDecoration.collapsed(hintText: ""),
                   onChanged: (_) {
                     setState(() {
