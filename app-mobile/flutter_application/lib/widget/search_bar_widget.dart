@@ -369,6 +369,7 @@ class SearchBarWidgetState extends State<SearchBarWidget>
                 borderRadius: BorderRadius.circular(30.0),
                 child: IconButton(
                   splashRadius: 19.0,
+                  hoverColor: Colors.transparent,
 
                   ///if toggle is 1, which means it's open. so show the back icon, which will close it.
                   ///if the toggle is 0, which means it's closed, so tapping on it will expand the widget.

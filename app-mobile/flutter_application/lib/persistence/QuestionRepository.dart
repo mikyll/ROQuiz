@@ -25,7 +25,7 @@ class QuestionRepository {
   late String _cachedNewContent;
   late DateTime _cachedNewDate;
 
-  Future<void> load() async {
+  Future<String> loadString() async {
     final prefs = await SharedPreferences.getInstance();
 
     lastQuestionUpdate = DateTime.parse(prefs.getString("lastQuestionUpdate") ??
@@ -94,9 +94,16 @@ class QuestionRepository {
         content = await rootBundle.loadString("assets/domande.txt");
     }
 
+    return content;
+  }
+
+  Future<void> load() async {
+    String content = await loadString();
+
     parse(content);
   }
 
+  /// Retrieves the timestamp of the latest question file, from the GitHub repository.
   Future<DateTime> getLatestQuestionFileDate() async {
     DateTime date;
 
@@ -118,7 +125,7 @@ class QuestionRepository {
     }
   }
 
-  // Returns true if there is a more recent questions file
+  /// Returns true if there is a more recent questions file
   Future<(bool, DateTime, int)> checkQuestionUpdates() async {
     DateTime date = await getLatestQuestionFileDate();
     String content = await downloadFile();
@@ -163,6 +170,7 @@ class QuestionRepository {
     lastQuestionUpdate = date;
   }
 
+  /// Overwrite questions file
   Future<bool> updateQuestionsFile([String? newContent]) async {
     String content;
 
@@ -317,6 +325,7 @@ class QuestionRepository {
     return topicsPresent;
   }
 
+  /// Restituisce un intero che indica il risultato ed una Stringa in caso di errore.
   static (int, String) isValidErrors(String content) {
     LineSplitter ls = const LineSplitter();
     List<String> lines = ls.convert(content);
@@ -378,7 +387,10 @@ class QuestionRepository {
         numQuestions++;
       }
     }
-    return (numQuestions, "OK");
+    return (
+      numQuestions,
+      numQuestions > 0 ? "OK" : "Non sono presenti domande."
+    );
   }
 
   static int isValid(String content) {

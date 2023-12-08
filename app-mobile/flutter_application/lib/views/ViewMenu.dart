@@ -103,33 +103,6 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void _showConfirmationDialog(
-      BuildContext context, String title, String content,
-      {void Function()? onConfirm, void Function()? onCancel}) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return ConfirmationAlert(
-            title: title,
-            content: content,
-            buttonConfirmText: "Sì",
-            buttonCancelText: "No",
-            onConfirm: onConfirm == null
-                ? null
-                : () {
-                    onConfirm();
-                    Navigator.pop(context);
-                  },
-            onCancel: onCancel == null
-                ? null
-                : () {
-                    onCancel();
-                    Navigator.pop(context);
-                  },
-          );
-        });
-  }
-
   Future<void> _launchInBrowser(String url) async {
     if (!await launchUrl(Uri.parse(url),
         mode: LaunchMode.externalApplication)) {
@@ -140,7 +113,7 @@ class ViewMenuState extends State<ViewMenu> {
   Future<void> _checkNewVersionDialog(bool newVersionPresent, String newVersion,
       String newVersionDownloadURL) async {
     if (newVersionPresent) {
-      _showConfirmationDialog(
+      ConfirmationAlert.showConfirmationDialog(
         context,
         "Nuova Versione App",
         "È stata trovata una versione più recente dell'applicazione.\n"
@@ -150,6 +123,7 @@ class ViewMenuState extends State<ViewMenu> {
         onConfirm: () {
           _launchInBrowser(newVersionDownloadURL);
         },
+        onCancel: () {},
       );
     }
   }
@@ -157,7 +131,7 @@ class ViewMenuState extends State<ViewMenu> {
   Future<void> _checkNewQuestionsDialog(
       bool newQuestionsPresent, DateTime date, int questionNumber) async {
     if (newQuestionsPresent) {
-      _showConfirmationDialog(
+      ConfirmationAlert.showConfirmationDialog(
         context,
         "Nuove Domande",
         "È stata trovata una versione più recente del file contenente le domande.\n"
@@ -170,6 +144,7 @@ class ViewMenuState extends State<ViewMenu> {
             _quizPool = qRepo.questions.length;
           });
         },
+        onCancel: () {},
       );
     }
   }
@@ -180,20 +155,14 @@ class ViewMenuState extends State<ViewMenu> {
 
     _settings.loadFromSharedPreferences();
 
-    qRepo
-        .load()
-        .then(
-          (_) => {
-            loadTopics(),
-            setState(
-              () {
-                _topicsPresent = qRepo.hasTopics();
-              },
-            )
-          },
-        )
-        .onError((error, stackTrace) =>
-            {setState(() => _qRepoLoadingError = error.toString())});
+    qRepo.load().then(
+      (_) {
+        loadTopics();
+        _topicsPresent = qRepo.hasTopics();
+      },
+    ).onError((error, stackTrace) {
+      _qRepoLoadingError = error.toString();
+    });
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       setState(() => Settings.VERSION_NUMBER = packageInfo.version);

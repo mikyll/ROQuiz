@@ -114,31 +114,6 @@ class _ViewQuizState extends State<ViewQuiz> {
     _startTimer();
   }
 
-  void _showConfirmationDialog(
-      BuildContext context, String title, String content,
-      {void Function()? onConfirm, void Function()? onCancel}) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return ConfirmationAlert(
-            title: title,
-            content: content,
-            onConfirm: onConfirm == null
-                ? null
-                : () {
-                    onConfirm();
-                    Navigator.pop(context);
-                  },
-            onCancel: onCancel == null
-                ? null
-                : () {
-                    onCancel();
-                    Navigator.pop(context);
-                  },
-          );
-        });
-  }
-
   Color _getTimerColor(ThemeProvider themeProvider) {
     Color res = themeProvider.isDarkMode ? Colors.white : Colors.black;
 
@@ -180,7 +155,7 @@ class _ViewQuizState extends State<ViewQuiz> {
           return;
         }
 
-        _showConfirmationDialog(
+        ConfirmationAlert.showConfirmationDialog(
           context,
           "Conferma",
           "Sei sicuro di voler uscire dal quiz?",
@@ -216,7 +191,7 @@ class _ViewQuizState extends State<ViewQuiz> {
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 if (widget.settings.confirmAlerts) {
-                  _showConfirmationDialog(
+                  ConfirmationAlert.showConfirmationDialog(
                     context,
                     "Conferma",
                     "Sei sicuro di voler uscire dal quiz?",
@@ -404,7 +379,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                           }
                         }
                         if (unanswered.isNotEmpty) {
-                          _showConfirmationDialog(
+                          ConfirmationAlert.showConfirmationDialog(
                             context,
                             "Terminare il quiz?",
                             "Non hai risposto alle seguenti domande: $unanswered",

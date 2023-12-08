@@ -14,6 +14,7 @@ class IconButtonWidget extends StatelessWidget {
     this.lightPalette,
     this.darkPalette,
     this.iconSize,
+    this.tooltip,
     this.shadow = false,
     required this.icon,
   }) : super(key: key);
@@ -28,6 +29,7 @@ class IconButtonWidget extends StatelessWidget {
   final double? width;
   final double? height;
   final double? iconSize;
+  final String? tooltip;
   final bool shadow;
 
   @override
@@ -36,46 +38,37 @@ class IconButtonWidget extends StatelessWidget {
 
     return Opacity(
       opacity: onTap == null && onDoubleTap == null ? 0.5 : 1.0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: themeProvider.isDarkMode
-              ? darkPalette!.color
-              : lightPalette!.color,
-          borderRadius: BorderRadius.circular(borderRadius),
-          boxShadow: shadow
-              ? const [
-                  BoxShadow(
-                    color: Colors.black,
-                    spreadRadius: 0.5,
-                    blurRadius: 2,
-                    offset: Offset(2, 2),
-                  ),
-                ]
-              : [],
-        ),
-        child: InkWell(
-          customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-          onTap: onTap,
-          onDoubleTap: onDoubleTap,
-          highlightColor: themeProvider.isDarkMode
-              ? darkPalette!.highlightColor
-              : lightPalette!.highlightColor,
-          hoverColor: themeProvider.isDarkMode
-              ? darkPalette!.hoverColor
-              : lightPalette!.hoverColor,
-          splashColor: themeProvider.isDarkMode
-              ? darkPalette!.splashColor
-              : lightPalette!.splashColor,
-          child: SizedBox(
-            width: width,
-            height: height,
-            child: Icon(icon,
-                color: themeProvider.isDarkMode
-                    ? darkPalette!.iconColor
-                    : lightPalette!.iconColor,
-                size: iconSize),
+      child: Material(
+        elevation: shadow ? 20.0 : 0.0,
+        borderRadius: BorderRadius.circular(borderRadius),
+        color:
+            themeProvider.isDarkMode ? darkPalette!.color : lightPalette!.color,
+        child: Tooltip(
+          message: tooltip ?? "",
+          child: InkWell(
+            customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+            onTap: onTap,
+            onDoubleTap: onDoubleTap,
+            highlightColor: themeProvider.isDarkMode
+                ? darkPalette!.highlightColor
+                : lightPalette!.highlightColor,
+            hoverColor: themeProvider.isDarkMode
+                ? darkPalette!.hoverColor
+                : lightPalette!.hoverColor,
+            splashColor: themeProvider.isDarkMode
+                ? darkPalette!.splashColor
+                : lightPalette!.splashColor,
+            child: SizedBox(
+              width: width,
+              height: height,
+              child: Icon(icon,
+                  color: themeProvider.isDarkMode
+                      ? darkPalette!.iconColor
+                      : lightPalette!.iconColor,
+                  size: iconSize),
+            ),
           ),
         ),
       ),
@@ -93,10 +86,12 @@ class IconButtonLongPressWidget extends StatefulWidget {
     this.onUpdate,
     this.width,
     this.height,
+    this.tooltip,
     this.lightPalette,
     this.darkPalette,
     this.iconSize,
     this.iconColor,
+    this.shadow = false,
     required this.icon,
   })  : assert(minDelay <= initialDelay,
             "The minimum delay cannot be larger than the initial delay"),
@@ -111,11 +106,13 @@ class IconButtonLongPressWidget extends StatefulWidget {
   final double? height;
   final double? iconSize;
   final Color? iconColor;
+  final String? tooltip;
 
   final int minDelay;
   final int initialDelay;
   final int delaySteps;
   final double borderRadius;
+  final bool shadow;
 
   @override
   State<StatefulWidget> createState() {
@@ -152,36 +149,43 @@ class _IconButtonLongPressWidgetState extends State<IconButtonLongPressWidget> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return Material(
-      borderRadius: BorderRadius.circular(widget.borderRadius),
-      color: themeProvider.isDarkMode
-          ? widget.darkPalette!.color
-          : widget.lightPalette!.color,
-      child: InkWell(
-        customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-        ),
-        onTap: widget.onUpdate != null ? () => _stopHolding() : null,
-        onTapDown: widget.onUpdate != null ? (_) => _startHolding() : null,
-        onTapCancel: widget.onUpdate != null ? () => _stopHolding() : null,
-        highlightColor: themeProvider.isDarkMode
-            ? widget.darkPalette!.highlightColor
-            : widget.lightPalette!.highlightColor,
-        hoverColor: themeProvider.isDarkMode
-            ? widget.darkPalette!.hoverColor
-            : widget.lightPalette!.hoverColor,
-        splashColor: themeProvider.isDarkMode
-            ? widget.darkPalette!.splashColor
-            : widget.lightPalette!.splashColor,
-        child: SizedBox(
-          width: widget.width,
-          height: widget.height,
-          child: Icon(widget.icon,
-              color: widget.iconColor ??
-                  (themeProvider.isDarkMode
-                      ? widget.darkPalette!.iconColor
-                      : widget.lightPalette!.iconColor),
-              size: widget.iconSize),
+    return Opacity(
+      opacity: widget.onUpdate == null ? 0.5 : 1.0,
+      child: Material(
+        elevation: widget.shadow ? 20.0 : 0.0,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        color: themeProvider.isDarkMode
+            ? widget.darkPalette!.color
+            : widget.lightPalette!.color,
+        child: Tooltip(
+          message: widget.tooltip ?? "",
+          child: InkWell(
+            customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+            ),
+            onTap: widget.onUpdate != null ? () => _stopHolding() : null,
+            onTapDown: widget.onUpdate != null ? (_) => _startHolding() : null,
+            onTapCancel: widget.onUpdate != null ? () => _stopHolding() : null,
+            highlightColor: themeProvider.isDarkMode
+                ? widget.darkPalette!.highlightColor
+                : widget.lightPalette!.highlightColor,
+            hoverColor: themeProvider.isDarkMode
+                ? widget.darkPalette!.hoverColor
+                : widget.lightPalette!.hoverColor,
+            splashColor: themeProvider.isDarkMode
+                ? widget.darkPalette!.splashColor
+                : widget.lightPalette!.splashColor,
+            child: SizedBox(
+              width: widget.width,
+              height: widget.height,
+              child: Icon(widget.icon,
+                  color: widget.iconColor ??
+                      (themeProvider.isDarkMode
+                          ? widget.darkPalette!.iconColor
+                          : widget.lightPalette!.iconColor),
+                  size: widget.iconSize),
+            ),
+          ),
         ),
       ),
     );

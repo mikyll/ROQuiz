@@ -7,6 +7,7 @@ import 'package:roquiz/model/Utils.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/persistence/Settings.dart';
 import 'package:roquiz/model/Themes.dart';
+import 'package:roquiz/views/ViewEdit.dart';
 import 'package:roquiz/widget/change_theme_button_widget.dart';
 import 'package:roquiz/widget/confirmation_alert.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
@@ -88,46 +89,46 @@ class ViewSettingsState extends State<ViewSettings> {
       String newVersionDownloadURL = result.$3;
 
       if (newVersionPresent) {
-        _showConfirmationDialog(
+        ConfirmationAlert.showConfirmationDialog(
           context,
           "Nuova Versione App",
           "È stata trovata una versione più recente dell'applicazione.\n"
               "Versione attuale: v${Settings.VERSION_NUMBER}\n"
               "Nuova versione: $newVersion\n"
               "Scaricare la nuova versione?",
-          "Sì",
-          "No",
-          () {
+          confirmButton: "Sì",
+          cancelButton: "No",
+          onConfirm: () {
             // Link for latest release
             //_launchInBrowser("https://github.com/mikyll/ROQuiz/releases/latest");
             // Link to download specific version
             _launchInBrowser(newVersionDownloadURL);
           },
-          () {},
+          onCancel: () {},
         );
       } else {
-        _showConfirmationDialog(
+        ConfirmationAlert.showConfirmationDialog(
           context,
           "Nessuna Nuova Versione",
           "L'applicazione è aggiornata all'ultima versione disponibile (${Settings.VERSION_NUMBER}).",
-          "",
-          "Ok",
-          null,
-          () {},
+          confirmButton: "",
+          cancelButton: "Ok",
+          onConfirm: null,
+          onCancel: () {},
         );
       }
     }).onError((error, stackTrace) {
       setState(() {
         _isLoading = false;
       });
-      _showConfirmationDialog(
+      ConfirmationAlert.showConfirmationDialog(
         context,
         "Errore Durante il Controllo",
         error.toString(),
-        "",
-        "Ok",
-        null,
-        () {},
+        confirmButton: "",
+        cancelButton: "Ok",
+        onConfirm: null,
+        onCancel: () {},
       );
     });
   }
@@ -157,16 +158,16 @@ class ViewSettingsState extends State<ViewSettings> {
       DateTime date = result.$2;
       int qNum = result.$3;
       if (newQuestionsPresent) {
-        _showConfirmationDialog(
+        ConfirmationAlert.showConfirmationDialog(
           context,
           "Nuove Domande",
           "È stata trovata una versione più recente del file contenente le domande.\n"
               "Versione attuale: ${widget.qRepo.questions.length} domande (${Utils.getParsedDateTime(widget.qRepo.lastQuestionUpdate)}).\n"
               "Nuova versione: $qNum domande (${Utils.getParsedDateTime(date)}).\n"
               "Scaricare il nuovo file?",
-          "Sì",
-          "No",
-          () {
+          confirmButton: "Sì",
+          cancelButton: "No",
+          onConfirm: () {
             setState(() {
               _isLoading = false;
               widget.qRepo.update().then((value) {
@@ -175,31 +176,31 @@ class ViewSettingsState extends State<ViewSettings> {
               });
             });
           },
-          () {},
+          onCancel: () {},
         );
       } else {
-        _showConfirmationDialog(
+        ConfirmationAlert.showConfirmationDialog(
           context,
           "Nessuna Nuova Domanda",
           "Non sono state trovate nuove domande. Il file è aggiornato all'ultima versione (${Utils.getParsedDateTime(widget.qRepo.lastQuestionUpdate)}).",
-          "",
-          "Ok",
-          null,
-          () {},
+          confirmButton: "",
+          cancelButton: "Ok",
+          onConfirm: null,
+          onCancel: () {},
         );
       }
     }).onError((error, stackTrace) {
       setState(() {
         _isLoading = false;
       });
-      _showConfirmationDialog(
+      ConfirmationAlert.showConfirmationDialog(
         context,
         "Errore Durante il Controllo",
         error.toString(),
-        "",
-        "Ok",
-        null,
-        () {},
+        confirmButton: "",
+        cancelButton: "Ok",
+        onConfirm: null,
+        onCancel: () {},
       );
     });
   }
@@ -241,17 +242,17 @@ class ViewSettingsState extends State<ViewSettings> {
         widget.reloadTopics();
       }
 
-      _showConfirmationDialog(
+      ConfirmationAlert.showConfirmationDialog(
         context,
         res > 0 ? "File Caricato" : "File Non Valido",
         res > 0
             ? "Il file domande personalizzato è stato caricato correttamente.\n"
                 "Numero domande: $res"
             : err,
-        "",
-        "Ok",
-        null,
-        () {},
+        confirmButton: "",
+        cancelButton: "Ok",
+        onConfirm: null,
+        onCancel: () {},
       );
     }
     setState(() {
@@ -347,38 +348,6 @@ class ViewSettingsState extends State<ViewSettings> {
         themeProvider.isDarkMode != widget.settings.darkTheme;
   }
 
-  void _showConfirmationDialog(
-      BuildContext context,
-      String title,
-      String content,
-      String confirmButton,
-      String cancelButton,
-      void Function()? onConfirm,
-      void Function()? onCancel) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return ConfirmationAlert(
-            title: title,
-            content: content,
-            buttonConfirmText: confirmButton,
-            buttonCancelText: cancelButton,
-            onConfirm: onConfirm == null
-                ? null
-                : () {
-                    onConfirm();
-                    Navigator.pop(context);
-                  },
-            onCancel: onCancel == null
-                ? null
-                : () {
-                    onCancel();
-                    Navigator.pop(context);
-                  },
-          );
-        });
-  }
-
   Future<void> _launchInBrowser(String url) async {
     if (!await launchUrl(Uri.parse(url),
         mode: LaunchMode.externalApplication)) {
@@ -386,18 +355,31 @@ class ViewSettingsState extends State<ViewSettings> {
     }
   }
 
+  void _showBackConfirmDialog(ThemeProvider themeProvider) {
+    ConfirmationAlert.showConfirmationDialog(
+      context,
+      "Modifiche Non Salvate",
+      "Uscire senza salvare?",
+      onConfirm: () {
+        // Discard settings (Confirm)
+        setState(() => _wentBack = true);
+        themeProvider.toggleTheme(_darkTheme);
+        Navigator.pop(context);
+      },
+      onCancel: () {},
+    );
+  }
+
   @override
   void initState() {
     super.initState();
 
-    setState(() {
-      _checkQuestionsUpdate = widget.settings.checkQuestionsUpdate;
-      _questionNumber = widget.settings.questionNumber;
-      _timer = widget.settings.timer;
-      _shuffleAnswers = widget.settings.shuffleAnswers;
-      _confirmAlerts = widget.settings.confirmAlerts;
-      _darkTheme = widget.settings.darkTheme;
-    });
+    _checkQuestionsUpdate = widget.settings.checkQuestionsUpdate;
+    _questionNumber = widget.settings.questionNumber;
+    _timer = widget.settings.timer;
+    _shuffleAnswers = widget.settings.shuffleAnswers;
+    _confirmAlerts = widget.settings.confirmAlerts;
+    _darkTheme = widget.settings.darkTheme;
   }
 
   @override
@@ -411,20 +393,7 @@ class ViewSettingsState extends State<ViewSettings> {
           return;
         }
 
-        _showConfirmationDialog(
-          context,
-          "Modifiche Non Salvate",
-          "Uscire senza salvare?",
-          "Conferma",
-          "Annulla",
-          () {
-            // Discard settings (Confirm)
-            setState(() => _wentBack = true);
-            themeProvider.toggleTheme(_darkTheme);
-            Navigator.pop(context);
-          },
-          () {},
-        );
+        _showBackConfirmDialog(themeProvider);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -435,20 +404,7 @@ class ViewSettingsState extends State<ViewSettings> {
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
               if (_isChanged(themeProvider) && widget.settings.confirmAlerts) {
-                _showConfirmationDialog(
-                  context,
-                  "Modifiche Non Salvate",
-                  "Uscire senza salvare?",
-                  "Conferma",
-                  "Annulla",
-                  () {
-                    // Discard settings (Confirm)
-                    setState(() => _wentBack = true);
-                    themeProvider.toggleTheme(_darkTheme);
-                    Navigator.pop(context);
-                  },
-                  () {},
-                );
+                _showBackConfirmDialog(themeProvider);
               } else {
                 setState(() => _wentBack = true);
                 themeProvider.toggleTheme(_darkTheme);
@@ -571,25 +527,33 @@ class ViewSettingsState extends State<ViewSettings> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Opacity(
-                            opacity: 0.5,
-                            child: IconButtonWidget(
-                              onTap: true
-                                  ? null
-                                  : () {
-                                      print("TO-DO: Edit question file.");
-                                    },
-                              lightPalette: MyThemes.lightIconButtonPalette,
-                              darkPalette: MyThemes.darkIconButtonPalette,
-                              width: 40.0,
-                              height: 40.0,
-                              icon: Icons.edit,
-                              iconSize: 35,
-                              borderRadius: 5,
-                            ),
+                          IconButtonWidget(
+                            tooltip: _isLoading ? null : "Modifica",
+                            onTap: () {
+                              print("TO-DO: Edit question file.");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewEdit(
+                                    qRepo: widget.qRepo,
+                                    settings: widget.settings,
+                                    reloadTopics: widget.reloadTopics,
+                                    updateQuizDefaults: _updateQuizDefaults,
+                                  ),
+                                ),
+                              );
+                            },
+                            lightPalette: MyThemes.lightIconButtonPalette,
+                            darkPalette: MyThemes.darkIconButtonPalette,
+                            width: 40.0,
+                            height: 40.0,
+                            icon: Icons.edit,
+                            iconSize: 35,
+                            borderRadius: 5,
                           ),
                           const Spacer(flex: 1),
                           IconButtonWidget(
+                            tooltip: _isLoading ? null : "Carica un file",
                             onTap: _isLoading
                                 ? null
                                 : () {
@@ -794,6 +758,7 @@ class ViewSettingsState extends State<ViewSettings> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: IconButtonWidget(
+          tooltip: _isDefault(themeProvider) ? null : "Ripristina",
           onTap: _isDefault(themeProvider)
               ? null
               : () {
@@ -820,20 +785,22 @@ class ViewSettingsState extends State<ViewSettings> {
                   FittedBox(
                     fit: BoxFit.fitWidth,
                     child: ElevatedButton(
-                      onPressed: () {
-                        widget.saveSettings(
-                            _checkAppUpdate,
-                            _checkQuestionsUpdate,
-                            _questionNumber,
-                            _timer,
-                            _shuffleAnswers,
-                            _confirmAlerts,
-                            themeProvider.isDarkMode);
-                        _darkTheme = themeProvider.isDarkMode;
+                      onPressed: !_isChanged(themeProvider)
+                          ? null
+                          : () {
+                              widget.saveSettings(
+                                  _checkAppUpdate,
+                                  _checkQuestionsUpdate,
+                                  _questionNumber,
+                                  _timer,
+                                  _shuffleAnswers,
+                                  _confirmAlerts,
+                                  themeProvider.isDarkMode);
+                              _darkTheme = themeProvider.isDarkMode;
 
-                        setState(() => _wentBack = true);
-                        Navigator.pop(context);
-                      },
+                              setState(() => _wentBack = true);
+                              Navigator.pop(context);
+                            },
                       child: Container(
                         alignment: Alignment.center,
                         height: 50.0,

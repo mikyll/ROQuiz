@@ -11,6 +11,39 @@ class ConfirmationAlert extends StatelessWidget {
       required this.content})
       : super(key: key);
 
+  static void showConfirmationDialog(
+    BuildContext context,
+    String title,
+    String content, {
+    String confirmButton = "Conferma",
+    String cancelButton = "Annulla",
+    void Function()? onConfirm,
+    void Function()? onCancel,
+  }) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ConfirmationAlert(
+            title: title,
+            content: content,
+            buttonConfirmText: confirmButton,
+            buttonCancelText: cancelButton,
+            onConfirm: onConfirm == null
+                ? null
+                : () {
+                    onConfirm();
+                    Navigator.pop(context);
+                  },
+            onCancel: onCancel == null
+                ? null
+                : () {
+                    onCancel();
+                    Navigator.pop(context);
+                  },
+          );
+        });
+  }
+
   final String title;
   final String content;
   final String buttonConfirmText;

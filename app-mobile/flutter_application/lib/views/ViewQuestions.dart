@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:provider/provider.dart';
+import 'package:roquiz/model/Themes.dart';
 import 'package:roquiz/widget/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/Question.dart';
@@ -83,6 +85,8 @@ class ViewQuestionsState extends State<ViewQuestions> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
+
     return Scaffold(
       appBar: AppBar(
         title: AnimatedOpacity(
@@ -106,6 +110,8 @@ class ViewQuestionsState extends State<ViewQuestions> {
         ),
         actions: [
           SearchBarWidget(
+            textFieldIconColor:
+                themeProvider.isDarkMode ? Colors.white : Colors.black,
             color: Colors.transparent,
             searchIconColor: Colors.white,
             boxShadow: false,
