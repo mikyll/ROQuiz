@@ -140,8 +140,10 @@ class ViewMenuState extends State<ViewMenu> {
             "Scaricare il nuovo file?",
         onConfirm: () {
           setState(() {
-            qRepo.update().then((_) => updateQuizPool(qRepo.questions.length));
-            _quizPool = qRepo.questions.length;
+            qRepo.update().then((_) {
+              updateQuizPool(qRepo.questions.length);
+              loadTopics();
+            });
           });
         },
         onCancel: () {},
@@ -158,7 +160,6 @@ class ViewMenuState extends State<ViewMenu> {
     qRepo.load().then(
       (_) {
         loadTopics();
-        _topicsPresent = qRepo.hasTopics();
       },
     ).onError((error, stackTrace) {
       _qRepoLoadingError = error.toString();
