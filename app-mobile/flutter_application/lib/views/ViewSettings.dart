@@ -44,8 +44,10 @@ class ViewSettingsState extends State<ViewSettings> {
   bool _confirmAlerts = Settings.DEFAULT_CONFIRM_ALERTS;
   bool _darkTheme = Settings.DEFAULT_DARK_THEME; // previous value
 
-  bool _wentBack =
-      false; // to check if the user went back while choosing the questions file
+  /// For Desktop platform: when a user leaves the Settings page with the
+  /// file picker dialog still open and then select a file, the upload will
+  /// fail.
+  bool _wentBack = false;
   bool _isLoading = false;
 
   void _updateQuizDefaults() {
@@ -230,7 +232,6 @@ class ViewSettingsState extends State<ViewSettings> {
     FilePickerResult? result = await FilePicker.platform
         .pickFiles(type: FileType.custom, allowedExtensions: ["txt"]);
 
-    // For Desktop platform: when a user leaves the Settings page, and then still uploads a questions file (the file picker window was still open).
     if (_wentBack) {
       return;
     }
@@ -796,16 +797,20 @@ class ViewSettingsState extends State<ViewSettings> {
                           ? null
                           : () {
                               widget.saveSettings(
-                                  _checkAppUpdate,
-                                  _checkQuestionsUpdate,
-                                  _questionNumber,
-                                  _timer,
-                                  _shuffleAnswers,
-                                  _confirmAlerts,
-                                  themeProvider.isDarkMode);
-                              _darkTheme = themeProvider.isDarkMode;
+                                _checkAppUpdate,
+                                _checkQuestionsUpdate,
+                                _questionNumber,
+                                _timer,
+                                _shuffleAnswers,
+                                _confirmAlerts,
+                                themeProvider.isDarkMode,
+                              );
 
-                              setState(() => _wentBack = true);
+                              setState(() {
+                                _darkTheme = themeProvider.isDarkMode;
+                                _wentBack = true;
+                              });
+
                               Navigator.pop(context);
                             },
                       child: Container(
@@ -826,12 +831,17 @@ class ViewSettingsState extends State<ViewSettings> {
                   FittedBox(
                     fit: BoxFit.fitWidth,
                     child: ElevatedButton(
-                      onPressed: () {
-                        themeProvider.toggleTheme(_darkTheme);
+                      onPressed: !_isChanged(themeProvider)
+                          ? null
+                          : () {
+                              themeProvider.toggleTheme(_darkTheme);
 
-                        setState(() => _wentBack = true);
-                        Navigator.pop(context);
-                      },
+                              setState(() {
+                                _wentBack = true;
+                              });
+
+                              Navigator.pop(context);
+                            },
                       child: Container(
                         alignment: Alignment.center,
                         height: 50.0,
