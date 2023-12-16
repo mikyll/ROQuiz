@@ -219,7 +219,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                   child: Row(
                     children: [
                       Text(
-                        "Question: ${_qIndex + 1}/${widget.settings.questionNumber}",
+                        "Domanda: ${_qIndex + 1}/${widget.settings.questionNumber}",
                         maxLines: 1,
                         style: const TextStyle(
                           fontSize: 24,
