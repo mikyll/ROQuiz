@@ -74,35 +74,6 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
-  void saveSettings(bool? appUpdateCheck, bool? questionsUpdateCheck, int? qNum,
-      int? timer, bool? shuffle, bool? confirmAlerts, bool? dTheme) {
-    setState(() {
-      if (appUpdateCheck != null) {
-        _settings.checkAppUpdate = appUpdateCheck;
-      }
-      if (questionsUpdateCheck != null) {
-        _settings.checkQuestionsUpdate = questionsUpdateCheck;
-      }
-      if (qNum != null) {
-        _settings.questionNumber = qNum;
-      }
-      if (timer != null) {
-        _settings.timer = timer;
-      }
-      if (shuffle != null) {
-        _settings.shuffleAnswers = shuffle;
-      }
-      if (confirmAlerts != null) {
-        _settings.confirmAlerts = confirmAlerts;
-      }
-      if (dTheme != null) {
-        _settings.darkTheme = dTheme;
-      }
-      _settings.saveToSharedPreferences();
-      loadTopics();
-    });
-  }
-
   Future<void> _launchInBrowser(String url) async {
     if (!await launchUrl(Uri.parse(url),
         mode: LaunchMode.externalApplication)) {
@@ -354,7 +325,6 @@ class ViewMenuState extends State<ViewMenu> {
                       builder: (context) => ViewSettings(
                             qRepo: qRepo,
                             settings: _settings,
-                            saveSettings: saveSettings,
                             reloadTopics: loadTopics,
                           )));
             },

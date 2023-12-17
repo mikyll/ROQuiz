@@ -19,14 +19,11 @@ class ViewSettings extends StatefulWidget {
     Key? key,
     required this.qRepo,
     required this.settings,
-    required this.saveSettings,
     required this.reloadTopics,
   }) : super(key: key);
 
   final QuestionRepository qRepo;
   final Settings settings;
-  final Function(bool? appCheck, bool? qCheck, int? qNum, int? timer,
-      bool? shuffle, bool? confirmAlerts, bool? dTheme) saveSettings;
   final Function() reloadTopics;
 
   @override
@@ -66,7 +63,7 @@ class ViewSettingsState extends State<ViewSettings> {
       }
     });
 
-    widget.saveSettings(null, null, qNum, timer, null, null, null);
+    _saveSettings(null, null, qNum, timer, null, null, null);
 
     setState(() {
       if (widget.qRepo.questions.length < 16) {
@@ -363,6 +360,46 @@ class ViewSettingsState extends State<ViewSettings> {
     }
   }
 
+  void _loadSettings() {
+    setState(() {
+      _checkQuestionsUpdate = widget.settings.checkQuestionsUpdate;
+      _questionNumber = widget.settings.questionNumber;
+      _timer = widget.settings.timer;
+      _shuffleAnswers = widget.settings.shuffleAnswers;
+      _confirmAlerts = widget.settings.confirmAlerts;
+      _darkTheme = widget.settings.darkTheme;
+    });
+  }
+
+  void _saveSettings(bool? appUpdateCheck, bool? questionsUpdateCheck,
+      int? qNum, int? timer, bool? shuffle, bool? confirmAlerts, bool? dTheme) {
+    setState(() {
+      if (appUpdateCheck != null) {
+        widget.settings.checkAppUpdate = appUpdateCheck;
+      }
+      if (questionsUpdateCheck != null) {
+        widget.settings.checkQuestionsUpdate = questionsUpdateCheck;
+      }
+      if (qNum != null) {
+        widget.settings.questionNumber = qNum;
+      }
+      if (timer != null) {
+        widget.settings.timer = timer;
+      }
+      if (shuffle != null) {
+        widget.settings.shuffleAnswers = shuffle;
+      }
+      if (confirmAlerts != null) {
+        widget.settings.confirmAlerts = confirmAlerts;
+      }
+      if (dTheme != null) {
+        widget.settings.darkTheme = dTheme;
+      }
+      widget.settings.saveToSharedPreferences();
+      widget.reloadTopics();
+    });
+  }
+
   void _showBackConfirmDialog(ThemeProvider themeProvider) {
     ConfirmationAlert.showConfirmationDialog(
       context,
@@ -382,12 +419,7 @@ class ViewSettingsState extends State<ViewSettings> {
   void initState() {
     super.initState();
 
-    _checkQuestionsUpdate = widget.settings.checkQuestionsUpdate;
-    _questionNumber = widget.settings.questionNumber;
-    _timer = widget.settings.timer;
-    _shuffleAnswers = widget.settings.shuffleAnswers;
-    _confirmAlerts = widget.settings.confirmAlerts;
-    _darkTheme = widget.settings.darkTheme;
+    _loadSettings();
   }
 
   @override
@@ -517,17 +549,9 @@ class ViewSettingsState extends State<ViewSettings> {
               // SETTING: Questions File
               Row(
                 children: [
-                  Expanded(
-                    child: InkWell(
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onDoubleTap: () {
-                          // TO-DO: edit
-                        },
-                        child: const Text("File domande: ",
-                            maxLines: 2, style: TextStyle(fontSize: 20))),
-                  ),
+                  const Expanded(
+                      child: Text("File domande: ",
+                          maxLines: 2, style: TextStyle(fontSize: 20))),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: SizedBox(
@@ -538,7 +562,6 @@ class ViewSettingsState extends State<ViewSettings> {
                           IconButtonWidget(
                             tooltip: _isLoading ? null : "Modifica",
                             onTap: () {
-                              print("TO-DO: Edit question file.");
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -796,7 +819,7 @@ class ViewSettingsState extends State<ViewSettings> {
                       onPressed: !_isChanged(themeProvider)
                           ? null
                           : () {
-                              widget.saveSettings(
+                              _saveSettings(
                                 _checkAppUpdate,
                                 _checkQuestionsUpdate,
                                 _questionNumber,
@@ -808,10 +831,8 @@ class ViewSettingsState extends State<ViewSettings> {
 
                               setState(() {
                                 _darkTheme = themeProvider.isDarkMode;
-                                _wentBack = true;
                               });
-
-                              Navigator.pop(context);
+                              themeProvider.toggleTheme(_darkTheme);
                             },
                       child: Container(
                         alignment: Alignment.center,
@@ -834,13 +855,8 @@ class ViewSettingsState extends State<ViewSettings> {
                       onPressed: !_isChanged(themeProvider)
                           ? null
                           : () {
+                              _loadSettings();
                               themeProvider.toggleTheme(_darkTheme);
-
-                              setState(() {
-                                _wentBack = true;
-                              });
-
-                              Navigator.pop(context);
                             },
                       child: Container(
                         alignment: Alignment.center,
