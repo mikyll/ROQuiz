@@ -233,6 +233,10 @@ Proposta feature:
       <td>✔️</td>
     </tr>
     <tr align="center">
+      <td>Impostazione: modifica del file domande (da dentro l'applicazione)</td>
+      <td>✔️</td>
+    </tr>
+    <tr align="center">
       <td>Impostazione: caricamento file domande esterno</td>
       <td>✔️</td>
     </tr>
