@@ -126,8 +126,13 @@ class _IconButtonLongPressWidgetState extends State<IconButtonLongPressWidget> {
   void _startHolding() async {
     // Make sure this isn't called more than once for
     // whatever reason.
-    if (_holding) return;
-    _holding = true;
+    if (_holding) {
+      return;
+    }
+
+    setState(() {
+      _holding = true;
+    });
 
     // Calculate the delay decrease per step
     final step =
@@ -137,12 +142,16 @@ class _IconButtonLongPressWidgetState extends State<IconButtonLongPressWidget> {
     while (_holding && widget.onUpdate != null) {
       widget.onUpdate!();
       await Future.delayed(Duration(milliseconds: delay.round()));
-      if (delay > widget.minDelay) delay -= step;
+      if (delay > widget.minDelay) {
+        delay -= step;
+      }
     }
   }
 
   void _stopHolding() {
-    _holding = false;
+    setState(() {
+      _holding = false;
+    });
   }
 
   @override
@@ -166,6 +175,14 @@ class _IconButtonLongPressWidgetState extends State<IconButtonLongPressWidget> {
             onTap: widget.onUpdate != null ? () => _stopHolding() : null,
             onTapDown: widget.onUpdate != null ? (_) => _startHolding() : null,
             onTapCancel: widget.onUpdate != null ? () => _stopHolding() : null,
+            onTapUp: widget.onUpdate != null ? (_) => _stopHolding() : null,
+            onFocusChange: widget.onUpdate != null
+                ? (value) {
+                    if (!value) {
+                      _stopHolding();
+                    }
+                  }
+                : null,
             highlightColor: themeProvider.isDarkMode
                 ? widget.darkPalette!.highlightColor
                 : widget.lightPalette!.highlightColor,

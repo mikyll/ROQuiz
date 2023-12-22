@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/AppUpdater.dart';
 import 'package:roquiz/model/Utils.dart';
@@ -31,6 +32,9 @@ class ViewSettings extends StatefulWidget {
 }
 
 class ViewSettingsState extends State<ViewSettings> {
+  final TextEditingController _questionNumberController =
+      TextEditingController();
+  final TextEditingController _timerController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   bool _checkAppUpdate = Settings.DEFAULT_CHECK_APP_UPDATE;
@@ -61,6 +65,9 @@ class ViewSettingsState extends State<ViewSettings> {
         _timer = widget.qRepo.questions.length * 2;
         timer = _timer;
       }
+
+      _questionNumberController.text = "$_questionNumber";
+      _timerController.text = "$_timer";
     });
 
     _saveSettings(null, null, qNum, timer, null, null, null);
@@ -268,40 +275,68 @@ class ViewSettingsState extends State<ViewSettings> {
   }
 
   void _resetQuestionNumber() {
-    setState(() => _questionNumber = Settings.DEFAULT_QUESTION_NUMBER);
-  }
-
-  void _increaseQuestionNumber(int v) {
     setState(() {
-      _questionNumber + v <= widget.qRepo.questions.length
-          ? _questionNumber += v
-          : _questionNumber = widget.qRepo.questions.length;
+      _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
+
+      _questionNumberController.text = "$_questionNumber";
     });
   }
 
-  void _decreaseQuestionNumber(int v) {
+  bool _canDecreaseQuestionNumber(int value) {
+    return _questionNumber - value >= Settings.MIN_QUESTIONS;
+  }
+
+  bool _canIncreaseQuestionNumber(int value) {
+    return _questionNumber + value <= widget.qRepo.questions.length;
+  }
+
+  void _updateQuestionNumber(int value) {
     setState(() {
-      _questionNumber - v >= Settings.MIN_QUESTIONS
-          ? _questionNumber -= v
-          : _questionNumber = 1;
+      _questionNumber = value;
+
+      if (value < Settings.MIN_QUESTIONS) {
+        _questionNumber = Settings.MIN_QUESTIONS;
+      }
+
+      if (value > widget.qRepo.questions.length) {
+        _questionNumber = widget.qRepo.questions.length;
+      }
+
+      // Update controller value
+      _questionNumberController.text = "$_questionNumber";
     });
   }
 
   void _resetTimer() {
-    setState(() => _timer = Settings.DEFAULT_TIMER);
-  }
-
-  void _increaseTimer(int v) {
     setState(() {
-      _timer + v <= widget.qRepo.questions.length * 2
-          ? _timer += v
-          : _timer = widget.qRepo.questions.length * 2;
+      _timer = Settings.DEFAULT_TIMER;
+
+      _timerController.text = "$_timer";
     });
   }
 
-  void _decreaseTimer(int v) {
+  bool _canDecreaseTimer(int value) {
+    return _timer - value >= Settings.MIN_TIMER;
+  }
+
+  bool _canIncreaseTimer(int value) {
+    return _timer + value <= widget.qRepo.questions.length * 2;
+  }
+
+  void _updateTimer(int value) {
     setState(() {
-      _timer - v >= Settings.MIN_TIMER ? _timer -= v : _timer = 2;
+      _timer = value;
+
+      if (value < Settings.MIN_TIMER) {
+        _timer = Settings.MIN_TIMER;
+      }
+
+      if (value > widget.qRepo.questions.length * 2) {
+        _timer = widget.qRepo.questions.length * 2;
+      }
+
+      // Update controller value
+      _timerController.text = "$_timer";
     });
   }
 
@@ -368,6 +403,9 @@ class ViewSettingsState extends State<ViewSettings> {
       _shuffleAnswers = widget.settings.shuffleAnswers;
       _confirmAlerts = widget.settings.confirmAlerts;
       _darkTheme = widget.settings.darkTheme;
+
+      _questionNumberController.text = "$_questionNumber";
+      _timerController.text = "$_timer";
     });
   }
 
@@ -480,25 +518,29 @@ class ViewSettingsState extends State<ViewSettings> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: InkWell(
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onDoubleTap: () {
-                          _resetCheckAppUpdate();
-                        },
-                        child: const Text("Controllo nuove versioni app: ",
-                            maxLines: 3,
-                            softWrap: true,
-                            style: TextStyle(fontSize: 20))),
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onDoubleTap: () {
+                        _resetCheckAppUpdate();
+                      },
+                      child: const Text(
+                        "Controllo nuove versioni app: ",
+                        maxLines: 3,
+                        softWrap: true,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
                   ),
                   SizedBox(
                       width: 120.0,
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
-                            value: _checkAppUpdate,
-                            onChanged: (bool? value) =>
-                                _selectCheckAppUpdate(value!)),
+                          value: _checkAppUpdate,
+                          onChanged: (bool? value) =>
+                              _selectCheckAppUpdate(value!),
+                        ),
                       ))
                 ],
               ),
@@ -523,16 +565,19 @@ class ViewSettingsState extends State<ViewSettings> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: InkWell(
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onDoubleTap: () {
-                          _resetCheckQuestionsUpdate();
-                        },
-                        child: const Text("Controllo nuove domande: ",
-                            maxLines: 3,
-                            softWrap: true,
-                            style: TextStyle(fontSize: 20))),
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onDoubleTap: () {
+                        _resetCheckQuestionsUpdate();
+                      },
+                      child: const Text(
+                        "Controllo nuove domande: ",
+                        maxLines: 3,
+                        softWrap: true,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
                   ),
                   SizedBox(
                       width: 120.0,
@@ -550,8 +595,13 @@ class ViewSettingsState extends State<ViewSettings> {
               Row(
                 children: [
                   const Expanded(
-                      child: Text("File domande: ",
-                          maxLines: 2, style: TextStyle(fontSize: 20))),
+                    child: Text(
+                      "File domande: ",
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  const SizedBox(width: 5.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: SizedBox(
@@ -619,11 +669,12 @@ class ViewSettingsState extends State<ViewSettings> {
                         child: const Text("Numero domande per quiz: ",
                             maxLines: 3, style: TextStyle(fontSize: 20))),
                   ),
+                  const SizedBox(width: 5.0),
                   // DECREASE POOL SIZE (QUESTION NUMBER)
                   IconButtonLongPressWidget(
-                    onUpdate: _questionNumber - 1 >= Settings.MIN_QUESTIONS
+                    onUpdate: _canDecreaseQuestionNumber(1)
                         ? () {
-                            _decreaseQuestionNumber(1);
+                            _updateQuestionNumber(_questionNumber - 1);
                           }
                         : null,
                     lightPalette: MyThemes.lightIconButtonPalette,
@@ -638,19 +689,48 @@ class ViewSettingsState extends State<ViewSettings> {
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Container(
                       alignment: Alignment.center,
-                      width: 35.0,
-                      child: Text("$_questionNumber",
-                          style: const TextStyle(fontSize: 20)),
+                      width: 40.0,
+                      child: TextField(
+                        key: UniqueKey(),
+                        controller: _questionNumberController,
+                        onEditingComplete: () {
+                          _updateQuestionNumber(
+                              int.tryParse(_questionNumberController.text) ??
+                                  _questionNumber);
+                        },
+                        onSubmitted: (value) {
+                          _updateQuestionNumber(
+                              int.tryParse(value) ?? _questionNumber);
+                        },
+                        onTapOutside: (_) {
+                          _updateQuestionNumber(
+                              int.tryParse(_questionNumberController.text) ??
+                                  _questionNumber);
+                        },
+                        maxLength: 3,
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                        keyboardType: const TextInputType.numberWithOptions(),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            counterStyle: TextStyle(
+                              height: double.minPositive,
+                            ),
+                            counterText: ""),
+                        style: const TextStyle(fontSize: 20),
+                      ),
                     ),
                   ),
                   // INCREASE POOL SIZE (QUESTION NUMBER)
                   IconButtonLongPressWidget(
-                    onUpdate:
-                        _questionNumber + 1 <= widget.qRepo.questions.length
-                            ? () {
-                                _increaseQuestionNumber(1);
-                              }
-                            : null,
+                    onUpdate: _canIncreaseQuestionNumber(1)
+                        ? () {
+                            _updateQuestionNumber(_questionNumber + 1);
+                          }
+                        : null,
                     lightPalette: MyThemes.lightIconButtonPalette,
                     darkPalette: MyThemes.darkIconButtonPalette,
                     width: 40.0,
@@ -674,11 +754,12 @@ class ViewSettingsState extends State<ViewSettings> {
                       child: const Text("Timer (minuti): ",
                           maxLines: 2, style: TextStyle(fontSize: 20))),
                 ),
+                const SizedBox(width: 5.0),
                 // DECREASE TIMER
                 IconButtonLongPressWidget(
-                  onUpdate: _timer - 1 >= Settings.MIN_TIMER
+                  onUpdate: _canDecreaseTimer(1)
                       ? () {
-                          _decreaseTimer(1);
+                          _updateTimer(_timer - 1);
                         }
                       : null,
                   lightPalette: MyThemes.lightIconButtonPalette,
@@ -693,16 +774,43 @@ class ViewSettingsState extends State<ViewSettings> {
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Container(
                     alignment: Alignment.center,
-                    width: 35.0,
-                    child:
-                        Text("$_timer", style: const TextStyle(fontSize: 20)),
+                    width: 40.0,
+                    child: TextField(
+                      key: UniqueKey(),
+                      controller: _timerController,
+                      onEditingComplete: () {
+                        _updateTimer(
+                            int.tryParse(_timerController.text) ?? _timer);
+                      },
+                      onSubmitted: (value) {
+                        _updateTimer(int.tryParse(value) ?? _timer);
+                      },
+                      onTapOutside: (_) {
+                        _updateTimer(
+                            int.tryParse(_timerController.text) ?? _timer);
+                      },
+                      maxLength: 3,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                      keyboardType: const TextInputType.numberWithOptions(),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          counterStyle: TextStyle(
+                            height: double.minPositive,
+                          ),
+                          counterText: ""),
+                      style: const TextStyle(fontSize: 20),
+                    ),
                   ),
                 ),
                 // INCREASE TIMER
                 IconButtonLongPressWidget(
-                  onUpdate: _timer + 1 <= widget.qRepo.questions.length * 2
+                  onUpdate: _canIncreaseTimer(1)
                       ? () {
-                          _increaseTimer(1);
+                          _updateTimer(_timer + 1);
                         }
                       : null,
                   lightPalette: MyThemes.lightIconButtonPalette,

@@ -28,6 +28,7 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   Quiz quiz = Quiz();
 
+  bool _showTime = true;
   bool _isOver = false;
   int _qIndex = 0;
   int _correctAnswers = 0;
@@ -219,45 +220,48 @@ class _ViewQuizState extends State<ViewQuiz> {
                   child: Row(
                     children: [
                       Text(
-                        "Domanda: ${_qIndex + 1}/${widget.settings.questionNumber}",
+                        "D${_qIndex + 1}/${widget.settings.questionNumber}",
                         maxLines: 1,
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Spacer(),
-                      RichText(
-                        maxLines: 2,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: themeProvider.isDarkMode
-                                  ? Colors.white
-                                  : Colors.black),
-                          children: <TextSpan>[
-                            const TextSpan(text: 'Timer: '),
-                            TextSpan(
-                              text:
-                                  "${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt()}",
+                      const Spacer(flex: 1),
+                      InkWell(
+                        onTap: _isOver
+                            ? null
+                            : () {
+                                setState(() {
+                                  _showTime = !_showTime;
+                                });
+                              },
+                        child: Opacity(
+                          opacity: _showTime || _isOver ? 1.0 : 0.0,
+                          child: RichText(
+                            maxLines: 1,
+                            text: TextSpan(
                               style: TextStyle(
-                                fontSize: 24,
-                                color: _getTimerColor(themeProvider),
-                              ),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: themeProvider.isDarkMode
+                                      ? Colors.white
+                                      : Colors.black),
+                              children: [
+                                const TextSpan(text: 'Time: '),
+                                TextSpan(
+                                  text:
+                                      "${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt()}",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color: _getTimerColor(themeProvider),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                      /*AutoSizeText(
-                        "Timer: ${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt()}",
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: _getTimerColor(),
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),*/
                     ],
                   ),
                 ),
@@ -266,7 +270,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                     controller: _scrollController,
                     primary: false,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: QuestionWidget(
                         questionText: _currentQuestion,
                         answers: _currentAnswers,
