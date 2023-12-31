@@ -371,7 +371,7 @@ Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato
 [total-lines-url]: https://img.shields.io/tokei/lines/github/mikyll/ROQuiz
 [pull-request-shield]: https://img.shields.io/github/issues-pr/mikyll/ROQuiz
 [pull-request-url]: https://img.shields.io/github/issues-pr/mikyll/ROQuiz
-[stars-shield]: https://img.shields.io/github/stars/mikyll/ROQuiz
+[stars-shield]: https://img.shields.io/github/stars/mikyll/ROQuiz?style=flat
 [stars-url]: https://github.com/mikyll/ROQuiz/stargazers
 [issues-shield]: https://img.shields.io/github/issues/mikyll/ROQuiz
 [issues-url]: https://github.com/mikyll/ROQuiz/issues
