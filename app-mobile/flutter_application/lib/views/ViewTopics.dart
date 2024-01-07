@@ -213,16 +213,18 @@ class ViewTopicsState extends State<ViewTopics> {
                   itemBuilder: (_, index) => Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: TopicWidget(
-                      onTap: () {
-                        if (_enabledTopics[index] ||
-                            !widget.selectedTopics[index]) {
-                          _selectTopic(index);
-                        }
-                      },
-                      checkBoxValue: widget.selectedTopics[index],
-                      onCheckBoxChanged: (_) =>
+                      onTap:
                           _enabledTopics[index] || !widget.selectedTopics[index]
-                              ? _selectTopic(index)
+                              ? () {
+                                  _selectTopic(index);
+                                }
+                              : null,
+                      checkBoxValue: widget.selectedTopics[index],
+                      onCheckBoxChanged:
+                          _enabledTopics[index] || !widget.selectedTopics[index]
+                              ? (_) {
+                                  _selectTopic(index);
+                                }
                               : null,
                       onPressedButton: () {
                         Navigator.push(
