@@ -24,16 +24,16 @@ class MyThemes {
     hoverColor: const Color.fromARGB(255, 91, 99, 181),
     iconColor: const Color.fromARGB(255, 255, 255, 255),
     splashColor: const Color.fromARGB(255, 160, 164, 212),
-    overlayColor: const Color.fromARGB(255, 160, 164, 212),
+    overlayColor: const Color.fromARGB(255, 91, 99, 181),
   );
 
   static final IconButtonPalette darkIconButtonPalette = IconButtonPalette(
     color: const Color.fromARGB(255, 182, 196, 255),
     highlightColor: const Color.fromARGB(255, 132, 150, 215),
-    hoverColor: const Color.fromARGB(255, 169, 184, 244),
+    hoverColor: const Color.fromARGB(255, 91, 99, 181),
     iconColor: const Color.fromARGB(255, 12, 40, 120),
     splashColor: const Color.fromARGB(255, 103, 124, 193),
-    overlayColor: const Color.fromARGB(255, 103, 124, 193),
+    overlayColor: const Color.fromARGB(255, 91, 99, 181),
   );
 
   static final themeLight = ThemeData(

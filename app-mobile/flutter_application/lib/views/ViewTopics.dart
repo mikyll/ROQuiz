@@ -165,7 +165,7 @@ class ViewTopicsState extends State<ViewTopics> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,7 +211,7 @@ class ViewTopicsState extends State<ViewTopics> {
                 child: ListView.builder(
                   itemCount: widget.qRepo.getTopics().length,
                   itemBuilder: (_, index) => Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
+                    padding: const EdgeInsets.only(bottom: 5.0),
                     child: TopicWidget(
                       onTap:
                           _enabledTopics[index] || !widget.selectedTopics[index]

@@ -92,70 +92,89 @@ class TopicWidget extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: InkWell(
-        splashColor: disabled ? Colors.transparent : null,
-        highlightColor: disabled ? Colors.transparent : null,
-        hoverColor: disabled ? Colors.transparent : null,
-        enableFeedback: true,
-        onTap: onTap != null ? () => onTap!() : null,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Transform.scale(
-                scale: 1.2,
-                child: Checkbox(
-                  value: checkBoxValue,
-                  onChanged: onCheckBoxChanged != null
-                      ? (value) => onCheckBoxChanged!(value)
-                      : null,
+      padding: const EdgeInsets.only(right: 5.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: InkWell(
+              splashColor: disabled ? Colors.transparent : null,
+              highlightColor: disabled ? Colors.transparent : null,
+              hoverColor: disabled ? Colors.transparent : null,
+              enableFeedback: true,
+              onTap: onTap != null ? () => onTap!() : null,
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Transform.scale(
+                        scale: 1.2,
+                        child: Checkbox(
+                          value: checkBoxValue,
+                          onChanged: onCheckBoxChanged != null
+                              ? (value) => onCheckBoxChanged!(value)
+                              : null,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        text,
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontSize: textSize,
+                          color: themeProvider.isDarkMode
+                              ? (darkTextColor
+                                      ?.withOpacity(disabled ? 0.3 : 1.0) ??
+                                  Colors.white
+                                      .withOpacity(disabled ? 0.3 : 1.0))
+                              : (lightTextColor
+                                      ?.withOpacity(disabled ? 0.3 : 1.0) ??
+                                  Colors.black
+                                      .withOpacity(disabled ? 0.3 : 1.0)),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "($questionNum)",
+                      style: TextStyle(
+                        fontSize: textSize,
+                        color: themeProvider.isDarkMode
+                            ? (darkTextColor
+                                    ?.withOpacity(disabled ? 0.3 : 1.0) ??
+                                Colors.white.withOpacity(disabled ? 0.3 : 1.0))
+                            : (lightTextColor
+                                    ?.withOpacity(disabled ? 0.3 : 1.0) ??
+                                Colors.black.withOpacity(disabled ? 0.3 : 1.0)),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Expanded(
-              child: Text(
-                text,
-                maxLines: 2,
-                style: TextStyle(
-                  fontSize: textSize,
-                  color: themeProvider.isDarkMode
-                      ? (darkTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
-                          Colors.white.withOpacity(disabled ? 0.3 : 1.0))
-                      : (lightTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
-                          Colors.black.withOpacity(disabled ? 0.3 : 1.0)),
-                ),
-              ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.arrow_forward_ios,
+              color: themeProvider.isDarkMode
+                  ? (darkTextColor?.withOpacity(1.0) ??
+                      Colors.white.withOpacity(1.0))
+                  : (lightTextColor?.withOpacity(1.0) ??
+                      Colors.black.withOpacity(1.0)),
             ),
-            Text(
-              "($questionNum)",
-              style: TextStyle(
-                fontSize: textSize,
-                color: themeProvider.isDarkMode
-                    ? (darkTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
-                        Colors.white.withOpacity(disabled ? 0.3 : 1.0))
-                    : (lightTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
-                        Colors.black.withOpacity(disabled ? 0.3 : 1.0)),
-              ),
-            ),
-            const SizedBox(width: 5.0),
-            IconButton(
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                color: themeProvider.isDarkMode
-                    ? (darkTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
-                        Colors.white.withOpacity(disabled ? 0.3 : 1.0))
-                    : (lightTextColor?.withOpacity(disabled ? 0.3 : 1.0) ??
-                        Colors.black.withOpacity(disabled ? 0.3 : 1.0)),
-              ),
-              hoverColor: Colors.transparent,
-              onPressed:
-                  onPressedButton != null ? () => onPressedButton!() : null,
-            ),
-          ],
-        ),
+            hoverColor: themeProvider.isDarkMode
+                ? MyThemes.darkIconButtonPalette.hoverColor
+                : MyThemes.lightIconButtonPalette.hoverColor,
+            onPressed:
+                onPressedButton != null ? () => onPressedButton!() : null,
+          ),
+        ],
       ),
     );
   }
