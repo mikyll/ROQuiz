@@ -18,7 +18,7 @@
   L'app permette di <b>simulare dei quiz d'esame</b>: vengono pescate, in modo casuale, delle domande a risposta multipla a cui l'utente deve rispondere entro un tempo limite, definito da un timer.<br/>
   <b>Pool corrente</b>: <i><span id="domande">107</span></i> domande differenti (ultima modifica: <i><span id="ultima_modifica">2023-07-19</span></i>).
 
-  [Download](https://github.com/mikyll/ROQuiz/releases/latest)
+  [**Download**](https://github.com/mikyll/ROQuiz/releases/latest)
   ·
   [Spiegazione Domande](./Domande%20RO%20con%20spiegazione.pdf)
   ·
