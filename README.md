@@ -377,7 +377,7 @@ Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato
 [issues-url]: https://github.com/mikyll/ROQuiz/issues
 [license-shield]: https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-lightgrey.svg
 [license-url]: https://creativecommons.org/licenses/by-nc-sa/4.0/
-[java-shield]: https://img.shields.io/badge/Java-ED8B00?logo=java&logoColor=white
+[java-shield]: https://custom-icon-badges.herokuapp.com/badge/Java-ED8B00?logo=java&logoColor=white
 [java-url]: https://www.java.com
 [dart-shield]: https://img.shields.io/badge/Dart-%230175C2.svg?logo=dart&logoColor=white
 [dart-url]: https://dart.dev/
