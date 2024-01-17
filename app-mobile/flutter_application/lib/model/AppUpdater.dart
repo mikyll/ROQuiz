@@ -29,10 +29,6 @@ class AppUpdater {
         }
       }
 
-      // test
-      print(newVersionPresent);
-      return (newVersionPresent, newVersion, newVersionDownloadURL);
-
       if (newVersionPresent) {
         newVersion = tagName;
 
@@ -64,13 +60,4 @@ class AppUpdater {
 
     return (newVersionPresent, newVersion, newVersionDownloadURL);
   }
-}
-
-void main() {
-  AppUpdater.checkNewVersion("1.09.1");
-  AppUpdater.checkNewVersion("1.09.1");
-  AppUpdater.checkNewVersion("1.10.1");
-  AppUpdater.checkNewVersion("1.10.0");
-  AppUpdater.checkNewVersion("1.11.0");
-  AppUpdater.checkNewVersion("2.9.0");
 }
