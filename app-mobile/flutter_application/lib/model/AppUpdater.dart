@@ -16,17 +16,22 @@ class AppUpdater {
     try {
       Map<String, dynamic> json = jsonDecode(response.body);
       String tagName = json['tag_name'];
-      List<String> repoVersion = tagName.replaceAll("v", "").split(".");
+      List<String> segmentsRepoV = tagName.replaceAll("v", "").split(".");
 
-      int repoMajor = int.parse(repoVersion[0]);
-      int repoMinor = int.parse(repoVersion[1]);
+      List<String> segmentsCurrV = currentVersion.split(".");
 
-      List<String> splittedCurrentVersion = currentVersion.split(".");
-      int currentMajor = int.parse(splittedCurrentVersion[0]);
-      int currentMinor = int.parse(splittedCurrentVersion[1]);
+      for (int i = 0;
+          i < segmentsRepoV.length && i < segmentsCurrV.length;
+          i++) {
+        if (int.parse(segmentsRepoV[i]) > int.parse(segmentsCurrV[i])) {
+          newVersionPresent = true;
+          break;
+        }
+      }
 
-      newVersionPresent = currentMajor < repoMajor ||
-          (currentMajor == repoMajor && currentMinor < repoMinor);
+      // test
+      print(newVersionPresent);
+      return (newVersionPresent, newVersion, newVersionDownloadURL);
 
       if (newVersionPresent) {
         newVersion = tagName;
@@ -59,4 +64,13 @@ class AppUpdater {
 
     return (newVersionPresent, newVersion, newVersionDownloadURL);
   }
+}
+
+void main() {
+  AppUpdater.checkNewVersion("1.09.1");
+  AppUpdater.checkNewVersion("1.09.1");
+  AppUpdater.checkNewVersion("1.10.1");
+  AppUpdater.checkNewVersion("1.10.0");
+  AppUpdater.checkNewVersion("1.11.0");
+  AppUpdater.checkNewVersion("2.9.0");
 }
