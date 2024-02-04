@@ -35,6 +35,7 @@ class ViewMenuState extends State<ViewMenu> {
 
   void loadTopics() {
     setState(() {
+      _qRepoLoadingError = "";
       _selectedTopics.clear();
       _topicsPresent = qRepo.topicsPresent;
       if (_topicsPresent) {
