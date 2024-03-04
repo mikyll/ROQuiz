@@ -1,5 +1,10 @@
+# Eclipse Project Setup
+
+## Indice
+
 <details open="open">
-  <summary><h2 style="display: inline-block">Indice</h2></summary>
+  <summary></summary>
+  
   <ol>
     <li>
       <a href="#installazione-java">Installazione Java</a>
@@ -20,9 +25,9 @@
   </ol>
 </details>
 
-### Installazione Java
+## Installazione Java
 
-#### Esempio Windows
+### Esempio Windows
 1. Scaricare Java 11 (jdk-11.0.11) o una versione più recente: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Java%20Installation%20Guide/InstallJava%20(1).png" width="70%"/><br/><br/>
 2. Estrarne il contenuto in una directory a piacere (meglio se nella stessa con le altre installazioni Java, di default è "C:\Program Files\Java\")<br/>
@@ -42,7 +47,7 @@
 <img src="https://github.com/mikyll/ROQuiz/blob/main/gfx/Java%20Installation%20Guide/InstallJava%20(7).png" width="70%"/><br/>
 5. Estrarne il contenuto in una directory a piacere (meglio se nella stessa con le altre installazioni Java, di default è "C:\Program Files\Java\").
 
-### Setup progetto
+## Setup progetto
 1. Installare l'ultima versione di Eclipse [download Eclipse](https://www.eclipse.org/downloads/).
 2. Controllare che Eclipse utilizzi una JRE adeguata (almeno 11.0): Window > Preferences > Java > Installed JREs.<br/>
 In caso contrario aggiungerla: Add > Standard VM > Directory... (selezionare la directory dell'JDK).
@@ -61,14 +66,14 @@ Linux: Tasto destro sulla classe application.Main > Run > Run Configurations > A
 NB: la differenza è il separatore ';' su Windows e ':' su Linux (avrei voluto scoprirlo subito invece di perdere 3 giorni a cercare di capire come mai non trovava il modulo roquiz :) )
 Ora l'applicazione è pronta per essere eseguita all'interno di Eclipse.
 
-### Build JRE con JavaFX
+## Build JRE con JavaFX
 Per eseguire l'applicazione standalone è necessario buildare una jre che includa JavaFX: per farlo si può usare jlink, che è compreso nell'installazione Java.
-#### Windows
+### Windows
 <pre>
 jlink --module-path "path/to/jaavafx-jmods";mods --add-modules=roquiz --output fxjreWin --compress=2 --strip-debug --no-header-files --no-man-pages
 </pre>
 
-#### Linux
+### Linux
 NB: controllare con java -version che sia installato Java 11 o una versione più recente.
 <pre>
 jlink --module-path "path/to/jaavafx-jmods":mods --add-modules=roquiz --output fxjreLin --compress=2 --strip-debug --no-header-files --no-man-pages
