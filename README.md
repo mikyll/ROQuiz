@@ -26,7 +26,9 @@
 </div>
 
 ## Demo
+
 ### Mobile
+
 <table style="border: none">
   <tr align="center">
     <td><img width=50% src="./gfx/[GIF] Mobile_Quiz.gif" alt="DemoMobileGIF"/></td>
@@ -41,6 +43,7 @@
 </table>
 
 ### Desktop
+
 <table style="border: none">
   <tr align="center">
     <td><img src="./gfx/[GIF] Desktop_QuizEnding.gif" alt="TimeoutGIF"/></td>
@@ -53,6 +56,7 @@
 </table>
 
 ### Desktop (Old)
+
 <details>
   <summary>Versione Java funzionante ma non più supportata.</summary>
   <br/>
@@ -70,12 +74,15 @@
 </details>
 
 ## Disclaimer
+
 L'obiettivo dell'applicazione è esercitarsi coi quiz dopo aver studiato la teoria (molto meglio se dal libro, in quanto è completo ed esaustivo). <b>Non mi assumo responsabilità di alcun tipo nel caso di errori nelle domande o nelle risposte, né tantomento nel caso di bocciature potenti</b>. Fatene un buon uso e buona fortuna con l'esame <3
 
 ## Download
+
 Scaricare l'[ultima release](https://github.com/mikyll/ROQuiz/releases/latest), per il proprio dispositivo (desktop/mobile).
 
 ## Formattazione domande
+
 Le domande sono caricate da un <a href="./Domande.txt">file di testo (.txt)</a> che ha il seguente formato:
 * (opzionale) Argomenti:
   - la riga di un argomento inizia col carattere speciale '@', seguito dal titolo dell'argomento (es: Complessità). Ogni riga di argomento è seguita dalle domande relative a quell'argomento, fino all'argomento successivo. Alla fine della riga dell'argomento possono essere usati caratteri non alfabetici (ad esempio '=') per separare visivamente le domande di argomenti differenti (tali caratteri verranno ignorati).
@@ -117,27 +124,15 @@ A
 </pre>
 
 ## Spiegazione Domande
+
 [Questo documento](./Domande%20RO%20con%20spiegazione.pdf), a cura di [Lorenzo di Palma](https://github.com/lollofred) e [Filippo Veronesi](https://github.com/filippoveronesi), contiene la spiegazione alla maggior parte delle domande presenti nel quiz.
 
 ## Come Contribuire
-Aggiunta domande o feature al progetto:
-1. Fare una **fork** della repository.
-2. Clonare la repository in locale.
-3. (Opzionale) Creare un nuovo branch.
-4. Aggiungere le modifiche:
-    - Per aggiungere nuove domande: modificare il file 'Domande.txt', inserendo le nuove domande sotto gli argomenti relativi.<br/>
-      **NB**: in caso non si sappia sotto quale argomento inserire una domanda, farlo presente in un commento nella pull request.<br/>
-    - Per aggiungere delle feature: basta implementarle e integrarle col resto dell'applicazione.
-5. Fare commit e push.
-6. Creare una **pull request** aggiungendo informazioni se necessario.
-7. Ammirare il proprio nome inserito in questa meravigliosa lista che viene aggiornata automaticamente.<br/>
-   **NB**: per far sì che il nome del contributor venga registrato correttamente nella lista, controllare che al commit corrispondano username ed e-mail del proprio account GitHub.
 
-Proposta feature:
-1. Aprire un issue spiegando in cosa consiste la feature da aggiungere.
-2. Possibilmente aggiungervi la label "enhancement".
+Vedi [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ### Contributors Attuali
+
 <!-- readme: contributors -start -->
 <table>
 <tr>
@@ -187,6 +182,7 @@ Proposta feature:
 <!-- readme: contributors -end -->
 
 ## Funzionalità
+
 <details>
   <summary>Features dell'app e sviluppi futuri.</summary>
   <br/>
@@ -292,11 +288,13 @@ Proposta feature:
 </details>
 
 ## Built With
+
 - IDE: **VSCode** v1.81.1
 - Framework: **Flutter** v3.13.1
 
 <!--
 ### Desktop (Old)
+
 Per l'implementazione dell'app desktop ho utilizzato Java 11 e JavaFX 11, come IDE Eclipse (versione 2020-03 (4.15.0)), e SceneBuilder per la creazione della grafica (file FXML). Vedere i passi seguiti per il [setup del progetto](./Project%20Setup.md).
 
 versione Java: JavaSE-11 (jdk-11.0.11)<br/>
@@ -306,6 +304,7 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
 ## Build
 
 ### Setup Flutter e Run del Progetto
+
 1. Scaricare l'SDK Flutter dal sito web [docs.flutter.dev](https://docs.flutter.dev/get-started/install).
 2. Assicurarsi di aver inserito la directory `bin/` alla variabile d'ambiente `PATH`.
 3. Aprire un terminale e lanciare `flutter doctor`.<br/>
@@ -316,6 +315,7 @@ versione JavaFX: JavaFX 11 (javafx-sdk-11.0.2)
    ```
 
 ### Compilazione Release
+
 Il progetto dell'applicazione flutter si trova nella directory [`app-mobile/flutter_application`](./app-mobile/flutter_application).
 Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato:
 - Android: `flutter build apk --split-per-abi`;
@@ -324,6 +324,7 @@ Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato
 - Web: `flutter build chrome`, `flutter build edge`.
 
 ## Riferimenti
+
 <details>
   <summary>Link e risorse a cui ho fatto riferimento durante lo sviluppo dell'app.</summary><br/>
 
