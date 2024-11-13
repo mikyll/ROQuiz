@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/AppUpdater.dart';
+import 'package:roquiz/model/PlatformType.dart';
 import 'package:roquiz/model/Utils.dart';
 import 'package:roquiz/persistence/QuestionRepository.dart';
 import 'package:roquiz/persistence/Settings.dart';
@@ -526,164 +527,171 @@ class ViewSettingsState extends State<ViewSettings> {
             primary: false,
             children: [
               // SETTING: New App Version Check
-              Row(
-                children: [
-                  IconButtonWidget(
-                    onTap: _isLoading
-                        ? null
-                        : () {
-                            _checkNewVersion();
-                          },
-                    lightPalette: MyThemes.lightIconButtonPalette,
-                    darkPalette: MyThemes.darkIconButtonPalette,
-                    width: 40.0,
-                    height: 40.0,
-                    icon: Icons.sync_rounded,
-                    iconSize: 35,
-                    borderRadius: 5,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: InkWell(
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onDoubleTap: () {
-                        _resetCheckAppUpdate();
-                      },
-                      child: const Text(
-                        "Controllo nuove versioni app: ",
-                        maxLines: 3,
-                        softWrap: true,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                      width: 120.0,
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: _checkAppUpdate,
-                          onChanged: (bool? value) =>
-                              _selectCheckAppUpdate(value!),
+              getPlatformType() == PlatformType.WEB
+                  ? const SizedBox.shrink()
+                  : Row(
+                      children: [
+                        IconButtonWidget(
+                          onTap: _isLoading
+                              ? null
+                              : () {
+                                  _checkNewVersion();
+                                },
+                          lightPalette: MyThemes.lightIconButtonPalette,
+                          darkPalette: MyThemes.darkIconButtonPalette,
+                          width: 40.0,
+                          height: 40.0,
+                          icon: Icons.sync_rounded,
+                          iconSize: 35,
+                          borderRadius: 5,
                         ),
-                      ))
-                ],
-              ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: InkWell(
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onDoubleTap: () {
+                              _resetCheckAppUpdate();
+                            },
+                            child: const Text(
+                              "Controllo nuove versioni app: ",
+                              maxLines: 3,
+                              softWrap: true,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                            width: 120.0,
+                            child: Transform.scale(
+                              scale: 1.5,
+                              child: Checkbox(
+                                value: _checkAppUpdate,
+                                onChanged: (bool? value) =>
+                                    _selectCheckAppUpdate(value!),
+                              ),
+                            ))
+                      ],
+                    ),
               const SizedBox(height: 20),
               // SETTING: New Questions Check
-              Row(
-                children: [
-                  IconButtonWidget(
-                    onTap: _isLoading
-                        ? null
-                        : () {
-                            _checkNewQuestions();
-                          },
-                    lightPalette: MyThemes.lightIconButtonPalette,
-                    darkPalette: MyThemes.darkIconButtonPalette,
-                    width: 40.0,
-                    height: 40.0,
-                    icon: Icons.sync_rounded,
-                    iconSize: 35,
-                    borderRadius: 5,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: InkWell(
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onDoubleTap: () {
-                        _resetCheckQuestionsUpdate();
-                      },
-                      child: const Text(
-                        "Controllo nuove domande: ",
-                        maxLines: 3,
-                        softWrap: true,
-                        style: TextStyle(fontSize: 20),
-                      ),
+              getPlatformType() == PlatformType.WEB
+                  ? const SizedBox.shrink()
+                  : Row(
+                      children: [
+                        IconButtonWidget(
+                          onTap: _isLoading
+                              ? null
+                              : () {
+                                  _checkNewQuestions();
+                                },
+                          lightPalette: MyThemes.lightIconButtonPalette,
+                          darkPalette: MyThemes.darkIconButtonPalette,
+                          width: 40.0,
+                          height: 40.0,
+                          icon: Icons.sync_rounded,
+                          iconSize: 35,
+                          borderRadius: 5,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: InkWell(
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onDoubleTap: () {
+                              _resetCheckQuestionsUpdate();
+                            },
+                            child: const Text(
+                              "Controllo nuove domande: ",
+                              maxLines: 3,
+                              softWrap: true,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                            width: 120.0,
+                            child: Transform.scale(
+                              scale: 1.5,
+                              child: Checkbox(
+                                  value: _checkQuestionsUpdate,
+                                  onChanged: (bool? value) =>
+                                      _selectCheckQuestionsUpdate(value!)),
+                            ))
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                      width: 120.0,
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                            value: _checkQuestionsUpdate,
-                            onChanged: (bool? value) =>
-                                _selectCheckQuestionsUpdate(value!)),
-                      ))
-                ],
-              ),
               const SizedBox(height: 20),
               // SETTING: Questions File
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      "File domande: ",
-                      maxLines: 2,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  const SizedBox(width: 5.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: SizedBox(
-                      width: 100.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButtonWidget(
-                            tooltip: _isLoading ? null : "Modifica",
-                            onTap: _isLoading
-                                ? null
-                                : () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ViewEdit(
-                                          qRepo: widget.qRepo,
-                                          settings: widget.settings,
-                                          reloadTopics: widget.reloadTopics,
-                                          updateQuizDefaults:
-                                              _updateQuizDefaults,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                            lightPalette: MyThemes.lightIconButtonPalette,
-                            darkPalette: MyThemes.darkIconButtonPalette,
-                            width: 40.0,
-                            height: 40.0,
-                            icon: Icons.edit,
-                            iconSize: 35,
-                            borderRadius: 5,
+              getPlatformType() == PlatformType.WEB
+                  ? const SizedBox.shrink()
+                  : Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            "File domande: ",
+                            maxLines: 2,
+                            style: TextStyle(fontSize: 20),
                           ),
-                          const Spacer(flex: 1),
-                          IconButtonWidget(
-                            tooltip: _isLoading ? null : "Carica un file",
-                            onTap: _isLoading
-                                ? null
-                                : () {
-                                    _loadQuestionFilePath();
-                                  },
-                            lightPalette: MyThemes.lightIconButtonPalette,
-                            darkPalette: MyThemes.darkIconButtonPalette,
-                            width: 40.0,
-                            height: 40.0,
-                            icon: Icons.file_open_outlined,
-                            iconSize: 35,
-                            borderRadius: 5,
+                        ),
+                        const SizedBox(width: 5.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: SizedBox(
+                            width: 100.0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButtonWidget(
+                                  tooltip: _isLoading ? null : "Modifica",
+                                  onTap: _isLoading
+                                      ? null
+                                      : () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ViewEdit(
+                                                qRepo: widget.qRepo,
+                                                settings: widget.settings,
+                                                reloadTopics:
+                                                    widget.reloadTopics,
+                                                updateQuizDefaults:
+                                                    _updateQuizDefaults,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                  lightPalette: MyThemes.lightIconButtonPalette,
+                                  darkPalette: MyThemes.darkIconButtonPalette,
+                                  width: 40.0,
+                                  height: 40.0,
+                                  icon: Icons.edit,
+                                  iconSize: 35,
+                                  borderRadius: 5,
+                                ),
+                                const Spacer(flex: 1),
+                                IconButtonWidget(
+                                  tooltip: _isLoading ? null : "Carica un file",
+                                  onTap: _isLoading
+                                      ? null
+                                      : () {
+                                          _loadQuestionFilePath();
+                                        },
+                                  lightPalette: MyThemes.lightIconButtonPalette,
+                                  darkPalette: MyThemes.darkIconButtonPalette,
+                                  width: 40.0,
+                                  height: 40.0,
+                                  icon: Icons.file_open_outlined,
+                                  iconSize: 35,
+                                  borderRadius: 5,
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
               const SizedBox(height: 20),
               // SETTING: USE MAX NUMBER OF QUESTIONS FOR EACH TOPIC
               Row(

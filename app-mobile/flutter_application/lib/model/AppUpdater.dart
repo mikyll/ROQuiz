@@ -10,6 +10,10 @@ class AppUpdater {
     String newVersion = "";
     String newVersionDownloadURL = "";
 
+    if (getPlatformType() == PlatformType.WEB) {
+      return (newVersionPresent, newVersion, newVersionDownloadURL);
+    }
+
     http.Response response = await http.get(Uri.parse(
         'https://api.github.com/repos/mikyll/ROQuiz/releases/latest'));
 
