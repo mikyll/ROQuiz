@@ -10,6 +10,7 @@ class Settings {
 
   static const bool DEFAULT_CHECK_APP_UPDATE = true;
   static const bool DEFAULT_CHECK_QUESTIONS_UPDATE = true;
+  static const bool DEFAULT_MAX_QUESTIONS_PER_TOPIC = false;
   static int DEFAULT_QUESTION_NUMBER = 16;
   static int DEFAULT_TIMER = 18;
   static const bool DEFAULT_SHUFFLE_ANSWERS = true;
@@ -18,6 +19,7 @@ class Settings {
 
   late bool checkAppUpdate = DEFAULT_CHECK_APP_UPDATE;
   late bool checkQuestionsUpdate = DEFAULT_CHECK_QUESTIONS_UPDATE;
+  late bool maxQuestionPerTopic = DEFAULT_MAX_QUESTIONS_PER_TOPIC;
   late int questionNumber = DEFAULT_QUESTION_NUMBER;
   late int timer = DEFAULT_TIMER;
   late bool shuffleAnswers = DEFAULT_SHUFFLE_ANSWERS;
@@ -31,6 +33,8 @@ class Settings {
         prefs.getBool("checkAppUpdate") ?? DEFAULT_CHECK_APP_UPDATE;
     checkQuestionsUpdate =
         prefs.getBool("checkQuestionsUpdate") ?? DEFAULT_CHECK_QUESTIONS_UPDATE;
+    maxQuestionPerTopic =
+        prefs.getBool("maxQuestionPerTopic") ?? DEFAULT_MAX_QUESTIONS_PER_TOPIC;
     questionNumber = prefs.getInt("questionNumber") ?? DEFAULT_QUESTION_NUMBER;
     timer = prefs.getInt("timer") ?? DEFAULT_TIMER;
     shuffleAnswers = prefs.getBool("shuffleAnswers") ?? DEFAULT_SHUFFLE_ANSWERS;
@@ -43,6 +47,7 @@ class Settings {
 
     prefs.setBool("checkAppUpdate", checkAppUpdate);
     prefs.setBool("checkQuestionsUpdate", checkQuestionsUpdate);
+    prefs.setBool("maxQuestionPerTopic", maxQuestionPerTopic);
     prefs.setInt("questionNumber", questionNumber);
     prefs.setInt("timer", timer);
     prefs.setBool("shuffleAnswers", shuffleAnswers);
@@ -55,9 +60,14 @@ class Settings {
 
     prefs.setBool("checkAppUpdate", DEFAULT_CHECK_APP_UPDATE);
     prefs.setBool("checkQuestionsUpdate", DEFAULT_CHECK_QUESTIONS_UPDATE);
+    prefs.setBool("maxQuestionPerTopic", DEFAULT_MAX_QUESTIONS_PER_TOPIC);
     prefs.setInt("questionNumber", DEFAULT_QUESTION_NUMBER);
     prefs.setInt("timer", DEFAULT_TIMER);
     prefs.setBool("shuffleAnswers", DEFAULT_SHUFFLE_ANSWERS);
     prefs.setBool("confirmAlerts", DEFAULT_CONFIRM_ALERTS);
+  }
+
+  String toString() {
+    return "";
   }
 }

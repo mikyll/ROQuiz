@@ -39,6 +39,7 @@ class ViewSettingsState extends State<ViewSettings> {
 
   bool _checkAppUpdate = Settings.DEFAULT_CHECK_APP_UPDATE;
   bool _checkQuestionsUpdate = Settings.DEFAULT_CHECK_QUESTIONS_UPDATE;
+  bool _maxQuestionPerTopic = Settings.DEFAULT_SHUFFLE_ANSWERS;
   int _questionNumber = Settings.DEFAULT_QUESTION_NUMBER;
   int _timer = Settings.DEFAULT_TIMER;
   bool _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS;
@@ -51,12 +52,12 @@ class ViewSettingsState extends State<ViewSettings> {
   bool _wentBack = false;
   bool _isLoading = false;
 
+  // Useful when checking for new questions: if the new questions exceeds the
+  // Settings values bounds, thenupdate the pool (questionNumber) settings.
   void _updateQuizDefaults() {
     int? qNum, timer;
 
     setState(() {
-      // If the new questions exceeds the Settings values bounds, update the settings
-
       if (_questionNumber > widget.qRepo.questions.length) {
         _questionNumber = widget.qRepo.questions.length;
         qNum = _questionNumber;
@@ -70,7 +71,8 @@ class ViewSettingsState extends State<ViewSettings> {
       _timerController.text = "$_timer";
     });
 
-    _saveSettings(null, null, qNum, timer, null, null, null);
+    // TODO
+    _saveSettings(null, null, null, qNum, timer, null, null, null);
 
     setState(() {
       if (widget.qRepo.questions.length < 16) {
@@ -283,11 +285,13 @@ class ViewSettingsState extends State<ViewSettings> {
   }
 
   bool _canDecreaseQuestionNumber(int value) {
-    return _questionNumber - value >= Settings.MIN_QUESTIONS;
+    return !_maxQuestionPerTopic &&
+        _questionNumber - value >= Settings.MIN_QUESTIONS;
   }
 
   bool _canIncreaseQuestionNumber(int value) {
-    return _questionNumber + value <= widget.qRepo.questions.length;
+    return !_maxQuestionPerTopic &&
+        _questionNumber + value <= widget.qRepo.questions.length;
   }
 
   void _updateQuestionNumber(int value) {
@@ -340,6 +344,15 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
+  void _resetMaxQuestionPerTopic() {
+    setState(
+        () => _maxQuestionPerTopic = Settings.DEFAULT_MAX_QUESTIONS_PER_TOPIC);
+  }
+
+  void _selectMaxQuestionPerTopic(bool value) {
+    setState(() => _maxQuestionPerTopic = value);
+  }
+
   void _resetShuffleAnswers() {
     setState(() => _shuffleAnswers = Settings.DEFAULT_SHUFFLE_ANSWERS);
   }
@@ -363,6 +376,7 @@ class ViewSettingsState extends State<ViewSettings> {
   void _reset(ThemeProvider themeProvider) {
     _resetCheckAppUpdate();
     _resetCheckQuestionsUpdate();
+    _resetMaxQuestionPerTopic();
     _resetQuestionNumber();
     _resetTimer();
     _resetShuffleAnswers();
@@ -372,6 +386,7 @@ class ViewSettingsState extends State<ViewSettings> {
   bool _isDefault(ThemeProvider themeProvider) {
     return _checkAppUpdate == Settings.DEFAULT_CHECK_APP_UPDATE &&
         _checkQuestionsUpdate == Settings.DEFAULT_CHECK_QUESTIONS_UPDATE &&
+        _maxQuestionPerTopic == Settings.DEFAULT_MAX_QUESTIONS_PER_TOPIC &&
         _questionNumber == Settings.DEFAULT_QUESTION_NUMBER &&
         _timer == Settings.DEFAULT_TIMER &&
         _shuffleAnswers == Settings.DEFAULT_SHUFFLE_ANSWERS &&
@@ -381,6 +396,7 @@ class ViewSettingsState extends State<ViewSettings> {
   bool _isChanged(ThemeProvider themeProvider) {
     return _checkAppUpdate != widget.settings.checkAppUpdate ||
         _checkQuestionsUpdate != widget.settings.checkQuestionsUpdate ||
+        _maxQuestionPerTopic != widget.settings.maxQuestionPerTopic ||
         _questionNumber != widget.settings.questionNumber ||
         _timer != widget.settings.timer ||
         _shuffleAnswers != widget.settings.shuffleAnswers ||
@@ -398,6 +414,7 @@ class ViewSettingsState extends State<ViewSettings> {
   void _loadSettings() {
     setState(() {
       _checkQuestionsUpdate = widget.settings.checkQuestionsUpdate;
+      _maxQuestionPerTopic = widget.settings.maxQuestionPerTopic;
       _questionNumber = widget.settings.questionNumber;
       _timer = widget.settings.timer;
       _shuffleAnswers = widget.settings.shuffleAnswers;
@@ -409,14 +426,24 @@ class ViewSettingsState extends State<ViewSettings> {
     });
   }
 
-  void _saveSettings(bool? appUpdateCheck, bool? questionsUpdateCheck,
-      int? qNum, int? timer, bool? shuffle, bool? confirmAlerts, bool? dTheme) {
+  void _saveSettings(
+      bool? appUpdateCheck,
+      bool? questionsUpdateCheck,
+      bool? maxQuestionPerTopic,
+      int? qNum,
+      int? timer,
+      bool? shuffle,
+      bool? confirmAlerts,
+      bool? dTheme) {
     setState(() {
       if (appUpdateCheck != null) {
         widget.settings.checkAppUpdate = appUpdateCheck;
       }
       if (questionsUpdateCheck != null) {
         widget.settings.checkQuestionsUpdate = questionsUpdateCheck;
+      }
+      if (maxQuestionPerTopic != null) {
+        widget.settings.maxQuestionPerTopic = maxQuestionPerTopic;
       }
       if (qNum != null) {
         widget.settings.questionNumber = qNum;
@@ -655,7 +682,7 @@ class ViewSettingsState extends State<ViewSettings> {
                 ],
               ),
               const SizedBox(height: 20),
-              // SETTING: QUIZ QUESTION NUMBER
+              // SETTING: USE MAX NUMBER OF QUESTIONS FOR EACH TOPIC
               Row(
                 children: [
                   Expanded(
@@ -664,8 +691,36 @@ class ViewSettingsState extends State<ViewSettings> {
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
                         onDoubleTap: () {
-                          _resetQuestionNumber();
+                          _resetMaxQuestionPerTopic();
                         },
+                        child: const Text("Quiz su argomenti interi: ",
+                            maxLines: 3, style: TextStyle(fontSize: 20))),
+                  ),
+                  SizedBox(
+                      width: 120.0,
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                            value: _maxQuestionPerTopic,
+                            onChanged: (bool? value) =>
+                                _selectMaxQuestionPerTopic(value!)),
+                      ))
+                ],
+              ),
+              const SizedBox(height: 20),
+              // SETTING: QUIZ QUESTION NUMBER
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onDoubleTap: !_maxQuestionPerTopic
+                            ? () {
+                                _resetQuestionNumber();
+                              }
+                            : null,
                         child: const Text("Numero domande per quiz: ",
                             maxLines: 3, style: TextStyle(fontSize: 20))),
                   ),
@@ -692,6 +747,7 @@ class ViewSettingsState extends State<ViewSettings> {
                       width: 40.0,
                       child: TextField(
                         key: UniqueKey(),
+                        enabled: !_maxQuestionPerTopic,
                         controller: _questionNumberController,
                         onEditingComplete: () {
                           _updateQuestionNumber(
@@ -777,6 +833,7 @@ class ViewSettingsState extends State<ViewSettings> {
                     width: 40.0,
                     child: TextField(
                       key: UniqueKey(),
+                      enabled: !_maxQuestionPerTopic,
                       controller: _timerController,
                       onEditingComplete: () {
                         _updateTimer(
@@ -821,7 +878,6 @@ class ViewSettingsState extends State<ViewSettings> {
                   iconSize: 35,
                 ),
               ]),
-
               const SizedBox(height: 20),
               // SETTING: SHUFFLE ANSWERS
               Row(
@@ -930,6 +986,7 @@ class ViewSettingsState extends State<ViewSettings> {
                               _saveSettings(
                                 _checkAppUpdate,
                                 _checkQuestionsUpdate,
+                                _maxQuestionPerTopic,
                                 _questionNumber,
                                 _timer,
                                 _shuffleAnswers,

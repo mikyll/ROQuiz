@@ -50,20 +50,21 @@ class ViewMenuState extends State<ViewMenu> {
     });
   }
 
+  // Restituisce il pool di domande che possono capitare nel quiz, in base agli argomenti
   List<Question> _getPoolFromSelected() {
+    if (!_topicsPresent) {
+      return qRepo.questions;
+    }
+
     List<Question> res = [];
-    if (_topicsPresent) {
-      for (int i = 0, j = 0; i < _selectedTopics.length; i++) {
-        if (_selectedTopics[i]) {
-          for (int k = 0; k < qRepo.getQuestionNumPerTopic()[i]; j++, k++) {
-            res.add(qRepo.getQuestions()[j]);
-          }
-        } else {
-          j += qRepo.getQuestionNumPerTopic()[i];
+    for (int i = 0, j = 0; i < _selectedTopics.length; i++) {
+      if (_selectedTopics[i]) {
+        for (int k = 0; k < qRepo.getQuestionNumPerTopic()[i]; j++, k++) {
+          res.add(qRepo.getQuestions()[j]);
         }
+      } else {
+        j += qRepo.getQuestionNumPerTopic()[i];
       }
-    } else {
-      res = qRepo.questions;
     }
 
     return res;
@@ -278,7 +279,8 @@ class ViewMenuState extends State<ViewMenu> {
                     const Icon(
                       Icons.format_list_numbered_rounded,
                     ),
-                    Text(" Domande: ${_settings.questionNumber} su $_quizPool"),
+                    Text(
+                        " Domande: ${_settings.maxQuestionPerTopic ? _quizPool : _settings.questionNumber} su $_quizPool"),
                     const SizedBox(width: 20),
                     const Icon(
                       Icons.timer_rounded,

@@ -25,7 +25,7 @@ class ViewQuiz extends StatefulWidget {
 class _ViewQuizState extends State<ViewQuiz> {
   final ScrollController _scrollController = ScrollController();
 
-  Quiz quiz = Quiz();
+  final Quiz _quiz = Quiz();
 
   bool _showTime = true;
   bool _isOver = false;
@@ -36,6 +36,7 @@ class _ViewQuizState extends State<ViewQuiz> {
   List<String> _currentAnswers = [];
 
   List<Answer> _userAnswers = [];
+  int _questionNumber = 0;
 
   late Timer _timer;
   int _timerCounter = -1;
@@ -50,14 +51,14 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   void _nextQuestion() {
     setState(() {
-      if (_qIndex < widget.settings.questionNumber - 1) _qIndex++;
+      if (_qIndex < _questionNumber - 1) _qIndex++;
     });
   }
 
   void _loadQuestion() {
     setState(() {
-      _currentQuestion = quiz.questions[_qIndex].question;
-      _currentAnswers = quiz.questions[_qIndex].answers;
+      _currentQuestion = _quiz.questions[_qIndex].question;
+      _currentAnswers = _quiz.questions[_qIndex].answers;
     });
   }
 
@@ -66,7 +67,7 @@ class _ViewQuizState extends State<ViewQuiz> {
       _userAnswers[_qIndex] = _userAnswers[_qIndex] != Answer.values[answer]
           ? Answer.values[answer]
           : Answer.NONE;
-      if (Answer.values[answer] == quiz.questions[_qIndex].correctAnswer) {}
+      if (Answer.values[answer] == _quiz.questions[_qIndex].correctAnswer) {}
     });
   }
 
@@ -75,8 +76,8 @@ class _ViewQuizState extends State<ViewQuiz> {
       _isOver = true;
       _timer.cancel();
     });
-    for (int i = 0; i < widget.settings.questionNumber; i++) {
-      if (_userAnswers[i] == quiz.questions[i].correctAnswer) {
+    for (int i = 0; i < _questionNumber; i++) {
+      if (_userAnswers[i] == _quiz.questions[i].correctAnswer) {
         _correctAnswers++;
       }
     }
@@ -96,18 +97,25 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   void _resetQuiz() {
     setState(() {
+      if (widget.settings.maxQuestionPerTopic) {
+        _questionNumber = widget.questions.length;
+      } else {
+        _questionNumber = widget.settings.questionNumber;
+      }
+
       _userAnswers = [];
-      for (int i = 0; i < widget.settings.questionNumber; i++) {
+      for (int i = 0; i < _questionNumber; i++) {
         _userAnswers.add(Answer.NONE);
       }
-      quiz.resetQuiz(widget.questions, widget.questions.length,
+
+      _quiz.resetQuiz(widget.questions, widget.questions.length,
           widget.settings.shuffleAnswers);
 
       _qIndex = 0;
       _correctAnswers = 0;
       _isOver = false;
-      _currentQuestion = quiz.questions[_qIndex].question;
-      _currentAnswers = quiz.questions[_qIndex].answers;
+      _currentQuestion = _quiz.questions[_qIndex].question;
+      _currentAnswers = _quiz.questions[_qIndex].answers;
 
       _timerCounter = widget.settings.timer * 60;
     });
@@ -140,7 +148,7 @@ class _ViewQuizState extends State<ViewQuiz> {
   void initState() {
     super.initState();
 
-    quiz.resetQuiz(widget.questions, widget.questions.length,
+    _quiz.resetQuiz(widget.questions, widget.questions.length,
         widget.settings.shuffleAnswers);
     _resetQuiz();
   }
@@ -219,7 +227,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                   child: Row(
                     children: [
                       Text(
-                        "D${_qIndex + 1}/${widget.settings.questionNumber}",
+                        "D${_qIndex + 1}/$_questionNumber",
                         maxLines: 1,
                         style: const TextStyle(
                           fontSize: 24,
@@ -314,8 +322,8 @@ class _ViewQuizState extends State<ViewQuiz> {
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Text(
-                                "Risposte corrette: $_correctAnswers/${widget.settings.questionNumber}\n"
-                                "Risposte errate: ${widget.settings.questionNumber - _correctAnswers}/${widget.settings.questionNumber}\n"
+                                "Risposte corrette: $_correctAnswers/$_questionNumber\n"
+                                "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
                                 "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]",
                                 maxLines: 4,
                               ),
@@ -356,7 +364,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                   IconButtonLongPressWidget(
                     lightPalette: MyThemes.lightIconButtonPalette,
                     darkPalette: MyThemes.darkIconButtonPalette,
-                    onUpdate: _qIndex < widget.settings.questionNumber - 1
+                    onUpdate: _qIndex < _questionNumber - 1
                         ? () {
                             _nextQuestion();
                             _loadQuestion();

@@ -29,6 +29,17 @@ class ViewTopicsState extends State<ViewTopics> {
   final List<bool> _enabledTopics =
       []; // current state of checkboxes (enabled/disabled). If disabled it cannot be selected
   int _currentQuizPool = 0;
+  int _selectedTopicsNum = 0;
+
+  // Check if a topic can be selected/deselected.
+  // NB: a topic cannot be deselected if the remaining topics do not add up for
+  // the pool minimum questions number.
+  bool _isEnabled(int index) {
+    if (widget.settings.maxQuestionPerTopic) {
+      return _selectedTopicsNum > 1 || _enabledTopics[index];
+    }
+    return _enabledTopics[index] || !widget.selectedTopics[index];
+  }
 
   void _selectTopic(int index) {
     setState(() {
@@ -55,14 +66,20 @@ class ViewTopicsState extends State<ViewTopics> {
   }
 
   void _updateEnabledTopics() {
+    print(
+        "MAX: ${widget.settings.maxQuestionPerTopic}, selectedNum: $_selectedTopicsNum");
     setState(() {
+      _selectedTopicsNum = 0;
       for (int i = 0; i < _enabledTopics.length; i++) {
-        // se il numero del pool meno queste è minore del numero di domande nel quiz
         _enabledTopics[i] = true;
 
+        // la checkbox dell'argomento è abilitata (ovvero è possibile deselezionarlo)
+        // solo se, deselezionandolo, nel pool risultante rimarrebbero comunque
+        // abbastanza domande per il pool (num domande >= pool)
         if (widget.selectedTopics[i]) {
           _enabledTopics[i] = _currentQuizPool - widget.qRepo.qNumPerTopic[i] >=
               widget.settings.questionNumber;
+          _selectedTopicsNum++;
         }
       }
     });
@@ -121,8 +138,13 @@ class ViewTopicsState extends State<ViewTopics> {
     super.initState();
     setState(() {
       _currentQuizPool = _getPoolSize();
+      _selectedTopicsNum = 0;
       for (int i = 0; i < widget.selectedTopics.length; i++) {
         _enabledTopics.add(widget.selectedTopics[i]);
+
+        if (widget.selectedTopics[i]) {
+          _selectedTopicsNum++;
+        }
       }
 
       _updateEnabledTopics();
@@ -203,7 +225,9 @@ class ViewTopicsState extends State<ViewTopics> {
               ),
               TopicsInfoWidget(
                 text: "Domande per Quiz: ",
-                value: widget.settings.questionNumber,
+                value: widget.settings.maxQuestionPerTopic
+                    ? _currentQuizPool
+                    : widget.settings.questionNumber,
                 color: Colors.indigo.withOpacity(0.35),
               ),
               const SizedBox(height: 25),
@@ -213,19 +237,17 @@ class ViewTopicsState extends State<ViewTopics> {
                   itemBuilder: (_, index) => Padding(
                     padding: const EdgeInsets.only(bottom: 5.0),
                     child: TopicWidget(
-                      onTap:
-                          _enabledTopics[index] || !widget.selectedTopics[index]
-                              ? () {
-                                  _selectTopic(index);
-                                }
-                              : null,
+                      onTap: _isEnabled(index)
+                          ? () {
+                              _selectTopic(index);
+                            }
+                          : null,
                       checkBoxValue: widget.selectedTopics[index],
-                      onCheckBoxChanged:
-                          _enabledTopics[index] || !widget.selectedTopics[index]
-                              ? (_) {
-                                  _selectTopic(index);
-                                }
-                              : null,
+                      onCheckBoxChanged: _isEnabled(index)
+                          ? (_) {
+                              _selectTopic(index);
+                            }
+                          : null,
                       onPressedButton: () {
                         Navigator.push(
                             context,
@@ -240,7 +262,7 @@ class ViewTopicsState extends State<ViewTopics> {
                       textSize: 20.0,
                       lightTextColor: Colors.black,
                       darkTextColor: Colors.white,
-                      disabled: !_enabledTopics[index],
+                      disabled: !_isEnabled(index),
                     ),
                   ),
                 ),
