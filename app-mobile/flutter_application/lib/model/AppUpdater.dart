@@ -16,20 +16,8 @@ class AppUpdater {
     try {
       Map<String, dynamic> json = jsonDecode(response.body);
       String tagName = json['tag_name'];
-      List<String> segmentsRepoV = tagName.replaceAll("v", "").split(".");
 
-      List<String> segmentsCurrV = currentVersion.split(".");
-
-      for (int i = 0;
-          i < segmentsRepoV.length && i < segmentsCurrV.length;
-          i++) {
-        if (int.parse(segmentsRepoV[i]) > int.parse(segmentsCurrV[i])) {
-          newVersionPresent = true;
-          break;
-        }
-      }
-
-      if (newVersionPresent) {
+      if (compareVersions(currentVersion, tagName) == 1) {
         newVersion = tagName;
 
         // Retrieve asset link from APIs
@@ -60,4 +48,41 @@ class AppUpdater {
 
     return (newVersionPresent, newVersion, newVersionDownloadURL);
   }
+
+  static int compareVersions(String localVersion, String remoteVersion) {
+    List<String> segmentsLocalV = localVersion.replaceAll("v", "").split(".");
+    List<String> segmentsRemoteV = remoteVersion.replaceAll("v", "").split(".");
+
+    // Get max length
+    int maxLength = segmentsLocalV.length > segmentsRemoteV.length
+        ? segmentsLocalV.length
+        : segmentsRemoteV.length;
+
+    // Add padding '0' to ensure equal length
+    segmentsLocalV.addAll(List.filled(maxLength - segmentsLocalV.length, '0'));
+    segmentsRemoteV
+        .addAll(List.filled(maxLength - segmentsRemoteV.length, '0'));
+
+    // Compare versions
+    for (int i = 0; i < maxLength; i++) {
+      int localSegment = int.tryParse(segmentsLocalV[i]) ?? 0;
+      int remoteSegment = int.tryParse(segmentsRemoteV[i]) ?? 0;
+      if (remoteSegment > localSegment) {
+        return 1;
+      } else if (remoteSegment < localSegment) {
+        return -1;
+      }
+    }
+    return 0;
+  }
+}
+
+// Test main
+void main(List<String> args) {
+  print("test");
+  // local, remote
+  print(AppUpdater.compareVersions("v1.10.1", "v1.11.0"));
+  print(AppUpdater.compareVersions("v1.11.1", "v1.10.0"));
+  print(AppUpdater.compareVersions("v1.11.0", "v1.10.1"));
+  print(AppUpdater.compareVersions("v1.11.0", "v1.11.0"));
 }
