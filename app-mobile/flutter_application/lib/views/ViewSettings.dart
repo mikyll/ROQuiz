@@ -638,19 +638,22 @@ class ViewSettingsState extends State<ViewSettings> {
                         children: [
                           IconButtonWidget(
                             tooltip: _isLoading ? null : "Modifica",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ViewEdit(
-                                    qRepo: widget.qRepo,
-                                    settings: widget.settings,
-                                    reloadTopics: widget.reloadTopics,
-                                    updateQuizDefaults: _updateQuizDefaults,
-                                  ),
-                                ),
-                              );
-                            },
+                            onTap: _isLoading
+                                ? null
+                                : () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ViewEdit(
+                                          qRepo: widget.qRepo,
+                                          settings: widget.settings,
+                                          reloadTopics: widget.reloadTopics,
+                                          updateQuizDefaults:
+                                              _updateQuizDefaults,
+                                        ),
+                                      ),
+                                    );
+                                  },
                             lightPalette: MyThemes.lightIconButtonPalette,
                             darkPalette: MyThemes.darkIconButtonPalette,
                             width: 40.0,
