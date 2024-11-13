@@ -836,7 +836,6 @@ class ViewSettingsState extends State<ViewSettings> {
                     width: 40.0,
                     child: TextField(
                       key: UniqueKey(),
-                      enabled: !_maxQuestionPerTopic,
                       controller: _timerController,
                       onEditingComplete: () {
                         _updateTimer(
