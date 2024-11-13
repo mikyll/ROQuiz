@@ -1,0 +1,74 @@
+Conferma
+Annulla
+Ok
+Sì
+No
+ROQuiz
+Avvia
+Argomenti
+Domande
+Tempo
+Se l'app ti è piaciuta, considera di lasciare una stellina al repository GitHub!\n\nBasta un click qui!
+Quiz
+Stai per uscire
+Sei sicuro di voler uscire dal quiz?
+D
+Tempo
+Termina
+Terminare il quiz?
+Non hai risposto alle seguenti domande
+Risposte corrette
+Risposte errate
+Range di voto finale, in base allo scritto
+Riavvia
+Argomenti
+Domande Totali
+Pool Corrente
+Domande per Quiz
+Ripristina
+Lista domande
+Cerca
+Impostazioni
+Modifiche non salvate
+Uscire senza salvare?
+Controllo nuove versioni
+Errore durante il controllo
+Versione attuale
+Nuova versione
+Procedere con il download?
+Nessuna nuova versione
+L'applicazione è aggiornata all'ultima versione disponibile
+Nuova versione app
+È stata trovata una versione più recente dell'applicazione.
+Controllo nuove domande
+Nessuna nuova domanda
+Non sono state trovate nuove domande. Il file è aggiornato all'ultima versione
+Nuove Domande
+È stata trovata una versione più recente del file contenente le domande
+File domande
+Modifica
+Carica un file
+Usa tutte le domande per ciascun argomento
+Numero domande per quiz
+Tempo (minuti)
+Mescola risposte
+Alert di Conferma
+Tema scuro
+Salva
+Annulla
+Ripristina
+Info
+Applicazione sviluppata da
+In collaborazione con
+contributors
+Repository GitHub
+Licenze
+Visualizza le licenze
+Problemi con l'app?
+Apri una issue su GitHub!
+Ti sfido a tenere premuta la stellina
+Crediti
+Build macOS e iOS
+Spiegazione domande
+Nuove domande
+Licenze
