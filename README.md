@@ -55,7 +55,7 @@
   </tr>
 </table>
 
-### Desktop (Old)
+#### Java (Obsoleta)
 
 <details>
   <summary>Versione Java funzionante ma non più supportata.</summary>
@@ -72,6 +72,10 @@
     </tr>
   </table>
 </details>
+
+### Web
+
+Per ora è accessibile al mio sito web: [mikyll.github.io/projects/roquiz/play](https://mikyll.github.io/projects/roquiz/play/)
 
 ## Disclaimer
 
