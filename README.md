@@ -347,6 +347,10 @@ Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato
   - [Download asset Flutter](https://pub.dev/packages/download_assets)
   - [LongPress Widget](https://stackoverflow.com/questions/52128572/flutter-execute-method-so-long-the-button-pressed)
   - [Flutter CI/CD using GitHub Actions](https://blog.logrocket.com/flutter-ci-cd-using-github-actions/)
+  - Build Flutter Installers:
+    - [MacOS](https://medium.com/@fluttergems/packaging-and-distributing-flutter-desktop-apps-the-missing-guide-part-1-macos-b36438269285)
+    - [Windows](https://medium.com/@fluttergems/packaging-and-distributing-flutter-desktop-apps-the-missing-guide-for-open-source-indie-0b468d5e9e70)
+    - [Linux](https://medium.com/@fluttergems/packaging-and-distributing-flutter-desktop-apps-the-missing-guide-part-3-linux-24ef8d30a5b4)
 
 </details>
 
