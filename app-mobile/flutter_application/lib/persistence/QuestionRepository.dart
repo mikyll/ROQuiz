@@ -127,6 +127,10 @@ class QuestionRepository {
 
   /// Returns true if there is a more recent questions file
   Future<(bool, DateTime, int)> checkQuestionUpdates() async {
+    if (getPlatformType() == PlatformType.MOBILE) {
+      return (false, DateTime.now(), 0);
+    }
+
     DateTime date = await getLatestQuestionFileDate();
     String content = await downloadFile();
     int qNum = isValid(content);

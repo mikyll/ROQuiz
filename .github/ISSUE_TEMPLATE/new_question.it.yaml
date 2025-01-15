@@ -1,0 +1,90 @@
+name: Nuova Domanda ROQuiz
+description: Richiesta di aggiunta di una nuova domanda
+title: "[Nuova Domanda]: "
+labels:
+  - new-question
+projects: 
+  - "mikyll/ROQuiz"
+assignees:
+  - mikyll
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **NB**: Sei un eroe.
+
+  - type: dropdown
+    id: topic-answer
+    attributes:
+      label: Argomento
+      multiple: false
+      options:
+        - Programmazione Matematica
+        - Programmazione Lineare
+        - Algoritmo del Simplesso
+        - Dualità
+        - Programmazione Lineare Intera
+        - Complessità
+      default: 0
+    validations:
+      required: false
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Domanda
+      placeholder: Scrivi qui il corpo della domanda.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: answerA
+    attributes:
+      label: Risposta A
+      placeholder: Scrivi qui la risposta A
+    validations:
+      required: true
+  - type: input
+    id: answerB
+    attributes:
+      label: Risposta B
+      placeholder: Scrivi qui la risposta B
+    validations:
+      required: true
+  - type: input
+    id: answerC
+    attributes:
+      label: Risposta C
+      placeholder: Scrivi qui la risposta C
+    validations:
+      required: false
+  - type: input
+    id: answerD
+    attributes:
+      label: Risposta D
+      placeholder: Scrivi qui la risposta D
+    validations:
+      required: false
+  - type: input
+    id: answerE
+    attributes:
+      label: Risposta E
+      placeholder: Scrivi qui la risposta E
+    validations:
+      required: false
+
+  - type: dropdown
+    id: correct-answer
+    attributes:
+      label: Risposta Corretta
+      multiple: false
+      options:
+        - A
+        - B
+        - C
+        - D
+        - E
+      default: 0
+    validations:
+      required: false
