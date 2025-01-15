@@ -526,6 +526,57 @@ class ViewSettingsState extends State<ViewSettings> {
             shrinkWrap: true,
             primary: false,
             children: [
+              // SETTING: Language
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onDoubleTap: () {
+                        _resetCheckAppUpdate();
+                      },
+                      child: const Text(
+                        "Lingua: ",
+                        maxLines: 3,
+                        softWrap: true,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 150.0,
+                    child: Container(
+                      margin: const EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+                        border: Border.all(color: Colors.grey, width: 2.0),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            icon: const Icon(Icons.arrow_drop_down_outlined),
+                            isExpanded: true,
+                            value: "it",
+                            items: [
+                              DropdownMenuItem(
+                                value: "it",
+                                child: Text("  Italiano  "),
+                              ),
+                              DropdownMenuItem(
+                                value: "en",
+                                child: Text("  Inglese  "),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              // TO-DO
+                            }),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
               // SETTING: New App Version Check
               getPlatformType() == PlatformType.WEB
                   ? const SizedBox.shrink()
