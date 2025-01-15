@@ -9,6 +9,11 @@ assignees:
   - mikyll
 
 body:
+  - type: markdown
+    attributes:
+      value: |
+        **NB**: Sei un eroe.
+
   - type: dropdown
     id: topic-answer
     attributes:
@@ -21,18 +26,16 @@ body:
         - Dualità
         - Programmazione Lineare Intera
         - Complessità
+      default: 0
     validations:
       required: false
 
-  - type: markdown
-    attributes:
-      value: |
-        Sei un eroe.
   - type: textarea
     id: question
     attributes:
       label: Domanda
       placeholder: Scrivi qui il corpo della domanda.
+      render: text
     validations:
       required: true
   - type: input
@@ -82,5 +85,6 @@ body:
         - C
         - D
         - E
+      default: 0
     validations:
       required: false
