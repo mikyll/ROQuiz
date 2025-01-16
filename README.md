@@ -139,49 +139,61 @@ Vedi [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 <!-- readme: contributors -start -->
 <table>
-<tr>
-    <td align="center">
-        <a href="https://github.com/mikyll">
-            <img src="https://avatars.githubusercontent.com/u/56556806?v=4" width="100;" alt="mikyll"/>
-            <br />
-            <sub><b>mikyll</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/filippoveronesi">
-            <img src="https://avatars.githubusercontent.com/u/61983672?v=4" width="100;" alt="filippoveronesi"/>
-            <br />
-            <sub><b>filippoveronesi</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/TryKatChup">
-            <img src="https://avatars.githubusercontent.com/u/39459803?v=4" width="100;" alt="TryKatChup"/>
-            <br />
-            <sub><b>TryKatChup</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/Federicoand98">
-            <img src="https://avatars.githubusercontent.com/u/40764404?v=4" width="100;" alt="Federicoand98"/>
-            <br />
-            <sub><b>Federicoand98</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/lollofred">
-            <img src="https://avatars.githubusercontent.com/u/73138694?v=4" width="100;" alt="lollofred"/>
-            <br />
-            <sub><b>lollofred</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/RedDuality">
-            <img src="https://avatars.githubusercontent.com/u/61973885?v=4" width="100;" alt="RedDuality"/>
-            <br />
-            <sub><b>RedDuality</b></sub>
-        </a>
-    </td></tr>
+	<tbody>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/mikyll">
+                    <img src="https://avatars.githubusercontent.com/u/56556806?v=4" width="100;" alt="mikyll"/>
+                    <br />
+                    <sub><b>mikyll</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/filippoveronesi">
+                    <img src="https://avatars.githubusercontent.com/u/61983672?v=4" width="100;" alt="filippoveronesi"/>
+                    <br />
+                    <sub><b>filippoveronesi</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/TryKatChup">
+                    <img src="https://avatars.githubusercontent.com/u/39459803?v=4" width="100;" alt="TryKatChup"/>
+                    <br />
+                    <sub><b>TryKatChup</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Emanuele8">
+                    <img src="https://avatars.githubusercontent.com/u/22657821?v=4" width="100;" alt="Emanuele8"/>
+                    <br />
+                    <sub><b>Emanuele8</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Federicoand98">
+                    <img src="https://avatars.githubusercontent.com/u/40764404?v=4" width="100;" alt="Federicoand98"/>
+                    <br />
+                    <sub><b>Federicoand98</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/lollofred">
+                    <img src="https://avatars.githubusercontent.com/u/73138694?v=4" width="100;" alt="lollofred"/>
+                    <br />
+                    <sub><b>lollofred</b></sub>
+                </a>
+            </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/RedDuality">
+                    <img src="https://avatars.githubusercontent.com/u/61973885?v=4" width="100;" alt="RedDuality"/>
+                    <br />
+                    <sub><b>RedDuality</b></sub>
+                </a>
+            </td>
+		</tr>
+	<tbody>
 </table>
 <!-- readme: contributors -end -->
 
