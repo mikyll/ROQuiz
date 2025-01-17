@@ -417,13 +417,6 @@ D. gli elementi della riga 0, colonne da 1 a n, sono tutti non negativi.
 E. Nessuna di queste.
 D
 
-Siano dati un problema di programmazione lineare ed il corrispondente tableau ottimo. L'analisi di sensistivita' dimostra che, se si cambia il coefficiente di costo di una variabile, la base attuale resta ottima se
-A. i nuovi valori dei costi relativi sono non negativi
-B. i nuovi valori delle variabili base soddisfano le equazioni dei vincoli
-C. i nuovi valori delle variabili base sono negativi o nulli
-D. i nuovi valori delle variabili base sono non negativi
-A
-
 Si consideri un tableau dell'algoritmo del simplesso primale. I costi relativi si trovano:
 A. In nessuna di queste posizioni
 B. Nella riga 0, nelle colonne corrispondenti alla base
@@ -471,6 +464,14 @@ C. Significa che la soluzione ottima è illimitata
 D. Significa che il sistema dei vincoli del problema originale è ridondante
 E. Non di può dire, occorrono ulteriori iterazioni
 E
+
+Siano dati un problema di programmazione lineare ed il corrispondente tableau ottimo. L'analisi di sensistivita' dimostra che, se si cambia il coefficiente di costo di una variabile, la base attuale resta ottima se
+A. i nuovi valori dei costi relativi sono non negativi
+B. i nuovi valori delle variabili base soddisfano le equazioni dei vincoli
+C. i nuovi valori delle variabili base sono negativi o nulli
+D. i nuovi valori delle variabili base sono non negativi
+E. risposta vuota
+A
 
 @Dualità ===============================================================================================
 Ad una variabile primale non negativa corrisponde
@@ -527,13 +528,6 @@ B. Ha colto con grande anticipo l'essenza della programmazione intera.
 C. Offre una solida dimostrazione sull'efficienza dell'algoritmo del simplesso.
 D. Identifica la relazione tra l'ammissibilità del primale e l'impossibilità del duale.
 E. Nessuna di queste
-A
-
-Si considerino un sistema (I), definito da {Ax = b, x >= 0}, ed un sistema (II), definito da {y′A <= 0, b′y > 0}. Si ha allora che
-A. il sistema (I) è impossible se e solo se il sistema (II) è possibile
-B. Nessuna di queste
-C. il sistema (I) è impossible se e solo se il sistema (II) è impossibile
-D. il sistema (I) è possible se e solo se il sistema (II) è possibile
 A
 
 Il teorema degli scarti complementari afferma:
@@ -648,6 +642,14 @@ D. Dipende dal gradiente della funzione obiettivo del duale
 E. Dipende dai gradienti delle due funzioni obiettivo
 B
 
+Si considerino un sistema (I), definito da {Ax = b, x >= 0}, ed un sistema (II), definito da {y′A <= 0, b′y > 0}. Si ha allora che
+A. il sistema (I) è impossible se e solo se il sistema (II) è possibile
+B. Nessuna di queste
+C. il sistema (I) è impossible se e solo se il sistema (II) è impossibile
+D. il sistema (I) è possible se e solo se il sistema (II) è possibile
+E. risposta vuota
+A
+
 @Programmazione Lineare Intera =========================================================================
 Relativamente ad un problema ILP e il suo rilassamento continuo LP
 A. z(ILP) >= z(LP)
@@ -663,14 +665,6 @@ B. z(LP) <= z(ILP)
 C. z(LP) > z(ILP)
 D. z(LP) < z(ILP)
 E. z(LP) = z(ILP)
-B
-
-Si consideri un problema ILP di massimizzazione. Sia z(P) il valore della sua soluzione ottima e z(L(P)) quello del suo rilassamento continuo. Si ha allora che
-A. z(P) > z(L(P))
-B. z(P) <= z(L(P))
-C. z(P) < z(L(P))
-D. z(P) = z(L(P))
-E. z(P) >= z(L(P))
 B
 
 Una matrice m x n è totalmente unimodulare se:
@@ -776,6 +770,14 @@ C. La regione ammissibile di P è contenuta nella regione ammissibile di L(P)
 D. L'intersezione fra la regione ammissibile di P e quella di L(P) è vuota
 E. Nessuna di queste
 C
+
+Si consideri un problema ILP di massimizzazione. Sia z(P) il valore della sua soluzione ottima e z(L(P)) quello del suo rilassamento continuo. Si ha allora che
+A. z(P) > z(L(P))
+B. z(P) <= z(L(P))
+C. z(P) < z(L(P))
+D. z(P) = z(L(P))
+E. z(P) >= z(L(P))
+B
 
 @Complessità ===========================================================================================
 Cosa è un'istanza di un problema?
