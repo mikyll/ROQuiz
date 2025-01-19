@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:roquiz/model/PlatformType.dart';
@@ -12,11 +13,11 @@ class QuestionRepository {
   static final DateTime CUSTOM_DATE = DateTime.parse("1999-01-01T00:00:00Z");
   static final DateTime DEFAULT_LAST_QUESTION_UPDATE =
       DateTime.parse("2023-07-19T20:18:08Z");
-  static const int DEFAULT_ANSWER_NUMBER = 5;
+  static const int MIN_ANSWER_NUMBER = 2;
+  static const int MAX_ANSWER_NUMBER = 5;
 
   DateTime lastQuestionUpdate = DEFAULT_LAST_QUESTION_UPDATE;
   List<Question> questions = [];
-  bool topicsPresent = false;
   List<String> topics = [];
   List<int> qNumPerTopic = [];
 
@@ -100,7 +101,7 @@ class QuestionRepository {
   Future<void> load() async {
     String content = await loadString();
 
-    parse(content);
+    parseFromTxt(content);
   }
 
   /// Retrieves the timestamp of the latest question file, from the GitHub repository.
@@ -212,7 +213,7 @@ class QuestionRepository {
     }
 
     // Load to repository
-    parse(content);
+    parseFromTxt(content);
 
     return true;
   }
@@ -223,94 +224,116 @@ class QuestionRepository {
   }
 
   // Parse a string and save each question in the repository
-  void parse(String content) async {
+  void parseFromTxt(String content) async {
     questions.clear();
     topics.clear();
     qNumPerTopic.clear();
-    topicsPresent = false;
     error = "";
+    int numPerTopic = 0;
 
-    int numPerTopic = 0, totQuest = 0;
+    // Empty file
+    if (content.trim().isEmpty) {
+      throw FormatException("File vuoto");
+    }
 
     LineSplitter ls = const LineSplitter();
-    List<String> lines = ls.convert(content);
+    List<String> lines = ls.convert(content.trim());
 
-    // the question file can be subdivided by topics (i == line #)
-    for (int i = 0; i < lines.length; i++) {
-      // if the first line starts with '@', then the file has topics
-      if (i == 0 && lines[i].startsWith("@")) {
-        topicsPresent = true;
+    // Trim leading and trailing spaces
+    for (String s in lines) {
+      s = s.trim();
+    }
 
-        topics.add(lines[i].substring(1).replaceAll("=", ""));
+    // Loop over lines
+    for (int iQ = 0; iQ < lines.length; iQ++) {
+      // Check if the current line is empty or full of white spaces
+      if (lines[iQ].isEmpty) continue;
 
+      // Check if the current line is a topic
+      if (lines[iQ].startsWith("@")) {
+        // Check if there already are questions without topic
+        if (topics.isEmpty && questions.isNotEmpty) {
+          throw FormatException(
+              "Riga ${iQ + 1}: errore argomenti! E' stato trovato un argomento ma sono gia' presenti domande senza");
+        }
+
+        if (topics.isNotEmpty) {
+          qNumPerTopic.add(numPerTopic);
+          numPerTopic = 0;
+        }
+
+        // Parse topic
+        String topic = lines[iQ].substring(1).replaceAll("=", "").trim();
+        topics.add(topic);
         continue;
       }
 
-      // next question
-      if (lines.length > i && lines[i].isNotEmpty) {
-        // next topic
-        if (topicsPresent && lines[i].startsWith("@")) {
-          qNumPerTopic.add(numPerTopic);
-          numPerTopic = 0;
+      // Parse question
+      Question q = Question(questions.length, lines[iQ]);
+      if (topics.isNotEmpty) q.setTopic(topics.last);
+      iQ++;
 
-          topics.add(lines[i].substring(1).replaceAll("=", ""));
-          i++;
-        } else if (lines[i].startsWith("@")) {
-          throw FileSystemException(
-              "Riga ${i + 1}: divisione per argomenti non rilevata (non è presente l'argomento per le prime domande), ma ne è stato trovato uno comunque");
+      // Parse answers
+      for (int iA = 0; iA < MAX_ANSWER_NUMBER; iQ++, iA++) {
+        // End of file
+        if (iQ >= lines.length) {
+          throw FormatException(
+              "Riga ${iQ + 1}: fine del file prima della lettura di tutte le risposte");
         }
 
-        Question q = Question(totQuest + 1, lines[i]);
-
-        for (int j = 0; j < DEFAULT_ANSWER_NUMBER; j++) {
-          i++;
-          if (lines.length <= i) {
-            throw FileSystemException(
-                "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} mancante");
-          }
-          List<String> splitted = lines[i].split(". ");
-          if (splitted.length < 2 || splitted[1].isEmpty) {
-            throw FileSystemException(
-                "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} formata male");
-          }
-
-          q.addAnswer(splitted[1]);
-        }
-        i++;
-
-        if (lines.length <= i || lines[i].length != 1) {
-          throw FileSystemException("Riga ${i + 1}: risposta corretta assente");
+        // Check if answer line is empty
+        if (lines[iQ].isEmpty) {
+          throw FormatException("Riga ${iQ + 1}: risposta vuota");
         }
 
-        int asciiValue = lines[i].codeUnitAt(0);
-        int value = asciiValue - 65;
-        if (value < 0 || value > DEFAULT_ANSWER_NUMBER - 1) {
-          throw FileSystemException(
-              "Riga ${i + 1}: risposta corretta non valida");
-        }
-        q.setCorrectAnswerFromInt(value);
-
-        if (topicsPresent) {
-          q.setTopic(topics.last);
+        // Check if we found the correct answer
+        if (lines[iQ].length == 1) {
+          break;
         }
 
-        questions.add(q);
+        // Try splitting
+        List<String> splitted = lines[iQ].split(". ");
+        if (splitted.length < 2 || splitted[1].isEmpty) {
+          throw FormatException(
+              "Riga ${iQ + 1}: risposta ${String.fromCharCode((iA + 65))} formattata male");
+        }
 
-        totQuest++;
-
-        if (topicsPresent) numPerTopic++;
+        q.addAnswer(splitted[1]);
       }
+
+      if (iQ >= lines.length) {
+        throw FormatException(
+            "Riga ${iQ + 1}: fine del file prima della lettura della risposta corretta");
+      }
+
+      // Try reading the correct answer
+      if (lines[iQ].length != 1) {
+        throw FormatException("Riga ${iQ + 1}: risposta corretta assente");
+      }
+
+      if (q.answers.length < MIN_ANSWER_NUMBER) {
+        throw FormatException(
+            "Riga ${iQ + 1}: non sono ammesse domande con meno di $MIN_ANSWER_NUMBER risposte");
+      }
+
+      // Check if the correct answer is valid (in letters range)
+      int letterCode = lines[iQ].codeUnitAt(0);
+      if (letterCode < "A".codeUnitAt(0) ||
+          letterCode > "A".codeUnitAt(0) + q.answers.length - 1) {
+        throw FormatException(
+            "Riga ${iQ + 1}: la risposta corretta dev'essere una delle risposte presenti");
+      }
+      q.setCorrectAnswerFromInt(letterCode - 65); // TODO
+      iQ++;
+
+      questions.add(q);
+
+      if (topics.isNotEmpty) numPerTopic++;
     }
 
-    if (topicsPresent) {
-      qNumPerTopic.add(numPerTopic);
+    if (topics.isNotEmpty) qNumPerTopic.add(numPerTopic);
 
-      print("Tot domande: $totQuest");
-      print("Argomenti: ");
-      for (int i = 0; i < qNumPerTopic.length; i++) {
-        print("- ${topics[i]} (num domande: ${qNumPerTopic[i].toString()})");
-      }
-    }
+    //printSummary();
   }
 
   List<Question> getQuestions() {
@@ -326,7 +349,7 @@ class QuestionRepository {
   }
 
   bool hasTopics() {
-    return topicsPresent;
+    return topics.isNotEmpty;
   }
 
   /// Restituisce un intero che indica il risultato ed una Stringa in caso di errore.
@@ -360,32 +383,63 @@ class QuestionRepository {
         }
 
         // answers
-        for (int j = 0; j < DEFAULT_ANSWER_NUMBER; j++) {
-          i++;
+        for (int j = 0; j < MAX_ANSWER_NUMBER; j++) {
+          // Check correct answer
+          if (lines[i].length == 1) {
+            // Check if there are enough answers
+            if (j < MIN_ANSWER_NUMBER) {
+              return (
+                -1,
+                "Riga ${i + 1}: non sono ammesse domande con meno di $MIN_ANSWER_NUMBER risposte",
+              );
+            }
+
+            int letterCode = lines[i].codeUnitAt(0);
+
+            // Check if the correct answer is valid (in range)
+            if (letterCode < "A".codeUnitAt(0) ||
+                letterCode > "A".codeUnitAt(0) + j) {
+              return (
+                -2,
+                "Riga ${i + 1}: non sono ammesse domande con meno di $MIN_ANSWER_NUMBER risposte",
+              );
+            }
+            print("Risposta corretta: ${String.fromCharCode(letterCode)}");
+            i++;
+            break;
+          }
+
+          if (j == MAX_ANSWER_NUMBER) {
+            return (
+              -3,
+              "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} mancante",
+            );
+          }
+
           if (lines.length <= i) {
             return (
-              -2,
+              -4,
               "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} mancante"
             );
           }
           List<String> splitted = lines[i].split(". ");
           if (splitted.length < 2 || splitted[1].isEmpty) {
             return (
-              -3,
-              "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} formata male"
+              -5,
+              "Riga ${i + 1}: risposta ${String.fromCharCode((j + 65))} formata male: ${lines[i]}"
             );
           }
         }
         i++;
 
         if (lines.length <= i || lines[i].length != 1) {
-          return (-4, "Riga ${i + 1}: risposta corretta assente");
+          return (-6, "Riga ${i + 1}: risposta corretta assente");
         }
 
         int asciiValue = lines[i].codeUnitAt(0);
         int value = asciiValue - 65;
-        if (value < 0 || value > DEFAULT_ANSWER_NUMBER - 1) {
-          return (-5, "Riga ${i + 1}: risposta corretta non valida");
+        if (value < 0 || value > MAX_ANSWER_NUMBER - 1) {
+          return (-7, "Riga ${i + 1}: risposta corretta non valida");
         }
 
         numQuestions++;
@@ -427,12 +481,34 @@ class QuestionRepository {
     return res;
   }
 
+  void printSummary() {
+    print("Tot domande: ${questions.length}");
+    print("Argomenti: ");
+    for (int i = 0; i < qNumPerTopic.length; i++) {
+      print("- ${topics[i]} (num domande: ${qNumPerTopic[i].toString()})");
+    }
+  }
+
   // Auxiliary method for testing
   Future<void> reloadFromAsset() async {
     String content = await rootBundle.loadString("assets/domande.txt");
 
     updateQuestionsDate(DEFAULT_LAST_QUESTION_UPDATE);
     updateQuestionsFile(content);
-    parse(content);
+    parseFromTxt(content);
   }
+}
+
+main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // String content = await rootBundle.loadString("assets/domande.txt");
+
+  QuestionRepository qRepo = QuestionRepository();
+  qRepo.parseFromTxt("""
+@ topic-name =================
+
+A. Answer 1
+B. Answer 2
+A
+  """);
 }
