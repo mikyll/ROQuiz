@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Aggiornamento contributors
-        uses: akhilmhdh/contributors-readme-action@v2.3.4
+        uses: akhilmhdh/contributors-readme-action@v2.3.10
         with:
           use_username: true
           committer_username: "mikyll"

@@ -16,7 +16,7 @@
   <h3> Applicazione multipiattaforma per esercitarsi con i quiz del corso <a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2022/467997">Ricerca Operativa M</a>.</h3>
   
   L'app permette di <b>simulare dei quiz d'esame</b>: vengono pescate, in modo casuale, delle domande a risposta multipla a cui l'utente deve rispondere entro un tempo limite, definito da un timer.<br/>
-  <b>Pool corrente</b>: <i><span id="domande">107</span></i> domande differenti (ultima modifica: <i><span id="ultima_modifica">2023-07-19</span></i>).
+  <b>Pool corrente</b>: <i><span id="domande">110</span></i> domande differenti (ultima modifica: <i><span id="ultima_modifica">2025-01-17</span></i>).
 
   [**Download**](https://github.com/mikyll/ROQuiz/releases/latest)
   ·
@@ -139,49 +139,61 @@ Vedi [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 <!-- readme: contributors -start -->
 <table>
-<tr>
-    <td align="center">
-        <a href="https://github.com/mikyll">
-            <img src="https://avatars.githubusercontent.com/u/56556806?v=4" width="100;" alt="mikyll"/>
-            <br />
-            <sub><b>mikyll</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/filippoveronesi">
-            <img src="https://avatars.githubusercontent.com/u/61983672?v=4" width="100;" alt="filippoveronesi"/>
-            <br />
-            <sub><b>filippoveronesi</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/TryKatChup">
-            <img src="https://avatars.githubusercontent.com/u/39459803?v=4" width="100;" alt="TryKatChup"/>
-            <br />
-            <sub><b>TryKatChup</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/Federicoand98">
-            <img src="https://avatars.githubusercontent.com/u/40764404?v=4" width="100;" alt="Federicoand98"/>
-            <br />
-            <sub><b>Federicoand98</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/lollofred">
-            <img src="https://avatars.githubusercontent.com/u/73138694?v=4" width="100;" alt="lollofred"/>
-            <br />
-            <sub><b>lollofred</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/RedDuality">
-            <img src="https://avatars.githubusercontent.com/u/61973885?v=4" width="100;" alt="RedDuality"/>
-            <br />
-            <sub><b>RedDuality</b></sub>
-        </a>
-    </td></tr>
+	<tbody>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/mikyll">
+                    <img src="https://avatars.githubusercontent.com/u/56556806?v=4" width="100;" alt="mikyll"/>
+                    <br />
+                    <sub><b>mikyll</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/filippoveronesi">
+                    <img src="https://avatars.githubusercontent.com/u/61983672?v=4" width="100;" alt="filippoveronesi"/>
+                    <br />
+                    <sub><b>filippoveronesi</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/TryKatChup">
+                    <img src="https://avatars.githubusercontent.com/u/39459803?v=4" width="100;" alt="TryKatChup"/>
+                    <br />
+                    <sub><b>TryKatChup</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Emanuele8">
+                    <img src="https://avatars.githubusercontent.com/u/22657821?v=4" width="100;" alt="Emanuele8"/>
+                    <br />
+                    <sub><b>Emanuele8</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Federicoand98">
+                    <img src="https://avatars.githubusercontent.com/u/40764404?v=4" width="100;" alt="Federicoand98"/>
+                    <br />
+                    <sub><b>Federicoand98</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/lollofred">
+                    <img src="https://avatars.githubusercontent.com/u/73138694?v=4" width="100;" alt="lollofred"/>
+                    <br />
+                    <sub><b>lollofred</b></sub>
+                </a>
+            </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/RedDuality">
+                    <img src="https://avatars.githubusercontent.com/u/61973885?v=4" width="100;" alt="RedDuality"/>
+                    <br />
+                    <sub><b>RedDuality</b></sub>
+                </a>
+            </td>
+		</tr>
+	<tbody>
 </table>
 <!-- readme: contributors -end -->
 
@@ -368,7 +380,7 @@ Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato
 [downloads-url]: https://github.com/mikyll/ROQuiz/releases/latest
 [contributors-shield]: https://img.shields.io/github/contributors/mikyll/ROQuiz
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
-[domande-shield]: https://img.shields.io/static/v1?label=domande&message=107&color=green
+[domande-shield]: https://img.shields.io/static/v1?label=domande&message=110&color=green
 [domande-url]: https://github.com/mikyll/ROQuiz/blob/main/Domande.txt
 [validazione-shield]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml/badge.svg
 [validazione-url]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml
