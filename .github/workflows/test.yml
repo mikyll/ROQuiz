@@ -1,0 +1,79 @@
+name: Flutter Test
+
+on:
+  # TODO: decide a strategy
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+
+env:
+  WEBSITE_BUILD_TARGET_PATH: "static/projects/roquiz/play/"
+
+jobs:
+  roquiz-unit-test:
+    name: ROQuiz Unit Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ROQuiz Repository
+        uses: actions/checkout@v4
+      
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.19.0
+
+      - name: Install Dependencies
+        working-directory: app-mobile/flutter_application/
+        run: flutter pub get
+
+      - name: Test Model
+        run: flutter test test/unit/model/*.dart
+      
+      - name: Test Persistence
+        run: flutter test test/unit/persistence/*.dart
+
+  roquiz-widget-test:
+    name: ROQuiz Widget Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ROQuiz Repository
+        uses: actions/checkout@v4
+      
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.19.0
+
+      - name: Install Dependencies
+        working-directory: app-mobile/flutter_application/
+        run: flutter pub get
+
+      - name: Test Widgets
+        run: flutter test test/widget/*.dart
+
+
+  roquiz-integration-test:
+    name: ROQuiz Integration Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ROQuiz Repository
+        uses: actions/checkout@v4
+      
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.19.0
+
+      - name: Install Dependencies
+        working-directory: app-mobile/flutter_application/
+        run: flutter pub get
+
+      - name: Test Application
+        run: flutter test test/integration/*.dart

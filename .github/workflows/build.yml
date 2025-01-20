@@ -1,0 +1,100 @@
+name: Flutter Build
+
+on:
+  # TODO: decide a strategy
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+
+env:
+  WEBSITE_BUILD_TARGET_PATH: "static/projects/roquiz/play/"
+
+jobs:
+  flutter-build-web:
+    name: Build ROQuiz Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ROQuiz Repository
+        uses: actions/checkout@v4
+        with:
+          path: roquiz-app/
+      
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.19.0
+
+      - name: Install Dependencies
+        run: flutter pub get
+        working-directory: roquiz-app/app-mobile/flutter_application
+
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Checkout mikyll.github.io Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.GH_PERSONAL_WEBSITE_REPO }}
+          # token: ${{ secrets.TARGET_REPO_TOKEN }}
+          path: mikyll-website/
+
+      - name: Copy Build Artifacts
+        run: |
+          rm -rf ${WEBSITE_BUILD_TARGET_PATH}
+          cp -r build/web/* mikyll-website/
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Deploy Flutter Web App"
+          git push
+        working-directory: mikyll-website/${WEBSITE_BUILD_TARGET_PATH}
+
+  flutter-build-apk:
+    name: Build ROQuiz APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ROQuiz Repository
+        uses: actions/checkout@v4
+        with:
+          path: roquiz-app/
+      
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.19.0
+
+      - name: Install Dependencies
+        run: flutter pub get
+        working-directory: roquiz-app/app-mobile/flutter_application
+
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Checkout mikyll.github.io Repository
+        uses: actions/checkout@v4
+        with:
+          repository: mikyll/mikyll.github.io
+          # token: ${{ secrets.TARGET_REPO_TOKEN }}
+          path: mikyll-website/
+
+      - name: Copy Build Artifacts
+        run: |
+          rm -rf ${WEBSITE_BUILD_TARGET_PATH}
+          cp -r build/web/* mikyll-website/
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Deploy Flutter Web App"
+          git push
+        working-directory: mikyll-website/${WEBSITE_BUILD_TARGET_PATH}

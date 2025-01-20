@@ -1,8 +1,11 @@
 name: Validazione File Domande
+
 on:
-  push:
-    branches:
-      - main
+  # TODO: decide a strategy
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
       
 defaults:
   run:
