@@ -1,10 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:roquiz/model/palette.dart';
-import 'package:roquiz/persistence/Settings.dart';
-import 'package:roquiz/model/Themes.dart';
+import 'package:roquiz/persistence/settings.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
 const DEFAULT_SIZE = 60.0;
@@ -61,7 +59,9 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
     final ContainerColors containerColors =
         Theme.of(context).extension<ContainerColors>()!;
 
-    return Scaffold(
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text("Info"),
@@ -90,26 +90,34 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold)),
-              const Spacer(flex: 2),
+              const Spacer(flex: 1),
+              Text("Applicazione per esercitarsi con i quiz del corso Ricerca Operativa M.", 
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 18,),),
+                                Spacer(),
               Expanded(
                 flex: 4,
                 child: ListView(
                   children: [
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       const Expanded(
-                        child: Text("Applicazione sviluppata da: ",
+                        child: Text("Sviluppata da: ",
                             maxLines: 2, style: TextStyle(fontSize: 18)),
                       ),
                       InkWell(
                         onTap: () {
                           //_launchInBrowser("https://github.com/mikyll");
                         },
-                        child: const Text("mikyll",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.underline)),
-                      ),
+                        child: Row(children: [
+                            const Text("mikyll",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  decoration: TextDecoration.underline),
+                                
+                              )],),
+                        )
                     ]),
                     const SizedBox(height: 20),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -195,30 +203,13 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              Spacer(),
-              Container(
-                color: Colors.indigo.withOpacity(0.35),
-                alignment: Alignment.center,
-                child: const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text("Ti sfido a tenere premuta la stellina",
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                      )),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Spacer()
+              Spacer(flex: 2)
             ],
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Stack(
-        alignment: Alignment.center,
-        children: [
+      floatingActionButton: 
           AnimatedBuilder(
             animation: _animation,
             builder: (context, _) {
@@ -246,20 +237,43 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                 ),
               );
             },
-          ), // The Tooltip just above the star button
-          Positioned(
-            bottom:
-                400, // Adjust this value to move the tooltip closer or further
-            child: Text(
-              "CIAOOO",
-              style: TextStyle(
-                fontSize: 48,
-                color: Colors.black,
-              ),
+          ), 
+
+        
+        ),         
+        Positioned(
+          bottom: 100,
+          child: 
+            DecoratedBox(
+              decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(8.0),
             ),
-          ),
-        ],
-      ),
+            child: Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Text("Ti sfido a premermi", style: TextStyle(
+                  fontSize: 24, // Adjust size based on your needs
+                  fontWeight: FontWeight.bold, // Comic text is often bold
+                  color: Colors.black, // Text color
+                  letterSpacing: 1.5, // Slightly spaced letters for comic effect
+                  
+                  // shadows: [
+                  //   Shadow(
+                  //     offset: Offset(10, 10), // Creates a shadow for depth
+                  //     blurRadius: 4.0, // Slight blur for softer shadow
+                  //     color: Colors.grey, // Shadow color
+                  //   ),
+                  // ],
+                  decoration: TextDecoration.none, // Remove underlines or similar
+                )),
+            ),
+            )
+            // CircleAvatar(
+            //   radius: 50,
+            //   backgroundImage: NetworkImage("https://avatars.githubusercontent.com/u/56556806?v=4")
+            // )
+        ),
+      ]
     );
   }
 }
