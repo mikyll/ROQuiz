@@ -29,10 +29,10 @@ class ContainerColors extends ThemeExtension<ContainerColors> {
   }
 }
 
-const LIGHT_BUTTON_COLOR = Color(0xff515b92);
-const LIGHT_BUTTON_HOVER_COLOR = Color(0xff515b92);
+const Color LIGHT_BUTTON_COLOR = Color(0xff515b92);
+const Color LIGHT_BUTTON_HOVER_COLOR = Color(0xff515b92);
 
-const DARK_PRIMARY_COLOR = Color(0xffb7c4ff);
+const Color DARK_PRIMARY_COLOR = Color(0xffb7c4ff);
 
 class LightContainerPalette {
   final Color backgroundColor = Color(0xff515b92);

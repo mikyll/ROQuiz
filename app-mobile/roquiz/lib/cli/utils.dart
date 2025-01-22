@@ -1,12 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:path/path.dart';
 
-import 'quiz/question.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-// Launch system url in the system browser 
-void openURL(String url) {
-  // TODO
+import '../model/quiz/question.dart';
+
+// Launch system url in the system browser
+void openUrl(String url, {bool external = true}) async {
+  launchUrlString(
+    url,
+    mode: external ? LaunchMode.externalApplication : LaunchMode.inAppWebView,
+  ).then((onValue) {}).onError((error, stackTrace) {
+    throw Exception("Could not launch $url: $error");
+  });
 }
 
 // NB: Questions already contain the topic, so there's no need to return the list while parsing
@@ -47,11 +53,10 @@ List<Question> parseQuestions(String content, int maxNumAnwers) {
 
       // Parse topic
       currentTopic = lines[iQ].substring(1).replaceAll("=", "").trim();
-      
+
       // Duplicated topic
       if (topics.contains(currentTopic)) {
-        throw FormatException(
-            "Riga ${iQ + 1}: argomento duplicato");
+        throw FormatException("Riga ${iQ + 1}: argomento duplicato");
       }
       topics.add(currentTopic);
       continue;
@@ -125,7 +130,7 @@ List<Question> parseQuestions(String content, int maxNumAnwers) {
 
 Map<String, int> getTopicSizes(List<Question> questions) {
   Map<String, int> topicSizes = {};
-  
+
   for (Question question in questions) {
     String topic = question.getTopic();
     if (topicSizes.containsKey(topic)) {
@@ -142,7 +147,7 @@ List<Question> parseQuestionsFromYaml(String content) {
   List<Question> questions = [];
 
   // TODO
-  
+
   return questions;
 }
 
@@ -164,10 +169,10 @@ void main(List<String> args) async {
     }
 
     if (args.length >= 2 && args[1] == "-t") {
-    Map<String, int> topicSizes = getTopicSizes(questions);
-    for (String topic in topicSizes.keys) {
-      print("- $topic");
+      Map<String, int> topicSizes = getTopicSizes(questions);
+      for (String topic in topicSizes.keys) {
+        print("- $topic");
+      }
     }
-  }
   });
 }

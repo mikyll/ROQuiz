@@ -1,4 +1,3 @@
-
 import 'package:roquiz/model/quiz/question.dart';
 
 class QuestionRepository {
@@ -6,5 +5,7 @@ class QuestionRepository {
   Map<String, int> _topicSizes = {};
   DateTime _lastQuestionUpdate = DateTime.parse("2000-00-00T00:00:00Z");
 
-  // TODO
+  int checkUpdates() {
+    return -1;
+  }
 }

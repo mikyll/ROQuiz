@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:roquiz/model/persistence/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:roquiz/model/themes.dart';
-import 'package:roquiz/persistence/settings.dart';
 import 'package:roquiz/view/view_menu.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Settings _settings = await Settings.loadFromSharedPreferences();
+  // print(_settings.toString());
 
   // TODO
   // if (getPlatformType() == PlatformType.DESKTOP) {
@@ -15,33 +17,35 @@ void main() {
   // }
 
   SharedPreferences.getInstance().then((prefs) {
-    // TODO
-    var isDarkTheme = prefs.getBool("darkTheme") ?? Settings.DEFAULT_DARK_THEME;
-    //isDarkTheme = true;
-    prefs.setBool("showStarMessage", true);
+    // // TODO
+    // var isDarkTheme =
+    //     prefs.getBool("darkTheme") ?? false; // Settings.DEFAULT_DARK_THEME;
+    // //isDarkTheme = true;
+    // prefs.setBool("showStarMessage", true);
 
-    return runApp(
-      ChangeNotifierProvider<ThemeProvider>(
-        child: const ROQuizApp(),
-        create: (_) => ThemeProvider(isDarkTheme),
-      ),
-    );
+    return runApp(ROQuizApp());
   });
 }
 
 class ROQuizApp extends StatelessWidget {
-  const ROQuizApp({super.key});
+  ROQuizApp({super.key});
+
+  final ValueNotifier<ThemeMode> _notifier =
+      ValueNotifier<ThemeMode>(ThemeMode.light);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(builder: (context, value, child) {
-      return MaterialApp(
-        title: Settings.APP_TITLE,
-        themeMode: value.themeMode,
-        theme: MyThemes.themeLight,
-        darkTheme: MyThemes.themeDark,
-        home: const ViewMenu(),
-      );
-    });
+    return ValueListenableBuilder<ThemeMode>(
+      builder: (context, mode, _) {
+        return MaterialApp(
+          title: "ROQuiz", // Settings.APP_TITLE,
+          themeMode: mode,
+          theme: MyThemes.themeLight,
+          darkTheme: MyThemes.themeDark,
+          home: ViewMenu(themeNotifier: _notifier, themeMode: mode),
+        );
+      },
+      valueListenable: _notifier,
+    );
   }
 }
