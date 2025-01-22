@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:roquiz/cli/utils.dart';
 import 'package:roquiz/model/palette.dart';
-import 'package:roquiz/persistence/settings.dart';
-// import 'package:url_launcher/url_launcher.dart';
+import 'package:roquiz/model/persistence/settings.dart';
 
 const DEFAULT_SIZE = 60.0;
 
@@ -46,7 +46,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
 
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // _launchInBrowser("https://github.com/mikyll/ROQuiz");
+        openUrl("https://github.com/mikyll/ROQuiz");
       }
     });
 
@@ -59,221 +59,236 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
     final ContainerColors containerColors =
         Theme.of(context).extension<ContainerColors>()!;
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text("Info"),
-        centerTitle: true,
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Spacer(),
-              Text(Settings.APP_TITLE,
-                  maxLines: 1,
+    return Stack(alignment: Alignment.bottomCenter, children: [
+      Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          title: const Text("Info"),
+          centerTitle: true,
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(),
+                Text(Settings.APP_TITLE,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
+                Text("v1.11.0${Settings.VERSION_NUMBER}",
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                const Spacer(flex: 1),
+                Text(
+                  "Applicazione per esercitarsi con i quiz del corso Ricerca Operativa M.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
-              Text("v1.11.0${Settings.VERSION_NUMBER}",
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
-              const Spacer(flex: 1),
-              Text("Applicazione per esercitarsi con i quiz del corso Ricerca Operativa M.", 
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18,),),
-                                Spacer(),
-              Expanded(
-                flex: 4,
-                child: ListView(
-                  children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      const Expanded(
-                        child: Text("Sviluppata da: ",
-                            maxLines: 2, style: TextStyle(fontSize: 18)),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          //_launchInBrowser("https://github.com/mikyll");
-                        },
-                        child: Row(children: [
-                            const Text("mikyll",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  decoration: TextDecoration.underline),
-                                
-                              )],),
-                        )
-                    ]),
-                    const SizedBox(height: 20),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      const Expanded(
-                          child: Text("In collaborazione con: ",
-                              maxLines: 2, style: TextStyle(fontSize: 18))),
-                      InkWell(
-                        // onTap: () {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => ViewCredits()));
-                        // },
-                        child: const Text("contributors",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.underline)),
-                      ),
-                    ]),
-                    const SizedBox(height: 20),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      const Expanded(
-                          child: Text("Repository GitHub: ",
-                              maxLines: 2, style: TextStyle(fontSize: 18))),
-                      InkWell(
-                        onTap: () {
-                          //_launchInBrowser("https://github.com/mikyll/ROQuiz");
-                        },
-                        child: const Text("mikyll/ROQuiz",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.underline)),
-                      ),
-                    ]),
-                    const SizedBox(height: 20),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      const Expanded(
-                          child: Text("Licenze: ",
-                              maxLines: 1, style: TextStyle(fontSize: 18))),
-                      InkWell(
-                        // onTap: () {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => ViewLicenses()));
-                        // },
-                        child: const Text("Visualizza le licenze",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.underline)),
-                      ),
-                    ]),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Expanded(
-                          child: Text("Problemi con l'app? ",
-                              style: TextStyle(fontSize: 18)),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Spacer(),
+                Expanded(
+                  flex: 4,
+                  child: ListView(
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            const Expanded(
+                              child: Text("Sviluppata da: ",
+                                  maxLines: 2, style: TextStyle(fontSize: 18)),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                openUrl("https://github.com/mikyll");
+                              },
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    "mikyll",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        decoration: TextDecoration.underline),
+                                  )
+                                ],
+                              ),
+                            )
+                          ]),
+                      const SizedBox(height: 20),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Expanded(
+                                child: Text("In collaborazione con: ",
+                                    maxLines: 2,
+                                    style: TextStyle(fontSize: 18))),
                             InkWell(
                               // onTap: () {
-                              //   _launchInBrowser(
-                              //       "https://github.com/mikyll/ROQuiz/issues/new/choose");
+                              //   Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) => ViewCredits()));
                               // },
-                              child: const Text("Apri una issue",
+                              child: const Text("contributors",
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 18,
                                       decoration: TextDecoration.underline)),
                             ),
-                            const Text(" su GitHub!",
+                          ]),
+                      const SizedBox(height: 20),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Expanded(
+                                child: Text("Repository GitHub: ",
+                                    maxLines: 2,
+                                    style: TextStyle(fontSize: 18))),
+                            InkWell(
+                              onTap: () {
+                                openUrl("https://github.com/mikyll/ROQuiz");
+                              },
+                              child: const Text("mikyll/ROQuiz",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      decoration: TextDecoration.underline)),
+                            ),
+                          ]),
+                      const SizedBox(height: 20),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Expanded(
+                                child: Text("Licenze: ",
+                                    maxLines: 1,
+                                    style: TextStyle(fontSize: 18))),
+                            InkWell(
+                              // onTap: () {
+                              //   Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) => ViewLicenses()));
+                              // },
+                              child: const Text("Visualizza le licenze",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      decoration: TextDecoration.underline)),
+                            ),
+                          ]),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Expanded(
+                            child: Text("Problemi con l'app? ",
                                 style: TextStyle(fontSize: 18)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  openUrl(
+                                      "https://github.com/mikyll/ROQuiz/issues/new/choose");
+                                },
+                                child: const Text("Apri una issue",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        decoration: TextDecoration.underline)),
+                              ),
+                              const Text(" su GitHub!",
+                                  style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Spacer(flex: 2)
-            ],
+                Spacer(flex: 2)
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: 
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, _) {
-              return Container(
-                width: _animation.value,
-                height: _animation.value,
-                decoration: BoxDecoration(
-                  color: containerColors.backgroundColor,
-                  borderRadius: BorderRadius.circular(1000),
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(1000),
-                  onTapDown: (details) {
-                    _animationController.forward();
-                  },
-                  onTapUp: (details) {
-                    _animationController.reverse();
-                  },
-                  onTapCancel: () {
-                    _animationController.reverse();
-                  },
-                  child: Icon(Icons.star,
-                      color: containerColors.starColor,
-                      size: _animation.value * 0.9),
-                ),
-              );
-            },
-          ), 
-
-        
-        ),         
-        Positioned(
-          bottom: 100,
-          child: 
-            DecoratedBox(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, _) {
+            return Container(
+              width: _animation.value,
+              height: _animation.value,
               decoration: BoxDecoration(
+                color: containerColors.backgroundColor,
+                borderRadius: BorderRadius.circular(1000),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(1000),
+                onTapDown: (details) {
+                  _animationController.forward();
+                },
+                onTapUp: (details) {
+                  _animationController.reverse();
+                },
+                onTapCancel: () {
+                  _animationController.reverse();
+                },
+                child: Icon(Icons.star,
+                    color: containerColors.starColor,
+                    size: _animation.value * 0.9),
+              ),
+            );
+          },
+        ),
+      ),
+      Positioned(
+          bottom: 100,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Padding(
               padding: EdgeInsets.all(15.0),
-              child: Text("Ti sfido a premermi", style: TextStyle(
-                  fontSize: 24, // Adjust size based on your needs
-                  fontWeight: FontWeight.bold, // Comic text is often bold
-                  color: Colors.black, // Text color
-                  letterSpacing: 1.5, // Slightly spaced letters for comic effect
-                  
-                  // shadows: [
-                  //   Shadow(
-                  //     offset: Offset(10, 10), // Creates a shadow for depth
-                  //     blurRadius: 4.0, // Slight blur for softer shadow
-                  //     color: Colors.grey, // Shadow color
-                  //   ),
-                  // ],
-                  decoration: TextDecoration.none, // Remove underlines or similar
-                )),
+              child: Text("Ti sfido a premermi",
+                  style: TextStyle(
+                    fontSize: 24, // Adjust size based on your needs
+                    fontWeight: FontWeight.bold, // Comic text is often bold
+                    color: Colors.black, // Text color
+                    letterSpacing:
+                        1.5, // Slightly spaced letters for comic effect
+
+                    // shadows: [
+                    //   Shadow(
+                    //     offset: Offset(10, 10), // Creates a shadow for depth
+                    //     blurRadius: 4.0, // Slight blur for softer shadow
+                    //     color: Colors.grey, // Shadow color
+                    //   ),
+                    // ],
+                    decoration:
+                        TextDecoration.none, // Remove underlines or similar
+                  )),
             ),
-            )
-            // CircleAvatar(
-            //   radius: 50,
-            //   backgroundImage: NetworkImage("https://avatars.githubusercontent.com/u/56556806?v=4")
-            // )
-        ),
-      ]
-    );
+          )
+          // CircleAvatar(
+          //   radius: 50,
+          //   backgroundImage: NetworkImage("https://avatars.githubusercontent.com/u/56556806?v=4")
+          // )
+          ),
+    ]);
   }
 }

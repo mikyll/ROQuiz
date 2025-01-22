@@ -1,13 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
+import 'package:roquiz/cli/utils.dart';
+import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/themes.dart';
-import 'package:roquiz/persistence/settings.dart';
 import 'package:roquiz/view/view_info.dart';
 import 'package:roquiz/widget/icon_button_widget.dart';
 
 class ViewMenu extends StatefulWidget {
-  const ViewMenu({super.key});
+  const ViewMenu(
+      {super.key, required this.themeNotifier, required this.themeMode});
+
+  final ValueNotifier<ThemeMode> themeNotifier;
+  final ThemeMode themeMode;
 
   @override
   State<StatefulWidget> createState() => ViewMenuState();
@@ -16,8 +21,6 @@ class ViewMenu extends StatefulWidget {
 class ViewMenuState extends State<ViewMenu> {
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-
     return Scaffold(
       body: Center(
           child: Padding(
@@ -35,9 +38,11 @@ class ViewMenuState extends State<ViewMenu> {
                             fit: BoxFit.fitWidth,
                             width: 200,
                             colorFilter: ColorFilter.mode(
-                                themeProvider.isDarkMode
-                                    ? Colors.indigo[300]!
-                                    : Colors.indigo[600]!,
+                                Colors.indigo[300]!,
+                                // TODO
+                                // widget.themeMode
+                                //     ? Colors.indigo[300]!
+                                //     : Colors.indigo[600]!,
                                 BlendMode.srcIn),
                           ),
                           const Text(
@@ -71,7 +76,13 @@ class ViewMenuState extends State<ViewMenu> {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO
+                          widget.themeNotifier.value =
+                              widget.themeMode == ThemeMode.light
+                                  ? ThemeMode.dark
+                                  : ThemeMode.light;
+                        },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: Text(
@@ -129,7 +140,7 @@ class ViewMenuState extends State<ViewMenu> {
                       : const SizedBox(height: 50),
                   InkWell(
                     onTap: () {
-                      // _launchInBrowser("https://github.com/mikyll/ROQuiz");
+                      openUrl("https://github.com/mikyll/ROQuiz");
                     },
                     child: Container(
                       color: Colors.indigo.withOpacity(0.35),
@@ -157,7 +168,7 @@ class ViewMenuState extends State<ViewMenu> {
             width: 60,
             child: IconButton.filled(
               onPressed: () {},
-              iconSize: 40,
+              iconSize: 45,
               icon: Icon(
                 Icons.settings,
               ),
@@ -193,11 +204,12 @@ class ViewMenuState extends State<ViewMenu> {
                   return ViewInfo();
                 }));
               },
-              iconSize: 40,
+              iconSize: 45,
               icon: Icon(
                 Icons.info,
-                color:
-                    themeProvider.isDarkMode ? Color(0xff515b92) : Colors.white,
+                // TODO
+                // color:
+                //     themeProvider.isDarkMode ? Color(0xff515b92) : Colors.white,
               ),
             ),
           ),

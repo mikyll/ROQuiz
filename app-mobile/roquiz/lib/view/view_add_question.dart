@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/palette.dart';
-import 'package:roquiz/persistence/settings.dart';
 
 class ViewAddQuestion extends StatefulWidget {
   const ViewAddQuestion({super.key});
@@ -11,10 +9,11 @@ class ViewAddQuestion extends StatefulWidget {
   State<StatefulWidget> createState() => ViewAddQuestionState();
 }
 
-class ViewAddQuestionState extends State<ViewAddQuestion> with TickerProviderStateMixin {
-
+class ViewAddQuestionState extends State<ViewAddQuestion>
+    with TickerProviderStateMixin {
   String _buildURL() {
-    String res = "https://github.com/mikyll/ROQuiz/blob/main/.github/ISSUE_TEMPLATE/new_question.it.yaml";
+    String res =
+        "https://github.com/mikyll/ROQuiz/blob/main/.github/ISSUE_TEMPLATE/new_question.it.yaml";
 
     return res;
   }
@@ -26,7 +25,6 @@ class ViewAddQuestionState extends State<ViewAddQuestion> with TickerProviderSta
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -56,18 +54,31 @@ class ViewAddQuestionState extends State<ViewAddQuestion> with TickerProviderSta
                 flex: 4,
                 child: Form(
                   child: ListView(
-                    
                     children: [
-                        DropdownButtonFormField(
-                            decoration: InputDecoration(label: Text("Argomento")),
-                            items: [
-                                DropdownMenuItem(key: Key("1"), value: 2, child: Text("Programmazione Matematica")),
-                                DropdownMenuItem(key: Key("2"), value: 1, child: Text("Programmazione Lineare")),
-                            ], onChanged: (_) {},
-                        ),
-                        TextFormField(maxLines: 5, decoration: InputDecoration(label: Text("Domanda")),),
-                        TextFormField(decoration: InputDecoration(label: Text("Risposta A")),),
-                        TextFormField(decoration: InputDecoration(label: Text("Risposta B")),),
+                      DropdownButtonFormField(
+                        decoration: InputDecoration(label: Text("Argomento")),
+                        items: [
+                          DropdownMenuItem(
+                              key: Key("1"),
+                              value: 2,
+                              child: Text("Programmazione Matematica")),
+                          DropdownMenuItem(
+                              key: Key("2"),
+                              value: 1,
+                              child: Text("Programmazione Lineare")),
+                        ],
+                        onChanged: (_) {},
+                      ),
+                      TextFormField(
+                        maxLines: 5,
+                        decoration: InputDecoration(label: Text("Domanda")),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(label: Text("Risposta A")),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(label: Text("Risposta B")),
+                      ),
                     ],
                   ),
                 ),
@@ -78,7 +89,10 @@ class ViewAddQuestionState extends State<ViewAddQuestion> with TickerProviderSta
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: ElevatedButton(onPressed: () {}, child: Text("Aggiungi"),),
+      floatingActionButton: ElevatedButton(
+        onPressed: () {},
+        child: Text("Aggiungi"),
+      ),
     );
   }
 }
