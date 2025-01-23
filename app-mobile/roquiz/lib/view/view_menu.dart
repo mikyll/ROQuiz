@@ -1,18 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/cli/utils.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/themes.dart';
 import 'package:roquiz/view/view_info.dart';
-import 'package:roquiz/widget/icon_button_widget.dart';
 
 class ViewMenu extends StatefulWidget {
-  const ViewMenu(
-      {super.key, required this.themeNotifier, required this.themeMode});
-
-  final ValueNotifier<ThemeMode> themeNotifier;
-  final ThemeMode themeMode;
+  ViewMenu(
+      {super.key});
+  
 
   @override
   State<StatefulWidget> createState() => ViewMenuState();
@@ -21,6 +19,7 @@ class ViewMenu extends StatefulWidget {
 class ViewMenuState extends State<ViewMenu> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     return Scaffold(
       body: Center(
           child: Padding(
@@ -70,6 +69,12 @@ class ViewMenuState extends State<ViewMenu> {
                     ),
                   ),
                   const Spacer(flex: 1),
+                  Switch(
+                  value: themeProvider.themeMode == ThemeMode.dark,
+                  onChanged: (isDarkMode) {
+                    themeProvider.toggleTheme();
+                  },
+                ),
                   // BUTTONS
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -78,10 +83,10 @@ class ViewMenuState extends State<ViewMenu> {
                       child: ElevatedButton(
                         onPressed: () {
                           // TODO
-                          widget.themeNotifier.value =
-                              widget.themeMode == ThemeMode.light
-                                  ? ThemeMode.dark
-                                  : ThemeMode.light;
+
+                          
+                          // widget.value.isDarkMode;
+                          //     widget.value.toggleTheme(widget.value.themeMode == ThemeMode.light);
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),

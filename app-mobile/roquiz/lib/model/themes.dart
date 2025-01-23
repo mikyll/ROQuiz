@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/palette.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.light;
 
-  ThemeProvider(bool darkThemeOn) {
-    themeMode = darkThemeOn ? ThemeMode.dark : ThemeMode.light;
+  ThemeProvider(bool isDarkTheme) {
+    _themeMode = isDarkTheme ? ThemeMode.dark : ThemeMode.light;
   }
 
-  bool get isDarkMode => themeMode == ThemeMode.dark;
+  ThemeMode get themeMode => _themeMode;
 
-  void toggleTheme(bool darkThemeOn) async {
-    themeMode = darkThemeOn ? ThemeMode.dark : ThemeMode.light;
+  void setTheme(ThemeMode darkTheme) async {
+    _themeMode = darkTheme;
+
+    notifyListeners();
+  }
+
+  void toggleTheme() async {
+    _themeMode =
+        _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
 
     notifyListeners();
   }
@@ -56,10 +63,11 @@ class MyThemes {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         splashFactory: InkSplash.splashFactory,
-        overlayColor:
-            WidgetStatePropertyAll(const Color.fromARGB(255, 91, 99, 181)),
+        overlayColor: WidgetStatePropertyAll(
+          const Color.fromARGB(255, 91, 99, 181),
+        ),
         textStyle: WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
-          return TextStyle(color: Colors.black);
+          return TextStyle(color: Colors.black, inherit: false);
         }),
         foregroundColor: WidgetStateColor.resolveWith(
           (Set<WidgetState> states) {
@@ -113,8 +121,8 @@ class MyThemes {
   );
 
   static final themeDark = ThemeData(
-    brightness: Brightness.dark,
     colorSchemeSeed: Colors.indigo[100],
+    brightness: Brightness.dark,
     appBarTheme: const AppBarTheme(
         titleTextStyle: TextStyle(
             color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.w500),
@@ -130,32 +138,39 @@ class MyThemes {
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-      splashFactory: InkSplash.splashFactory,
-      overlayColor:
-          WidgetStatePropertyAll(const Color.fromARGB(255, 91, 99, 181)),
-      foregroundColor: WidgetStateColor.resolveWith(
-        (Set<WidgetState> states) {
-          if (states.contains(WidgetState.disabled)) {
-            return const Color.fromARGB(149, 17, 28, 59);
-          } else {
-            return const Color.fromARGB(255, 12, 40, 120);
-          }
-        },
+      style: ButtonStyle(
+        textStyle: WidgetStateTextStyle.resolveWith(
+          (Set<WidgetState> states) {
+            return TextStyle(color: Colors.black, inherit: false);
+          },
+        ),
+        splashFactory: InkSplash.splashFactory,
+        overlayColor: WidgetStatePropertyAll(
+          const Color.fromARGB(255, 91, 99, 181),
+        ),
+        foregroundColor: WidgetStateColor.resolveWith(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.disabled)) {
+              return const Color.fromARGB(149, 17, 28, 59);
+            } else {
+              return const Color.fromARGB(255, 12, 40, 120);
+            }
+          },
+        ),
+        backgroundColor: WidgetStateColor.resolveWith(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.disabled)) {
+              return const Color.fromARGB(50, 182, 196, 255);
+            } else {
+              return const Color.fromARGB(255, 182, 196, 255);
+            }
+          },
+        ),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        ),
       ),
-      backgroundColor: WidgetStateColor.resolveWith(
-        (Set<WidgetState> states) {
-          if (states.contains(WidgetState.disabled)) {
-            return const Color.fromARGB(50, 182, 196, 255);
-          } else {
-            return const Color.fromARGB(255, 182, 196, 255);
-          }
-        },
-      ),
-      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      ),
-    )),
+    ),
     checkboxTheme: CheckboxThemeData(
       checkColor:
           WidgetStatePropertyAll(const Color.fromARGB(255, 12, 40, 120)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,36 +17,41 @@ void main() async {
   //   DesktopWindow.setWindowSize(const Size(800, 800));
   // }
 
-  SharedPreferences.getInstance().then((prefs) {
-    // // TODO
-    // var isDarkTheme =
-    //     prefs.getBool("darkTheme") ?? false; // Settings.DEFAULT_DARK_THEME;
-    // //isDarkTheme = true;
-    // prefs.setBool("showStarMessage", true);
+  // SharedPreferences.getInstance().then((prefs) {
+  //   // // TODO
+  //   // var isDarkTheme =
+  //   //     prefs.getBool("darkTheme") ?? false; // Settings.DEFAULT_DARK_THEME;
+  //   // //isDarkTheme = true;
+  //   // prefs.setBool("showStarMessage", true);
 
-    return runApp(ROQuizApp());
-  });
+    
+  // });
+
+  bool isDarkTheme = false;
+
+    return runApp(
+      ChangeNotifierProvider<ThemeProvider>(
+        child: ROQuizApp(),
+        create: (BuildContext context) {
+          return ThemeProvider(isDarkTheme);
+        },
+      ),
+    );
 }
 
 class ROQuizApp extends StatelessWidget {
-  ROQuizApp({super.key});
-
-  final ValueNotifier<ThemeMode> _notifier =
-      ValueNotifier<ThemeMode>(ThemeMode.light);
+  const ROQuizApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      builder: (context, mode, _) {
-        return MaterialApp(
-          title: "ROQuiz", // Settings.APP_TITLE,
-          themeMode: mode,
-          theme: MyThemes.themeLight,
-          darkTheme: MyThemes.themeDark,
-          home: ViewMenu(themeNotifier: _notifier, themeMode: mode),
-        );
-      },
-      valueListenable: _notifier,
-    );
+    return Consumer<ThemeProvider>(builder: (context, value, child) {
+      return MaterialApp(
+        title: Settings.APP_TITLE,
+        themeMode: value.themeMode,
+        theme: MyThemes.themeLight,
+        darkTheme: MyThemes.themeDark,
+        home: ViewMenu(),
+      );
+    });
   }
 }

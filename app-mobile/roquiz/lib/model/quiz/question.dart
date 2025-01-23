@@ -1,12 +1,13 @@
 class Question {
   final int _id;
   final String _body;
-  
+
   late String _topic;
   late List<String> _answers;
   late int _correctAnswer;
 
-  Question(this._id, this._body, this._answers, this._correctAnswer, this._topic);
+  Question(
+      this._id, this._body, this._topic, this._answers, this._correctAnswer);
 
   Question.onlyBody(this._id, this._body) {
     _answers = [];
@@ -19,6 +20,7 @@ class Question {
   int getId() {
     return _id;
   }
+
   String getBody() {
     return _body;
   }
@@ -26,15 +28,26 @@ class Question {
   List<String> getAnswers() {
     return _answers;
   }
+
+  String getTopic() {
+    return _topic;
+  }
+
+  void setTopic(String topic) {
+    _topic = topic;
+  }
+
   void setAnswers(List<String> answers) {
     for (String s in answers) {
       s = s.replaceAll('"', "'");
     }
     _answers = answers;
   }
+
   void addAnswer(String answer) {
     if (_answers.contains(answer)) {
-      throw FormatException("Duplicated answer: answer '$answer' is already present");
+      throw FormatException(
+          "Duplicated answer: answer '$answer' is already present");
     }
 
     answer = answer.replaceAll('"', "'");
@@ -42,21 +55,16 @@ class Question {
     _answers.add(answer);
   }
 
-  String getTopic() {
-    return _topic;
-  }
-  void setTopic(String topic) {
-    _topic = topic;
-  }
-
   int getCorrectAnswer() {
     return _correctAnswer;
   }
+
   void setCorrectAnswer(int correctAnswer) {
     if (correctAnswer >= 0 && correctAnswer <= 9) {
       _correctAnswer = correctAnswer;
     }
   }
+
   void setCorrectAnswerFromText(String correctAnswer) {
     if (!_answers.contains(correctAnswer)) {
       throw FormatException("Answer not present");
@@ -83,16 +91,17 @@ class Question {
     $_body
   topic: "$_topic"
   answers:""";
-      for (String s in _answers) {
-        res += "\n    - \"$s\"";
-      }
+    for (String s in _answers) {
+      res += "\n    - \"$s\"";
+    }
 
-      if (letters) {
-        res += "\n  correct_answer: ${String.fromCharCode(_correctAnswer + 65)}\n";
-      } else {
-        res += "\n  correct_answer: $_correctAnswer\n";
-      }
+    if (letters) {
+      res +=
+          "\n  correct_answer: ${String.fromCharCode(_correctAnswer + 65)}\n";
+    } else {
+      res += "\n  correct_answer: $_correctAnswer\n";
+    }
 
-      return res;
+    return res;
   }
 }
