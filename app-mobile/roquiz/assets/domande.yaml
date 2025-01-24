@@ -1,0 +1,1210 @@
+- body: >-
+    Dato un insieme F, un intorno è
+  topic: "Programmazione Matematica"
+  answers:
+    - "L'insieme di tutti i sottoinsiemi di F"
+    - "L'insieme dei punti di F a distanza minore di epsilon da un punto x di F"
+    - "Una funzione N: F -> 2^F"
+    - "Una combinazione convessa di due punti x e y di F"
+    - "Nessuna di queste"
+  correct_answer: 2
+
+- body: >-
+    Si consideri un problema di ottimizzazione (F,d) ed un intorno N. La proprietà che se un punto f di F è localmente ottimo rispetto ad N allora f è l'ottimo assoluto implica
+  topic: "Programmazione Matematica"
+  answers:
+    - "che N è un intorno esatto"
+    - "che N è un intorno euclideo"
+    - "che N è un intorno non euclideo"
+    - "nessuna di queste caratterizzazioni"
+    - "che N è un intorno convesso"
+  correct_answer: 0
+
+- body: >-
+    Facendo variare lambda fra 0 e 1, la combinazione convessa di due punti x ed y descrive
+  topic: "Programmazione Matematica"
+  answers:
+    - "tutti i punti della semiretta che origina in x e passa per y"
+    - "tutti i punti della retta passante per x ed y"
+    - "tutti i punti del segmento [x,y]"
+    - "il punto centrale del segmento [x,y]"
+    - "tutti i punti della semiretta che origina in y e passa per x"
+  correct_answer: 2
+
+- body: >-
+    Data una funzione f convessa su un insieme S convesso, la corda che unisce due punti della funzione:
+  topic: "Programmazione Matematica"
+  answers:
+    - "coincide con un flesso della funzione."
+    - "sta al di sotto della funzione ma non coincide mai con essa."
+    - "sta al di sopra della funzione ma non coincide mai con essa."
+    - "sta al di sopra della funzione o è con essa coincidente."
+    - "sta al di sotto della funzione o è con essa coincidente."
+  correct_answer: 3
+
+- body: >-
+    Dati una funzione convessa definita su un insieme S convesso ed una soglia t, il sottoinsieme di punti x di S in cui f(x) <= t :
+  topic: "Programmazione Matematica"
+  answers:
+    - "È concavo"
+    - "È un intorno euclideo"
+    - "È convesso"
+    - "È un intorno esatto"
+    - "È il complemento di S"
+  correct_answer: 2
+
+- body: >-
+    Sia dato un problema di programmazione convessa. Si ha allora che un ottimo locale rispetto alla distanza euclidea
+  topic: "Programmazione Matematica"
+  answers:
+    - "Non gode di particolari proprietà"
+    - "È spesso un ottimo globale"
+    - "Può essere un ottimo globale se soddisfa determinate condizioni"
+    - "È sempre un ottimo globale"
+    - "Coincide con l'origine"
+  correct_answer: 3
+
+- body: >-
+    Si considerino una funzione f convessa definita su un insieme S convesso ed un valore di soglia q. Si ha allora che il sottoinsieme di punti x di S in cui f(x) <= q
+  topic: "Programmazione Matematica"
+  answers:
+    - "È un intorno esatto"
+    - "È il complemento di S"
+    - "Coincide con S"
+    - "È convesso"
+    - "È concavo"
+  correct_answer: 3
+
+- body: >-
+    Si consideri una famiglia di insiemi convessi. Vale che
+  topic: "Programmazione Matematica"
+  answers:
+    - "La loro unione è sempre un insieme convesso"
+    - "La loro intersezione è un insieme convesso solo se valgono opportune condizioni"
+    - "La loro unione è sempre un insieme concavo"
+    - "La loro intersezione è sempre un insieme concavo"
+    - "La loro intersezione è sempre un insieme convesso"
+  correct_answer: 4
+
+- body: >-
+    Un insieme di colonne di una matrice intera A m x n non è linearmente indipendente se:
+  topic: "Programmazione Lineare"
+  answers:
+    - "la loro combinazione lineare che produce il vettore nullo ha tutti i coefficienti nulli"
+    - "ogni colonna può essere espressa come combinazione lineare delle altre"
+    - "la sottomatrice corrispondente non è singolare"
+    - "il determinante della matrice corrispondente è diverso da zero"
+    - "nessuna colonna può essere espressa come combinazione lineare delle altre"
+  correct_answer: 1
+
+- body: >-
+    Un insieme di m colonne di una matrice intera A m x n è linearmente indipendente se:
+  topic: "Programmazione Lineare"
+  answers:
+    - "la sottomatrice corrispondente è singolare."
+    - "il determinante della matrice corrispondente è nullo."
+    - "al massimo una colonna può essere espressa come combinazione lineare delle altre."
+    - "una loro combinazione lineare con coefficienti non tutti nulli può produrre il vettore nullo."
+    - "nessuna colonna può essere espressa come combinazione lineare delle altre."
+  correct_answer: 4
+
+- body: >-
+    Quale di queste non è un'assunzione che l'algoritmo del Simplesso deve verificare prima di poter operare?
+  topic: "Programmazione Lineare"
+  answers:
+    - "Si considera sempre la forma standard con m<n."
+    - "La regione ammissibile F non è vuota."
+    - "La matrice A contiene m colonne linearmente indipendenti, ha cioè rango m."
+    - "La SBA iniziale non deve essere degenere."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: >-
+    Una variabile libera in segno può essere sostituita equivalentemente da:
+  topic: "Programmazione Lineare"
+  answers:
+    - "la differenza fra una variabile non positiva ed una non negativa."
+    - "la differenza fra due variabili non negative."
+    - "la somma di due variabili non positive."
+    - "la somma di due variabili non negative."
+    - "la differenza fra una variabile non negativa e una non positiva."
+  correct_answer: 1
+
+- body: >-
+    Un vincolo espresso come Ax = b in forma standard equivale, in forma canonica, a
+  topic: "Programmazione Lineare"
+  answers:
+    - "Ax <=b, Ax >=b"
+    - "Ax < b"
+    - "Ax > b"
+    - "Ax >= b, Ax < b"
+    - "Nessuna di queste"
+  correct_answer: 0
+
+- body: >-
+    Dati un vettore di parametri a ed un vettore di incognite x, una disequazione della forma a'x <= b è equivalente a
+  topic: "Programmazione Lineare"
+  answers:
+    - "a'x <= b, a'x + s = b, s >= 0."
+    - "a'x - s = b, s >= 0"
+    - "a'x + s = b, s <= 0."
+    - "a'x + s = b, s >= 0."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: >-
+    Si consideri un sistema di equazioni lineari della forma Ax = b, con A matrice m x n di rango m. Il sistema ha
+  topic: "Programmazione Lineare"
+  answers:
+    - "infinite soluzioni se m = n"
+    - "infinite soluzioni se m > n"
+    - "una sola soluzione se m = n"
+    - "una sola soluzione se m > n"
+    - "nessuna delle precedenti"
+  correct_answer: 2
+
+- body: >-
+    Cosa è una base di una matrice A?
+  topic: "Programmazione Lineare"
+  answers:
+    - "Un sottoinsieme di colonne di A."
+    - "Un sottoinsieme di colonne di A linearmente indipendenti."
+    - "Un sottoinsieme di m colonne di A (m rango di A)."
+    - "Un sottoinsieme di m colonne di A linearmente indipendenti (m rango di A)."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: >-
+    Data una matrice intera A m x n, una sua base è costituita da
+  topic: "Programmazione Lineare"
+  answers:
+    - "un insieme di m colonne"
+    - "un insieme di m colonne linearmente indipendenti"
+    - "un insieme di m colonne la cui matrice quadrata corrispondente è singolare"
+    - "un insieme di m colonne linearmente dipendenti"
+    - "nessuna di queste"
+  correct_answer: 1
+
+- body: >-
+    Una soluzione base corrispondente ad una sottomatrice base B di una matrice A m x n si ottiene:
+  topic: "Programmazione Lineare"
+  answers:
+    - "azzerando tutte le variabili e risolvendo il sistema risultante"
+    - "azzerando le variabili base e risolvendo il sistema risultante"
+    - "azzerando le variabili fuori base e risolvendo il sistema risultante"
+    - "dando un valore non nullo alle variabili fuori base e risolvendo il sistema risultante"
+    - "nessuna di queste"
+  correct_answer: 2
+
+- body: >-
+    Quale tra le seguenti è la definizione di politopo?
+  topic: "Programmazione Lineare"
+  answers:
+    - "Regione in cui la combinazione convessa di ciascun punto appartiene sempre alla regione."
+    - "Intersezione di un numero finito di semispazi."
+    - "Combinazione convessa di un numero finito di vertici."
+    - "Regione ammissibile che ha come punti ottimi i vertici."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Sia P un politopo, H un generico iperpiano, HS uno dei due semispazi generati da H. Insieme dei punti f = intersezione tra P e HS è detta:
+  topic: "Programmazione Lineare"
+  answers:
+    - "Politopo convesso ammissibile"
+    - "Regione ammissibile"
+    - "Faccia del politopo se f non vuoto e contenuto in H"
+    - "Insieme di punti ottimi contenuti in H"
+    - "Nessuna di queste"
+  correct_answer: 2
+
+- body: >-
+    Relativamente all'affermazione 'ogni punto di un politopo è combinazione convessa dei vertici':
+  topic: "Programmazione Lineare"
+  answers:
+    - "Vale solo in caso di vertici ottimi."
+    - "E' corretta."
+    - "Vale solo se la combinazione è stretta."
+    - "E' errata."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    La combinazione convessa stretta di due punti distinti x ed y di un politopo convesso è:
+  topic: "Programmazione Lineare"
+  answers:
+    - "un vertice del politopo."
+    - "un punto del politopo non coincidente con un vertice."
+    - "il punto centrale del politopo."
+    - "un punto esterno al politopo."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Dato un politopo P definito dai vincoli di un LP, condizione necessaria e sufficiente perché un punto sia un vertice è che:
+  topic: "Programmazione Lineare"
+  answers:
+    - "La sua combinazione convessa con un qualunque altro punto del politopo appartenga ancora al politopo."
+    - "La relativa soluzione x abbia componenti positivi."
+    - "Il politopo sia limitato e non vuoto."
+    - "La corrispondente soluzione x sia una soluzione base ammissibile."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: >-
+    Quale tra queste affermazioni è errata?
+  topic: "Programmazione Lineare"
+  answers:
+    - "Ogni punto del politopo è combinazione convessa dei vertici."
+    - "Ogni combinazione convessa dei vertici è un punto del politopo."
+    - "Un vertice è combinazione convessa stretta di due punti distinti del politopo."
+    - "Un vertice non è combinazione convessa stretta di due punti distinti del politopo."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    Quale tra queste affermazioni è errata?
+  topic: "Programmazione Lineare"
+  answers:
+    - "L'intersezione di un numero finito di iperpiani è un politopo (convesso)."
+    - "La dimensione di un politopo è la minima dimensione di uno spazio che lo può contenere."
+    - "Una faccia di dimensione 1 viene detta spigolo."
+    - "Un vertice non è combinazione convessa stretta di due punti distinti del politopo."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Dato il politopo definito dai vincoli di un LP, una combinazione convessa di vertici ottimi è:
+  topic: "Programmazione Lineare"
+  answers:
+    - "ottima solo se la combinazione convessa è stretta"
+    - "non ottima"
+    - "ottima sotto particolari condizioni"
+    - "sempre ottima"
+    - "nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    Una SBA si dice degenere se:
+  topic: "Programmazione Lineare"
+  answers:
+    - "Contiene più di m-n variabili con valore zero."
+    - "Contiene più di n-m variabili con valore zero."
+    - "Esistono fuori base variabili con valore zero."
+    - "Non c'è nessuna variabile con valore zero."
+    - "Nessuna di queste"
+  correct_answer: 1
+
+- body: >-
+    Se due basi producono la stessa soluzione base ammissibile x, allora x contiene:
+  topic: "Programmazione Lineare"
+  answers:
+    - "meno di n zeri."
+    - "n-m zeri."
+    - "meno di n-m zeri."
+    - "più di m zeri."
+    - "più di n-m zeri."
+  correct_answer: 4
+
+- body: >-
+    Quale di queste affermazioni è errata?
+  topic: "Programmazione Lineare"
+  answers:
+    - "Un insieme S si dice convesso se dati due qualunque punti di S, la combinazione convessa di questi appartiene ancora ad S."
+    - "Una funzione c si dice convessa su un insieme convesso S se il valore della funzione nella combinazione convessa di due qualunque punti di S è maggiore o uguale alla combinazione convessa del valore della funzione nei due punti."
+    - "Dato un qualunque problema LP, esiste sempre un vertice ottimo."
+    - "Se due basi distinte producono la stessa SBA x, allora x è degenere."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Quale tra queste affermazioni è errata?
+  topic: "Programmazione Lineare"
+  answers:
+    - "Ogni combinazione convessa di vertici ottimi è ottima."
+    - "Dato un LP non è detto che esista un punto ottimo; se esiste allora questo è un vertice."
+    - "L'insieme dei vincoli di un LP è un politopo."
+    - "La regione ammissibile di un LP è un politopo."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    La definizione di politopo (convesso) è:
+  topic: "Programmazione Lineare"
+  answers:
+    - "Intersezione di un numero qualunque di semispazi"
+    - "Intersezione di un numero finito di semipiani purchè limitata"
+    - "Intersezione di un numero qualsiasi di semipiani"
+    - "Intersezione di un numero finito di semipiani purchè limitata e non vuota"
+    - "Intersezione di un numero finito si semipiani purchè non vuota"
+  correct_answer: 3
+
+- body: >-
+    Sia B una base di un sistema Ax=b. Qualunque colonna non appartentente a B può essere espressa come:
+  topic: "Programmazione Lineare"
+  answers:
+    - "Combinazione lineare delle colonne di B, con coefficienti non negativi"
+    - "Combinazione convessa delle colonne di B, con coefficienti positivi"
+    - "Combinazione convessa delle colonne di B, con coefficienti non negativi"
+    - "Combinazione lineare delle colonne di B, con coefficienti positivi"
+    - "combinazione lineare delle colonne di B, con coefficienti di segno qualunque"
+  correct_answer: 4
+
+- body: >-
+    In un politopo (convesso)  di dimensione d, uno spigolo è
+  topic: "Programmazione Lineare"
+  answers:
+    - "Una faccia di dimensione d - 1"
+    - "Una faccia di dimensione 0"
+    - "Una faccia di dimensione 1"
+    - "Una faccia di dimensione d"
+    - "Una faccia di dimensione d + 1"
+  correct_answer: 2
+
+- body: >-
+    Se yij è minore o uguale a 0 per ogni i, in relazione a theta, cosa succede?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Viene violata assunzione 0 (forma standard con m<n)."
+    - "Viene violata assunzione 1 (A di rango m)."
+    - "Viene violata assunzione 2 (F non vuota)."
+    - "Viene violata assunzione 3 (F limitata in direzione di decrescenza della funzione obiettivo)."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: >-
+    Cosa significa se nel calcolo di theta max c'è un caso di parità?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "La soluzione attuale era degenere."
+    - "La nuova soluzione è degenere."
+    - "La nuova soluzione avrà costo maggiore."
+    - "Niente di particolare, si prosegue scegliendo l'indice minimo."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    In un tableau del simplesso primale, gli elementi della colonna 0 righe da 1 a m:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "contengono i valori attuali delle sole variabili base"
+    - "sono tutti nulli"
+    - "contengono i valori attuali di tutte le variabili"
+    - "contengono i costi relativi"
+    - "contengono i valori ottimi delle sole variabili base"
+  correct_answer: 0
+
+- body: >-
+    Cosa contiene il tableau a qualunque iterazione?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Rappresentazione compatta dei coefficienti del sistema AX = b."
+    - "Informazioni sui costi e valori delle soluzioni di base ammissibili."
+    - "Rappresentazione compatta dei vincoli di un problema di LP."
+    - "Rappresentazione compatta dei valori delle soluzioni."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Quale colonna conviene far entrare in base in un cambiamento di base?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Colonna con tutti elementi positivi."
+    - "Colonna con costo relativo positivo."
+    - "Colonna con costo relativo negativo."
+    - "Colonna con tutti elementi negativi."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    In un tableau del simplesso primale, gli elementi della riga 0 (colonne da 1 a n):
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "sono tutti nulli."
+    - "possono avere segno qualunque."
+    - "sono tutti non negativi."
+    - "sono tutti positivi o nulli."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Cosa contiene un tableau nella posizione di riga 0 e colonna 0?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Costo relativo della colonna 0."
+    - "Il valore z0 della soluzione base attuale."
+    - "Il profitto della colonna 0."
+    - "L'opposto di z0 della soluzione base attuale."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: >-
+    Cosa dice il criterio di ottimalità?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Se il costo relativo j-esimo è maggiore o uguale a 0 per ogni j, allora la soluzione attuale è ottima."
+    - "Se il costo relativo j-esimo è positivo per ogni j, allora la soluzione attuale è ottima."
+    - "Se i valori delle variabili base sono tutti positivi o nulli, allora la soluzione attuale è ottima."
+    - "Se il valore z0 è negativo, allora la soluzione attuale è ottima."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Cosa afferma la regola di Dantzig?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Entra in base la colonna Aj con il costo Cj più negativo."
+    - "Entra in base la colonna Aj di indice minimo con costo Cj negativo."
+    - "Entra in base la prima colonna Aj con costo Cj negativo"
+    - "Esce dalla base la colonna Aj con il costo Cj più negativo."
+    - "Nessuna di queste"
+  correct_answer: 0
+
+- body: >-
+    Nell'operazione di pivoting del simplesso primale, in caso di parità nella scelta del pivot, la nuova soluzione base:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "può essere peggiore della soluzione base attuale."
+    - "coincide sempre con la soluzione base attuale."
+    - "non è mai degenere."
+    - "può essere non ammissibile."
+    - "Nessuna di queste."
+  correct_answer: 4
+
+- body: >-
+    Nell'algoritmo del simplesso primale, utilizzare ad ogni iterazione la regola di Dantzig:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "non garantisce nulla"
+    - "garantisce la convergenza dell'algoritmo nel numero minimo di iterazioni"
+    - "garantisce la convergenza dell'algoritmo"
+    - "garantisce il massimo decremento locale del valore della soluzione"
+    - "nessuna di queste"
+  correct_answer: 0
+
+- body: >-
+    Sia v il vertice del politopo corrispondente alla base attuale B. Se B è degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice, che è:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "sempre diverso da v."
+    - "diverso da v oppure coincidente con v, dipende dal tableau attuale."
+    - "coincidente con v se il determinante di B è nullo."
+    - "sempre coincidente con v."
+    - "diverso da v purché il determinante di B sia positivo."
+  correct_answer: 1
+
+- body: >-
+    Sia v il vertice del politopo corrispondente alla base attuale B. Se B non è degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice che è:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "diverso da v oppure coincidente da v, non si può dire"
+    - "coincidente con v se il determinante di B è nullo"
+    - "sempre diverso da v"
+    - "diverso da v purchè il determinante di B sia positivo"
+    - "coincidente con v se il determinante di B è non negativo"
+  correct_answer: 2
+
+- body: >-
+    In cosa consiste la Fase 1 dell'algoritmo del Simplesso?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Eliminare le variabili artificiali."
+    - "Minimizzare la funzione obiettivo originale."
+    - "Determinare una SBA iniziale."
+    - "Azzerare i costi relativi originali."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore negativo:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "si è ottenuta una soluzione base ammissibile per il problema originale."
+    - "significa che la soluzione ottima è illimitata."
+    - "significa che il problema originale è impossibile."
+    - "si è trovata la soluzione ottima del problema originale."
+    - "Nessuna di queste."
+  correct_answer: 4
+
+- body: >-
+    Se la soluzione del problema artificiale della fase 1 del simplesso ha valore nullo:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "E' sempre possibile proseguire con la fase 2, a patto di eliminare le variabili artificiali, sostituire la funzione obiettivo con quella del costo originale e azzerare i costi relativi in corrispondenza delle basi o ridurre la dimensione della base."
+    - "Non è detto che sia sempre possibile proseguire con la fase 2."
+    - "Si prosegue con la fase 2 senza nessun tipo di operazione preliminare."
+    - "Il problema originale non ha soluzione ammissibile."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Cosa significa se la soluzione del problema artificiale ha valore positivo?
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Violata assunzione 0 (forma standard con m<n)."
+    - "Violata assunzione 1 (A di rango m)."
+    - "Violata assunzione 2 (F non vuota)."
+    - "Violata assunzione 3 (F limitata in direzione di decrescenza della funzione obiettivo)."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore positivo
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "significa che la soluzione ottima è illimitata"
+    - "sotto determinate condizioni si è ottenuta una soluzione base ammissibile per il problema originale"
+    - "si è trovata la soluzione ottima del problema originale"
+    - "si è ottenuta una soluzione base ammissibile per il problema originale"
+    - "significa che il problema è impossibile"
+  correct_answer: 4
+
+- body: >-
+    Se un tableau del simplesso primale corrisponde alla soluzione ottima:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "gli elementi della riga 0 sono tutti non negativi."
+    - "gli elementi della colonna 0 sono tutti non negativi."
+    - "gli elementi della riga 0, colonne da 1 a n, sono tutti positivi."
+    - "gli elementi della riga 0, colonne da 1 a n, sono tutti non negativi."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: >-
+    Si consideri un tableau dell'algoritmo del simplesso primale. I costi relativi si trovano:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "In nessuna di queste posizioni"
+    - "Nella riga 0, nelle colonne corrispondenti alla base"
+    - "Nella riga 0, nelle colonne non corrispondenti alla base"
+    - "Nella colonna 0, nelle righe corrispondenti alla base"
+    - "Nella colonna 0, nelle righe non corrispondenti alla base"
+  correct_answer: 2
+
+- body: >-
+    Si consideri una sottomatrice B di ordine m di una matrice A m x n. La soluzione base corrispondente a B:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "è ammissibile per il corrispondente problema in forma standard solo se x = 0 per ogni variabile non base"
+    - "è sempre ammissibile per il corrispondene problema in forma standard"
+    - "Non è mai ammissibile per il corrispondente problema in forma standard"
+    - "è ammissibile per il corrispondente problema in forma standard solo se x >= 0"
+    - "Nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    Si consideri un tableau dell'algoritmo del simplesso primale. Gli elementi della riga 0 corrispondenti alle colonne della base
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Nessuna di queste"
+    - "Possono avere segno qualunque"
+    - "Sono tutti nulli"
+    - "Contengono i costi relativi"
+    - "Valgono tutti 1"
+  correct_answer: 2
+
+- body: >-
+    Sia A_j una colonna corrispondente ad un costo relativo negativo nell'algoritmo del simplesso primale. Se tutti i coefficienti della colonna sono negativi o nulli, ciò implica che:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Il problema ha soluzione illimitata"
+    - "Il sistema Ax = b è ridondante"
+    - "Nessuna di queste"
+    - "La soluzione attuale è ottima"
+    - "La regione ammissibile è vuota"
+  correct_answer: 0
+
+- body: >-
+    Si consideri un tableau dell'algoritmo del simplesso primale. Il costo relativo di una variabile fuori base fornisce:
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "La diminuzione unitaria del valore della soluzione se tale variabile entra in base"
+    - "La variazione unitaria del valore della soluzione se tale variabile esce dalla base"
+    - "La diminuzione unitaria del valore della soluzione se tale variabile esce dalla base"
+    - "La variazione unitaria del valore della soluzione se tale variabile entra in base"
+    - "Nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    Se al termine della Fase 1 dell'algoritmo del simplesso la soluzione vale 0 ma ci sono variabili artificiali in base
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "Si è trovata la soluzione ottima del problema originale"
+    - "Significa che il problema originale è impossibile"
+    - "Significa che la soluzione ottima è illimitata"
+    - "Significa che il sistema dei vincoli del problema originale è ridondante"
+    - "Non di può dire, occorrono ulteriori iterazioni"
+  correct_answer: 4
+
+- body: >-
+    Siano dati un problema di programmazione lineare ed il corrispondente tableau ottimo. L'analisi di sensistivita' dimostra che, se si cambia il coefficiente di costo di una variabile, la base attuale resta ottima se
+  topic: "Algoritmo del Simplesso"
+  answers:
+    - "i nuovi valori dei costi relativi sono non negativi"
+    - "i nuovi valori delle variabili base soddisfano le equazioni dei vincoli"
+    - "i nuovi valori delle variabili base sono negativi o nulli"
+    - "i nuovi valori delle variabili base sono non negativi"
+    - "risposta vuota"
+  correct_answer: 0
+
+- body: >-
+    Ad una variabile primale non negativa corrisponde
+  topic: "Dualità"
+  answers:
+    - "nessuna di queste"
+    - "un vincolo duale della forma pi'a^ <= c"
+    - "un vincolo duale nella forma pi'a^ = c"
+    - "una variabile duale non negativa"
+    - "una variabile duale libera (non ristretta in segno)"
+  correct_answer: 1
+
+- body: >-
+    Quale tra queste affermazioni è falsa rispetto ad una corrispondenza primale-duale?
+  topic: "Dualità"
+  answers:
+    - "Ai costi corrispondono condizioni su variabili e viceversa."
+    - "I vincoli sono dati dalle righe di A per il primale, dalle colonne di A per il duale."
+    - "Ai costi corrispondono i termini noti e viceversa."
+    - "Ad un vincolo corrisponde una condizione su una variabile e viceversa."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Se un problema di programmazione lineare (primale) ha soluzione ottima finita, allora:
+  topic: "Dualità"
+  answers:
+    - "Il suo duale non è detto che abbia soluzione ottima finita."
+    - "Anche il suo duale ha soluzione ottima finita e i valori delle soluzioni coincidono."
+    - "Anche il duale ha soluzione ottima finita, ma non è detto che i valori delle soluzioni coincidano."
+    - "Anche il duale ha soluzione ottima finita, ma i valori delle due soluzioni non coincidono."
+    - "Nessuna di queste"
+  correct_answer: 1
+
+- body: >-
+    Quale può essere una possibile coppia di problemi primale-duale?
+  topic: "Dualità"
+  answers:
+    - "Primale ottimo finito / Duale illimitato."
+    - "Primale Illimitato / Duale Illimitato."
+    - "Primale impossibile / Duale impossibile."
+    - "Primale ottimo finito / Duale impossibile."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    La situazione "primale illimitato" e corrispondente "duale illimitato":
+  topic: "Dualità"
+  answers:
+    - "dipende dal gradiente della funzione obiettivo del primale."
+    - "non può mai verificarsi."
+    - "può verificarsi sotto determinate condizioni."
+    - "dipende dai gradienti delle due funzioni obiettivo."
+    - "si verifica sempre."
+  correct_answer: 1
+
+- body: >-
+    Quando un primale è illimitato, la situazione "corrispondente duale impossibile":
+  topic: "Dualità"
+  answers:
+    - "dipende dai gradienti delle due funzioni obiettivo"
+    - "non può mai verificarsi"
+    - "può verificarsi sotto determinate condizioni"
+    - "dipende dal gradiente della funzione obiettivo"
+    - "si verifica sempre"
+  correct_answer: 4
+
+- body: >-
+    Il lemma di Farkas:
+  topic: "Dualità"
+  answers:
+    - "Ha colto con grande anticipo l'essenza della dualità."
+    - "Ha colto con grande anticipo l'essenza della programmazione intera."
+    - "Offre una solida dimostrazione sull'efficienza dell'algoritmo del simplesso."
+    - "Identifica la relazione tra l'ammissibilità del primale e l'impossibilità del duale."
+    - "Nessuna di queste"
+  correct_answer: 0
+
+- body: >-
+    Il teorema degli scarti complementari afferma:
+  topic: "Dualità"
+  answers:
+    - "Per ogni i ad 1 a m, l'i-esima variabile duale è nulla o l'i-esimo vincolo primale è soddisfatto con uguaglianza."
+    - "Per ogni j da 1 a n, il j-esimo vincolo primale deve essere soddisfatto con uguaglianza o la j-esima variabile duale deve essere nulla."
+    - "per ogni i da 1 a m, l'i-esima variabile primale è nulla o l'i-esimo vincolo duale è soddisfatto con uguaglianza."
+    - "Per ogni j da 1 a n, i j-esimi vincoli primali e duali devono essere soddisfatti con uguaglianza."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    In un problema di programmazione lineare con m vincoli ed n variabili, le condizioni di ortogonalità (complementary slackness)
+  topic: "Dualità"
+  answers:
+    - "sono m-n."
+    - "sono m+n."
+    - "sono m."
+    - "sono m*n."
+    - "sono n."
+  correct_answer: 1
+
+- body: >-
+    Le condizioni di ortogonalità (complementary slackness) di una coppia primale-duale garantiscono:
+  topic: "Dualità"
+  answers:
+    - "l'ammissibilità di due soluzioni, una primale e una duale"
+    - "l'ottimalità di due soluzioni ammissibili, una primale e una duale"
+    - "l'ottimalità di due soluzioni, una primale e una duale, anche se non ammissibili"
+    - "l'ottimalità di una soluzione primale e del suo complemento"
+    - "nessuna di queste"
+  correct_answer: 1
+
+- body: >-
+    In un tableau del simplesso duale, gli elementi della riga 0 (colonna da 1 a n):
+  topic: "Dualità"
+  answers:
+    - "sono tutti positivi o nulli."
+    - "sono tutti positivi."
+    - "sono tutti negativi."
+    - "sono tutti nulli."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    In un tableau del simplesso duale, i costi relativi si trovano:
+  topic: "Dualità"
+  answers:
+    - "nella riga 0, colonne corrispondenti alla base"
+    - "nella riga 0, colonne non corrispondenti alla base"
+    - "nella colonna 0, righe non corrispondenti alla base"
+    - "in nessuna di queste posizioni"
+    - "nella colonna 0, nelle righe corrispondenti alla base"
+  correct_answer: 1
+
+- body: >-
+    Nell'algoritmo del simplesso duale:
+  topic: "Dualità"
+  answers:
+    - "Scegliamo una riga i >= 1, corrispondente ad un yi0 frazionario"
+    - "Il pivoting deve annullare la yi0 scelta"
+    - "Si inizia con una base ammissibile per il primale ma non per il duale"
+    - "La scelta del pivot garantisce il minimo aumento del valore della soluzione"
+    - "Nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    La scelta del pivot del simplesso duale viene determinata da:
+  topic: "Dualità"
+  answers:
+    - "un minimo tra rapporti di valore positivo"
+    - "un minimo tra rapporti di valore negativo"
+    - "un massimo tra rapporti di valore negativo"
+    - "un massimo tra rapporti di valore positivo"
+    - "nessuna di queste"
+  correct_answer: 2
+
+- body: >-
+    Cosa succede se, dopo aver individuato la riga con elemento in colonna 0 negativo, nell'algoritmo del simplesso duale ogni elemento di quella riga è positivo o nullo?
+  topic: "Dualità"
+  answers:
+    - "Duale impossibile, Primale illimitato."
+    - "Duale illimitato, Primale impossibile."
+    - "Duale impossibile, Primale impossibile."
+    - "Duale illimitato, Primale illimitato."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Nell'algoritmo del simplesso duale, sia a'i (i>0) una riga corrispondente ad un valore negativo in colonna 0. Se tutti i coefficienti di tale riga sono positivi o nulli, ciò implica che:
+  topic: "Dualità"
+  answers:
+    - "Il sistema Ax = b è ridondante."
+    - "il problema è impossibile."
+    - "la soluzione attuale è ottima."
+    - "il problema ha soluzione illimitata."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Relativamente al prezzo ombra:
+  topic: "Dualità"
+  answers:
+    - "Il valore ottimo della variabile xi fornisce il prezzo ombra della risorsa associata al vincolo i."
+    - "Il prezzo ombra della risorsa i identifica il valore della soluzione ottima duale."
+    - "Il valore ottimo della variabile duale pi-i identifica il prezzo ombra della risorsa associata al vincolo i."
+    - "Il prezzo ombra della variabile duale pi-i indica il modo per capire se una base con coefficienti diversi è ancora ottima."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    Relativamente al simplesso duale, quale tra le seguenti affermazioni è errata?
+  topic: "Dualità"
+  answers:
+    - "Vogliamo che il pivoting renda positiva yi0 ."
+    - "Si inizia con una base ammissibile per il primale e vogliamo trovare la soluzione ottima duale."
+    - "Vogliamo eliminare le inammissibilità contenute nel tableau."
+    - "Il pivoting deve portare il valore 0 in y0s ."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Nell'operazione di pivoting dell'algoritmo del simplesso duale:
+  topic: "Dualità"
+  answers:
+    - "Nessuna di queste."
+    - "La colonna del pivot viene moltiplicata per il pivot"
+    - "La riga del pivot viene moltiplicata per il pivot"
+    - "La colonna del pivot viene divisa per il pivot"
+    - "La riga del pivot viene divisa per il pivot"
+  correct_answer: 4
+
+- body: >-
+    Nel duale di un problema di minimizzazione in forma standard
+  topic: "Dualità"
+  answers:
+    - "Le variabili possono assumere solo valori non positivi"
+    - "Le variabili possono assumere solo valori non negativi"
+    - "Le variabili possono assumere solo valori positivi"
+    - "Le variabili possono assumere qualunque valore"
+    - "Nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    La situazione in cui il primale è impossibile e il corrispondente duale è impossibile
+  topic: "Dualità"
+  answers:
+    - "Si verifica sempre"
+    - "Può verificarsi"
+    - "Non può mai verificarsi"
+    - "Dipende dal gradiente della funzione obiettivo del duale"
+    - "Dipende dai gradienti delle due funzioni obiettivo"
+  correct_answer: 1
+
+- body: >-
+    Si considerino un sistema (I), definito da {Ax = b, x >= 0}, ed un sistema (II), definito da {y′A <= 0, b′y > 0}. Si ha allora che
+  topic: "Dualità"
+  answers:
+    - "il sistema (I) è impossible se e solo se il sistema (II) è possibile"
+    - "Nessuna di queste"
+    - "il sistema (I) è impossible se e solo se il sistema (II) è impossibile"
+    - "il sistema (I) è possible se e solo se il sistema (II) è possibile"
+    - "risposta vuota"
+  correct_answer: 0
+
+- body: >-
+    Relativamente ad un problema ILP e il suo rilassamento continuo LP
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "z(ILP) >= z(LP)"
+    - "z(ILP) <= z(LP)"
+    - "z(ILP) < z(LP)"
+    - "z(ILP) > z(LP)"
+    - "z(ILP) = z(LP)"
+  correct_answer: 0
+
+- body: >-
+    Relativamente ad un problema ILP e il suo rilassamento continuo LP
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "z(LP) >= z(ILP)"
+    - "z(LP) <= z(ILP)"
+    - "z(LP) > z(ILP)"
+    - "z(LP) < z(ILP)"
+    - "z(LP) = z(ILP)"
+  correct_answer: 1
+
+- body: >-
+    Una matrice m x n è totalmente unimodulare se:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "ogni sottomatrice quadrata ha determinante di valore +1 o -1."
+    - "ogni sottomatrice quadrata ha determinante di valore unitario."
+    - "il suo determinante ha valore unitario."
+    - "il suo determinante vale 0, +1 o -1."
+    - "Ogni sottomatrice quadrata ha determinante di valore 0, +1 o -1."
+  correct_answer: 4
+
+- body: >-
+    Se A è totalmente unimodulare, relativamente a problemi ILP:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "Il simplesso risolve problemi in tutte le forme."
+    - "Il simplesso risolve solo problemi in forma standard."
+    - "Il simplesso risolve problemi in forma standard e canonica, ma non in forma generale."
+    - "Il simplesso risolve i problemi in forma standard e generale, ma non in forma canonica."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Scelta una riga generatrice, un taglio di Gomory impone che
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "la somma delle parti frazionarie delle variabili fuori base sia non maggiore della parte frazionaria del termine noto"
+    - "la somma delle parti frazionarie delle variabili base sia non maggiore della parte frazionaria del termine noto"
+    - "la somma delle parti frazionarie delle variabili base sia non minore della parte frazionaria del termine noto"
+    - "la somma delle parti frazionarie delle variabili fuori base sia non minore della parte frazionaria del termine noto"
+    - "nessuna delle precedenti"
+  correct_answer: 3
+
+- body: >-
+    Aggiungendo un taglio di Gomory al tableau finale di un LP con yi0 non intero
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "Si elimina al più un punto intero ammissibile non ottimo"
+    - "Il nuovo tableau contiene una base ammissibile ma non ottima per il primale"
+    - "Il nuovo tableau contiene una base non ammissibile per il primale ma ammissibile per il duale"
+    - "Si elimina almeno una soluzione ammissibile intera"
+    - "Nessuna di queste"
+  correct_answer: 2
+
+- body: >-
+    L'aggiunta al tableau del taglio di Gomory relativo ad una riga generatrice frazionaria produce una soluzione (un tableau) che:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "soddisfa il vincolo di interezza ma non è ottima."
+    - "soddisfa il criterio di ottimalità ma non è ammissibile."
+    - "è ammissibile ma non è intera."
+    - "è ammissibile ma non soddisfa il criterio di ottimalità."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Sia P il problema ILP e L(P) il suo rilassamento continuo. Se L(P) è illimitato, allora:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "P è sempre impossibile"
+    - "non si può dire nulla su P"
+    - "P è sempre illimitato"
+    - "P è illimitato salvo casi molto particolari"
+    - "nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    Sia P un problema di programmazione lineare intera e L(P) il suo rilassamento continuo. Se L(P) è impossibile, allora
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "P è impossibile salvo casi molto particolari"
+    - "non si può dire nulla su P"
+    - "P è sempre impossibile"
+    - "P è illimitato"
+    - "nessuna di queste"
+  correct_answer: 2
+
+- body: >-
+    In un algoritmo branch-and-bound per un problema di massimizzazione, sia U l'upper-bound del nodo corrente. Il nodo viene ucciso se:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "U è minore o uguale al valore della soluzione ottima corrente"
+    - "U è minore o uguale al valore della soluzione ottima finale"
+    - "U è maggiore o uguale al valore della soluzione ottima corrente"
+    - "U è maggiore o uguale al valore della soluzione ottima finale"
+    - "nessuna di queste"
+  correct_answer: 0
+
+- body: >-
+    Dopo aver inserito i vincoli del procedimento Branch-and-Bound nel tableau:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "Si prosegue sempre con il simplesso primale."
+    - "Si prosegue sempre con il simplesso duale."
+    - "Si può proseguire sia con il simplesso primale che con il simplesso duale."
+    - "Si prosegue con la Fase 1 del simplesso primale."
+    - "Nessuna di queste."
+  correct_answer: 1
+
+- body: >-
+    Nel Forward Step della strategia di esplorazione Depth-First rivisitata:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "Si generano tutti i figli di P0 e si prosegue."
+    - "Si calcola L0,si rimuove dai nodi attivi il nodo con più basso lower bound, si generano i suoi figli e ne si calcolano i lower bound, aggiornando quello migliore."
+    - "Si genera un figlio dell'ultimo nodo Pk generato finchè si ottiene una soluzione immediatamente risolubile e si aggiorna eventualmente z."
+    - "Si generano tutti i figli del nodo attuale, si calcolano i loro lower bound, si prosegue l'esplorazione dal figlio con minimo lower bound."
+    - "Nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    Sia L il lower bound del nodo corrente in un algoritmo branch-and-bound per un problema di minimizzazione, il nodo viene ucciso se:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "L è minore o uguale al valore della soluzione ottima corrente"
+    - "L è minore o uguale al valore della soluzione ottima finale"
+    - "L è maggiore o uguale al valore della soluzione ottima corrente"
+    - "L è maggiore o uguale al valore della soluzione ottima finale"
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    Sia x la soluzione del rilassamento continuo di un problema di programmazione lineare intera di massimizzazione. Se si arrotonda ogni x_j frazionario all'intero più prossimo,
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "Si ottiene una soluzione ammissibile ma non ottima per il problema ILP"
+    - "Si ottiene una soluzione ottima del problema ILP"
+    - "Si ottiene un upper bound per il problema ILP"
+    - "Si ottiene una soluzione intera priva di particolari proprietà"
+    - "Nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    Sia P un problema di programmazione lineare intera e L(P) il suo rilassamento continuo. Allora:
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "La regione ammissibile di L(P) è contenuta nella regione ammissibile di P"
+    - "La regione ammissibile di P e quella di L(P) non hanno nessuna relazione"
+    - "La regione ammissibile di P è contenuta nella regione ammissibile di L(P)"
+    - "L'intersezione fra la regione ammissibile di P e quella di L(P) è vuota"
+    - "Nessuna di queste"
+  correct_answer: 2
+
+- body: >-
+    Si consideri un problema ILP di massimizzazione. Sia z(P) il valore della sua soluzione ottima e z(L(P)) quello del suo rilassamento continuo. Si ha allora che
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "z(P) > z(L(P))"
+    - "z(P) <= z(L(P))"
+    - "z(P) < z(L(P))"
+    - "z(P) = z(L(P))"
+    - "z(P) >= z(L(P))"
+  correct_answer: 1
+
+- body: >-
+    Cosa è un'istanza di un problema?
+  topic: "Complessità"
+  answers:
+    - "Un possibile algoritmo per risolverlo."
+    - "Un algoritmo attualmente in esecuzione per risolverlo."
+    - "L'insieme di tutti gli algoritmi che lo possono risolvere."
+    - "Un particolare caso numerico."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: >-
+    Cosa è la dimensione di un problema?
+  topic: "Complessità"
+  answers:
+    - "Minimo tempo di esecuzione di un algoritmo per risolverlo."
+    - "Lunghezza minima di un output di una sua istanza."
+    - "Numero di bit necessari per codificare l'input."
+    - "Numero di risorse utilizzate per risolverlo."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    Se un problema appartiene alla classe NP
+  topic: "Complessità"
+  answers:
+    - "È risolubile solo mediante un albero decisionale di altezza esponenziale"
+    - "È sempre risolubile mediante un algoritmo di programmazione dinamica"
+    - "È sempre risolubile in tempo polinomiale"
+    - "È sempre risolubile mediante un albero decisionale di altezza polinomiale"
+    - "È sempre risolubile in tempo pseudo-polinomiale"
+  correct_answer: 1
+
+- body: >-
+    Un algoritmo polinomiale per un problema NP-completo:
+  topic: "Complessità"
+  answers:
+    - "risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli fortemente NP-completi"
+    - "non può esistere"
+    - "risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli della classe P"
+    - "risolverebbe ogni problema della classe NP in tempo polinomiale"
+    - "nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    Si dice che S' domina S'' se:
+  topic: "Complessità"
+  answers:
+    - "La somma dei pesi di S' è maggiore o uguale a quella dei pesi di S'' e la somma dei profitti di S' è minore o uguale a quella dei profitti di S''."
+    - "La somma dei pesi di S' e di S'' è uguale e la somma dei profitti di S'' è maggiore di quella dei profitti di S'."
+    - "La somma dei pesi di S' è minore o uguale alla somma dei pesi di S'' e la somma dei profitti di S' è maggiore o uguale a quella dei profitti di S''."
+    - "La somma dei pesi di S' è minore a quella dei pesi di S'' e la somma dei profitti di S' e di S'' coincidono."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    L'algoritmo Knapsack DP è:
+  topic: "Complessità"
+  answers:
+    - "Polinomiale"
+    - "Esponenziale"
+    - "Pseudo-Esponenziale"
+    - "Pseudo-Polinomiale"
+    - "Nessuna di queste"
+  correct_answer: 3
+
+- body: >-
+    Relativamente ad un problema fortemente NP-Completo:
+  topic: "Complessità"
+  answers:
+    - "Non può esistere nessun algoritmo pseudo-polinomiale, a meno che P=NP."
+    - "Non può esistere nessun algoritmo pseudo-polinomiale."
+    - "Può esistere un algoritmo pseudo-polinomiale, a meno che P=NP."
+    - "Può esistere un algoritmo pseudo-polinomiale."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Quale tra queste affermazioni è errata?
+  topic: "Complessità"
+  answers:
+    - "Per tutti i problemi fortemente NP-Completi esiste un algoritmo pseudo-polinomiale."
+    - "La versione riconoscimento e ottimizzazione hanno stessa difficoltà in relazione alla possibilità o meno di trovare la soluzione in tempo polinomiale."
+    - "Se A è trasformabile polinomialmente in B e si conosce un algoritmo polinomiale per B, allora si ha un algoritmo polinomiale anche per A."
+    - "Un problema che soddisfa la definizione di Np-Completo senza stabilire la sua appartenenza a NP viene detto NP-Difficile."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Relativamente alla classe di problemi NP, quale di queste affermazioni è errata?
+  topic: "Complessità"
+  answers:
+    - "Contiene i problemi risolubili con un tempo polinomiale da una Macchina di Turing Non Deterministica."
+    - "Se un problema non appartiene a NP, allora è possibile trovare un algoritmo polinomiale che lo risolva."
+    - "Identifica i problemi RV tali che, se l'istanza della risposta è 'sì', ciò può essere certificato in tempo polinomiale."
+    - "Un problema A di NP è NP-Completo se per ogni problema B di NP, B può essere trasformato polinomialmente in A."
+    - "Nessuna di queste"
+  correct_answer: 1
+
+- body: >-
+    La programmazione lineare:
+  topic: "Complessità"
+  answers:
+    - "È risolubile in tempo polinomiale, ma non dall'algoritmo del simplesso."
+    - "non è risolubile in tempo polinomiale."
+    - "È risolubile in tempo polinomiale dall'algoritmo del simplesso."
+    - "È risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: >-
+    Relativamente ad un problema KP-01:
+  topic: "Complessità"
+  answers:
+    - "È risolvibile solo mediante un albero decisionale."
+    - "È risolvibile in tempo polinomiale."
+    - "È risolvibile mediante la programmazione dinamica."
+    - "non esiste algoritmo pseudo-polinomiale."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: >-
+    Un problema P è NP-completo se:
+  topic: "Complessità"
+  answers:
+    - "Qualunque problema della classe NP si può trasformare in P in tempo polinomiale"
+    - "Si può trasformare in tempo polinomiale in qualunque problema della classe NP"
+    - "è risolubile mediante un albero decisionale di altezza polinomiale"
+    - "è risolubile mediante un algoritmo di programmazione dinamica"
+    - "Nessuna di queste"
+  correct_answer: 0
+
+- body: >-
+    Un problema Knapsack 0-1:
+  topic: "Complessità"
+  answers:
+    - "Non può essere risolto in tempo pseudo-polinomiale"
+    - "È risolubile solo mediante un albero decisionale di altezza esponenziale"
+    - "È risolubile in tempo polinomiale"
+    - "È sempre risolubile mediante un albero decisionale di altezza polinomiale"
+    - "Nessuna di queste"
+  correct_answer: 3
+
