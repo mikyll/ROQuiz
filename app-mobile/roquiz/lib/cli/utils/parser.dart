@@ -1,22 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:roquiz/model/quiz/question.dart';
+import 'package:yaml/yaml.dart';
 
-import '../model/quiz/question.dart';
-
-// Launch system url in the system browser
-void openUrl(String url, {bool external = true}) async {
-  launchUrlString(
-    url,
-    mode: external ? LaunchMode.externalApplication : LaunchMode.inAppWebView,
-  ).then((onValue) {}).onError((error, stackTrace) {
-    throw Exception("Could not launch $url: $error");
-  });
-}
-
-// NB: Questions already contain the topic, so there's no need to return the list while parsing
-List<Question> parseQuestions(String content, int maxNumAnwers) {
+List<Question> parseQuestionsFromTxt(String content, int maxNumAnwers) {
   const minAnswers = 2;
 
   List<Question> questions = [];
@@ -128,6 +116,40 @@ List<Question> parseQuestions(String content, int maxNumAnwers) {
   return questions;
 }
 
+List<Question> parseQuestionsFromYaml(String content) {
+  List<Question> questions = [];
+
+  final dynamic parsedData = loadYaml(content);
+
+  if (parsedData is! List) {
+    throw FormatException("Invalid YAML format: expected a list of questions");
+  }
+
+  int iQ = 1;
+  for (final el in parsedData) {
+    if (el is Map) {
+      try {
+        final body = el["body"] as String;
+        final topic = el["topic"] as String;
+        final answers = el["answers"] as List;
+        final correctAnswer = el["correct_answer"];
+
+        Question q = Question(
+            iQ, body, topic, List<String>.from(answers), correctAnswer);
+
+        iQ++;
+        questions.add(q);
+      } catch (e) {
+        print("Error parsing question: $e");
+      }
+    } else {
+      print("Invalid question format: $el");
+    }
+  }
+
+  return questions;
+}
+
 Map<String, int> getTopicSizes(List<Question> questions) {
   Map<String, int> topicSizes = {};
 
@@ -143,14 +165,6 @@ Map<String, int> getTopicSizes(List<Question> questions) {
   return topicSizes;
 }
 
-List<Question> parseQuestionsFromYaml(String content) {
-  List<Question> questions = [];
-
-  // TODO
-
-  return questions;
-}
-
 void main(List<String> args) async {
   if (args.isEmpty) {
     print("No arg specified args");
@@ -163,7 +177,19 @@ void main(List<String> args) async {
   }
 
   file.readAsString().then((content) {
-    List<Question> questions = parseQuestions(content, 5);
+    List<Question> questions = parseQuestionsFromYaml(content);
+    print(questions.length);
+
+    if (args.length >= 2 && args[1] == "-t") {
+      Map<String, int> topicSizes = getTopicSizes(questions);
+      for (String topic in topicSizes.keys) {
+        print("- $topic: ${topicSizes[topic]}");
+      }
+    }
+
+    return;
+
+    /*List<Question> questions = parseQuestions(content, 5);
     for (Question q in questions) {
       print(q.toYAML());
     }
@@ -173,6 +199,6 @@ void main(List<String> args) async {
       for (String topic in topicSizes.keys) {
         print("- $topic");
       }
-    }
+    }*/
   });
 }
