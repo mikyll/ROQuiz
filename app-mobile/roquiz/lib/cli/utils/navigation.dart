@@ -9,3 +9,5 @@ void openUrl(String url, {bool external = true}) async {
     throw Exception("Could not launch $url: $error");
   });
 }
+
+// TODO: show dialog
