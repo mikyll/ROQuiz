@@ -54,10 +54,10 @@ class MyThemes {
         elevation: 3.0),
     iconButtonTheme: IconButtonThemeData(
       style: ButtonStyle(
-        iconColor: WidgetStatePropertyAll(Colors.white),
+        iconColor: WidgetStatePropertyAll(FOREGROUND_COLOR_LIGHT),
+        backgroundColor: WidgetStatePropertyAll(BACKGROUND_COLOR_LIGHT),
         splashFactory: InkSplash.splashFactory,
-        overlayColor:
-            WidgetStatePropertyAll(const Color.fromARGB(255, 91, 99, 181)),
+        overlayColor: WidgetStatePropertyAll(OVERLAY_COLOR_LIGHT),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -131,10 +131,10 @@ class MyThemes {
         elevation: 3.0),
     iconButtonTheme: IconButtonThemeData(
       style: ButtonStyle(
-        iconColor: WidgetStatePropertyAll(Colors.white),
+        iconColor: WidgetStatePropertyAll(FOREGROUND_COLOR_DARK),
+        backgroundColor: WidgetStatePropertyAll(BACKGROUND_COLOR_DARK),
         splashFactory: InkSplash.splashFactory,
-        overlayColor:
-            WidgetStatePropertyAll(const Color.fromARGB(255, 91, 99, 181)),
+        overlayColor: WidgetStatePropertyAll(OVERLAY_COLOR_DARK),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
