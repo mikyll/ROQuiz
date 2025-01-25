@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:provider/provider.dart';
-import 'package:roquiz/cli/utils.dart';
+
+import 'package:roquiz/cli/utils/navigation.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/themes.dart';
 import 'package:roquiz/view/view_info.dart';
+import 'package:roquiz/view/view_settings.dart';
+import 'package:roquiz/model/constants.dart';
 
 class ViewMenu extends StatefulWidget {
-  ViewMenu(
-      {super.key});
-  
+  ViewMenu({super.key});
 
   @override
   State<StatefulWidget> createState() => ViewMenuState();
@@ -20,151 +22,151 @@ class ViewMenuState extends State<ViewMenu> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
+
     return Scaffold(
       body: Center(
-          child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Spacer(flex: 2),
-                  Settings.SHOW_APP_LOGO
-                      ? Column(children: [
-                          SvgPicture.asset(
-                            'assets/icons/logo.svg',
-                            alignment: Alignment.center,
-                            fit: BoxFit.fitWidth,
-                            width: 200,
-                            colorFilter: ColorFilter.mode(
-                                Colors.indigo[300]!,
-                                // TODO
-                                // widget.themeMode
-                                //     ? Colors.indigo[300]!
-                                //     : Colors.indigo[600]!,
-                                BlendMode.srcIn),
-                          ),
-                          const Text(
-                            Settings.APP_TITLE,
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ])
-                      : const Text(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(flex: 2),
+                Settings.SHOW_APP_LOGO
+                    ? Column(children: [
+                        SvgPicture.asset(
+                          'assets/icons/logo.svg',
+                          alignment: Alignment.center,
+                          fit: BoxFit.fitWidth,
+                          width: 200,
+                          colorFilter: ColorFilter.mode(
+                              Colors.indigo[300]!,
+                              // TODO
+                              // widget.themeMode
+                              //     ? Colors.indigo[300]!
+                              //     : Colors.indigo[600]!,
+                              BlendMode.srcIn),
+                        ),
+                        const Text(
                           Settings.APP_TITLE,
-                          maxLines: 1,
                           style: TextStyle(
-                            fontSize: 54,
+                            fontSize: 40,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                  Text(
-                    "v${Settings.VERSION_NUMBER}",
-                    maxLines: 1,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      ])
+                    : const Text(
+                        Settings.APP_TITLE,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 54,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                Text(
+                  "v${Settings.VERSION_NUMBER}",
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const Spacer(flex: 1),
-                  Switch(
-                  value: themeProvider.themeMode == ThemeMode.dark,
-                  onChanged: (isDarkMode) {
-                    themeProvider.toggleTheme();
-                  },
                 ),
-                  // BUTTONS
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // TODO
+                const Spacer(flex: 1),
 
-                          
-                          // widget.value.isDarkMode;
-                          //     widget.value.toggleTheme(widget.value.themeMode == ThemeMode.light);
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            "Avvia",
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            "Argomenti",
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(direction: Axis.horizontal, children: [
-                    const Icon(
-                      Icons.format_list_numbered_rounded,
-                    ),
-                    Text(" Domande: X su Y"),
-                    const SizedBox(width: 20),
-                    const Icon(
-                      Icons.timer_rounded,
-                    ),
-                    Text(" Tempo: N min"),
-                  ]),
-                  false
-                      ? Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Text(
-                            "error",
-                            style: const TextStyle(color: Colors.red),
-                          ))
-                      : const SizedBox(height: 50),
-                  InkWell(
-                    onTap: () {
-                      openUrl("https://github.com/mikyll/ROQuiz");
-                    },
-                    child: Container(
-                      color: Colors.indigo.withOpacity(0.35),
-                      alignment: Alignment.center,
+                // BUTTONS
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // TODO
+
+                        // widget.value.isDarkMode;
+                        //     widget.value.toggleTheme(widget.value.themeMode == ThemeMode.light);
+                      },
                       child: const Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.symmetric(vertical: 10.0),
                         child: Text(
-                            "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
-                            maxLines: 6,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18,
-                            )),
+                          "Avvia",
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  const Spacer(flex: 5),
-                ],
-              ))),
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          "Argomenti",
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Wrap(direction: Axis.horizontal, children: [
+                  const Icon(
+                    Icons.format_list_numbered_rounded,
+                  ),
+                  Text(" Domande: X su Y"),
+                  const SizedBox(width: 20),
+                  const Icon(
+                    Icons.timer_rounded,
+                  ),
+                  Text(" Tempo: N min"),
+                ]),
+                false
+                    ? Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          "error",
+                          style: const TextStyle(color: Colors.red),
+                        ))
+                    : const SizedBox(height: 50),
+                InkWell(
+                  onTap: () {
+                    openUrl("https://github.com/mikyll/ROQuiz");
+                  },
+                  child: Container(
+                    color: Colors.indigo.withOpacity(0.35),
+                    alignment: Alignment.center,
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                          "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
+                          maxLines: 6,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                          )),
+                    ),
+                  ),
+                ),
+                const Spacer(flex: 5),
+              ],
+            ),
+          ),
+        ),
+      ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -172,7 +174,16 @@ class ViewMenuState extends State<ViewMenu> {
             height: 60,
             width: 60,
             child: IconButton.filled(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ViewSettings();
+                    },
+                  ),
+                );
+              },
               iconSize: 45,
               icon: Icon(
                 Icons.settings,

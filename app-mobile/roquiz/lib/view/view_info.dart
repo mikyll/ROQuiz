@@ -1,9 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:roquiz/cli/utils.dart';
+import 'package:provider/provider.dart';
+import 'package:roquiz/cli/utils/navigation.dart';
 import 'package:roquiz/model/palette.dart';
 import 'package:roquiz/model/persistence/settings.dart';
+import 'package:roquiz/model/themes.dart';
+import 'package:roquiz/widget/back_button.dart';
 
 const DEFAULT_SIZE = 60.0;
 
@@ -58,6 +61,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final ContainerColors containerColors =
         Theme.of(context).extension<ContainerColors>()!;
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
 
     return Stack(alignment: Alignment.bottomCenter, children: [
       Scaffold(
@@ -66,11 +70,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
           title: const Text("Info"),
           centerTitle: true,
           automaticallyImplyLeading: true,
-          leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
+          leading: BackButtonWidget(),
         ),
         body: SafeArea(
           child: Padding(
@@ -79,6 +79,12 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Switch(
+                  value: themeProvider.themeMode == ThemeMode.dark,
+                  onChanged: (isDarkMode) {
+                    themeProvider.toggleTheme();
+                  },
+                ),
                 const Spacer(),
                 Text(Settings.APP_TITLE,
                     maxLines: 1,
