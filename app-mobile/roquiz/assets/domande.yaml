@@ -644,7 +644,6 @@
     - "i nuovi valori delle variabili base soddisfano le equazioni dei vincoli"
     - "i nuovi valori delle variabili base sono negativi o nulli"
     - "i nuovi valori delle variabili base sono non negativi"
-    - "risposta vuota"
   correct_answer: 0
 
 - body: >-

@@ -31,6 +31,7 @@ flutter:
   assets:
     - assets/licenses.json
     - assets/domande.txt
+    - assets/domande.yaml
     - assets/credits.json
     - assets/icons/logo.svg
 
