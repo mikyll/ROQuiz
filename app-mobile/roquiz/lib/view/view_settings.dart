@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/setting_type.dart';
 import 'package:roquiz/model/persistence/settings.dart';
-import 'package:roquiz/model/themes.dart';
-import 'package:roquiz/widget/back_button.dart';
 import 'package:roquiz/widget/settings/setting_checkbox.dart';
 import 'package:roquiz/widget/settings/setting_checkbox_button.dart';
 import 'package:roquiz/widget/settings/setting_spinner.dart';
@@ -121,7 +118,6 @@ class ViewSettingsState extends State<ViewSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     bool canPop = false;
 
     return PopScope(
@@ -137,7 +133,17 @@ class ViewSettingsState extends State<ViewSettings> {
           title: const Text("Impostazioni"),
           centerTitle: true,
           automaticallyImplyLeading: true,
-          leading: BackButtonWidget(),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            style: ButtonStyle(
+              iconColor: WidgetStatePropertyAll(Colors.white),
+              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
+              backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: Center(
           child: ListView(

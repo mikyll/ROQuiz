@@ -5,11 +5,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:roquiz/cli/utils/navigation.dart';
+import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
+import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/themes.dart';
 import 'package:roquiz/view/view_info.dart';
 import 'package:roquiz/view/view_settings.dart';
 import 'package:roquiz/model/constants.dart';
+import 'package:roquiz/view/view_topics.dart';
 
 class ViewMenu extends StatefulWidget {
   ViewMenu({super.key});
@@ -19,6 +22,78 @@ class ViewMenu extends StatefulWidget {
 }
 
 class ViewMenuState extends State<ViewMenu> {
+  final QuestionRepository _questionRepository = QuestionRepository();
+  Map<String, bool> _selectedTopics = {};
+
+  int _numQuizQuestions = 20;
+  int _numSelectedQuestions = 0;
+  int _timer = 0;
+
+  int _calculateNumSelected() {
+    int num = 0;
+
+    Map<String, List<Question>> topicSizes =
+        _questionRepository.getGroupedQuestions();
+    for (String topic in topicSizes.keys) {
+      if (_selectedTopics[topic] != null && _selectedTopics[topic]!) {
+        num += topicSizes[topic]!.length;
+      }
+    }
+
+    return num;
+  }
+
+  void _test() {
+    String res = "\n";
+    int curr = 0;
+    for (String topic in _selectedTopics.keys) {
+      bool isSelected = _selectedTopics[topic] ?? false;
+      int num = _questionRepository.getGroupedQuestions()[topic]?.length ?? 0;
+
+      res += "- [";
+      res += isSelected ? "x" : " ";
+      res += "] $topic: $num (+$curr)\n";
+      if (isSelected) {
+        curr += num;
+      }
+    }
+    print(res);
+    print(curr);
+  }
+
+  void _updateQuizValues() {
+    setState(() {
+      // Num Quiz Questions
+      // Tot Num Questions
+      _numSelectedQuestions = _calculateNumSelected();
+      // Timer from settings
+    });
+    _test();
+  }
+
+  void _initQuestionRepository() {
+    _questionRepository.loadFromAsset().then((_) {
+      setState(() {
+        _numSelectedQuestions = _questionRepository.getQuestions().length;
+        _selectedTopics = {
+          for (var value in _questionRepository.getGroupedQuestions().keys)
+            value: true
+        };
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // From settings
+    // TODO: set quiz pool
+    // TODO: set quiz timer
+
+    _initQuestionRepository();
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
@@ -35,28 +110,27 @@ class ViewMenuState extends State<ViewMenu> {
               children: [
                 const Spacer(flex: 2),
                 Settings.SHOW_APP_LOGO
-                    ? Column(children: [
-                        SvgPicture.asset(
-                          'assets/icons/logo.svg',
-                          alignment: Alignment.center,
-                          fit: BoxFit.fitWidth,
-                          width: 200,
-                          colorFilter: ColorFilter.mode(
+                    ? Column(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/logo.svg',
+                            alignment: Alignment.center,
+                            fit: BoxFit.fitWidth,
+                            width: 200,
+                            colorFilter: ColorFilter.mode(
                               Colors.indigo[300]!,
-                              // TODO
-                              // widget.themeMode
-                              //     ? Colors.indigo[300]!
-                              //     : Colors.indigo[600]!,
-                              BlendMode.srcIn),
-                        ),
-                        const Text(
-                          Settings.APP_TITLE,
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
+                              BlendMode.srcIn,
+                            ),
                           ),
-                        ),
-                      ])
+                          const Text(
+                            Settings.APP_TITLE,
+                            style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      )
                     : const Text(
                         Settings.APP_TITLE,
                         maxLines: 1,
@@ -107,7 +181,21 @@ class ViewMenuState extends State<ViewMenu> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ViewTopics(
+                                questionRepository: _questionRepository,
+                                selectedTopics: _selectedTopics,
+                                numQuizQuestions: _numQuizQuestions,
+                                updateQuizValues: _updateQuizValues,
+                              );
+                            },
+                          ),
+                        );
+                      },
                       child: const Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.0),
                         child: Text(
@@ -123,17 +211,22 @@ class ViewMenuState extends State<ViewMenu> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Wrap(direction: Axis.horizontal, children: [
-                  const Icon(
-                    Icons.format_list_numbered_rounded,
-                  ),
-                  Text(" Domande: X su Y"),
-                  const SizedBox(width: 20),
-                  const Icon(
-                    Icons.timer_rounded,
-                  ),
-                  Text(" Tempo: N min"),
-                ]),
+                Wrap(
+                  direction: Axis.horizontal,
+                  spacing: 5.0,
+                  children: [
+                    const Icon(
+                      Icons.format_list_numbered_rounded,
+                    ),
+                    Text(
+                        "Domande: $_numQuizQuestions su $_numSelectedQuestions"),
+                    const SizedBox(width: 20),
+                    const Icon(
+                      Icons.timer_rounded,
+                    ),
+                    Text("Tempo: $_timer min"),
+                  ],
+                ),
                 false
                     ? Padding(
                         padding: const EdgeInsets.all(15.0),

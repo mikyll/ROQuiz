@@ -186,7 +186,7 @@ void main(List<String> args) async {
         print("- $topic: ${topicSizes[topic]}");
       }
     }
-
+    _printTopics(questions);
     return;
 
     /*List<Question> questions = parseQuestions(content, 5);
@@ -201,4 +201,19 @@ void main(List<String> args) async {
       }
     }*/
   });
+}
+
+void _printTopics(List<Question> questions) {
+  String res = "\n";
+  int curr = 0;
+  Map<String, int> topicSizes = getTopicSizes(questions);
+
+  for (String topic in topicSizes.keys) {
+    int num = topicSizes[topic] ?? 0;
+
+    res += "- $topic: $num (+$curr)\n";
+    curr += num;
+  }
+  print(res);
+  print(curr);
 }

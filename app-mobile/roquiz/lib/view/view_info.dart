@@ -6,7 +6,6 @@ import 'package:roquiz/cli/utils/navigation.dart';
 import 'package:roquiz/model/palette.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/themes.dart';
-import 'package:roquiz/widget/back_button.dart';
 
 const DEFAULT_SIZE = 60.0;
 
@@ -70,7 +69,17 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
           title: const Text("Info"),
           centerTitle: true,
           automaticallyImplyLeading: true,
-          leading: BackButtonWidget(),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            style: ButtonStyle(
+              iconColor: WidgetStatePropertyAll(Colors.white),
+              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
+              backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: SafeArea(
           child: Padding(
