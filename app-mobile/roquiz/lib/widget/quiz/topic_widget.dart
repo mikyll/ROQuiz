@@ -90,7 +90,7 @@ class TopicWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 5.0),
+      padding: const EdgeInsets.only(right: 5.0, bottom: 10.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -110,9 +110,9 @@ class TopicWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
+                      padding: const EdgeInsets.only(right: 15.0),
                       child: Transform.scale(
-                        scale: 1.2,
+                        scale: 1.5,
                         child: Checkbox(
                           value: checkBoxValue,
                           onChanged: onCheckBoxChanged != null
@@ -157,6 +157,7 @@ class TopicWidget extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(width: 10.0),
           IconButton(
             icon: Icon(
               Icons.arrow_forward_ios,
@@ -169,6 +170,13 @@ class TopicWidget extends StatelessWidget {
             // hoverColor: themeProvider.isDarkMode
             //     ? MyThemes.darkIconButtonPalette.hoverColor
             //     : MyThemes.lightIconButtonPalette.hoverColor,
+            style: ButtonStyle(
+              shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+              ),
+            ),
             onPressed:
                 onPressedButton != null ? () => onPressedButton!() : null,
           ),

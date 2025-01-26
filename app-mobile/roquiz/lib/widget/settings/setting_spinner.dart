@@ -61,6 +61,13 @@ class SettingSpinnerWidgetState extends State<SettingSpinnerWidget> {
               IconButton(
                 onPressed: () {},
                 icon: Icon(Icons.remove),
+                style: ButtonStyle(
+                  shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                  ),
+                ),
               ),
 
               // IconButtonLongPressWidget(
@@ -117,7 +124,17 @@ class SettingSpinnerWidgetState extends State<SettingSpinnerWidget> {
                   ),
                 ),
               ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.add))
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.add),
+                style: ButtonStyle(
+                  shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                  ),
+                ),
+              ),
               // INCREASE POOL SIZE (QUESTION NUMBER)
               // IconButtonLongPressWidget(
               //   onUpdate: _canIncreaseQuestionNumber(1)

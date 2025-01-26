@@ -60,12 +60,13 @@ class SettingCheckboxWidgetState extends State<SettingCheckboxWidget> {
               SizedBox(
                 width: 120.0,
                 child: Transform.scale(
-                    scale: 1.5,
-                    child: Checkbox(
-                      semanticLabel: widget.label,
-                      value: _isChecked,
-                      onChanged: _toggleCheckbox,
-                    )),
+                  scale: 1.5,
+                  child: Checkbox(
+                    semanticLabel: widget.label,
+                    value: _isChecked,
+                    onChanged: _toggleCheckbox,
+                  ),
+                ),
               ),
             ],
           ),

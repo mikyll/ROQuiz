@@ -148,6 +148,12 @@ class ViewMenuState extends State<ViewMenu> {
                   ),
                 ),
                 const Spacer(flex: 1),
+                Switch(
+                  value: themeProvider.themeMode == ThemeMode.dark,
+                  onChanged: (isDarkMode) {
+                    themeProvider.toggleTheme();
+                  },
+                ),
 
                 // BUTTONS
                 Padding(

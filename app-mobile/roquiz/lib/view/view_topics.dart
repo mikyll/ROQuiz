@@ -3,7 +3,7 @@ import 'package:roquiz/model/constants.dart';
 import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/view/view_questions.dart';
-import 'package:roquiz/widget/quiz/topic.dart';
+import 'package:roquiz/widget/quiz/topic_widget.dart';
 
 class ViewTopics extends StatefulWidget {
   const ViewTopics({
@@ -86,8 +86,8 @@ class ViewTopicsState extends State<ViewTopics> {
         if (didPop) {
           return;
         }
+        // TODO: PopScope?
       },
-      // TODO: PopScope?
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Argomenti"),

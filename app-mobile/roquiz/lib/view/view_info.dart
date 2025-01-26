@@ -88,12 +88,6 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Switch(
-                  value: themeProvider.themeMode == ThemeMode.dark,
-                  onChanged: (isDarkMode) {
-                    themeProvider.toggleTheme();
-                  },
-                ),
                 const Spacer(),
                 Text(Settings.APP_TITLE,
                     maxLines: 1,
