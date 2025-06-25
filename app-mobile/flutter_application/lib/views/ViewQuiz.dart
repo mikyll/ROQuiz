@@ -87,7 +87,6 @@ class _ViewQuizState extends State<ViewQuiz> {
     }
     _quiz.correctAnswer = _correctAnswers;
     _quiz.questions = widget.questions;
-    _quizGrade = _quiz.getQuizGrade();
 
   }
 
@@ -312,60 +311,74 @@ class _ViewQuizState extends State<ViewQuiz> {
                 // Results card
                _isOver
                 ? Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).disabledColor,
-                              spreadRadius: 0.5,
-                              blurRadius: 2,
-                              offset: const Offset(2, 2),
+                  padding: const EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).disabledColor,
+                        spreadRadius: 0.5,
+                        blurRadius: 2,
+                        offset: const Offset(2, 2),
+                      ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                      children: [
+                        Builder(
+                        builder: (context) {
+                          final quizGrade = _questionNumber > 0
+                            ? _correctAnswers * 30 / _questionNumber
+                            : 0;
+                          return Column(
+                          children: [
+                            Text(
+                            "Risposte corrette: $_correctAnswers/$_questionNumber\n"
+                            "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
+                            "Voto quiz: ${quizGrade.toStringAsFixed(1)}",
                             ),
                           ],
+                          );
+                        },
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                "Risposte corrette: $_correctAnswers/$_questionNumber\n"
-                                "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
-                                "Voto quiz: ${_quizGrade?.toStringAsFixed(1) ?? "-"}",
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                controller: _writtenGradeController,
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: "Inserisci voto della prova scritta (opzionale)",
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  final written = double.tryParse(_writtenGradeController.text);
-                                  if (written != null && _quizGrade != null) {
-                                    setState(() {
-                                      _finalGrade = ((written * 2) + _quizGrade!) / 3;
-                                    });
-                                  }
-                                },
-                                child: const Text("Calcola voto finale"),
-                              ),
-                              if (_finalGrade != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text("Voto finale: ${_finalGrade!.toStringAsFixed(1)}"),
-                                ),
-                            ],
-                          ),
+                        const SizedBox(height: 10),
+                        TextField(
+                        controller: _writtenGradeController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: "Inserisci voto della prova scritta (opzionale)",
                         ),
+                        ),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                        onPressed: () {
+                          final written = double.tryParse(_writtenGradeController.text);
+                          final quizGrade = _questionNumber > 0
+                            ? _correctAnswers * 30 / _questionNumber
+                            : 0;
+                          if (written != null) {
+                          setState(() {
+                            _finalGrade = written * 2 / 3 + quizGrade / 3;
+                          });
+                          }
+                        },
+                        child: const Text("Calcola voto finale"),
+                        ),
+                        if (_finalGrade != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text("Voto finale: ${_finalGrade!.toStringAsFixed(1)}"),
+                        ),
+                      ],
                       ),
                     ),
+                    ),
+                  ),
                   )
   : const Text(""),
               ],

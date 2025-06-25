@@ -44,15 +44,4 @@ class Quiz {
     answers[index] = value;
   }
 
-  double getQuizGrade() {
-    if (questions.isEmpty) return 0;
-    double percentage = correctAnswer / questions.length;
-    return 18 + percentage * (30 - 18);
-  }
-
-  double calculateFinalGrade(double writtenGrade) {
-    double quizGrade = getQuizGrade();
-    return ((writtenGrade * 2) + quizGrade) / 3;
-  }
-
 }
