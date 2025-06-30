@@ -15,7 +15,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - run: cd ${{ github.workspace }}
       - name: Controllo Codifica File
         run: |
@@ -40,7 +40,7 @@ jobs:
               git config --global user.email "righi.michele98@gmail.com"
               git config --global user.name "mikyll"
               git commit -m "Update file domande"
-              git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
+              git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
               echo "✔️ File domande aggiornati!"
             else
               echo "Nessuna modifica necessaria."
