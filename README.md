@@ -149,13 +149,6 @@ Vedi [CONTRIBUTING.md](./CONTRIBUTING.md).
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/jacopochergui">
-                    <img src="https://avatars.githubusercontent.com/u/96496259?v=4" width="100;" alt="jacopochergui"/>
-                    <br />
-                    <sub><b>jacopochergui</b></sub>
-                </a>
-            </td>
-            <td align="center">
                 <a href="https://github.com/filippoveronesi">
                     <img src="https://avatars.githubusercontent.com/u/61983672?v=4" width="100;" alt="filippoveronesi"/>
                     <br />
@@ -183,8 +176,6 @@ Vedi [CONTRIBUTING.md](./CONTRIBUTING.md).
                     <sub><b>Federicoand98</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/lollofred">
                     <img src="https://avatars.githubusercontent.com/u/73138694?v=4" width="100;" alt="lollofred"/>
@@ -192,6 +183,8 @@ Vedi [CONTRIBUTING.md](./CONTRIBUTING.md).
                     <sub><b>lollofred</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/RedDuality">
                     <img src="https://avatars.githubusercontent.com/u/61973885?v=4" width="100;" alt="RedDuality"/>
