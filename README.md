@@ -16,7 +16,7 @@
   <h3> Applicazione multipiattaforma per esercitarsi con i quiz del corso <a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2022/467997">Ricerca Operativa M</a>.</h3>
   
   L'app permette di <b>simulare dei quiz d'esame</b>: vengono pescate, in modo casuale, delle domande a risposta multipla a cui l'utente deve rispondere entro un tempo limite, definito da un timer.<br/>
-  <b>Pool corrente</b>: <i><span id="domande">110</span></i> domande differenti (ultima modifica: <i><span id="ultima_modifica">2025-01-17</span></i>).
+  <b>Pool corrente</b>: <i><span id="domande">115</span></i> domande differenti (ultima modifica: <i><span id="ultima_modifica">2025-06-30</span></i>).
 
   [**Download**](https://github.com/mikyll/ROQuiz/releases/latest)
   ·
@@ -380,7 +380,7 @@ Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato
 [downloads-url]: https://github.com/mikyll/ROQuiz/releases/latest
 [contributors-shield]: https://img.shields.io/github/contributors/mikyll/ROQuiz
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
-[domande-shield]: https://img.shields.io/static/v1?label=domande&message=110&color=green
+[domande-shield]: https://img.shields.io/static/v1?label=domande&message=115&color=green
 [domande-url]: https://github.com/mikyll/ROQuiz/blob/main/Domande.txt
 [validazione-shield]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml/badge.svg
 [validazione-url]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml
