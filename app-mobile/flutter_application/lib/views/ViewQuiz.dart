@@ -56,8 +56,8 @@ class _ViewQuizState extends State<ViewQuiz> {
   void _calculateQuizGrade() {
     setState(() {
       _quizGrade = (_questionNumber > 0
-          ? _correctAnswers / _questionNumber * 2
-          : 0) as int?;
+          ? (_correctAnswers / _questionNumber * 2.0).round()
+          : 0);
     });
   }
 
@@ -355,8 +355,18 @@ class _ViewQuizState extends State<ViewQuiz> {
                                   ),
                                   const SizedBox(height: 10),
                                   TextField(
+                                    onSubmitted:
+                                        !_isWrittenGradeValid(_writtenGrade)
+                                            ? null
+                                            : (_) {
+                                                setState(() {
+                                                  _finalGrade =
+                                                      _writtenGrade! * 2 / 3 +
+                                                          _quizGrade! / 3;
+                                                });
+                                              },
                                     onChanged: (value) {
-                                      final writtenGrade = int.parse(
+                                      final writtenGrade = int.tryParse(
                                           _writtenGradeController.text);
                                       setState(() {
                                         _writtenGrade = writtenGrade;
