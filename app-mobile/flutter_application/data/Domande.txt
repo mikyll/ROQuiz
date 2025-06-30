@@ -802,7 +802,7 @@ B. È sempre risolubile mediante un algoritmo di programmazione dinamica
 C. È sempre risolubile in tempo polinomiale
 D. È sempre risolubile mediante un albero decisionale di altezza polinomiale
 E. È sempre risolubile in tempo pseudo-polinomiale
-B
+D
 
 Un algoritmo polinomiale per un problema NP-completo:
 A. risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli fortemente NP-completi

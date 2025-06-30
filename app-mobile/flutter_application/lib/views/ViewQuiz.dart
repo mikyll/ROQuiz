@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
@@ -45,7 +46,6 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   final TextEditingController _writtenGradeController = TextEditingController();
   double? _finalGrade;
-  double? _quizGrade;
 
   void _previousQuestion() {
     setState(() {
@@ -333,7 +333,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                         Builder(
                         builder: (context) {
                           final quizGrade = _questionNumber > 0
-                            ? _correctAnswers * 30 / _questionNumber
+                            ? _correctAnswers * 32 / _questionNumber
                             : 0;
                           return Column(
                           children: [
@@ -350,6 +350,9 @@ class _ViewQuizState extends State<ViewQuiz> {
                         TextField(
                         controller: _writtenGradeController,
                         keyboardType: TextInputType.number,
+			inputFormatters: <TextInputFormatter>[
+			  FilteringTextInputFormatter.digitsOnly
+			],
                         decoration: const InputDecoration(
                           labelText: "Inserisci voto della prova scritta (opzionale)",
                         ),
@@ -357,11 +360,11 @@ class _ViewQuizState extends State<ViewQuiz> {
                         const SizedBox(height: 10),
                         ElevatedButton(
                         onPressed: () {
-                          final written = double.tryParse(_writtenGradeController.text);
+                          final written = double.tryParse(_writtenGradeController.text.trim());
                           final quizGrade = _questionNumber > 0
-                            ? _correctAnswers * 30 / _questionNumber
+                            ? _correctAnswers * 32 / _questionNumber
                             : 0;
-                          if (written != null) {
+                          if (written != null && written >= 0 && written <= 32) {
                           setState(() {
                             _finalGrade = written * 2 / 3 + quizGrade / 3;
                           });
