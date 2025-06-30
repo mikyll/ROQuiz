@@ -43,4 +43,5 @@ class Quiz {
     }
     answers[index] = value;
   }
+
 }

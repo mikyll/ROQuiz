@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/model/Answer.dart';
@@ -43,6 +44,23 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   int _dragDirectionDX = 0;
 
+  final TextEditingController _writtenGradeController = TextEditingController();
+  int? _writtenGrade;
+  int? _quizGrade;
+  double? _finalGrade;
+
+  bool _isWrittenGradeValid(int? grade) {
+    return grade != null && grade >= 0 && grade <= 32;
+  }
+
+  void _calculateQuizGrade() {
+    setState(() {
+      _quizGrade = (_questionNumber > 0
+          ? _correctAnswers / _questionNumber * 2
+          : 0) as int?;
+    });
+  }
+
   void _previousQuestion() {
     setState(() {
       if (_qIndex > 0) _qIndex--;
@@ -81,6 +99,10 @@ class _ViewQuizState extends State<ViewQuiz> {
         _correctAnswers++;
       }
     }
+    _quiz.correctAnswer = _correctAnswers;
+    _quiz.questions = widget.questions;
+
+    _calculateQuizGrade();
   }
 
   void _startTimer() {
@@ -116,6 +138,9 @@ class _ViewQuizState extends State<ViewQuiz> {
       _isOver = false;
       _currentQuestion = _quiz.questions[_qIndex].question;
       _currentAnswers = _quiz.questions[_qIndex].answers;
+
+      _quizGrade = null;
+      _finalGrade = null;
 
       _timerCounter = widget.settings.timer * 60;
     });
@@ -321,11 +346,52 @@ class _ViewQuizState extends State<ViewQuiz> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Text(
-                                "Risposte corrette: $_correctAnswers/$_questionNumber\n"
-                                "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
-                                "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]",
-                                maxLines: 4,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Risposte corrette: $_correctAnswers/$_questionNumber\n"
+                                    "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
+                                    "Voto quiz: $_quizGrade",
+                                  ),
+                                  const SizedBox(height: 10),
+                                  TextField(
+                                    onChanged: (value) {
+                                      final writtenGrade = int.parse(
+                                          _writtenGradeController.text);
+                                      setState(() {
+                                        _writtenGrade = writtenGrade;
+                                      });
+                                    },
+                                    controller: _writtenGradeController,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    decoration: const InputDecoration(
+                                      labelText: "Voto della prova scritta",
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  ElevatedButton(
+                                    onPressed:
+                                        !_isWrittenGradeValid(_writtenGrade)
+                                            ? null
+                                            : () {
+                                                setState(() {
+                                                  _finalGrade =
+                                                      _writtenGrade! * 2 / 3 +
+                                                          _quizGrade! / 3;
+                                                });
+                                              },
+                                    child: const Text("Calcola voto finale"),
+                                  ),
+                                  if (_finalGrade != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                          "Voto finale: ${_finalGrade!.toStringAsFixed(1)}"),
+                                    ),
+                                ],
                               ),
                             ),
                           ),

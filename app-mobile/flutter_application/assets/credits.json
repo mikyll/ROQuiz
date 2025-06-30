@@ -1,27 +1,32 @@
 [
-    {
-        "author": "TryKatChup",
-        "task": "Build macOS e iOS",
-        "url": "https://github.com/TryKatChup"
-    },
-    {
-        "author": "Federyeeco",
-        "task": "Build macOS e iOS",
-        "url": "https://github.com/Federicoand98"
-    },
-    {
-        "author": "LolloFred",
-        "task": "Spiegazione domande",
-        "url": "https://github.com/lollofred"
-    },
-    {
-        "author": "filovero98",
-        "task": "Spiegazione domande",
-        "url": "https://github.com/filippoveronesi"
-    },
-    {
-        "author": "RedDuality",
-        "task": "Nuove domande",
-        "url": "https://github.com/RedDuality"
-    }
+  {
+    "author": "TryKatChup",
+    "task": "Build macOS e iOS",
+    "url": "https://github.com/TryKatChup"
+  },
+  {
+    "author": "Federyeeco",
+    "task": "Build macOS e iOS",
+    "url": "https://github.com/Federicoand98"
+  },
+  {
+    "author": "LolloFred",
+    "task": "Spiegazione domande",
+    "url": "https://github.com/lollofred"
+  },
+  {
+    "author": "filovero98",
+    "task": "Spiegazione domande",
+    "url": "https://github.com/filippoveronesi"
+  },
+  {
+    "author": "RedDuality",
+    "task": "Nuove domande",
+    "url": "https://github.com/RedDuality"
+  },
+  {
+    "author": "jacopochergui",
+    "task": "Calcolo voto finale e nuove domande",
+    "url": "https://github.com/jacopochergui"
+  }
 ]

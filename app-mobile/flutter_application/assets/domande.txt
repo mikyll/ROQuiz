@@ -104,6 +104,14 @@ D. Ax >= b, Ax < b
 E. Nessuna di queste
 A
 
+Quando un problema in forma canonica viene posto in forma standard
+A. aumenta il numero di variabili
+B. aumentano sia il numero di vincoli che il numero di variabili
+C. nessuna di queste
+D. aumenta il numero di vincoli
+E. risposta vuota
+A
+
 Dati un vettore di parametri a ed un vettore di incognite x, una disequazione della forma a'x <= b è equivalente a
 A. a'x <= b, a'x + s = b, s >= 0.
 B. a'x - s = b, s >= 0. 
@@ -263,6 +271,14 @@ C. Una faccia di dimensione 1
 D. Una faccia di dimensione d
 E. Una faccia di dimensione d + 1
 C
+
+Dato il problema min_{x in F} f(x) (trovare il minimo di una funzione f(x) per x appartenente all'insieme F),  il valore max_{x in F} f(x) è dato da
+A. min_{x in F} (-f(x))
+B. - min_{x in F} (- f(x))
+C. max_{x in F} (f(1-x))
+D. - min_{x in F} f(x)
+E. - max_{x in F} (-f(x))
+B
 
 @Algoritmo del Simplesso ===============================================================================
 Se yij è minore o uguale a 0 per ogni i, in relazione a theta, cosa succede?
@@ -650,6 +666,14 @@ D. il sistema (I) è possible se e solo se il sistema (II) è possibile
 E. risposta vuota
 A
 
+Dati un problema LP e la corrispondente base ottima B, si consideri la modifica di un dato di input. L'analisi di sensitività definisce un intervallo di confidenza tale che
+A. Se il nuovo valore del dato ricade all'interno di tale intervallo, la soluzione corrispondente a B è ancora ottima
+B. Se il nuovo valore del dato ricade all'esterno di tale intervallo, la soluzione corrispondente a B è ancora ottima
+C. Se il nuovo valore del dato ricade all'interno di tale intervallo, i valori delle variabili nella soluzione ottima non cambiano
+D. Nessuna di queste
+E. Risposta vuota
+C
+
 @Programmazione Lineare Intera =========================================================================
 Relativamente ad un problema ILP e il suo rilassamento continuo LP
 A. z(ILP) >= z(LP)
@@ -682,6 +706,22 @@ C. Il simplesso risolve problemi in forma standard e canonica, ma non in forma g
 D. Il simplesso risolve i problemi in forma standard e generale, ma non in forma canonica.
 E. Nessuna di queste.
 A
+
+Se la matrice m x n (con m < n) dei vincoli di un problema di programmazione lineare intera è unimodulare
+A. Ciò non è possibile: solo le matrici quadrate possono essere unimodulari
+B. La soluzione del rilassamento continuo del problema è sempre intera
+C. L'ottimalità della soluzione può essere verificata in tempo polinomiale
+D. La soluzione del rilassamento continuo del problema è ottima per l'ILP
+E. Risposta vuota
+A
+
+Sia x la soluzione ottima del rilassamento continuo di un problema ILP di massimizzazione. Se x contiene un solo valore non intero
+A. sostituendo a tale valore il suo troncamento, si ottiene la soluzione ottima dell'ILP
+B. sostituendo a tale valore il suo arrotondamento, si ottiene un upper bound sulla soluzione ottima dell'ILP
+C. sostituendo a tale valore il suo arrotondamento, si ottiene la soluzione ottima dell'ILP
+D. nessuna di queste
+E. risposta vuota
+D
 
 Scelta una riga generatrice, un taglio di Gomory impone che
 A. la somma delle parti frazionarie delle variabili fuori base sia non maggiore della parte frazionaria del termine noto
@@ -802,7 +842,7 @@ B. È sempre risolubile mediante un algoritmo di programmazione dinamica
 C. È sempre risolubile in tempo polinomiale
 D. È sempre risolubile mediante un albero decisionale di altezza polinomiale
 E. È sempre risolubile in tempo pseudo-polinomiale
-B
+D
 
 Un algoritmo polinomiale per un problema NP-completo:
 A. risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli fortemente NP-completi
