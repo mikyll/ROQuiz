@@ -22,6 +22,7 @@ class AppUpdater {
       String tagName = json['tag_name'];
 
       if (compareVersions(currentVersion, tagName) == 1) {
+        newVersionPresent = true;
         newVersion = tagName;
 
         // Retrieve asset link from APIs
@@ -89,4 +90,5 @@ void main(List<String> args) {
   print(AppUpdater.compareVersions("v1.11.1", "v1.10.0"));
   print(AppUpdater.compareVersions("v1.11.0", "v1.10.1"));
   print(AppUpdater.compareVersions("v1.11.0", "v1.11.0"));
+  print(AppUpdater.compareVersions("v1.11.0", "v1.11.4"));
 }
