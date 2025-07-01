@@ -149,10 +149,10 @@ Vedi [CONTRIBUTING.md](./CONTRIBUTING.md).
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/jacopochergui">
-                    <img src="https://avatars.githubusercontent.com/u/96496259?v=4" width="100;" alt="jacopochergui"/>
+                <a href="https://github.com/jchergu">
+                    <img src="https://avatars.githubusercontent.com/u/96496259?v=4" width="100;" alt="jchergu"/>
                     <br />
-                    <sub><b>jacopochergui</b></sub>
+                    <sub><b>jchergu</b></sub>
                 </a>
             </td>
             <td align="center">
