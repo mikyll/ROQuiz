@@ -71,7 +71,7 @@ jobs:
             git add "$FILE_README"
             git config --global user.email "righi.michele98@gmail.com"
             git config --global user.name "mikyll"
-            git commit -m "Update README.md"
+            git commit -m "docs: update README.md"
             git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
             echo "✔️ Readme aggiornato!"
           else
