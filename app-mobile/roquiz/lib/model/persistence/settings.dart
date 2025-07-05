@@ -6,7 +6,7 @@ class Settings {
   // TODO
   static const SHOW_APP_LOGO = false;
   static const APP_TITLE = "ROQuiz";
-  static const VERSION_NUMBER = "v1.0.0";
+  static const VERSION_TAG = "v1.0.0";
 
   final Map<String, _Setting> _defaults = {
     "check_update_app": _Setting.fromDefault(
