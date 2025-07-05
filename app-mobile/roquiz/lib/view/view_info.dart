@@ -94,7 +94,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     textAlign: TextAlign.center,
                     style:
                         TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
-                Text("v1.11.0${Settings.VERSION_NUMBER}",
+                Text("v1.11.0${Settings.VERSION_TAG}",
                     maxLines: 1,
                     textAlign: TextAlign.center,
                     style: const TextStyle(

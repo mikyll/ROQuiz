@@ -140,7 +140,7 @@ class ViewMenuState extends State<ViewMenu> {
                         ),
                       ),
                 Text(
-                  "v${Settings.VERSION_NUMBER}",
+                  "${Settings.VERSION_TAG}",
                   maxLines: 1,
                   style: const TextStyle(
                     fontSize: 24,
