@@ -1,0 +1,29 @@
+- author: "TryKatChup"
+  url: "https://github.com/TryKatChup"
+  tasks:
+    - "Build macOS e iOS"
+
+- author: "Federyeeco"
+  url: "https://github.com/Federicoand98"
+  tasks:
+    - "Build macOS e iOS"
+
+- author: "LolloFred"
+  url: "https://github.com/lollofred"
+  tasks:
+    - "Spiegazione domande"
+
+- author: "filovero98"
+  url: "https://github.com/filippoveronesi"
+  tasks:
+    - "Spiegazione domande"
+
+- author: "RedDuality"
+  url: "https://github.com/RedDuality"
+  tasks:
+    - "Nuove domande"
+
+- author: "Emanuele8"
+  url: "https://github.com/Emanuele8"
+  tasks:
+    - "Nuove domande"

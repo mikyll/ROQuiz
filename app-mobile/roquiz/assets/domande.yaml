@@ -13,33 +13,33 @@
     Si consideri un problema di ottimizzazione (F,d) ed un intorno N. La proprietà che se un punto f di F è localmente ottimo rispetto ad N allora f è l'ottimo assoluto implica
   topic: "Programmazione Matematica"
   answers:
-    - "che N è un intorno esatto"
-    - "che N è un intorno euclideo"
-    - "che N è un intorno non euclideo"
-    - "nessuna di queste caratterizzazioni"
-    - "che N è un intorno convesso"
+    - "Che N è un intorno esatto"
+    - "Che N è un intorno euclideo"
+    - "Che N è un intorno non euclideo"
+    - "Nessuna di queste caratterizzazioni"
+    - "Che N è un intorno convesso"
   correct_answer: 0
 
 - body: >-
     Facendo variare lambda fra 0 e 1, la combinazione convessa di due punti x ed y descrive
   topic: "Programmazione Matematica"
   answers:
-    - "tutti i punti della semiretta che origina in x e passa per y"
-    - "tutti i punti della retta passante per x ed y"
-    - "tutti i punti del segmento [x,y]"
-    - "il punto centrale del segmento [x,y]"
-    - "tutti i punti della semiretta che origina in y e passa per x"
+    - "Tutti i punti della semiretta che origina in x e passa per y"
+    - "Tutti i punti della retta passante per x ed y"
+    - "Tutti i punti del segmento [x,y]"
+    - "Il punto centrale del segmento [x,y]"
+    - "Tutti i punti della semiretta che origina in y e passa per x"
   correct_answer: 2
 
 - body: >-
     Data una funzione f convessa su un insieme S convesso, la corda che unisce due punti della funzione:
   topic: "Programmazione Matematica"
   answers:
-    - "coincide con un flesso della funzione."
-    - "sta al di sotto della funzione ma non coincide mai con essa."
-    - "sta al di sopra della funzione ma non coincide mai con essa."
-    - "sta al di sopra della funzione o è con essa coincidente."
-    - "sta al di sotto della funzione o è con essa coincidente."
+    - "Coincide con un flesso della funzione."
+    - "Sta al di sotto della funzione ma non coincide mai con essa."
+    - "Sta al di sopra della funzione ma non coincide mai con essa."
+    - "Sta al di sopra della funzione o è con essa coincidente."
+    - "Sta al di sotto della funzione o è con essa coincidente."
   correct_answer: 3
 
 - body: >-
@@ -90,22 +90,22 @@
     Un insieme di colonne di una matrice intera A m x n non è linearmente indipendente se:
   topic: "Programmazione Lineare"
   answers:
-    - "la loro combinazione lineare che produce il vettore nullo ha tutti i coefficienti nulli"
-    - "ogni colonna può essere espressa come combinazione lineare delle altre"
-    - "la sottomatrice corrispondente non è singolare"
-    - "il determinante della matrice corrispondente è diverso da zero"
-    - "nessuna colonna può essere espressa come combinazione lineare delle altre"
+    - "La loro combinazione lineare che produce il vettore nullo ha tutti i coefficienti nulli"
+    - "Ogni colonna può essere espressa come combinazione lineare delle altre"
+    - "La sottomatrice corrispondente non è singolare"
+    - "Il determinante della matrice corrispondente è diverso da zero"
+    - "Nessuna colonna può essere espressa come combinazione lineare delle altre"
   correct_answer: 1
 
 - body: >-
     Un insieme di m colonne di una matrice intera A m x n è linearmente indipendente se:
   topic: "Programmazione Lineare"
   answers:
-    - "la sottomatrice corrispondente è singolare."
-    - "il determinante della matrice corrispondente è nullo."
-    - "al massimo una colonna può essere espressa come combinazione lineare delle altre."
-    - "una loro combinazione lineare con coefficienti non tutti nulli può produrre il vettore nullo."
-    - "nessuna colonna può essere espressa come combinazione lineare delle altre."
+    - "La sottomatrice corrispondente è singolare."
+    - "Il determinante della matrice corrispondente è nullo."
+    - "Al massimo una colonna può essere espressa come combinazione lineare delle altre."
+    - "Una loro combinazione lineare con coefficienti non tutti nulli può produrre il vettore nullo."
+    - "Nessuna colonna può essere espressa come combinazione lineare delle altre."
   correct_answer: 4
 
 - body: >-
@@ -123,11 +123,11 @@
     Una variabile libera in segno può essere sostituita equivalentemente da:
   topic: "Programmazione Lineare"
   answers:
-    - "la differenza fra una variabile non positiva ed una non negativa."
-    - "la differenza fra due variabili non negative."
-    - "la somma di due variabili non positive."
-    - "la somma di due variabili non negative."
-    - "la differenza fra una variabile non negativa e una non positiva."
+    - "La differenza fra una variabile non positiva ed una non negativa."
+    - "La differenza fra due variabili non negative."
+    - "La somma di due variabili non positive."
+    - "La somma di due variabili non negative."
+    - "La differenza fra una variabile non negativa e una non positiva."
   correct_answer: 1
 
 - body: >-
@@ -156,11 +156,11 @@
     Si consideri un sistema di equazioni lineari della forma Ax = b, con A matrice m x n di rango m. Il sistema ha
   topic: "Programmazione Lineare"
   answers:
-    - "infinite soluzioni se m = n"
-    - "infinite soluzioni se m > n"
-    - "una sola soluzione se m = n"
-    - "una sola soluzione se m > n"
-    - "nessuna delle precedenti"
+    - "Infinite soluzioni se m = n"
+    - "Infinite soluzioni se m > n"
+    - "Una sola soluzione se m = n"
+    - "Una sola soluzione se m > n"
+    - "Nessuna delle precedenti"
   correct_answer: 2
 
 - body: >-
@@ -178,22 +178,22 @@
     Data una matrice intera A m x n, una sua base è costituita da
   topic: "Programmazione Lineare"
   answers:
-    - "un insieme di m colonne"
-    - "un insieme di m colonne linearmente indipendenti"
-    - "un insieme di m colonne la cui matrice quadrata corrispondente è singolare"
-    - "un insieme di m colonne linearmente dipendenti"
-    - "nessuna di queste"
+    - "Un insieme di m colonne"
+    - "Un insieme di m colonne linearmente indipendenti"
+    - "Un insieme di m colonne la cui matrice quadrata corrispondente è singolare"
+    - "Un insieme di m colonne linearmente dipendenti"
+    - "Nessuna di queste"
   correct_answer: 1
 
 - body: >-
     Una soluzione base corrispondente ad una sottomatrice base B di una matrice A m x n si ottiene:
   topic: "Programmazione Lineare"
   answers:
-    - "azzerando tutte le variabili e risolvendo il sistema risultante"
-    - "azzerando le variabili base e risolvendo il sistema risultante"
-    - "azzerando le variabili fuori base e risolvendo il sistema risultante"
-    - "dando un valore non nullo alle variabili fuori base e risolvendo il sistema risultante"
-    - "nessuna di queste"
+    - "Azzerando tutte le variabili e risolvendo il sistema risultante"
+    - "Azzerando le variabili base e risolvendo il sistema risultante"
+    - "Azzerando le variabili fuori base e risolvendo il sistema risultante"
+    - "Dando un valore non nullo alle variabili fuori base e risolvendo il sistema risultante"
+    - "Nessuna di queste"
   correct_answer: 2
 
 - body: >-
@@ -223,9 +223,9 @@
   topic: "Programmazione Lineare"
   answers:
     - "Vale solo in caso di vertici ottimi."
-    - "E' corretta."
+    - "È corretta."
     - "Vale solo se la combinazione è stretta."
-    - "E' errata."
+    - "È errata."
     - "Nessuna di queste."
   correct_answer: 1
 
@@ -233,10 +233,10 @@
     La combinazione convessa stretta di due punti distinti x ed y di un politopo convesso è:
   topic: "Programmazione Lineare"
   answers:
-    - "un vertice del politopo."
-    - "un punto del politopo non coincidente con un vertice."
-    - "il punto centrale del politopo."
-    - "un punto esterno al politopo."
+    - "Un vertice del politopo."
+    - "Un punto del politopo non coincidente con un vertice."
+    - "Il punto centrale del politopo."
+    - "Un punto esterno al politopo."
     - "Nessuna di queste."
   correct_answer: 1
 
@@ -277,11 +277,11 @@
     Dato il politopo definito dai vincoli di un LP, una combinazione convessa di vertici ottimi è:
   topic: "Programmazione Lineare"
   answers:
-    - "ottima solo se la combinazione convessa è stretta"
-    - "non ottima"
-    - "ottima sotto particolari condizioni"
-    - "sempre ottima"
-    - "nessuna di queste"
+    - "Ottima solo se la combinazione convessa è stretta"
+    - "Non ottima"
+    - "Ottima sotto particolari condizioni"
+    - "Sempre ottima"
+    - "Nessuna di queste"
   correct_answer: 3
 
 - body: >-
@@ -299,11 +299,11 @@
     Se due basi producono la stessa soluzione base ammissibile x, allora x contiene:
   topic: "Programmazione Lineare"
   answers:
-    - "meno di n zeri."
+    - "Meno di n zeri."
     - "n-m zeri."
-    - "meno di n-m zeri."
-    - "più di m zeri."
-    - "più di n-m zeri."
+    - "Meno di n-m zeri."
+    - "Più di m zeri."
+    - "Più di n-m zeri."
   correct_answer: 4
 
 - body: >-
@@ -387,11 +387,11 @@
     In un tableau del simplesso primale, gli elementi della colonna 0 righe da 1 a m:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "contengono i valori attuali delle sole variabili base"
-    - "sono tutti nulli"
-    - "contengono i valori attuali di tutte le variabili"
-    - "contengono i costi relativi"
-    - "contengono i valori ottimi delle sole variabili base"
+    - "Contengono i valori attuali delle sole variabili base"
+    - "Sono tutti nulli"
+    - "Contengono i valori attuali di tutte le variabili"
+    - "Contengono i costi relativi"
+    - "Contengono i valori ottimi delle sole variabili base"
   correct_answer: 0
 
 - body: >-
@@ -420,10 +420,10 @@
     In un tableau del simplesso primale, gli elementi della riga 0 (colonne da 1 a n):
   topic: "Algoritmo del Simplesso"
   answers:
-    - "sono tutti nulli."
-    - "possono avere segno qualunque."
-    - "sono tutti non negativi."
-    - "sono tutti positivi o nulli."
+    - "Sono tutti nulli."
+    - "Possono avere segno qualunque."
+    - "Sono tutti non negativi."
+    - "Sono tutti positivi o nulli."
     - "Nessuna di queste."
   correct_answer: 1
 
@@ -464,10 +464,10 @@
     Nell'operazione di pivoting del simplesso primale, in caso di parità nella scelta del pivot, la nuova soluzione base:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "può essere peggiore della soluzione base attuale."
-    - "coincide sempre con la soluzione base attuale."
-    - "non è mai degenere."
-    - "può essere non ammissibile."
+    - "Può essere peggiore della soluzione base attuale."
+    - "Coincide sempre con la soluzione base attuale."
+    - "Non è mai degenere."
+    - "Può essere non ammissibile."
     - "Nessuna di queste."
   correct_answer: 4
 
@@ -475,33 +475,33 @@
     Nell'algoritmo del simplesso primale, utilizzare ad ogni iterazione la regola di Dantzig:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "non garantisce nulla"
-    - "garantisce la convergenza dell'algoritmo nel numero minimo di iterazioni"
-    - "garantisce la convergenza dell'algoritmo"
-    - "garantisce il massimo decremento locale del valore della soluzione"
-    - "nessuna di queste"
+    - "Non garantisce nulla"
+    - "Garantisce la convergenza dell'algoritmo nel numero minimo di iterazioni"
+    - "Garantisce la convergenza dell'algoritmo"
+    - "Garantisce il massimo decremento locale del valore della soluzione"
+    - "Nessuna di queste"
   correct_answer: 0
 
 - body: >-
     Sia v il vertice del politopo corrispondente alla base attuale B. Se B è degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice, che è:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "sempre diverso da v."
-    - "diverso da v oppure coincidente con v, dipende dal tableau attuale."
-    - "coincidente con v se il determinante di B è nullo."
-    - "sempre coincidente con v."
-    - "diverso da v purché il determinante di B sia positivo."
+    - "Sempre diverso da v."
+    - "Diverso da v oppure coincidente con v, dipende dal tableau attuale."
+    - "Coincidente con v se il determinante di B è nullo."
+    - "Sempre coincidente con v."
+    - "Diverso da v purché il determinante di B sia positivo."
   correct_answer: 1
 
 - body: >-
     Sia v il vertice del politopo corrispondente alla base attuale B. Se B non è degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice che è:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "diverso da v oppure coincidente da v, non si può dire"
-    - "coincidente con v se il determinante di B è nullo"
-    - "sempre diverso da v"
-    - "diverso da v purchè il determinante di B sia positivo"
-    - "coincidente con v se il determinante di B è non negativo"
+    - "Diverso da v oppure coincidente da v, non si può dire"
+    - "Coincidente con v se il determinante di B è nullo"
+    - "Sempre diverso da v"
+    - "Diverso da v purchè il determinante di B sia positivo"
+    - "Coincidente con v se il determinante di B è non negativo"
   correct_answer: 2
 
 - body: >-
@@ -519,10 +519,10 @@
     Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore negativo:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "si è ottenuta una soluzione base ammissibile per il problema originale."
-    - "significa che la soluzione ottima è illimitata."
-    - "significa che il problema originale è impossibile."
-    - "si è trovata la soluzione ottima del problema originale."
+    - "Si è ottenuta una soluzione base ammissibile per il problema originale."
+    - "Significa che la soluzione ottima è illimitata."
+    - "Significa che il problema originale è impossibile."
+    - "Si è trovata la soluzione ottima del problema originale."
     - "Nessuna di queste."
   correct_answer: 4
 
@@ -530,7 +530,7 @@
     Se la soluzione del problema artificiale della fase 1 del simplesso ha valore nullo:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "E' sempre possibile proseguire con la fase 2, a patto di eliminare le variabili artificiali, sostituire la funzione obiettivo con quella del costo originale e azzerare i costi relativi in corrispondenza delle basi o ridurre la dimensione della base."
+    - "È sempre possibile proseguire con la fase 2, a patto di eliminare le variabili artificiali, sostituire la funzione obiettivo con quella del costo originale e azzerare i costi relativi in corrispondenza delle basi o ridurre la dimensione della base."
     - "Non è detto che sia sempre possibile proseguire con la fase 2."
     - "Si prosegue con la fase 2 senza nessun tipo di operazione preliminare."
     - "Il problema originale non ha soluzione ammissibile."
@@ -552,21 +552,21 @@
     Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore positivo
   topic: "Algoritmo del Simplesso"
   answers:
-    - "significa che la soluzione ottima è illimitata"
-    - "sotto determinate condizioni si è ottenuta una soluzione base ammissibile per il problema originale"
-    - "si è trovata la soluzione ottima del problema originale"
-    - "si è ottenuta una soluzione base ammissibile per il problema originale"
-    - "significa che il problema è impossibile"
+    - "Significa che la soluzione ottima è illimitata"
+    - "Sotto determinate condizioni si è ottenuta una soluzione base ammissibile per il problema originale"
+    - "Si è trovata la soluzione ottima del problema originale"
+    - "Si è ottenuta una soluzione base ammissibile per il problema originale"
+    - "Significa che il problema è impossibile"
   correct_answer: 4
 
 - body: >-
     Se un tableau del simplesso primale corrisponde alla soluzione ottima:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "gli elementi della riga 0 sono tutti non negativi."
-    - "gli elementi della colonna 0 sono tutti non negativi."
-    - "gli elementi della riga 0, colonne da 1 a n, sono tutti positivi."
-    - "gli elementi della riga 0, colonne da 1 a n, sono tutti non negativi."
+    - "Gli elementi della riga 0 sono tutti non negativi."
+    - "Gli elementi della colonna 0 sono tutti non negativi."
+    - "Gli elementi della riga 0, colonne da 1 a n, sono tutti positivi."
+    - "Gli elementi della riga 0, colonne da 1 a n, sono tutti non negativi."
     - "Nessuna di queste."
   correct_answer: 3
 
@@ -585,10 +585,10 @@
     Si consideri una sottomatrice B di ordine m di una matrice A m x n. La soluzione base corrispondente a B:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "è ammissibile per il corrispondente problema in forma standard solo se x = 0 per ogni variabile non base"
-    - "è sempre ammissibile per il corrispondene problema in forma standard"
+    - "È ammissibile per il corrispondente problema in forma standard solo se x = 0 per ogni variabile non base"
+    - "È sempre ammissibile per il corrispondene problema in forma standard"
     - "Non è mai ammissibile per il corrispondente problema in forma standard"
-    - "è ammissibile per il corrispondente problema in forma standard solo se x >= 0"
+    - "È ammissibile per il corrispondente problema in forma standard solo se x >= 0"
     - "Nessuna di queste"
   correct_answer: 3
 
@@ -637,24 +637,24 @@
   correct_answer: 4
 
 - body: >-
-    Siano dati un problema di programmazione lineare ed il corrispondente tableau ottimo. L'analisi di sensistivita' dimostra che, se si cambia il coefficiente di costo di una variabile, la base attuale resta ottima se
+    Siano dati un problema di programmazione lineare ed il corrispondente tableau ottimo. L'analisi di sensistività dimostra che, se si cambia il coefficiente di costo di una variabile, la base attuale resta ottima se
   topic: "Algoritmo del Simplesso"
   answers:
-    - "i nuovi valori dei costi relativi sono non negativi"
-    - "i nuovi valori delle variabili base soddisfano le equazioni dei vincoli"
-    - "i nuovi valori delle variabili base sono negativi o nulli"
-    - "i nuovi valori delle variabili base sono non negativi"
+    - "I nuovi valori dei costi relativi sono non negativi"
+    - "I nuovi valori delle variabili base soddisfano le equazioni dei vincoli"
+    - "I nuovi valori delle variabili base sono negativi o nulli"
+    - "I nuovi valori delle variabili base sono non negativi"
   correct_answer: 0
 
 - body: >-
     Ad una variabile primale non negativa corrisponde
   topic: "Dualità"
   answers:
-    - "nessuna di queste"
-    - "un vincolo duale della forma pi'a^ <= c"
-    - "un vincolo duale nella forma pi'a^ = c"
-    - "una variabile duale non negativa"
-    - "una variabile duale libera (non ristretta in segno)"
+    - "Nessuna di queste"
+    - "Un vincolo duale della forma pi'a^ <= c"
+    - "Un vincolo duale nella forma pi'a^ = c"
+    - "Una variabile duale non negativa"
+    - "Una variabile duale libera (non ristretta in segno)"
   correct_answer: 1
 
 - body: >-
@@ -694,22 +694,22 @@
     La situazione "primale illimitato" e corrispondente "duale illimitato":
   topic: "Dualità"
   answers:
-    - "dipende dal gradiente della funzione obiettivo del primale."
-    - "non può mai verificarsi."
-    - "può verificarsi sotto determinate condizioni."
-    - "dipende dai gradienti delle due funzioni obiettivo."
-    - "si verifica sempre."
+    - "Dipende dal gradiente della funzione obiettivo del primale."
+    - "Non può mai verificarsi."
+    - "Può verificarsi sotto determinate condizioni."
+    - "Dipende dai gradienti delle due funzioni obiettivo."
+    - "Si verifica sempre."
   correct_answer: 1
 
 - body: >-
     Quando un primale è illimitato, la situazione "corrispondente duale impossibile":
   topic: "Dualità"
   answers:
-    - "dipende dai gradienti delle due funzioni obiettivo"
-    - "non può mai verificarsi"
-    - "può verificarsi sotto determinate condizioni"
-    - "dipende dal gradiente della funzione obiettivo"
-    - "si verifica sempre"
+    - "Dipende dai gradienti delle due funzioni obiettivo"
+    - "Non può mai verificarsi"
+    - "Può verificarsi sotto determinate condizioni"
+    - "Dipende dal gradiente della funzione obiettivo"
+    - "Si verifica sempre"
   correct_answer: 4
 
 - body: >-
@@ -729,7 +729,7 @@
   answers:
     - "Per ogni i ad 1 a m, l'i-esima variabile duale è nulla o l'i-esimo vincolo primale è soddisfatto con uguaglianza."
     - "Per ogni j da 1 a n, il j-esimo vincolo primale deve essere soddisfatto con uguaglianza o la j-esima variabile duale deve essere nulla."
-    - "per ogni i da 1 a m, l'i-esima variabile primale è nulla o l'i-esimo vincolo duale è soddisfatto con uguaglianza."
+    - "Per ogni i da 1 a m, l'i-esima variabile primale è nulla o l'i-esimo vincolo duale è soddisfatto con uguaglianza."
     - "Per ogni j da 1 a n, i j-esimi vincoli primali e duali devono essere soddisfatti con uguaglianza."
     - "Nessuna di queste."
   correct_answer: 0
@@ -738,32 +738,32 @@
     In un problema di programmazione lineare con m vincoli ed n variabili, le condizioni di ortogonalità (complementary slackness)
   topic: "Dualità"
   answers:
-    - "sono m-n."
-    - "sono m+n."
-    - "sono m."
-    - "sono m*n."
-    - "sono n."
+    - "Sono m-n."
+    - "Sono m+n."
+    - "Sono m."
+    - "Sono m*n."
+    - "Sono n."
   correct_answer: 1
 
 - body: >-
     Le condizioni di ortogonalità (complementary slackness) di una coppia primale-duale garantiscono:
   topic: "Dualità"
   answers:
-    - "l'ammissibilità di due soluzioni, una primale e una duale"
-    - "l'ottimalità di due soluzioni ammissibili, una primale e una duale"
-    - "l'ottimalità di due soluzioni, una primale e una duale, anche se non ammissibili"
-    - "l'ottimalità di una soluzione primale e del suo complemento"
-    - "nessuna di queste"
+    - "L'ammissibilità di due soluzioni, una primale e una duale"
+    - "L'ottimalità di due soluzioni ammissibili, una primale e una duale"
+    - "L'ottimalità di due soluzioni, una primale e una duale, anche se non ammissibili"
+    - "L'ottimalità di una soluzione primale e del suo complemento"
+    - "Nessuna di queste"
   correct_answer: 1
 
 - body: >-
     In un tableau del simplesso duale, gli elementi della riga 0 (colonna da 1 a n):
   topic: "Dualità"
   answers:
-    - "sono tutti positivi o nulli."
-    - "sono tutti positivi."
-    - "sono tutti negativi."
-    - "sono tutti nulli."
+    - "Sono tutti positivi o nulli."
+    - "Sono tutti positivi."
+    - "Sono tutti negativi."
+    - "Sono tutti nulli."
     - "Nessuna di queste."
   correct_answer: 0
 
@@ -771,11 +771,11 @@
     In un tableau del simplesso duale, i costi relativi si trovano:
   topic: "Dualità"
   answers:
-    - "nella riga 0, colonne corrispondenti alla base"
-    - "nella riga 0, colonne non corrispondenti alla base"
-    - "nella colonna 0, righe non corrispondenti alla base"
-    - "in nessuna di queste posizioni"
-    - "nella colonna 0, nelle righe corrispondenti alla base"
+    - "Nella riga 0, colonne corrispondenti alla base"
+    - "Nella riga 0, colonne non corrispondenti alla base"
+    - "Nella colonna 0, righe non corrispondenti alla base"
+    - "In nessuna di queste posizioni"
+    - "Nella colonna 0, nelle righe corrispondenti alla base"
   correct_answer: 1
 
 - body: >-
@@ -793,11 +793,11 @@
     La scelta del pivot del simplesso duale viene determinata da:
   topic: "Dualità"
   answers:
-    - "un minimo tra rapporti di valore positivo"
-    - "un minimo tra rapporti di valore negativo"
-    - "un massimo tra rapporti di valore negativo"
-    - "un massimo tra rapporti di valore positivo"
-    - "nessuna di queste"
+    - "Un minimo tra rapporti di valore positivo"
+    - "Un minimo tra rapporti di valore negativo"
+    - "Un massimo tra rapporti di valore negativo"
+    - "Un massimo tra rapporti di valore positivo"
+    - "Nessuna di queste"
   correct_answer: 2
 
 - body: >-
@@ -816,9 +816,9 @@
   topic: "Dualità"
   answers:
     - "Il sistema Ax = b è ridondante."
-    - "il problema è impossibile."
-    - "la soluzione attuale è ottima."
-    - "il problema ha soluzione illimitata."
+    - "Il problema è impossibile."
+    - "La soluzione attuale è ottima."
+    - "Il problema ha soluzione illimitata."
     - "Nessuna di queste."
   correct_answer: 1
 
@@ -881,11 +881,11 @@
     Si considerino un sistema (I), definito da {Ax = b, x >= 0}, ed un sistema (II), definito da {y′A <= 0, b′y > 0}. Si ha allora che
   topic: "Dualità"
   answers:
-    - "il sistema (I) è impossible se e solo se il sistema (II) è possibile"
+    - "Il sistema (I) è impossible se e solo se il sistema (II) è possibile"
     - "Nessuna di queste"
-    - "il sistema (I) è impossible se e solo se il sistema (II) è impossibile"
-    - "il sistema (I) è possible se e solo se il sistema (II) è possibile"
-    - "risposta vuota"
+    - "Il sistema (I) è impossible se e solo se il sistema (II) è impossibile"
+    - "Il sistema (I) è possible se e solo se il sistema (II) è possibile"
+    - "Risposta vuota"
   correct_answer: 0
 
 - body: >-
@@ -914,10 +914,10 @@
     Una matrice m x n è totalmente unimodulare se:
   topic: "Programmazione Lineare Intera"
   answers:
-    - "ogni sottomatrice quadrata ha determinante di valore +1 o -1."
-    - "ogni sottomatrice quadrata ha determinante di valore unitario."
-    - "il suo determinante ha valore unitario."
-    - "il suo determinante vale 0, +1 o -1."
+    - "Ogni sottomatrice quadrata ha determinante di valore +1 o -1."
+    - "Ogni sottomatrice quadrata ha determinante di valore unitario."
+    - "Il suo determinante ha valore unitario."
+    - "Il suo determinante vale 0, +1 o -1."
     - "Ogni sottomatrice quadrata ha determinante di valore 0, +1 o -1."
   correct_answer: 4
 
@@ -936,11 +936,11 @@
     Scelta una riga generatrice, un taglio di Gomory impone che
   topic: "Programmazione Lineare Intera"
   answers:
-    - "la somma delle parti frazionarie delle variabili fuori base sia non maggiore della parte frazionaria del termine noto"
-    - "la somma delle parti frazionarie delle variabili base sia non maggiore della parte frazionaria del termine noto"
-    - "la somma delle parti frazionarie delle variabili base sia non minore della parte frazionaria del termine noto"
-    - "la somma delle parti frazionarie delle variabili fuori base sia non minore della parte frazionaria del termine noto"
-    - "nessuna delle precedenti"
+    - "La somma delle parti frazionarie delle variabili fuori base sia non maggiore della parte frazionaria del termine noto"
+    - "La somma delle parti frazionarie delle variabili base sia non maggiore della parte frazionaria del termine noto"
+    - "La somma delle parti frazionarie delle variabili base sia non minore della parte frazionaria del termine noto"
+    - "La somma delle parti frazionarie delle variabili fuori base sia non minore della parte frazionaria del termine noto"
+    - "Nessuna delle precedenti"
   correct_answer: 3
 
 - body: >-
@@ -958,10 +958,10 @@
     L'aggiunta al tableau del taglio di Gomory relativo ad una riga generatrice frazionaria produce una soluzione (un tableau) che:
   topic: "Programmazione Lineare Intera"
   answers:
-    - "soddisfa il vincolo di interezza ma non è ottima."
-    - "soddisfa il criterio di ottimalità ma non è ammissibile."
-    - "è ammissibile ma non è intera."
-    - "è ammissibile ma non soddisfa il criterio di ottimalità."
+    - "Soddisfa il vincolo di interezza ma non è ottima."
+    - "Soddisfa il criterio di ottimalità ma non è ammissibile."
+    - "È ammissibile ma non è intera."
+    - "È ammissibile ma non soddisfa il criterio di ottimalità."
     - "Nessuna di queste."
   correct_answer: 1
 
@@ -970,10 +970,10 @@
   topic: "Programmazione Lineare Intera"
   answers:
     - "P è sempre impossibile"
-    - "non si può dire nulla su P"
+    - "Non si può dire nulla su P"
     - "P è sempre illimitato"
     - "P è illimitato salvo casi molto particolari"
-    - "nessuna di queste"
+    - "Nessuna di queste"
   correct_answer: 3
 
 - body: >-
@@ -1101,11 +1101,11 @@
     Un algoritmo polinomiale per un problema NP-completo:
   topic: "Complessità"
   answers:
-    - "risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli fortemente NP-completi"
-    - "non può esistere"
-    - "risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli della classe P"
-    - "risolverebbe ogni problema della classe NP in tempo polinomiale"
-    - "nessuna di queste"
+    - "Risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli fortemente NP-completi"
+    - "Non può esistere"
+    - "Risolverebbe in tempo polinomiale i problemi della classe NP, ma non quelli della classe P"
+    - "Risolverebbe ogni problema della classe NP in tempo polinomiale"
+    - "Nessuna di queste"
   correct_answer: 3
 
 - body: >-
@@ -1191,8 +1191,8 @@
   answers:
     - "Qualunque problema della classe NP si può trasformare in P in tempo polinomiale"
     - "Si può trasformare in tempo polinomiale in qualunque problema della classe NP"
-    - "è risolubile mediante un albero decisionale di altezza polinomiale"
-    - "è risolubile mediante un algoritmo di programmazione dinamica"
+    - "È risolubile mediante un albero decisionale di altezza polinomiale"
+    - "È risolubile mediante un algoritmo di programmazione dinamica"
     - "Nessuna di queste"
   correct_answer: 0
 
@@ -1206,4 +1206,3 @@
     - "È sempre risolubile mediante un albero decisionale di altezza polinomiale"
     - "Nessuna di queste"
   correct_answer: 3
-

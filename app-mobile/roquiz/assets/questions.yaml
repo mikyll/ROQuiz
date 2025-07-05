@@ -1,0 +1,22 @@
+questions:
+  - topic: "Programmazione Matematica"
+    body: |
+      Dato un insieme F, un intorno è
+    answers:
+      - "L'insieme di tutti i sottoinsiemi di F"
+      - "L'insieme dei punti di F a distanza minore di epsilon da un punto x di F"
+      - "Una funzione N: F -> 2^F"
+      - "Una combinazione convessa di due punti x e y di F"
+      - "Nessuna di queste"
+    correct: C
+
+  - topic: "Programmazione Matematica"
+    body: |
+      Si consideri un problema di ottimizzazione (F,d) ed un intorno N. La proprietà che se un punto f di F è localmente ottimo rispetto ad N allora f è l'ottimo assoluto implica
+    answers:
+      - "che N è un intorno esatto"
+      - "che N è un intorno euclideo"
+      - "che N è un intorno non euclideo"
+      - "nessuna di queste caratterizzazioni"
+      - "che N è un intorno convesso"
+    correct: A
