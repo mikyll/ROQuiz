@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:roquiz/cli/parser.dart';
+import 'package:roquiz/cli/questions_parser.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
 class QuestionRepository {

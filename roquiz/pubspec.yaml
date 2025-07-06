@@ -7,7 +7,7 @@ version: 2.0.0+0
 
 environment:
   sdk: ^3.8.1
-  flutter: 3.32.5
+  flutter: ^3.32.5
 
 # Check updates with: `flutter pub outdated`
 # Update with: `flutter pub upgrade --major-versions`
@@ -15,6 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  package_info_plus: ^8.3.0
   provider: ^6.1.2
   yaml: ^3.1.3
 

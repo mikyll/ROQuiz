@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:roquiz/cli/parser.dart';
+import 'package:roquiz/cli/questions_parser.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -17,6 +17,7 @@ B''';
       final questions = parseQuestionsFromTxt(fileContent, 5);
 
       expect(questions.length, 1);
+      expect(questions[0].getId(), 1);
       expect(questions[0].getId(), 1);
     });
 
