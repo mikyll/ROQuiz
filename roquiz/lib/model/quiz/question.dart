@@ -48,7 +48,12 @@ class Question {
 
   @override
   String toString() {
-    String res = "Topic: $topic\nQ$id: $body\n";
+    String res = "";
+
+    if (topic != null) {
+      res += "Topic: $topic\n";
+    }
+    res += "Q$id: $body\n";
 
     for (int i = 0; i < answers.length; i++) {
       res += "${String.fromCharCode(i + 65)}. ${answers[i]}\n";
@@ -60,14 +65,21 @@ class Question {
   }
 
   String toYaml({letters = false}) {
-    String res =
-        """
-- body: >-
-    $body
-  topic: "$topic"
+    String res = """
+- body: |
+    $body""";
+
+    if (topic != null) {
+      res += """
+
+  topic: $topic""";
+    }
+
+    res += """
+
   answers:""";
     for (String a in answers) {
-      res += "\n    - \"$a\"";
+      res += "\n    - $a";
     }
 
     if (letters) {
