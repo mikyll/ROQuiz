@@ -1,105 +1,79 @@
 class Question {
-  final int _id;
-  final String _body;
+  static const maxAnswers = 6;
 
-  late String _topic;
-  late List<String> _answers;
-  late int _correctAnswer;
+  int id;
+  String body;
+  String? topic;
+  List<String> answers;
+  int correctAnswer;
 
-  Question(
-      this._id, this._body, this._topic, this._answers, this._correctAnswer);
-
-  Question.onlyBody(this._id, this._body) {
-    _answers = [];
-  }
-
-  Question.onlyBodyWithTopic(this._id, this._body, this._topic) {
-    _answers = [];
-  }
-
-  int getId() {
-    return _id;
-  }
-
-  String getBody() {
-    return _body;
-  }
-
-  List<String> getAnswers() {
-    return _answers;
-  }
-
-  String getTopic() {
-    return _topic;
-  }
-
-  void setTopic(String topic) {
-    _topic = topic;
-  }
-
-  void setAnswers(List<String> answers) {
-    for (String s in answers) {
-      s = s.replaceAll('"', "'");
+  Question(this.id, this.body, this.topic, this.answers, this.correctAnswer) {
+    if (id <= 0) {
+      throw FormatException("Invalid question ID: $id");
     }
-    _answers = answers;
-  }
 
-  void addAnswer(String answer) {
-    if (_answers.contains(answer)) {
+    if (body.isEmpty) {
+      throw FormatException("Body cannot be empty");
+    }
+
+    // Not enough answers
+    if (answers.length < 2) {
       throw FormatException(
-          "Duplicated answer: answer '$answer' is already present");
+        "Answers must be at least 2. Got ${answers.length}",
+      );
     }
 
-    answer = answer.replaceAll('"', "'");
+    // Check for duplicates
+    for (int i = 0; i < answers.length; i++) {
+      for (int j = 0; j < answers.length; j++) {
+        if (j == i) {
+          continue;
+        }
+        if (answers[j].toLowerCase() == answers[i].toLowerCase()) {
+          throw FormatException("Duplicated answer: ${answers[j]}");
+        }
+      }
+    }
 
-    _answers.add(answer);
-  }
-
-  int getCorrectAnswer() {
-    return _correctAnswer;
-  }
-
-  void setCorrectAnswer(int correctAnswer) {
-    if (correctAnswer >= 0 && correctAnswer <= 9) {
-      _correctAnswer = correctAnswer;
+    // Check that correct answer is valid
+    if (correctAnswer < 0 || correctAnswer >= answers.length) {
+      throw FormatException(
+        "Invalid correct answer: $correctAnswer is out of bounds [0,${answers.length}]",
+      );
     }
   }
 
-  void setCorrectAnswerFromText(String correctAnswer) {
-    if (!_answers.contains(correctAnswer)) {
-      throw FormatException("Answer not present");
-    }
-    _correctAnswer = _answers.indexOf(correctAnswer);
-  }
+  Question.noTopic(id, body, answers, correctAnswer)
+    : this(id, body, null, answers, correctAnswer);
 
   @override
   String toString() {
-    String res = "Topic: $_topic\nQ$_id: $_body\n";
+    String res = "Topic: $topic\nQ$id: $body\n";
 
-    for (int i = 0; i < _answers.length; i++) {
-      res += "${String.fromCharCode(i + 65)}. ${_answers[i]}\n";
+    for (int i = 0; i < answers.length; i++) {
+      res += "${String.fromCharCode(i + 65)}. ${answers[i]}\n";
     }
 
-    res += "${String.fromCharCode(_correctAnswer + 65)}\n";
+    res += "${String.fromCharCode(correctAnswer + 65)}\n";
 
     return res;
   }
 
-  String toYAML({letters = false}) {
-    String res = """
+  String toYaml({letters = false}) {
+    String res =
+        """
 - body: >-
-    $_body
-  topic: "$_topic"
+    $body
+  topic: "$topic"
   answers:""";
-    for (String s in _answers) {
-      res += "\n    - \"$s\"";
+    for (String a in answers) {
+      res += "\n    - \"$a\"";
     }
 
     if (letters) {
-      res +=
-          "\n  correct_answer: ${String.fromCharCode(_correctAnswer + 65)}\n";
+      res += "\n  correct_answer: ${String.fromCharCode(correctAnswer + 65)}\n";
     } else {
-      res += "\n  correct_answer: $_correctAnswer\n";
+      res += "\n  correct_answer: $correctAnswer\n";
     }
 
     return res;
