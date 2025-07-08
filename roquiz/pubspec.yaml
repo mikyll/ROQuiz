@@ -1,5 +1,6 @@
 name: roquiz
-description: "Applicazione per esercitarsi con i quiz di Ricerca Operativa M."
+description: |
+  Applicazione per esercitarsi con i quiz di Ricerca Operativa M.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
