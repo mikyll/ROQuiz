@@ -65,19 +65,13 @@ class Question {
   }
 
   String toYaml({letters = false}) {
-    String res = """
-- body: |
-    $body""";
+    String res = "- body: |\n    $body";
 
     if (topic != null) {
-      res += """
-
-  topic: $topic""";
+      res += "\n  topic: $topic";
     }
 
-    res += """
-
-  answers:""";
+    res += "\n  answers:";
     for (String a in answers) {
       res += "\n    - $a";
     }
