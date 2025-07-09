@@ -7,11 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/style/theme_provider.dart';
+import 'package:roquiz/view/view_info.dart';
+import 'package:roquiz/view/view_quiz.dart';
 
 class ViewMenu extends StatefulWidget {
-  const ViewMenu({super.key, required this.packageInfo});
-
   final PackageInfo packageInfo;
+
+  const ViewMenu({super.key, required this.packageInfo});
 
   @override
   State<StatefulWidget> createState() => ViewMenuState();
@@ -37,6 +39,20 @@ class ViewMenuState extends State<ViewMenu> {
     }
 
     return num;
+  }
+
+  List<Question> _getQuizPool() {
+    Map<String, List<Question>> groupedQuestions = _questionRepository
+        .getGroupedQuestions();
+    List<Question> questions = [];
+
+    for (String topic in _selectedTopics.keys) {
+      if (_selectedTopics[topic]! && groupedQuestions[topic] != null) {
+        questions.addAll(groupedQuestions[topic]!);
+      }
+    }
+
+    return questions;
   }
 
   void _test() {
@@ -130,12 +146,12 @@ class ViewMenuState extends State<ViewMenu> {
                 //       )
                 //     :
                 Text(
-                  widget.packageInfo.appName,
+                  "ROQuiz",
                   maxLines: 1,
                   style: TextStyle(fontSize: 54, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  widget.packageInfo.version,
+                  "v${widget.packageInfo.version}${widget.packageInfo.buildNumber.isNotEmpty ? "+${widget.packageInfo.buildNumber}" : ""}",
                   maxLines: 1,
                   style: const TextStyle(
                     fontSize: 24,
@@ -157,6 +173,21 @@ class ViewMenuState extends State<ViewMenu> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ViewQuiz(
+                                quizPool: _getQuizPool(),
+                                questionNum: _numQuizQuestions,
+                                timer: _timer,
+                                // TODO
+                                shuffleAnswers: false,
+                              );
+                            },
+                          ),
+                        );
+
                         // TODO
 
                         // widget.value.isDarkMode;
@@ -244,7 +275,7 @@ class ViewMenuState extends State<ViewMenu> {
                     child: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub!\n\nBasta un click qui!",
+                        "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub ⭐\n\nBasta un click qui!",
                         maxLines: 6,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18),
@@ -305,14 +336,14 @@ class ViewMenuState extends State<ViewMenu> {
             width: 60,
             child: IconButton.filled(
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) {
-                //       return ViewInfo();
-                //     },
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ViewInfo(packageInfo: widget.packageInfo);
+                    },
+                  ),
+                );
               },
               iconSize: 45,
               icon: Icon(

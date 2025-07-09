@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ContainerColors extends ThemeExtension<ContainerColors> {
-  const ContainerColors({
+class AnimatedStarTheme extends ThemeExtension<AnimatedStarTheme> {
+  const AnimatedStarTheme({
     required this.backgroundColor,
     required this.starColor,
   });
@@ -10,27 +10,27 @@ class ContainerColors extends ThemeExtension<ContainerColors> {
   final Color starColor;
 
   @override
-  ContainerColors copyWith({Color? backgroundColor, Color? starColor}) {
-    return ContainerColors(
+  AnimatedStarTheme copyWith({Color? backgroundColor, Color? starColor}) {
+    return AnimatedStarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       starColor: starColor ?? this.starColor,
     );
   }
 
   @override
-  ContainerColors lerp(ContainerColors? other, double t) {
-    if (other is! ContainerColors) {
+  AnimatedStarTheme lerp(AnimatedStarTheme? other, double t) {
+    if (other is! AnimatedStarTheme) {
       return this;
     }
-    return ContainerColors(
+    return AnimatedStarTheme(
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
       starColor: Color.lerp(starColor, other.starColor, t)!,
     );
   }
 }
 
-class SearchBarColors extends ThemeExtension<SearchBarColors> {
-  const SearchBarColors({
+class SearchBarTheme extends ThemeExtension<SearchBarTheme> {
+  const SearchBarTheme({
     required this.lensIconColor,
     required this.lensIconOpenColor,
     required this.lensIconOverlayColor,
@@ -49,7 +49,7 @@ class SearchBarColors extends ThemeExtension<SearchBarColors> {
   final Color crossIconColor;
 
   @override
-  SearchBarColors copyWith({
+  SearchBarTheme copyWith({
     Color? lensIconColor,
     Color? lensIconOpenColor,
     Color? lensIconOverlayColor,
@@ -58,7 +58,7 @@ class SearchBarColors extends ThemeExtension<SearchBarColors> {
     Color? labelTextColor,
     Color? crossIconColor,
   }) {
-    return SearchBarColors(
+    return SearchBarTheme(
       lensIconColor: lensIconColor ?? this.lensIconColor,
       lensIconOpenColor: lensIconOpenColor ?? this.lensIconOpenColor,
       lensIconOverlayColor: lensIconOverlayColor ?? this.lensIconOverlayColor,
@@ -70,11 +70,11 @@ class SearchBarColors extends ThemeExtension<SearchBarColors> {
   }
 
   @override
-  SearchBarColors lerp(SearchBarColors? other, double t) {
-    if (other is! SearchBarColors) {
+  SearchBarTheme lerp(SearchBarTheme? other, double t) {
+    if (other is! SearchBarTheme) {
       return this;
     }
-    return SearchBarColors(
+    return SearchBarTheme(
       lensIconColor: Color.lerp(lensIconColor, other.lensIconColor, t)!,
       lensIconOpenColor: Color.lerp(
         lensIconOpenColor,
@@ -94,8 +94,8 @@ class SearchBarColors extends ThemeExtension<SearchBarColors> {
   }
 }
 
-class QuestionWidgetColors extends ThemeExtension<QuestionWidgetColors> {
-  const QuestionWidgetColors({
+class QuestionWidgetTheme extends ThemeExtension<QuestionWidgetTheme> {
+  const QuestionWidgetTheme({
     required this.defaultAnswerColor,
     required this.selectedAnswerColor,
     required this.correctAnswerColor,
@@ -114,7 +114,7 @@ class QuestionWidgetColors extends ThemeExtension<QuestionWidgetColors> {
   final Color textColor;
 
   @override
-  QuestionWidgetColors copyWith({
+  QuestionWidgetTheme copyWith({
     Color? defaultAnswerColor,
     Color? selectedAnswerColor,
     Color? correctAnswerColor,
@@ -123,7 +123,7 @@ class QuestionWidgetColors extends ThemeExtension<QuestionWidgetColors> {
     Color? backgroundQuizColor,
     Color? textColor,
   }) {
-    return QuestionWidgetColors(
+    return QuestionWidgetTheme(
       defaultAnswerColor: defaultAnswerColor ?? this.defaultAnswerColor,
       selectedAnswerColor: selectedAnswerColor ?? this.selectedAnswerColor,
       correctAnswerColor: correctAnswerColor ?? this.correctAnswerColor,
@@ -136,11 +136,11 @@ class QuestionWidgetColors extends ThemeExtension<QuestionWidgetColors> {
   }
 
   @override
-  QuestionWidgetColors lerp(QuestionWidgetColors? other, double t) {
-    if (other is! QuestionWidgetColors) {
+  QuestionWidgetTheme lerp(QuestionWidgetTheme? other, double t) {
+    if (other is! QuestionWidgetTheme) {
       return this;
     }
-    return QuestionWidgetColors(
+    return QuestionWidgetTheme(
       defaultAnswerColor: Color.lerp(
         defaultAnswerColor,
         other.defaultAnswerColor,

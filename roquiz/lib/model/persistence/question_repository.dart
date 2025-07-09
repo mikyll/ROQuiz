@@ -44,6 +44,7 @@ class QuestionRepository {
     return topics;
   }
 
+  // Returns a map with questions grouped by topic
   Map<String, List<Question>> getGroupedQuestions() {
     Map<String, List<Question>> groupedQuestions = {};
 

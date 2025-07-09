@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBarTheme;
 import 'package:roquiz/model/style/palettes.dart';
 
 class Themes {
@@ -75,11 +75,11 @@ class Themes {
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const ContainerColors(
+      const AnimatedStarTheme(
         backgroundColor: Color(0xff515b92),
         starColor: Color(0xffffeb3b),
       ),
-      const QuestionWidgetColors(
+      const QuestionWidgetTheme(
         defaultAnswerColor: Color(0x333f51b5),
         selectedAnswerColor: Color(0x7f3f51b5),
         correctAnswerColor: Color(0x7f2aff31),
@@ -88,7 +88,7 @@ class Themes {
         backgroundQuizColor: Color(0x1900bbd4),
         textColor: Color(0xff000000),
       ),
-      const SearchBarColors(
+      const SearchBarTheme(
         lensIconColor: Color(0xffffffff),
         lensIconOpenColor: Color(0xff9e9e9e),
         lensIconOverlayColor: Color(0x7f5b63b5),
@@ -176,11 +176,11 @@ class Themes {
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const ContainerColors(
+      const AnimatedStarTheme(
         backgroundColor: Color(0xffb7c4ff),
         starColor: Color(0xffb71c1c),
       ),
-      const QuestionWidgetColors(
+      const QuestionWidgetTheme(
         defaultAnswerColor: Color(0x333f51b5),
         selectedAnswerColor: Color(0x7f3f51b5),
         correctAnswerColor: Color(0x7f2aff31),
@@ -189,7 +189,7 @@ class Themes {
         backgroundQuizColor: Color(0x1900bbd4),
         textColor: Color(0xffffffff),
       ),
-      const SearchBarColors(
+      const SearchBarTheme(
         lensIconColor: Color(0xffffffff),
         lensIconOpenColor: Color(0xff9e9e9e),
         lensIconOverlayColor: Color(0x7fb7c4ff),
