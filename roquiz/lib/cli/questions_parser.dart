@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:yaml/yaml.dart';
 
+enum QuestionFormat { txt, yaml }
+
 List<Question> parseQuestionsFromTxt(String content) {
   List<Question> questions = [];
   List<String> topics = [];
@@ -130,13 +132,13 @@ List<Question> parseQuestionsFromYaml(String content) {
   }
 
   int iQ = 1;
-  for (final el in parsedData) {
-    if (el is Map) {
+  for (final question in parsedData) {
+    if (question is Map) {
       try {
-        final body = el["body"] as String;
-        final topic = el["topic"] as String;
-        final answers = el["answers"] as List;
-        final correctAnswer = el["correct_answer"];
+        final body = question["body"] as String;
+        final topic = question["topic"] as String;
+        final answers = question["answers"] as List;
+        final correctAnswer = question["correct_answer"];
 
         Question q = Question(
           iQ,
@@ -149,10 +151,10 @@ List<Question> parseQuestionsFromYaml(String content) {
         iQ++;
         questions.add(q);
       } catch (e) {
-        print("Error parsing question: $e");
+        rethrow;
       }
     } else {
-      print("Invalid question format: $el");
+      throw FormatException("Invalid question: $question");
     }
   }
 
@@ -180,84 +182,55 @@ Map<String, int> getTopicSizes(List<Question> questions) {
   return topicSizes;
 }
 
-// // Parse from YAML
-// void main(List<String> args) async {
-//   if (args.isEmpty) {
-//     print("No arg specified args");
-//     return;
-//   }
-
-//   File file = File(args[0]);
-//   if (!file.existsSync()) {
-//     print("File ${args[0]} doesn't exist");
-//   }
-
-//   file.readAsString().then((content) {
-//     List<Question> questions = parseQuestionsFromYaml(content);
-//     print(questions.length);
-
-//     if (args.length >= 2 && args[1] == "-t") {
-//       Map<String, int> topicSizes = getTopicSizes(questions);
-//       for (String topic in topicSizes.keys) {
-//         print("- $topic: ${topicSizes[topic]}");
-//       }
-//     }
-//     _printTopics(questions);
-//     return;
-
-//     /*List<Question> questions = parseQuestions(content, 5);
-//     for (Question q in questions) {
-//       print(q.toYAML());
-//     }
-
-//     if (args.length >= 2 && args[1] == "-t") {
-//       Map<String, int> topicSizes = getTopicSizes(questions);
-//       for (String topic in topicSizes.keys) {
-//         print("- $topic");
-//       }
-//     }*/
-//   });
-// }
-
 void main(List<String> args) async {
-  if (args.isEmpty) {
-    print("No arg specified args");
-    return;
+  QuestionFormat fileType = QuestionFormat.yaml;
+  String filePath = "";
+
+  for (int i = 0; i < args.length; i++) {
+    if (args[i] == "-t" || args[i] == "--type") {
+      i++;
+
+      if (i >= args.length) {
+        throw Exception("Missing file type after -t/--type");
+      }
+
+      fileType = QuestionFormat.values.byName(args[i].toLowerCase());
+    }
   }
 
-  File file = File(args[0]);
+  filePath = args.last;
+
+  if (filePath.isEmpty) {
+    throw Exception("File path must not be empty");
+  }
+
+  File file = File(filePath);
   if (!file.existsSync()) {
-    print("File ${args[0]} doesn't exist");
+    throw Exception("File $filePath doesn't exist");
   }
 
   file.readAsString().then((content) {
-    List<Question> questions = parseQuestionsFromTxt(content);
+    List<Question> questions;
 
-    if (args.length >= 2 && args[1] == "-t") {
-      Map<String, int> topicSizes = getTopicSizes(questions);
-      for (String topic in topicSizes.keys) {
-        print("- $topic: ${topicSizes[topic]}");
-      }
+    switch (fileType) {
+      case QuestionFormat.txt:
+        questions = parseQuestionsFromTxt(content);
+        break;
+
+      case QuestionFormat.yaml:
+        questions = parseQuestionsFromYaml(content);
+        break;
     }
+
     _printTopics(questions);
+    print("Tot: ${questions.length}");
+
     return;
-
-    /*List<Question> questions = parseQuestions(content, 5);
-    for (Question q in questions) {
-      print(q.toYAML());
-    }
-
-    if (args.length >= 2 && args[1] == "-t") {
-      Map<String, int> topicSizes = getTopicSizes(questions);
-      for (String topic in topicSizes.keys) {
-        print("- $topic");
-      }
-    }*/
   });
 }
 
 void _printTopics(List<Question> questions) {
-  String res = "\n";
+  String res = "Topics:\n";
   int curr = 0;
   Map<String, int> topicSizes = getTopicSizes(questions);
 
@@ -268,5 +241,4 @@ void _printTopics(List<Question> questions) {
     curr += num;
   }
   print(res);
-  print(curr);
 }
