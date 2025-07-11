@@ -1,23 +1,38 @@
 # ROQuiz
 
-Applicazione mobile di ROQuiz, per esercitarsi con i quiz del corso Ricerca Operativa M. 
+App to practice Ricerca Operativa M exam quiz.
 
-### Demo
+## Roadmap
 
-### Esecuzione
-1. Scaricare l'[apk](https://github.com/mikyll/ROQuiz/releases/download/v1.5/roquiz-mobile.apk).
-2. Selezionare ```INSTALLA``` e ```INSTALLA COMUNQUE```.
+- [ ] todo
 
-### Roadmap
-Features da aggiungere e sviluppi futuri:
-- [ ]
+## Build
 
-### Compilazione APK
-- default: ```flutter build apk --split-per-abi```
-- obfuscated: ```flutter build apk --obfuscate --split-debug-info=flutter_application/debug```
+### APK
 
-### Built With
-Per l'implementazione ho utilizzato dell'app mobile ho utilizzato Flutter e come IDE Visual Studio Code (versione 1.63.2) + estensioni Flutter e Dart.
+```bash
+flutter build apk --release
+```
 
-versione Flutter: 3.0.5 (stable)<br/>
-versione SDK Dart: 2.17.6 (stable)
+Obfuscated:
+
+```bash
+flutter build apk --release --obfuscate
+```
+
+### Web
+
+```bash
+flutter build web --release --base-href /projects/roquiz/play/
+```
+
+## Built With Flutter
+
+`flutter --version`:
+
+```basg
+Flutter 3.32.5 • channel stable • https://github.com/flutter/flutter.git
+Framework • revision fcf2c11572 (2 weeks ago) • 2025-06-24 11:44:07 -0700
+Engine • revision dd93de6fb1 (2 weeks ago) • 2025-06-24 07:39:37 -0700
+Tools • Dart 3.8.1 • DevTools 2.45.1
+```
