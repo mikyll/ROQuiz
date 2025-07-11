@@ -43,7 +43,7 @@ List<Question> parseQuestionsFromTxt(String content) {
       // Check if there already are questions without topic
       if (topics.isEmpty && questions.isNotEmpty) {
         throw FormatException(
-          "Line ${iLine + 1}: topics error! A topic was found but there already are questions with no topic",
+          "Line ${iLine + 1}: topics error! A topic was found but there already are ${questions.length} questions with no topic",
         );
       }
 
