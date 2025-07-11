@@ -74,7 +74,7 @@ List<Question> parseQuestionsFromTxt(String content) {
       // Answer iAnswer is empty
       if (lines[iLine].isEmpty) {
         throw FormatException(
-          "Line ${iLine + 1}: empty answer ${String.fromCharCode(iAnswer + 65)}",
+          "Line ${iLine + 1}: empty answer '${String.fromCharCode(iAnswer + 65)}'",
         );
       }
 
@@ -104,7 +104,7 @@ List<Question> parseQuestionsFromTxt(String content) {
       }
       if (splitted[1].isEmpty) {
         throw FormatException(
-          "Line ${iLine + 1}: answer ${String.fromCharCode(iAnswer + 65)} is empty",
+          "Line ${iLine + 1}: answer '${String.fromCharCode(iAnswer + 65)}' is empty",
         );
       }
       answers.add(splitted[1]);
