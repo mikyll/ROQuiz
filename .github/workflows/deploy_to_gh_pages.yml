@@ -27,7 +27,7 @@ jobs:
         run: flutter pub get
 
       - name: Build for Web Platform
-        run: flutter build web --release --base-href /projects/roquiz/play/
+        run: flutter build web --release --base-href /ROQuiz/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
