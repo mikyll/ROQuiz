@@ -75,7 +75,7 @@
 
 ### Web
 
-Per ora è accessibile al mio sito web: [mikyll.github.io/projects/roquiz/play](https://mikyll.github.io/projects/roquiz/play/)
+Accessibile a [mikyll.github.io/ROQuiz/](https://mikyll.github.io/ROQuiz/)
 
 ## Disclaimer
 
