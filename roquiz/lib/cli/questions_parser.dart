@@ -86,9 +86,20 @@ List<Question> parseQuestionsFromTxt(String content) {
 
       // Try parsing answer iAnswer
       List<String> splitted = lines[iLine].split(". ");
-      if (splitted.length < 2) {
+      if (splitted[0].length != 1) {
         throw FormatException(
-          "Line ${iLine + 1}: answer ${String.fromCharCode(iAnswer + 65)} badly formatted",
+          "Line ${iLine + 1}: answer letter must be a single uppercase character be '${String.fromCharCode(iAnswer + 65)}'",
+        );
+      }
+      if ((splitted[0].codeUnitAt(0) - 65) != iAnswer) {
+        throw FormatException(
+          "Line ${iLine + 1}: answer letter must be '${String.fromCharCode(iAnswer + 65)}', but got '${splitted[0]}'",
+        );
+      }
+
+      if (splitted.length != 2) {
+        throw FormatException(
+          "Line ${iLine + 1}: answer '${String.fromCharCode(iAnswer + 65)}' badly formatted",
         );
       }
       if (splitted[1].isEmpty) {
