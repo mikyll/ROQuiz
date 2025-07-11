@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class QuestionRepository {
   static final DateTime CUSTOM_DATE = DateTime.parse("1999-01-01T00:00:00Z");
   static final DateTime DEFAULT_LAST_QUESTION_UPDATE =
-      DateTime.parse("2023-07-19T20:18:08Z");
+      DateTime.parse("2025-06-30T21:41:51Z");
   static const int DEFAULT_ANSWER_NUMBER = 5;
 
   DateTime lastQuestionUpdate = DEFAULT_LAST_QUESTION_UPDATE;
