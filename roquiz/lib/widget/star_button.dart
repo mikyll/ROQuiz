@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/style/palettes.dart';
 
 class StarButton extends StatefulWidget {
-  const StarButton({super.key, required this.size, required this.onMaxSize});
-
   final double size;
   final Function() onMaxSize;
+
+  const StarButton({super.key, required this.size, required this.onMaxSize});
 
   @override
   State<StatefulWidget> createState() => StarButtonState();
@@ -58,7 +58,7 @@ class StarButtonState extends State<StarButton> with TickerProviderStateMixin {
 
     _pulseFadeAnimation = Tween<double>(
       begin: 1,
-      end: 0.1,
+      end: 0.0,
     ).animate(_pulseController);
 
     // Setup grow on press animation
