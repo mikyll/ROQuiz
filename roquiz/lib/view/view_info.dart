@@ -1,15 +1,15 @@
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
-import 'package:roquiz/model/style/palettes.dart';
 import 'package:roquiz/model/style/theme_provider.dart';
+import 'package:roquiz/model/utils/navigation.dart';
+import 'package:roquiz/widget/star_button.dart';
 // import 'package:roquiz/cli/utils/navigation.dart';
 // import 'package:roquiz/model/palette.dart';
 // import 'package:roquiz/model/persistence/settings.dart';
-
-const DEFAULT_SIZE = 60.0;
 
 class ViewInfo extends StatefulWidget {
   final PackageInfo packageInfo;
@@ -21,51 +21,13 @@ class ViewInfo extends StatefulWidget {
 }
 
 class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
-  late final AnimationController _animationController;
-  late final Animation<double> _animation;
-  double _maxSize = 0.0;
-
   @override
   void initState() {
     super.initState();
-
-    FlutterView view = PlatformDispatcher.instance.views.first;
-    double physicalWidth = view.physicalSize.width;
-    double physicalHeight = view.physicalSize.height;
-
-    double devicePixelRatio = view.devicePixelRatio;
-    double screenWidth = physicalWidth / devicePixelRatio;
-    double screenHeight = physicalHeight / devicePixelRatio;
-
-    _maxSize = (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.8;
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-      value: DEFAULT_SIZE,
-    );
-
-    _animation = Tween<double>(begin: DEFAULT_SIZE, end: _maxSize).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.ease),
-    );
-
-    _animationController.reset();
-
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // openUrl("https://github.com/mikyll/ROQuiz");
-      }
-    });
-
-    // TODO: show star message
-    // prefs.getBool("showStarMessage");
   }
 
   @override
   Widget build(BuildContext context) {
-    final AnimatedStarTheme containerColors = Theme.of(
-      context,
-    ).extension<AnimatedStarTheme>()!;
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
 
     return Stack(
@@ -113,11 +75,33 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     ),
                   ),
                   const Spacer(flex: 1),
-                  Text(
-                    "Applicazione per esercitarsi con i quiz del corso Ricerca Operativa M.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
+                  // textAlign: TextAlign.center,
+                  //   style: TextStyle(fontSize: 18),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text:
+                              "Applicazione per esercitarsi con i quiz del corso ",
+                        ),
+                        TextSpan(
+                          text: "Ricerca Operativa M",
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              // launch(
+                              //   'https://docs.flutter.io/flutter/services/UrlLauncher-class.html',
+                              // );
+                            },
+                        ),
+                        TextSpan(text: "."),
+                      ],
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
+
                   Spacer(),
                   Expanded(
                     flex: 4,
@@ -281,66 +265,11 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: AnimatedBuilder(
-            animation: _animation,
-            builder: (context, _) {
-              return Container(
-                width: _animation.value,
-                height: _animation.value,
-                decoration: BoxDecoration(
-                  color: containerColors.backgroundColor,
-                  borderRadius: BorderRadius.circular(1000),
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(1000),
-                  onTapDown: (details) {
-                    _animationController.forward();
-                  },
-                  onTapUp: (details) {
-                    _animationController.reverse();
-                  },
-                  onTapCancel: () {
-                    _animationController.reverse();
-                  },
-                  child: Icon(
-                    Icons.star,
-                    color: containerColors.starColor,
-                    size: _animation.value * 0.9,
-                  ),
-                ),
-              );
+          floatingActionButton: StarButton(
+            size: 70.0,
+            onMaxSize: () {
+              openUrl("https://github.com/mikyll/ROQuiz");
             },
-          ),
-        ),
-        Positioned(
-          bottom: 100,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Text(
-                "Ti sfido a premermi",
-                style: TextStyle(
-                  fontSize: 24, // Adjust size based on your needs
-                  fontWeight: FontWeight.bold, // Comic text is often bold
-                  color: Colors.black, // Text color
-                  letterSpacing:
-                      1.5, // Slightly spaced letters for comic effect
-                  // shadows: [
-                  //   Shadow(
-                  //     offset: Offset(10, 10), // Creates a shadow for depth
-                  //     blurRadius: 4.0, // Slight blur for softer shadow
-                  //     color: Colors.grey, // Shadow color
-                  //   ),
-                  // ],
-                  decoration:
-                      TextDecoration.none, // Remove underlines or similar
-                ),
-              ),
-            ),
           ),
           // CircleAvatar(
           //   radius: 50,
