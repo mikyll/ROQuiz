@@ -75,7 +75,7 @@ class Themes {
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const AnimatedStarTheme(
+      const StarButtonTheme(
         backgroundColor: Color(0xff515b92),
         starColor: Color(0xffffeb3b),
       ),
@@ -176,7 +176,7 @@ class Themes {
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const AnimatedStarTheme(
+      const StarButtonTheme(
         backgroundColor: Color(0xffb7c4ff),
         starColor: Color(0xffb71c1c),
       ),
