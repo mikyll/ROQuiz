@@ -54,10 +54,20 @@ class _ViewQuizState extends State<ViewQuiz> {
   }
 
   void _calculateQuizGrade() {
+    if (_questionNumber <= 0) {
+      setState(() {
+        _quizGrade = 0;
+      });
+      return;
+    }
+
+    final correctAnswerRatio = _correctAnswers / _questionNumber;
+    final equivalentDefaultQuestions =
+        (correctAnswerRatio * Settings.DEFAULT_QUESTION_NUMBER).round();
+    final calculatedQuizGrade = equivalentDefaultQuestions * 2;
+
     setState(() {
-      _quizGrade = (_questionNumber > 0
-          ? (_correctAnswers / _questionNumber * 2.0).round()
-          : 0);
+      _quizGrade = calculatedQuizGrade;
     });
   }
 
