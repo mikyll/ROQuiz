@@ -76,6 +76,7 @@ class StarButtonState extends State<StarButton> with TickerProviderStateMixin {
 
     _pressGrowController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        _pressGrowController.reverse();
         widget.onMaxSize();
       }
     });
