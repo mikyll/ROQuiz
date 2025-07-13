@@ -5,7 +5,7 @@ import 'package:roquiz/model/license.dart';
 import 'package:roquiz/widget/licenses_widget.dart';
 
 class ViewLicenses extends StatelessWidget {
-  const ViewLicenses({Key? key}) : super(key: key);
+  const ViewLicenses({super.key});
 
   Future<List<License>> loadLicenses(BuildContext context) async {
     final bundle = DefaultAssetBundle.of(context);

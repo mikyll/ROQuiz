@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ConfirmationAlert extends StatelessWidget {
-  const ConfirmationAlert(
-      {Key? key,
-      this.onConfirm,
-      this.onCancel,
-      this.buttonConfirmText = "Conferma",
-      this.buttonCancelText = "Annulla",
-      required this.title,
-      required this.content})
-      : super(key: key);
+  const ConfirmationAlert({
+    super.key,
+    this.onConfirm,
+    this.onCancel,
+    this.buttonConfirmText = "Conferma",
+    this.buttonCancelText = "Annulla",
+    required this.title,
+    required this.content,
+  });
 
   static void showConfirmationDialog(
     BuildContext context,

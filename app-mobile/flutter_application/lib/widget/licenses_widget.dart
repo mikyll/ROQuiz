@@ -5,9 +5,9 @@ class LicensesWidget extends StatelessWidget {
   final List<License> licenses;
 
   const LicensesWidget({
-    Key? key,
+    super.key,
     required this.licenses,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => ListView.builder(

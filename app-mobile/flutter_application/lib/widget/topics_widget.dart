@@ -4,14 +4,14 @@ import 'package:roquiz/model/Themes.dart';
 
 class TopicsInfoWidget extends StatelessWidget {
   const TopicsInfoWidget({
-    Key? key,
+    super.key,
     this.onTap,
     this.textSize = 18.0,
     this.textWeight = FontWeight.normal,
     required this.text,
     required this.value,
     required this.color,
-  }) : super(key: key);
+  });
 
   final String text;
   final int value;

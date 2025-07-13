@@ -5,7 +5,7 @@ import 'package:roquiz/model/Contribution.dart';
 import 'package:roquiz/widget/credits_widget.dart';
 
 class ViewCredits extends StatelessWidget {
-  const ViewCredits({Key? key}) : super(key: key);
+  const ViewCredits({super.key});
 
   Future<List<Contribution>> loadCredits(BuildContext context) async {
     final bundle = DefaultAssetBundle.of(context);
