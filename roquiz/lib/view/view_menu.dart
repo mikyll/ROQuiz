@@ -23,7 +23,7 @@ class ViewMenuState extends State<ViewMenu> {
   final QuestionRepository _questionRepository = QuestionRepository();
   Map<String, bool> _selectedTopics = {};
 
-  int _numQuizQuestions = 20;
+  int _numQuizQuestions = 110;
   int _numSelectedQuestions = 0;
   int _timer = 0;
 

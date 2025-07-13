@@ -1,30 +1,74 @@
 import 'package:flutter/material.dart';
 
-class AnimatedStarTheme extends ThemeExtension<AnimatedStarTheme> {
-  const AnimatedStarTheme({
+class StarButtonTheme extends ThemeExtension<StarButtonTheme> {
+  final Color backgroundColor;
+  final Color starColor;
+
+  const StarButtonTheme({
     required this.backgroundColor,
     required this.starColor,
   });
 
-  final Color backgroundColor;
-  final Color starColor;
-
   @override
-  AnimatedStarTheme copyWith({Color? backgroundColor, Color? starColor}) {
-    return AnimatedStarTheme(
+  StarButtonTheme copyWith({Color? backgroundColor, Color? starColor}) {
+    return StarButtonTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       starColor: starColor ?? this.starColor,
     );
   }
 
   @override
-  AnimatedStarTheme lerp(AnimatedStarTheme? other, double t) {
-    if (other is! AnimatedStarTheme) {
+  StarButtonTheme lerp(StarButtonTheme? other, double t) {
+    if (other is! StarButtonTheme) {
       return this;
     }
-    return AnimatedStarTheme(
+    return StarButtonTheme(
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
       starColor: Color.lerp(starColor, other.starColor, t)!,
+    );
+  }
+}
+
+class QuestionCardTheme extends ThemeExtension<QuestionCardTheme> {
+  final Color backgroundColor;
+  final Color textColor;
+  final Color selectedTextColor;
+
+  const QuestionCardTheme({
+    required this.backgroundColor,
+    required this.textColor,
+    required this.selectedTextColor,
+  });
+
+  @override
+  ThemeExtension<QuestionCardTheme> copyWith({
+    Color? backgroundColor,
+    Color? textColor,
+    Color? selectedTextColor,
+  }) {
+    return QuestionCardTheme(
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      textColor: textColor ?? this.textColor,
+      selectedTextColor: selectedTextColor ?? this.selectedTextColor,
+    );
+  }
+
+  @override
+  ThemeExtension<QuestionCardTheme> lerp(
+    covariant ThemeExtension<QuestionCardTheme>? other,
+    double t,
+  ) {
+    if (other is! QuestionCardTheme) {
+      return this;
+    }
+    return QuestionCardTheme(
+      backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
+      textColor: Color.lerp(textColor, other.textColor, t)!,
+      selectedTextColor: Color.lerp(
+        selectedTextColor,
+        other.selectedTextColor,
+        t,
+      )!,
     );
   }
 }
