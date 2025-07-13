@@ -23,7 +23,8 @@ class QuestionRepository {
 
     // Init topics
     for (Question q in _questions) {
-      String topic = q.getTopic();
+      // Todo
+      String topic = q.topic!;
 
       if (!_topics.contains(topic)) {
         _topics.add(topic);
@@ -35,7 +36,8 @@ class QuestionRepository {
     List<String> topics = [];
 
     for (Question q in _questions) {
-      String topic = q.getTopic();
+      // Todo
+      String topic = q.topic!;
 
       if (!topics.contains(topic)) {
         topics.add(topic);
@@ -53,7 +55,8 @@ class QuestionRepository {
     }
 
     for (Question q in _questions) {
-      String topic = q.getTopic();
+      // Todo
+      String topic = q.topic!;
 
       groupedQuestions[topic]!.add(q);
     }
