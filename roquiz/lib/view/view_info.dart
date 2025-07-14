@@ -78,6 +78,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   // textAlign: TextAlign.center,
                   //   style: TextStyle(fontSize: 18),
                   RichText(
+                    textAlign: TextAlign.justify,
                     text: TextSpan(
                       children: [
                         TextSpan(
@@ -91,12 +92,30 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              // launch(
-                              //   'https://docs.flutter.io/flutter/services/UrlLauncher-class.html',
-                              // );
+                              openUrl(
+                                "https://www.unibo.it/it/studiare/insegnamenti-competenze-trasversali-moocs/insegnamenti/insegnamento/2022/467997",
+                              );
                             },
                         ),
-                        TextSpan(text: "."),
+                        TextSpan(text: ", dell'Università di Bologna.\n"),
+                        // TextSpan(
+                        //   text:
+                        //       "L'obiettivo di ROQuiz è fornire supporto per il ripasso della teoria. ",
+                        // ),
+                        // TextSpan(
+                        //   text:
+                        //       "Non è un'applicazione ufficiale e non sostituisce in alcun modo la preparazione della teoria dell'esame, per cui è necessario studiare. ",
+                        // ),
+                        TextSpan(
+                          text:
+                              "Gli sviluppatori non si assumono responsabilità di alcun tipo nel caso di errori nei quiz, né per usi impropri dell'applicazione. ",
+                        ),
+                        TextSpan(text: "Fatene buon uso e "),
+                        TextSpan(
+                          text: "buona fortuna",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(text: " con l'esame!"),
                       ],
                       style: TextStyle(fontSize: 18),
                     ),
