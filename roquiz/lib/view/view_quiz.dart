@@ -2,11 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
+import 'package:roquiz/model/style/theme_provider.dart';
+import 'package:roquiz/widget/question_card.dart';
+import 'package:roquiz/widget/question_card_selectable.dart';
 
 class ViewQuiz extends StatefulWidget {
+  final List<Question> quizPool;
+  final int questionNum;
+  final int timer;
+  final bool shuffleAnswers;
+
   const ViewQuiz({
     super.key,
     required this.quizPool,
@@ -15,11 +22,6 @@ class ViewQuiz extends StatefulWidget {
     required this.shuffleAnswers,
   });
 
-  final List<Question> quizPool;
-  final int questionNum;
-  final int timer;
-  final bool shuffleAnswers;
-
   @override
   State<StatefulWidget> createState() => _ViewQuizState();
 }
@@ -27,182 +29,110 @@ class ViewQuiz extends StatefulWidget {
 class _ViewQuizState extends State<ViewQuiz> {
   final ScrollController _scrollController = ScrollController();
 
-  Quiz _quiz = Quiz();
+  Timer? _timer;
+  int _timerCounter = -1;
+
+  late Quiz _quiz;
+  Question? _currentQuestion;
+  int _iQuestion = 0;
 
   bool _showTimer = true;
   bool _isQuizOver = false;
-
-  Question? _currentQuestion = null;
-  int _iQuestion = 0;
-
-  int _correctAnswers = 0;
-
-  String _currentQuestion = "";
-  List<String> _currentAnswers = [];
-
-  List<Answer> _userAnswers = [];
-  int _questionNumber = 0;
-
-  late Timer _timer;
-  int _timerCounter = -1;
 
   int _dragDirectionDX = 0;
 
   void _previousQuestion() {
     setState(() {
-      if (_qIndex > 0) _qIndex--;
+      if (_iQuestion > 0) {
+        _iQuestion--;
+      }
+      _currentQuestion = _quiz.questions[_iQuestion];
     });
   }
 
   void _nextQuestion() {
     setState(() {
-      if (_qIndex < _questionNumber - 1) _qIndex++;
-    });
-  }
-
-  void _loadQuestion() {
-    setState(() {
-      _currentQuestion = _quiz.questions[_qIndex].question;
-      _currentAnswers = _quiz.questions[_qIndex].answers;
-    });
-  }
-
-  void _setUserAnswer(int answer) {
-    setState(() {
-      _userAnswers[_qIndex] = _userAnswers[_qIndex] != Answer.values[answer]
-          ? Answer.values[answer]
-          : Answer.NONE;
-      if (Answer.values[answer] == _quiz.questions[_qIndex].correctAnswer) {}
-    });
-  }
-
-  int _getCorrectAnswers() {
-    int numCorrectAnswers = 0;
-
-    for (int i = 0; i < _questionNumber; i++) {
-      if (_userAnswers[i] == _quiz.questions[i].correctAnswer) {
-        numCorrectAnswers++;
+      if (_iQuestion < widget.questionNum - 1) {
+        _iQuestion++;
       }
-    }
-
-    return numCorrectAnswers;
-  }
-
-  void _endQuiz() {
-    setState(() {
-      _isQuizOver = true;
-      _timer.cancel();
+      _currentQuestion = _quiz.questions[_iQuestion];
     });
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_timerCounter > 0) {
-          _timerCounter--;
-        } else {
-          _endQuiz();
-        }
-      });
-    });
-  }
-
-  void _resetQuiz() {
-    setState(() {
-      if (widget.settings.maxQuestionPerTopic) {
-        _questionNumber = widget.questions.length;
-      } else {
-        _questionNumber = widget.settings.questionNumber;
-      }
-
-      _userAnswers = [];
-      for (int i = 0; i < _questionNumber; i++) {
-        _userAnswers.add(Answer.NONE);
-      }
-
-      _quiz.resetQuiz(
-        widget.questions,
-        widget.questions.length,
-        widget.settings.shuffleAnswers,
-      );
-
-      _qIndex = 0;
-      _correctAnswers = 0;
-      _isQuizOver = false;
-      _currentQuestion = _quiz.questions[_qIndex].question;
-      _currentAnswers = _quiz.questions[_qIndex].answers;
-
-      _timerCounter = widget.settings.timer * 60;
-    });
-    _startTimer();
-  }
-
-  Color _getTimerColor(ThemeProvider themeProvider) {
-    Color res = themeProvider.isDarkMode ? Colors.white : Colors.black;
-
-    if (_timerCounter < widget.settings.timer * 60 / 6) {
-      res = themeProvider.isDarkMode ? Colors.yellow : Colors.yellow[700]!;
-    }
-    if (_timerCounter < widget.settings.timer * 60 / 9) {
-      res = themeProvider.isDarkMode ? Colors.orange : Colors.orange[700]!;
-    }
-    if (_timerCounter < widget.settings.timer * 60 / 18) {
-      res = Colors.red;
-    }
-
-    return res;
   }
 
   void _startQuiz() {
     setState(() {
+      _quiz = Quiz(widget.quizPool, widget.questionNum, widget.shuffleAnswers);
+      _currentQuestion = _quiz.questions[0];
+
       _isQuizOver = false;
+      _startTimer(10); //widget.timer * 60);
     });
   }
 
   void _endQuiz() {
     setState(() {
       _isQuizOver = true;
+      _timer?.cancel();
     });
+  }
+
+  void _startTimer(int startTime) {
+    setState(() {
+      _timerCounter = startTime;
+    });
+
+    _timer?.cancel();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_timerCounter > 0) {
+        setState(() {
+          _timerCounter--;
+        });
+      } else {
+        _endQuiz();
+      }
+    });
+  }
+
+  String _getTimeString() {
+    String minutes = "${_timerCounter ~/ 60}".padLeft(2, '0');
+    String seconds = "${_timerCounter % 60}".padLeft(2, '0');
+    return "$minutes:$seconds";
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
   @override
   void initState() {
-    super.initState();
+    _startQuiz();
 
-    _quiz.resetQuiz(
-      widget.questions,
-      widget.questions.length,
-      widget.settings.shuffleAnswers,
-    );
-    _resetQuiz();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     return PopScope(
-      canPop: !widget.settings.confirmAlerts,
-      onPopInvoked: (didPop) {
+      canPop: true, //!widget.settings.confirmAlerts,
+      onPopInvokedWithResult: (didPop, Object? result) {
         if (didPop) {
           return;
         }
 
-        ConfirmationAlert.showConfirmationDialog(
-          context,
-          "Conferma",
-          "Sei sicuro di voler uscire dal quiz?",
-          onConfirm: () {
-            _endQuiz(); // end quiz and stop timer
-            Navigator.pop(context);
-          },
-          onCancel: () {},
-        );
+        // ConfirmationAlert.showConfirmationDialog(
+        //   context,
+        //   "Conferma",
+        //   "Sei sicuro di voler uscire dal quiz?",
+        //   onConfirm: () {
+        //     _endQuiz(); // end quiz and stop timer
+        //     Navigator.pop(context);
+        //   },
+        //   onCancel: () {},
+        // );
       },
       child: GestureDetector(
         onTapDown: (details) {},
@@ -217,7 +147,7 @@ class _ViewQuizState extends State<ViewQuiz> {
           _dragDirectionDX > 0
               ? _nextQuestion()
               : (_dragDirectionDX < 0 ? _previousQuestion() : null);
-          _loadQuestion();
+          // _loadQuestion();
           _dragDirectionDX = 0;
         },
         child: Scaffold(
@@ -227,22 +157,27 @@ class _ViewQuizState extends State<ViewQuiz> {
             automaticallyImplyLeading: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
+              style: ButtonStyle(
+                iconColor: WidgetStatePropertyAll(Colors.white),
+                overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
+                backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+              ),
               onPressed: () {
-                if (widget.settings.confirmAlerts) {
-                  ConfirmationAlert.showConfirmationDialog(
-                    context,
-                    "Conferma",
-                    "Sei sicuro di voler uscire dal quiz?",
-                    onConfirm: () {
-                      _endQuiz(); // end quiz and stop timer
-                      Navigator.pop(context);
-                    },
-                    onCancel: () {},
-                  );
-                } else {
-                  _endQuiz();
-                  Navigator.pop(context);
-                }
+                // if (widget.settings.confirmAlerts) {
+                //   ConfirmationAlert.showConfirmationDialog(
+                //     context,
+                //     "Conferma",
+                //     "Sei sicuro di voler uscire dal quiz?",
+                //     onConfirm: () {
+                //       _endQuiz(); // end quiz and stop timer
+                //       Navigator.pop(context);
+                //     },
+                //     onCancel: () {},
+                //   );
+                // } else {
+                _endQuiz();
+                Navigator.pop(context);
+                // }
               },
             ),
           ),
@@ -261,7 +196,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                   child: Row(
                     children: [
                       Text(
-                        "D${_qIndex + 1}/$_questionNumber",
+                        "D${_iQuestion + 1}/${widget.questionNum}",
                         maxLines: 1,
                         style: const TextStyle(
                           fontSize: 24,
@@ -274,26 +209,26 @@ class _ViewQuizState extends State<ViewQuiz> {
                             ? null
                             : () {
                                 setState(() {
-                                  _showTime = !_showTime;
+                                  _showTimer = !_showTimer;
                                 });
                               },
                         child: Opacity(
-                          opacity: _showTime || _isQuizOver ? 1.0 : 0.0,
+                          opacity: _showTimer || _isQuizOver ? 1.0 : 0.0,
                           child: RichText(
                             maxLines: 1,
                             text: TextSpan(
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: themeProvider.isDarkMode
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: Colors.black,
+                                // color: themeProvider.isDarkMode
+                                //     ? Colors.white
+                                //     : Colors.black,
                               ),
                               children: [
                                 const TextSpan(text: 'Time: '),
                                 TextSpan(
-                                  text:
-                                      "${_timerCounter ~/ 60}:${(_timerCounter % 60).toInt() < 10 ? "0${(_timerCounter % 60).toInt()}" : (_timerCounter % 60).toInt()}",
+                                  text: _getTimeString(),
                                   style: TextStyle(
                                     fontSize: 24,
                                     // color: _getTimerColor(themeProvider),
@@ -313,66 +248,54 @@ class _ViewQuizState extends State<ViewQuiz> {
                     primary: false,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: QuestionWidget(
-                        questionText: _currentQuestion,
-                        answers: _currentAnswers,
-                        highlightAnswer: _isQuizOver,
-                        userAnswer: _userAnswers[_qIndex],
-                        correctAnswer: widget.questions[_qIndex].correctAnswer,
-                        onTapAnswer: !_isQuizOver
-                            ? (int index) => _setUserAnswer(index)
-                            : null,
-                        backgroundQuizColor: Colors.cyan.withOpacity(0.1),
-                        defaultAnswerColor: Colors.indigo.withOpacity(0.2),
-                        selectedAnswerColor: Colors.indigo.withOpacity(0.5),
-                        correctAnswerColor: const Color.fromARGB(
-                          255,
-                          42,
-                          255,
-                          49,
-                        ).withOpacity(0.5),
-                        correctNotSelectedAnswerColor: const Color.fromARGB(
-                          255,
-                          27,
-                          94,
-                          32,
-                        ).withOpacity(0.8),
-                        wrongAnswerColor: Colors.red.withOpacity(0.8),
-                      ),
+                      child: _isQuizOver
+                          ? QuestionCard(
+                              question: _currentQuestion!,
+                              selectedAnswer: _quiz.selectedAnswers[_iQuestion],
+                            )
+                          : QuestionCardSelectable(
+                              question: _currentQuestion!,
+                              selectedAnswer: _quiz.selectedAnswers[_iQuestion],
+                              onAnswerSelected: (int? iAnswer) {
+                                setState(() {
+                                  _quiz.selectedAnswers[_iQuestion] = iAnswer;
+                                });
+                              },
+                            ),
                     ),
                   ),
                 ),
                 // Results card
-                _isQuizOver
-                    ? Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).disabledColor,
-                                  spreadRadius: 0.5,
-                                  blurRadius: 2,
-                                  offset: const Offset(2, 2),
-                                ),
-                              ],
+                if (_isQuizOver)
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).disabledColor,
+                              spreadRadius: 0.5,
+                              blurRadius: 2,
+                              offset: const Offset(2, 2),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text(
-                                "Risposte corrette: $_correctAnswers/$_questionNumber\n"
-                                "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
-                                "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]",
-                                maxLines: 4,
-                              ),
-                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "todo",
+                            // "Risposte corrette: $_correctAnswers/$_questionNumber\n"
+                            // "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
+                            // "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]",
+                            maxLines: 4,
                           ),
                         ),
-                      )
-                    : const Text(""),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -388,63 +311,31 @@ class _ViewQuizState extends State<ViewQuiz> {
               child: Row(
                 children: [
                   // Show previous question
-                  IconButtonLongPressWidget(
-                    lightPalette: MyThemes.lightIconButtonPalette,
-                    darkPalette: MyThemes.darkIconButtonPalette,
-                    onUpdate: _qIndex > 0
-                        ? () {
-                            _previousQuestion();
-                            _loadQuestion();
-                          }
-                        : null,
-                    width: 50.0,
-                    height: 50.0,
-                    icon: Icons.arrow_back_ios_rounded,
+                  IconButton(
+                    onPressed: () {
+                      _previousQuestion();
+                    },
+                    icon: Icon(Icons.arrow_back_ios_rounded),
                     iconSize: 35,
                   ),
                   const SizedBox(width: 20),
                   // Show next question
-                  IconButtonLongPressWidget(
-                    lightPalette: MyThemes.lightIconButtonPalette,
-                    darkPalette: MyThemes.darkIconButtonPalette,
-                    onUpdate: _qIndex < _questionNumber - 1
-                        ? () {
-                            _nextQuestion();
-                            _loadQuestion();
-                          }
-                        : null,
-                    width: 50.0,
-                    height: 50.0,
-                    icon: Icons.arrow_forward_ios_rounded,
+                  IconButton(
+                    onPressed: () {
+                      _nextQuestion();
+                    },
+                    icon: Icon(Icons.arrow_forward_ios_rounded),
                     iconSize: 35,
                   ),
+                  const SizedBox(width: 20),
                   const Spacer(flex: 5),
                   // End/Restart quiz
                   ElevatedButton(
                     onPressed: () {
                       if (_isQuizOver) {
-                        _resetQuiz();
+                        _startQuiz();
                       } else {
-                        String unanswered = "";
-                        for (int i = 0; i < _userAnswers.length; i++) {
-                          if (_userAnswers[i] == Answer.NONE) {
-                            unanswered += unanswered.isNotEmpty ? ", " : "";
-                            unanswered += "${i + 1}";
-                          }
-                        }
-                        if (unanswered.isNotEmpty) {
-                          ConfirmationAlert.showConfirmationDialog(
-                            context,
-                            "Terminare il quiz?",
-                            "Non hai risposto alle seguenti domande: $unanswered",
-                            onConfirm: () {
-                              _endQuiz();
-                            },
-                            onCancel: () {},
-                          );
-                        } else {
-                          _endQuiz();
-                        }
+                        _endQuiz();
                       }
                     },
                     child: Container(
