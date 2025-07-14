@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
-class QuestionCard extends StatelessWidget {
+class QuestionCardSelectable extends StatelessWidget {
   final Question question;
   final int? selectedAnswer;
+  final ValueChanged<int?> onAnswerSelected;
 
   // Constructors(or separate files?):
   // - quiz
   // - questions list
   // - questions editor
-  const QuestionCard({super.key, required this.question, this.selectedAnswer});
+  const QuestionCardSelectable({
+    super.key,
+    required this.question,
+    this.selectedAnswer,
+    required this.onAnswerSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +48,13 @@ class QuestionCard extends StatelessWidget {
                 child: _AnswerTile(
                   answer: answer,
                   isSelected: selectedAnswer != null && index == selectedAnswer,
-                  isCorrect: index == question.correctAnswer,
+                  onTap: () {
+                    if (selectedAnswer == index) {
+                      onAnswerSelected(null);
+                    } else {
+                      onAnswerSelected(index);
+                    }
+                  },
                 ),
               );
             }),
@@ -56,40 +68,29 @@ class QuestionCard extends StatelessWidget {
 class _AnswerTile extends StatelessWidget {
   final String answer;
   final bool isSelected;
-  final bool isCorrect;
+  final VoidCallback onTap;
 
   const _AnswerTile({
     required this.answer,
     required this.isSelected,
-    required this.isCorrect,
+    required this.onTap,
   });
-
-  Color? _getColor(bool isSelected, bool isCorrect) {
-    Color? color;
-
-    if (isSelected && !isCorrect) {
-      color = Colors.red.withAlpha(200);
-    }
-    if (isSelected && isCorrect) {
-      color = Colors.green.shade400.withAlpha(200);
-    }
-    if (!isSelected && isCorrect) {
-      color = Colors.green.shade900.withAlpha(200);
-    }
-
-    return color;
-  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
         decoration: BoxDecoration(
-          color: _getColor(isSelected, isCorrect),
+          color: isSelected
+              ? Theme.of(context).primaryColor.withAlpha(50)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: _getColor(isSelected, isCorrect) ?? Colors.grey.shade300,
+            color: isSelected
+                ? Theme.of(context).primaryColor.withAlpha(50)
+                : Colors.grey.shade300,
           ),
         ),
         padding: const EdgeInsets.all(12),
@@ -100,7 +101,14 @@ class _AnswerTile extends StatelessWidget {
               color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
             ),
             const SizedBox(width: 12),
-            Expanded(child: Text(answer)),
+            Expanded(
+              child: Text(
+                answer,
+                style: TextStyle(
+                  color: isSelected ? Theme.of(context).primaryColor : null,
+                ),
+              ),
+            ),
           ],
         ),
       ),
