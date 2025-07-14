@@ -6,6 +6,26 @@ import 'package:yaml/yaml.dart';
 
 enum QuestionFormat { txt, yaml }
 
+QuestionFormat? inferQuestionFormat(String content) {
+  List<Question> questions;
+  QuestionFormat? questionFormat;
+
+  try {
+    questions = parseQuestionsFromTxt(content);
+    if (questions.isNotEmpty) {
+      questionFormat = QuestionFormat.txt;
+    }
+  } catch (_) {}
+  try {
+    questions = parseQuestionsFromYaml(content);
+    if (questions.isNotEmpty) {
+      questionFormat = QuestionFormat.yaml;
+    }
+  } catch (_) {}
+
+  return questionFormat;
+}
+
 List<Question> parseQuestionsFromTxt(String content) {
   List<Question> questions = [];
   List<String> topics = [];
@@ -97,7 +117,7 @@ List<Question> parseQuestionsFromTxt(String content) {
         );
       }
 
-      if (splitted.length != 2) {
+      if (splitted.length < 2) {
         throw FormatException(
           "Line ${iLine + 1}: answer '${String.fromCharCode(iAnswer + 65)}' badly formatted",
         );
@@ -107,7 +127,9 @@ List<Question> parseQuestionsFromTxt(String content) {
           "Line ${iLine + 1}: answer '${String.fromCharCode(iAnswer + 65)}' is empty",
         );
       }
-      answers.add(splitted[1]);
+
+      String answerBody = lines[iLine].substring(2).trim();
+      answers.add(answerBody);
     }
     if (correctAnswer == null) {
       throw FormatException(
@@ -194,7 +216,7 @@ Map<String, int> getTopicSizes(List<Question> questions) {
 }
 
 void main(List<String> args) async {
-  QuestionFormat fileType = QuestionFormat.yaml;
+  QuestionFormat? fileType;
   String filePath = "";
 
   for (int i = 0; i < args.length; i++) {
@@ -221,6 +243,9 @@ void main(List<String> args) async {
   }
 
   file.readAsString().then((content) {
+    // If fileType not provided, try inferring it
+    fileType ??= inferQuestionFormat(content);
+
     List<Question> questions;
 
     switch (fileType) {
@@ -231,6 +256,9 @@ void main(List<String> args) async {
       case QuestionFormat.yaml:
         questions = parseQuestionsFromYaml(content);
         break;
+
+      default:
+        throw Exception("Couldn't infer file type");
     }
 
     _printTopics(questions);
