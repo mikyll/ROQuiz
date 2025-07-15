@@ -3,6 +3,7 @@ import 'package:roquiz/model/style/palettes.dart';
 
 class Themes {
   static final themeLight = ThemeData(
+    useMaterial3: true,
     colorSchemeSeed: Colors.indigo[400],
     brightness: Brightness.light,
     appBarTheme: const AppBarTheme(
@@ -60,13 +61,6 @@ class Themes {
       checkColor: WidgetStatePropertyAll(
         const Color.fromARGB(255, 255, 255, 255),
       ),
-      fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
-        if (states.contains(WidgetState.selected)) {
-          return const Color.fromARGB(255, 77, 86, 175);
-        } else {
-          return const Color.fromARGB(255, 227, 225, 236);
-        }
-      }),
       side: BorderSide(width: 1.3, color: Colors.grey[700]!),
     ),
     switchTheme: SwitchThemeData(
@@ -101,6 +95,7 @@ class Themes {
   );
 
   static final themeDark = ThemeData(
+    useMaterial3: true,
     colorSchemeSeed: Colors.indigo[100],
     brightness: Brightness.dark,
     appBarTheme: const AppBarTheme(
@@ -155,15 +150,11 @@ class Themes {
       ),
     ),
     checkboxTheme: CheckboxThemeData(
-      checkColor: WidgetStatePropertyAll(
-        const Color.fromARGB(255, 12, 40, 120),
-      ),
-      fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
-        if (states.contains(WidgetState.selected)) {
-          return const Color.fromARGB(255, 182, 196, 255);
-        } else {
-          return const Color.fromARGB(100, 182, 196, 255);
+      checkColor: WidgetStateProperty.resolveWith<Color>((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return const Color.fromARGB(255, 150, 150, 150); // Disabled color
         }
+        return const Color.fromARGB(255, 12, 40, 120); // Enabled color
       }),
       side: const BorderSide(color: Color.fromARGB(100, 182, 196, 255)),
     ),
