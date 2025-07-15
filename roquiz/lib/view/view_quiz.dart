@@ -61,7 +61,11 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   void _startQuiz() {
     setState(() {
-      _quiz = Quiz(widget.quizPool, widget.questionNum, widget.shuffleAnswers);
+      _quiz = Quiz(
+        questions: widget.quizPool,
+        questionNum: widget.questionNum,
+        shuffleAnswers: widget.shuffleAnswers,
+      );
       _currentQuestion = _quiz.questions[0];
 
       _isQuizOver = false;
@@ -115,7 +119,6 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     return PopScope(
       canPop: true, //!widget.settings.confirmAlerts,
       onPopInvokedWithResult: (didPop, Object? result) {
