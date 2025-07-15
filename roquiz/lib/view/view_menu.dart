@@ -9,6 +9,7 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/style/theme_provider.dart';
 import 'package:roquiz/view/view_info.dart';
 import 'package:roquiz/view/view_quiz.dart';
+import 'package:roquiz/view/view_topics.dart';
 
 class ViewMenu extends StatefulWidget {
   final PackageInfo packageInfo;
@@ -23,9 +24,8 @@ class ViewMenuState extends State<ViewMenu> {
   final QuestionRepository _questionRepository = QuestionRepository();
   Map<String, bool> _selectedTopics = {};
 
-  int _numQuizQuestions = 110;
-  int _numSelectedQuestions = 0;
-  int _timer = 0;
+  int _numQuizQuestions = 16;
+  int _timer = 18;
 
   int _calculateNumSelected() {
     int num = 0;
@@ -41,10 +41,11 @@ class ViewMenuState extends State<ViewMenu> {
     return num;
   }
 
+  // Get the question list
   List<Question> _getQuizPool() {
+    List<Question> questions = [];
     Map<String, List<Question>> groupedQuestions = _questionRepository
         .getGroupedQuestions();
-    List<Question> questions = [];
 
     for (String topic in _selectedTopics.keys) {
       if (_selectedTopics[topic]! && groupedQuestions[topic] != null) {
@@ -73,20 +74,9 @@ class ViewMenuState extends State<ViewMenu> {
     print(curr);
   }
 
-  void _updateQuizValues() {
-    setState(() {
-      // Num Quiz Questions
-      // Tot Num Questions
-      _numSelectedQuestions = _calculateNumSelected();
-      // Timer from settings
-    });
-    _test();
-  }
-
   void _initQuestionRepository() {
     _questionRepository.loadFromAsset().then((_) {
       setState(() {
-        _numSelectedQuestions = _questionRepository.getQuestions().length;
         _selectedTopics = {
           for (var value in _questionRepository.getGroupedQuestions().keys)
             value: true,
@@ -97,13 +87,12 @@ class ViewMenuState extends State<ViewMenu> {
 
   @override
   void initState() {
-    super.initState();
-
     // From settings
     // TODO: set quiz pool
     // TODO: set quiz timer
-
     _initQuestionRepository();
+
+    super.initState();
   }
 
   @override
@@ -111,180 +100,224 @@ class ViewMenuState extends State<ViewMenu> {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
 
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: ConstrainedBox(
-            // todo
-            constraints: BoxConstraints(maxWidth: 500.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Spacer(flex: 2),
-                // Settings.SHOW_APP_LOGO
-                //     ? Column(
-                //         children: [
-                //           SvgPicture.asset(
-                //             'assets/icons/logo.svg',
-                //             alignment: Alignment.center,
-                //             fit: BoxFit.fitWidth,
-                //             width: 200,
-                //             colorFilter: ColorFilter.mode(
-                //               Colors.indigo[300]!,
-                //               BlendMode.srcIn,
-                //             ),
-                //           ),
-                //           const Text(
-                //             Settings.APP_TITLE,
-                //             style: TextStyle(
-                //               fontSize: 40,
-                //               fontWeight: FontWeight.bold,
-                //             ),
-                //           ),
-                //         ],
-                //       )
-                //     :
-                Text(
-                  "ROQuiz",
-                  maxLines: 1,
-                  style: TextStyle(fontSize: 54, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "v${widget.packageInfo.version}${widget.packageInfo.buildNumber.isNotEmpty ? "+${widget.packageInfo.buildNumber}" : ""}",
-                  maxLines: 1,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: ConstrainedBox(
+              // todo
+              constraints: BoxConstraints(maxWidth: 500.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 2),
+                  // Settings.SHOW_APP_LOGO
+                  //     ? Column(
+                  //         children: [
+                  //           SvgPicture.asset(
+                  //             'assets/icons/logo.svg',
+                  //             alignment: Alignment.center,
+                  //             fit: BoxFit.fitWidth,
+                  //             width: 200,
+                  //             colorFilter: ColorFilter.mode(
+                  //               Colors.indigo[300]!,
+                  //               BlendMode.srcIn,
+                  //             ),
+                  //           ),
+                  //           const Text(
+                  //             Settings.APP_TITLE,
+                  //             style: TextStyle(
+                  //               fontSize: 40,
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       )
+                  //     :
+                  Text(
+                    "ROQuiz",
+                    maxLines: 1,
+                    style: TextStyle(fontSize: 54, fontWeight: FontWeight.bold),
                   ),
-                ),
-                const Spacer(flex: 1),
-                Switch(
-                  value: themeProvider.themeMode == ThemeMode.dark,
-                  onChanged: (isDarkMode) {
-                    themeProvider.toggleTheme();
-                  },
-                ),
+                  Text(
+                    "v${widget.packageInfo.version}",
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Spacer(flex: 1),
+                  Switch(
+                    value: themeProvider.themeMode == ThemeMode.dark,
+                    onChanged: (isDarkMode) {
+                      themeProvider.toggleTheme();
+                    },
+                  ),
 
-                // BUTTONS
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ViewQuiz(
-                                quizPool: _getQuizPool(),
-                                questionNum: _numQuizQuestions,
-                                timer: _timer,
-                                // TODO
-                                shuffleAnswers: false,
-                              );
-                            },
+                  // BUTTONS
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ViewQuiz(
+                                  quizPool: _getQuizPool(),
+                                  questionNum: _numQuizQuestions,
+                                  timer: _timer,
+                                  // TODO
+                                  shuffleAnswers: false,
+                                );
+                              },
+                            ),
+                          );
+
+                          // TODO
+
+                          // widget.value.isDarkMode;
+                          //     widget.value.toggleTheme(widget.value.themeMode == ThemeMode.light);
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            "Avvia Quiz",
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        );
-
-                        // TODO
-
-                        // widget.value.isDarkMode;
-                        //     widget.value.toggleTheme(widget.value.themeMode == ThemeMode.light);
-                      },
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ViewTopics(
+                                        quizPool: _numQuizQuestions,
+                                        questionsPerTopic: _questionRepository
+                                            .getGroupedQuestions(),
+                                        selectedTopics: _selectedTopics,
+                                        toggleTopic: (Map<String, bool> v) {
+                                          setState(() {
+                                            _selectedTopics = v;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10.0),
+                                child: Text(
+                                  "Argomenti",
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) {
+                                //       return ViewTopics(
+                                //         questionRepository: _questionRepository,
+                                //         selectedTopics: _selectedTopics,
+                                //         numQuizQuestions: _numQuizQuestions,
+                                //         updateQuizValues: _updateQuizValues,
+                                //       );
+                                //     },
+                                //   ),
+                                // );
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10.0),
+                                child: Text(
+                                  "Domande",
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    direction: Axis.horizontal,
+                    spacing: 5.0,
+                    children: [
+                      const Icon(Icons.format_list_numbered_rounded),
+                      Text(
+                        "Domande: $_numQuizQuestions su ${_calculateNumSelected()}",
+                      ),
+                      const SizedBox(width: 20),
+                      const Icon(Icons.timer_rounded),
+                      Text("Tempo: $_timer min"),
+                    ],
+                  ),
+                  false
+                      ? Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            "error",
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        )
+                      : const SizedBox(height: 50),
+                  InkWell(
+                    onTap: () {
+                      // openUrl("https://github.com/mikyll/ROQuiz");
+                    },
+                    child: Container(
+                      color: Colors.indigo.withOpacity(0.35),
+                      alignment: Alignment.center,
                       child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "Avvia",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub ⭐\n\nBasta un click qui!",
+                          maxLines: 6,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) {
-                        //       return ViewTopics(
-                        //         questionRepository: _questionRepository,
-                        //         selectedTopics: _selectedTopics,
-                        //         numQuizQuestions: _numQuizQuestions,
-                        //         updateQuizValues: _updateQuizValues,
-                        //       );
-                        //     },
-                        //   ),
-                        // );
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text(
-                          "Argomenti",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Wrap(
-                  direction: Axis.horizontal,
-                  spacing: 5.0,
-                  children: [
-                    const Icon(Icons.format_list_numbered_rounded),
-                    Text(
-                      "Domande: $_numQuizQuestions su $_numSelectedQuestions",
-                    ),
-                    const SizedBox(width: 20),
-                    const Icon(Icons.timer_rounded),
-                    Text("Tempo: $_timer min"),
-                  ],
-                ),
-                false
-                    ? Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Text(
-                          "error",
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      )
-                    : const SizedBox(height: 50),
-                InkWell(
-                  onTap: () {
-                    // openUrl("https://github.com/mikyll/ROQuiz");
-                  },
-                  child: Container(
-                    color: Colors.indigo.withOpacity(0.35),
-                    alignment: Alignment.center,
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub ⭐\n\nBasta un click qui!",
-                        maxLines: 6,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
-                ),
-                const Spacer(flex: 5),
-              ],
+                  const Spacer(flex: 5),
+                ],
+              ),
             ),
           ),
         ),
