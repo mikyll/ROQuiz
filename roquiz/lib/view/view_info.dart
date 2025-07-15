@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/style/theme_provider.dart';
 import 'package:roquiz/model/utils/navigation.dart';
+import 'package:roquiz/view/view_licenses.dart';
 import 'package:roquiz/widget/star_button.dart';
 // import 'package:roquiz/cli/utils/navigation.dart';
 // import 'package:roquiz/model/palette.dart';
@@ -83,7 +84,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                       children: [
                         TextSpan(
                           text:
-                              "Applicazione per esercitarsi con i quiz del corso ",
+                              "ROQuiz è un'applicazione per esercitarsi con i quiz del corso ",
                         ),
                         TextSpan(
                           text: "Ricerca Operativa M",
@@ -222,12 +223,14 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                               ),
                             ),
                             InkWell(
-                              // onTap: () {
-                              //   Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //           builder: (context) => ViewLicenses()));
-                              // },
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ViewLicenses(),
+                                  ),
+                                );
+                              },
                               child: const Text(
                                 "Visualizza le licenze",
                                 textAlign: TextAlign.center,
