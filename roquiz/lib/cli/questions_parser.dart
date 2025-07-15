@@ -139,11 +139,11 @@ List<Question> parseQuestionsFromTxt(String content) {
 
     try {
       Question question = Question(
-        id,
-        body,
-        currentTopic,
-        answers,
-        correctAnswer,
+        id: id,
+        body: body,
+        topic: currentTopic,
+        answers: answers,
+        correctAnswer: correctAnswer,
       );
       questions.add(question);
     } catch (e) {
@@ -154,7 +154,6 @@ List<Question> parseQuestionsFromTxt(String content) {
   return questions;
 }
 
-// TODO: refactor with new Question class
 List<Question> parseQuestionsFromYaml(String content) {
   List<Question> questions = [];
 
@@ -174,11 +173,11 @@ List<Question> parseQuestionsFromYaml(String content) {
         final correctAnswer = question["correct_answer"];
 
         Question q = Question(
-          iQ,
-          body,
-          topic,
-          List<String>.from(answers),
-          correctAnswer,
+          id: iQ,
+          body: body,
+          topic: topic,
+          answers: List<String>.from(answers),
+          correctAnswer: correctAnswer,
         );
 
         iQ++;
@@ -213,6 +212,20 @@ Map<String, int> getTopicSizes(List<Question> questions) {
   }
 
   return topicSizes;
+}
+
+void _printTopics(List<Question> questions) {
+  String res = "Topics:\n";
+  int curr = 0;
+  Map<String, int> topicSizes = getTopicSizes(questions);
+
+  for (String topic in topicSizes.keys) {
+    int num = topicSizes[topic] ?? 0;
+
+    res += "- $topic: $num (+$curr)\n";
+    curr += num;
+  }
+  print(res);
 }
 
 void main(List<String> args) async {
@@ -266,18 +279,4 @@ void main(List<String> args) async {
 
     return;
   });
-}
-
-void _printTopics(List<Question> questions) {
-  String res = "Topics:\n";
-  int curr = 0;
-  Map<String, int> topicSizes = getTopicSizes(questions);
-
-  for (String topic in topicSizes.keys) {
-    int num = topicSizes[topic] ?? 0;
-
-    res += "- $topic: $num (+$curr)\n";
-    curr += num;
-  }
-  print(res);
 }

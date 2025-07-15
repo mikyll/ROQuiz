@@ -1,13 +1,18 @@
 class Question {
-  static const maxAnswers = 6;
-
   int id;
   String body;
   String? topic;
   List<String> answers;
   int correctAnswer;
+  String? explaination;
 
-  Question(this.id, this.body, this.topic, this.answers, this.correctAnswer) {
+  Question({
+    required this.id,
+    required this.body,
+    this.topic,
+    required this.answers,
+    required this.correctAnswer,
+  }) {
     if (id <= 0) {
       throw FormatException("Invalid question ID: $id");
     }
@@ -44,7 +49,13 @@ class Question {
   }
 
   Question.noTopic(id, body, answers, correctAnswer)
-    : this(id, body, null, answers, correctAnswer);
+    : this(
+        id: id,
+        body: body,
+        topic: null,
+        answers: answers,
+        correctAnswer: correctAnswer,
+      );
 
   @override
   String toString() {

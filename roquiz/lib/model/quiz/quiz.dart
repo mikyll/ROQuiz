@@ -4,10 +4,14 @@ class Quiz {
   List<Question> questions = [];
   List<int?> selectedAnswers = [];
 
-  Quiz(List<Question> selectedQuestions, int questionNum, bool shuffleAnswers) {
-    selectedQuestions.shuffle();
+  Quiz({
+    required this.questions,
+    required int questionNum,
+    required bool shuffleAnswers,
+  }) {
+    questions.shuffle();
     for (int i = 0; i < questionNum; i++) {
-      questions.add(selectedQuestions[i]);
+      questions.add(questions[i]);
       selectedAnswers.add(null);
     }
   }
