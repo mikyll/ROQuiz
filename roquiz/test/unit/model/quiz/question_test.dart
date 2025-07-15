@@ -5,11 +5,13 @@ import 'package:test/test.dart';
 void main() {
   group('Values', () {
     test('Correct question', () {
-      Question question = Question(1, "What is 2+2?", "Addition", [
-        "3",
-        "4",
-        "5",
-      ], 1);
+      Question question = Question(
+        id: 1,
+        body: "What is 2+2?",
+        topic: "Addition",
+        answers: ["3", "4", "5"],
+        correctAnswer: 1,
+      );
 
       expect(question.id, 1);
       expect(question.answers.length, 3);
@@ -48,7 +50,13 @@ B
     });
 
     test('Correct question with no topic', () {
-      Question question = Question(1, "What is 2+2?", null, ["3", "4", "5"], 1);
+      Question question = Question(
+        id: 1,
+        body: "What is 2+2?",
+        topic: null,
+        answers: ["3", "4", "5"],
+        correctAnswer: 1,
+      );
 
       expect(question.id, 1);
       expect(question.answers.length, 3);
@@ -85,7 +93,13 @@ B
     });
 
     test('Second constructor', () {
-      Question question = Question(1, "What is 2+2?", null, ["3", "4", "5"], 1);
+      Question question = Question(
+        id: 1,
+        body: "What is 2+2?",
+        topic: null,
+        answers: ["3", "4", "5"],
+        correctAnswer: 1,
+      );
 
       expect(question.id, 1);
       expect(question.answers.length, 3);
