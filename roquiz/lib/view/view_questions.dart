@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,8 +72,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
               controller: _scrollController,
               itemCount: _questions.length,
               itemBuilder: (_, index) {
-                Widget questionWidget = QuestionCard(
-                  mode: QuestionCardMode.base,
+                Widget questionWidget = QuestionCard.base(
                   question: _questions[index],
                   hideCorrectAnswer: !_showAnswers,
                 );
@@ -140,7 +140,19 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 waitDuration: Duration(milliseconds: 500),
                 message: "Modifica",
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ViewQuestionsEdit(
+                            questions: _questions,
+                            showAnswers: _showAnswers,
+                          );
+                        },
+                      ),
+                    );
+                  },
                   icon: Icon(Icons.edit),
                   iconSize: 45,
                 ),

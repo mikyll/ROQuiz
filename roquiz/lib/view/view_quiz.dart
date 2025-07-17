@@ -6,7 +6,6 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
 import 'package:roquiz/model/style/theme_provider.dart';
 import 'package:roquiz/widget/question_card.dart';
-import 'package:roquiz/widget/question_card_selectable.dart';
 
 class ViewQuiz extends StatefulWidget {
   final List<Question> quizPool;
@@ -66,6 +65,7 @@ class _ViewQuizState extends State<ViewQuiz> {
         questionNum: widget.questionNum,
         shuffleAnswers: widget.shuffleAnswers,
       );
+      _iQuestion = 0;
       _currentQuestion = _quiz.questions[0];
 
       _isQuizOver = false;
@@ -252,11 +252,11 @@ class _ViewQuizState extends State<ViewQuiz> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: _isQuizOver
-                          ? QuestionCard(
+                          ? QuestionCard.quizOver(
                               question: _currentQuestion!,
                               selectedAnswer: _quiz.selectedAnswers[_iQuestion],
                             )
-                          : QuestionCardSelectable(
+                          : QuestionCard.quiz(
                               question: _currentQuestion!,
                               selectedAnswer: _quiz.selectedAnswers[_iQuestion],
                               onAnswerSelected: (int? iAnswer) {
