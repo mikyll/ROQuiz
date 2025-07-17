@@ -29,23 +29,61 @@ class QuestionCard extends StatelessWidget {
     this.hideCorrectAnswer = false,
   });
 
-  // const QuestionCard.quiz({
-  //   super.key,
-  //   required this.question,
-  //   this.selectedAnswer,
-  // });
+  // Present in view_questions
+  const QuestionCard.base({
+    super.key,
+    required this.question,
+    this.hideCorrectAnswer = false,
+  }) : mode = QuestionCardMode.base,
+       selectedAnswer = null,
+       onAnswerSelected = null;
 
-  // const QuestionCard.quizOver({
-  //   super.key,
-  //   required this.question,
-  //   this.selectedAnswer,
-  // });
+  // Present in view_quiz (when the quiz is still running)
+  const QuestionCard.quiz({
+    super.key,
+    required this.question,
+    required this.onAnswerSelected,
+    this.selectedAnswer,
+  }) : mode = QuestionCardMode.quiz,
+       hideCorrectAnswer = false;
 
-  // const QuestionCard.base({
-  //   super.key,
-  //   required this.question,
-  //   this.selectedAnswer,
-  // });
+  // Present in view_quiz (when the quiz is over)
+  const QuestionCard.quizOver({
+    super.key,
+    required this.question,
+    this.selectedAnswer,
+  }) : mode = QuestionCardMode.quizOver,
+       onAnswerSelected = null,
+       hideCorrectAnswer = false;
+
+  // Present in view_edit, in edit mode
+  const QuestionCard.hidden({
+    super.key,
+    required this.question,
+    this.selectedAnswer,
+  }) : mode = QuestionCardMode.hidden,
+       onAnswerSelected = null,
+       hideCorrectAnswer = false;
+
+  // Present in view_edit, in edit mode
+  const QuestionCard.edit({
+    super.key,
+    required this.question,
+    this.selectedAnswer,
+  }) : mode = QuestionCardMode.quizOver,
+       onAnswerSelected = null,
+       hideCorrectAnswer = false;
+
+  Color _getBorderColor() {
+    if (mode == QuestionCardMode.quizOver) {
+      if (selectedAnswer != null && selectedAnswer == question.correctAnswer) {
+        return Colors.green;
+      } else {
+        return Colors.red;
+      }
+    }
+    return Colors.grey;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +92,7 @@ class QuestionCard extends StatelessWidget {
         Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: BorderSide(width: 2.0, color: Colors.grey),
+            side: BorderSide(width: 2.0, color: _getBorderColor()),
           ),
           elevation: 10,
           margin: const EdgeInsets.all(16),
@@ -105,6 +143,15 @@ class QuestionCard extends StatelessWidget {
                           selectedAnswer != null && index == selectedAnswer,
                       isCorrect:
                           !hideCorrectAnswer && index == question.correctAnswer,
+                      onTap: mode == QuestionCardMode.quiz
+                          ? () {
+                              if (selectedAnswer == index) {
+                                onAnswerSelected!(null);
+                              } else {
+                                onAnswerSelected!(index);
+                              }
+                            }
+                          : null,
                     ),
                   );
                 }),
@@ -148,52 +195,106 @@ class _AnswerTile extends StatelessWidget {
     this.onTap,
   });
 
-  Color? _getColor(bool isSelected, bool isCorrect) {
-    Color? color;
-
+  Color _getColor(BuildContext context) {
     switch (mode) {
-      case QuestionCardMode.base:
-        // TODO
-        break;
+      case QuestionCardMode.hidden:
+        return Colors.grey.shade300;
 
       case QuestionCardMode.quiz:
-        // TODO
+        if (isSelected) {
+          return Theme.of(context).primaryColor.withAlpha(50);
+        }
         break;
-      default:
+
+      case QuestionCardMode.quizOver:
+        if (isSelected && !isCorrect) {
+          return Colors.red.withAlpha(200);
+        }
+        if (isSelected && isCorrect) {
+          return Colors.green.shade400.withAlpha(200);
+        }
+        if (!isSelected && isCorrect) {
+          return Colors.green.shade900.withAlpha(200);
+        }
+        break;
+
+      case QuestionCardMode.base:
+      case QuestionCardMode.edit:
+        if (isCorrect) {
+          return Colors.green.shade400.withAlpha(200);
+        }
     }
 
-    if (isSelected && !isCorrect) {
-      color = Colors.red.withAlpha(200);
-    }
-    if (isSelected && isCorrect) {
-      color = Colors.green.shade400.withAlpha(200);
-    }
-    if (!isSelected && isCorrect) {
-      color = Colors.green.shade900.withAlpha(200);
+    return Colors.transparent;
+  }
+
+  Color _getBorderColor(BuildContext context) {
+    switch (mode) {
+      case QuestionCardMode.hidden:
+        return Colors.grey.shade300;
+
+      case QuestionCardMode.quiz:
+        if (isSelected) {
+          return Theme.of(context).primaryColor.withAlpha(50);
+        }
+        break;
+
+      case QuestionCardMode.quizOver:
+        if (isSelected && !isCorrect) {
+          return Colors.red.withAlpha(200);
+        }
+        if (isSelected && isCorrect) {
+          return Colors.green.shade400.withAlpha(200);
+        }
+        if (!isSelected && isCorrect) {
+          return Colors.green.shade900.withAlpha(200);
+        }
+        break;
+
+      case QuestionCardMode.base:
+      case QuestionCardMode.edit:
+        if (isCorrect) {
+          return Colors.green.shade400.withAlpha(200);
+        }
     }
 
-    return color;
+    return Colors.grey.shade300;
+  }
+
+  Color _getRadioButtonColor(BuildContext context) {
+    if (mode == QuestionCardMode.quizOver) {
+      return Colors.grey.withAlpha(150);
+    }
+    if (isSelected) {
+      return Theme.of(context).primaryColor;
+    }
+    return Colors.grey;
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
         decoration: BoxDecoration(
-          color: _getColor(isSelected, isCorrect),
+          color: _getColor(context),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: _getColor(isSelected, isCorrect) ?? Colors.grey.shade300,
-          ),
+          border: Border.all(color: _getBorderColor(context)),
         ),
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            Icon(
-              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
-            ),
+            if ([
+              QuestionCardMode.quiz,
+              QuestionCardMode.quizOver,
+            ].contains(mode))
+              Icon(
+                isSelected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_off,
+                color: _getRadioButtonColor(context),
+              ),
             const SizedBox(width: 12),
             Expanded(child: Text(answer)),
           ],
