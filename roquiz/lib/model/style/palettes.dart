@@ -1,52 +1,77 @@
 import 'package:flutter/material.dart';
 
-class StarButtonTheme extends ThemeExtension<StarButtonTheme> {
+class BackButtonPalette extends ThemeExtension<BackButtonPalette> {
+  // final Color iconColor;
+  // final Color overlayColor;
+  // final Color backgroundColor;
+  // final double iconSize;
+
+  @override
+  ThemeExtension<BackButtonPalette> copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
+
+  @override
+  ThemeExtension<BackButtonPalette> lerp(
+    covariant ThemeExtension<BackButtonPalette>? other,
+    double t,
+  ) {
+    // TODO: implement lerp
+    throw UnimplementedError();
+  }
+}
+
+// TODO: small button on top of card
+//class QuestionCardButton
+
+class StarButtonPalette extends ThemeExtension<StarButtonPalette> {
   final Color backgroundColor;
   final Color starColor;
 
-  const StarButtonTheme({
+  const StarButtonPalette({
     required this.backgroundColor,
     required this.starColor,
   });
 
   @override
-  StarButtonTheme copyWith({Color? backgroundColor, Color? starColor}) {
-    return StarButtonTheme(
+  StarButtonPalette copyWith({Color? backgroundColor, Color? starColor}) {
+    return StarButtonPalette(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       starColor: starColor ?? this.starColor,
     );
   }
 
   @override
-  StarButtonTheme lerp(StarButtonTheme? other, double t) {
-    if (other is! StarButtonTheme) {
+  StarButtonPalette lerp(StarButtonPalette? other, double t) {
+    if (other is! StarButtonPalette) {
       return this;
     }
-    return StarButtonTheme(
+    return StarButtonPalette(
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
       starColor: Color.lerp(starColor, other.starColor, t)!,
     );
   }
 }
 
-class QuestionCardTheme extends ThemeExtension<QuestionCardTheme> {
+class QuestionCardPalette extends ThemeExtension<QuestionCardPalette> {
   final Color backgroundColor;
   final Color textColor;
   final Color selectedTextColor;
 
-  const QuestionCardTheme({
+  const QuestionCardPalette({
     required this.backgroundColor,
     required this.textColor,
     required this.selectedTextColor,
   });
 
   @override
-  ThemeExtension<QuestionCardTheme> copyWith({
+  ThemeExtension<QuestionCardPalette> copyWith({
     Color? backgroundColor,
     Color? textColor,
     Color? selectedTextColor,
   }) {
-    return QuestionCardTheme(
+    return QuestionCardPalette(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       textColor: textColor ?? this.textColor,
       selectedTextColor: selectedTextColor ?? this.selectedTextColor,
@@ -54,14 +79,14 @@ class QuestionCardTheme extends ThemeExtension<QuestionCardTheme> {
   }
 
   @override
-  ThemeExtension<QuestionCardTheme> lerp(
-    covariant ThemeExtension<QuestionCardTheme>? other,
+  ThemeExtension<QuestionCardPalette> lerp(
+    covariant ThemeExtension<QuestionCardPalette>? other,
     double t,
   ) {
-    if (other is! QuestionCardTheme) {
+    if (other is! QuestionCardPalette) {
       return this;
     }
-    return QuestionCardTheme(
+    return QuestionCardPalette(
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
       textColor: Color.lerp(textColor, other.textColor, t)!,
       selectedTextColor: Color.lerp(
@@ -73,8 +98,8 @@ class QuestionCardTheme extends ThemeExtension<QuestionCardTheme> {
   }
 }
 
-class SearchBarTheme extends ThemeExtension<SearchBarTheme> {
-  const SearchBarTheme({
+class CustomSearchBarPalette extends ThemeExtension<CustomSearchBarPalette> {
+  const CustomSearchBarPalette({
     required this.lensIconColor,
     required this.lensIconOpenColor,
     required this.lensIconOverlayColor,
@@ -93,7 +118,7 @@ class SearchBarTheme extends ThemeExtension<SearchBarTheme> {
   final Color crossIconColor;
 
   @override
-  SearchBarTheme copyWith({
+  CustomSearchBarPalette copyWith({
     Color? lensIconColor,
     Color? lensIconOpenColor,
     Color? lensIconOverlayColor,
@@ -102,7 +127,7 @@ class SearchBarTheme extends ThemeExtension<SearchBarTheme> {
     Color? labelTextColor,
     Color? crossIconColor,
   }) {
-    return SearchBarTheme(
+    return CustomSearchBarPalette(
       lensIconColor: lensIconColor ?? this.lensIconColor,
       lensIconOpenColor: lensIconOpenColor ?? this.lensIconOpenColor,
       lensIconOverlayColor: lensIconOverlayColor ?? this.lensIconOverlayColor,
@@ -114,11 +139,11 @@ class SearchBarTheme extends ThemeExtension<SearchBarTheme> {
   }
 
   @override
-  SearchBarTheme lerp(SearchBarTheme? other, double t) {
-    if (other is! SearchBarTheme) {
+  CustomSearchBarPalette lerp(CustomSearchBarPalette? other, double t) {
+    if (other is! CustomSearchBarPalette) {
       return this;
     }
-    return SearchBarTheme(
+    return CustomSearchBarPalette(
       lensIconColor: Color.lerp(lensIconColor, other.lensIconColor, t)!,
       lensIconOpenColor: Color.lerp(
         lensIconOpenColor,
@@ -134,88 +159,6 @@ class SearchBarTheme extends ThemeExtension<SearchBarTheme> {
       textColor: Color.lerp(textColor, other.textColor, t)!,
       labelTextColor: Color.lerp(labelTextColor, other.labelTextColor, t)!,
       crossIconColor: Color.lerp(crossIconColor, other.crossIconColor, t)!,
-    );
-  }
-}
-
-class QuestionWidgetTheme extends ThemeExtension<QuestionWidgetTheme> {
-  const QuestionWidgetTheme({
-    required this.defaultAnswerColor,
-    required this.selectedAnswerColor,
-    required this.correctAnswerColor,
-    required this.correctNotSelectedAnswerColor,
-    required this.wrongAnswerColor,
-    required this.backgroundQuizColor,
-    required this.textColor,
-  });
-
-  final Color defaultAnswerColor;
-  final Color selectedAnswerColor;
-  final Color correctAnswerColor;
-  final Color correctNotSelectedAnswerColor;
-  final Color wrongAnswerColor;
-  final Color backgroundQuizColor;
-  final Color textColor;
-
-  @override
-  QuestionWidgetTheme copyWith({
-    Color? defaultAnswerColor,
-    Color? selectedAnswerColor,
-    Color? correctAnswerColor,
-    Color? correctNotSelectedAnswerColor,
-    Color? wrongAnswerColor,
-    Color? backgroundQuizColor,
-    Color? textColor,
-  }) {
-    return QuestionWidgetTheme(
-      defaultAnswerColor: defaultAnswerColor ?? this.defaultAnswerColor,
-      selectedAnswerColor: selectedAnswerColor ?? this.selectedAnswerColor,
-      correctAnswerColor: correctAnswerColor ?? this.correctAnswerColor,
-      correctNotSelectedAnswerColor:
-          correctNotSelectedAnswerColor ?? this.correctNotSelectedAnswerColor,
-      wrongAnswerColor: wrongAnswerColor ?? this.wrongAnswerColor,
-      backgroundQuizColor: backgroundQuizColor ?? this.backgroundQuizColor,
-      textColor: textColor ?? this.textColor,
-    );
-  }
-
-  @override
-  QuestionWidgetTheme lerp(QuestionWidgetTheme? other, double t) {
-    if (other is! QuestionWidgetTheme) {
-      return this;
-    }
-    return QuestionWidgetTheme(
-      defaultAnswerColor: Color.lerp(
-        defaultAnswerColor,
-        other.defaultAnswerColor,
-        t,
-      )!,
-      selectedAnswerColor: Color.lerp(
-        selectedAnswerColor,
-        other.selectedAnswerColor,
-        t,
-      )!,
-      correctAnswerColor: Color.lerp(
-        correctAnswerColor,
-        other.correctAnswerColor,
-        t,
-      )!,
-      correctNotSelectedAnswerColor: Color.lerp(
-        correctNotSelectedAnswerColor,
-        other.correctNotSelectedAnswerColor,
-        t,
-      )!,
-      wrongAnswerColor: Color.lerp(
-        wrongAnswerColor,
-        other.wrongAnswerColor,
-        t,
-      )!,
-      backgroundQuizColor: Color.lerp(
-        backgroundQuizColor,
-        other.backgroundQuizColor,
-        t,
-      )!,
-      textColor: Color.lerp(textColor, other.textColor, t)!,
     );
   }
 }
