@@ -88,7 +88,7 @@ class _ViewQuizState extends State<ViewQuiz> {
     _timer?.cancel();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_timerCounter > 0) {
+      if (_timerCounter > 1) {
         setState(() {
           _timerCounter--;
         });
@@ -99,22 +99,24 @@ class _ViewQuizState extends State<ViewQuiz> {
   }
 
   String _getTimeString() {
+    String hours = "${_timerCounter ~/ 3600}".padLeft(2, '0');
     String minutes = "${_timerCounter ~/ 60}".padLeft(2, '0');
     String seconds = "${_timerCounter % 60}".padLeft(2, '0');
-    return "$minutes:$seconds";
+    return "$hours:$minutes:$seconds";
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+
     super.dispose();
   }
 
   @override
   void initState() {
-    _startQuiz();
-
     super.initState();
+
+    _startQuiz();
   }
 
   @override
@@ -185,121 +187,128 @@ class _ViewQuizState extends State<ViewQuiz> {
             ),
           ),
           body: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    left: 10.0,
-                    right: 10.0,
-                    bottom: 20.0,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        "D${_iQuestion + 1}/${widget.questionNum}",
-                        maxLines: 1,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 800.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10.0,
+                        left: 10.0,
+                        right: 10.0,
+                        bottom: 20.0,
                       ),
-                      const Spacer(flex: 1),
-                      InkWell(
-                        onTap: _isQuizOver
-                            ? null
-                            : () {
-                                setState(() {
-                                  _showTimer = !_showTimer;
-                                });
-                              },
-                        child: Opacity(
-                          opacity: _showTimer || _isQuizOver ? 1.0 : 0.0,
-                          child: RichText(
+                      child: Row(
+                        children: [
+                          Text(
+                            "D${_iQuestion + 1}/${widget.questionNum}",
                             maxLines: 1,
-                            text: TextSpan(
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                // color: themeProvider.isDarkMode
-                                //     ? Colors.white
-                                //     : Colors.black,
-                              ),
-                              children: [
-                                const TextSpan(text: 'Time: '),
-                                TextSpan(
-                                  text: _getTimeString(),
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Spacer(flex: 1),
+                          InkWell(
+                            onTap: _isQuizOver
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _showTimer = !_showTimer;
+                                    });
+                                  },
+                            child: Opacity(
+                              opacity: _showTimer || _isQuizOver ? 1.0 : 0.0,
+                              child: RichText(
+                                maxLines: 1,
+                                text: TextSpan(
                                   style: TextStyle(
                                     fontSize: 24,
-                                    // color: _getTimerColor(themeProvider),
+                                    fontWeight: FontWeight.bold,
+                                    // color: themeProvider.isDarkMode
+                                    //     ? Colors.white
+                                    //     : Colors.black,
                                   ),
+                                  children: [
+                                    const TextSpan(text: 'Time: '),
+                                    TextSpan(
+                                      text: _getTimeString(),
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        // color: _getTimerColor(themeProvider),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        primary: false,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: _isQuizOver
+                              ? QuestionCard.quizOver(
+                                  question: _currentQuestion!,
+                                  selectedAnswer:
+                                      _quiz.selectedAnswers[_iQuestion],
+                                )
+                              : QuestionCard.quiz(
+                                  question: _currentQuestion!,
+                                  selectedAnswer:
+                                      _quiz.selectedAnswers[_iQuestion],
+                                  onAnswerSelected: (int? iAnswer) {
+                                    setState(() {
+                                      _quiz.selectedAnswers[_iQuestion] =
+                                          iAnswer;
+                                    });
+                                  },
+                                ),
+                        ),
+                      ),
+                    ),
+                    // Results card
+                    if (_isQuizOver)
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).disabledColor,
+                                  spreadRadius: 0.5,
+                                  blurRadius: 2,
+                                  offset: const Offset(2, 2),
                                 ),
                               ],
                             ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                "todo",
+                                // "Risposte corrette: $_correctAnswers/$_questionNumber\n"
+                                // "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
+                                // "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]",
+                                maxLines: 4,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    primary: false,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: _isQuizOver
-                          ? QuestionCard.quizOver(
-                              question: _currentQuestion!,
-                              selectedAnswer: _quiz.selectedAnswers[_iQuestion],
-                            )
-                          : QuestionCard.quiz(
-                              question: _currentQuestion!,
-                              selectedAnswer: _quiz.selectedAnswers[_iQuestion],
-                              onAnswerSelected: (int? iAnswer) {
-                                setState(() {
-                                  _quiz.selectedAnswers[_iQuestion] = iAnswer;
-                                });
-                              },
-                            ),
-                    ),
-                  ),
-                ),
-                // Results card
-                if (_isQuizOver)
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).disabledColor,
-                              spreadRadius: 0.5,
-                              blurRadius: 2,
-                              offset: const Offset(2, 2),
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "todo",
-                            // "Risposte corrette: $_correctAnswers/$_questionNumber\n"
-                            // "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
-                            // "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]",
-                            maxLines: 4,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+              ),
             ),
           ),
           bottomNavigationBar: Container(
