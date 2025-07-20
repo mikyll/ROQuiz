@@ -69,20 +69,11 @@ class Themes {
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const StarButtonTheme(
+      const StarButtonPalette(
         backgroundColor: Color(0xff515b92),
         starColor: Color(0xffffeb3b),
       ),
-      const QuestionWidgetTheme(
-        defaultAnswerColor: Color(0x333f51b5),
-        selectedAnswerColor: Color(0x7f3f51b5),
-        correctAnswerColor: Color(0x7f2aff31),
-        correctNotSelectedAnswerColor: Color(0xcc1b5e20),
-        wrongAnswerColor: Color(0xccff1100),
-        backgroundQuizColor: Color(0x1900bbd4),
-        textColor: Color(0xff000000),
-      ),
-      const SearchBarTheme(
+      const CustomSearchBarPalette(
         lensIconColor: Color(0xffffffff),
         lensIconOpenColor: Color(0xff9e9e9e),
         lensIconOverlayColor: Color(0x7f5b63b5),
@@ -112,6 +103,7 @@ class Themes {
       style: ButtonStyle(
         iconColor: WidgetStatePropertyAll(FOREGROUND_COLOR_DARK),
         backgroundColor: WidgetStatePropertyAll(BACKGROUND_COLOR_DARK),
+        //backgroundColor: WidgetStatePropertyAll(BACKGROUND_COLOR_DARK),
         splashFactory: InkSplash.splashFactory,
         overlayColor: WidgetStatePropertyAll(OVERLAY_COLOR_DARK),
       ),
@@ -167,20 +159,11 @@ class Themes {
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const StarButtonTheme(
+      const StarButtonPalette(
         backgroundColor: Color(0xffb7c4ff),
         starColor: Color(0xffb71c1c),
       ),
-      const QuestionWidgetTheme(
-        defaultAnswerColor: Color(0x333f51b5),
-        selectedAnswerColor: Color(0x7f3f51b5),
-        correctAnswerColor: Color(0x7f2aff31),
-        correctNotSelectedAnswerColor: Color(0xcc1b5e20),
-        wrongAnswerColor: Color(0xccff1100),
-        backgroundQuizColor: Color(0x1900bbd4),
-        textColor: Color(0xffffffff),
-      ),
-      const SearchBarTheme(
+      const CustomSearchBarPalette(
         lensIconColor: Color(0xffffffff),
         lensIconOpenColor: Color(0xff9e9e9e),
         lensIconOverlayColor: Color(0x7fb7c4ff),
