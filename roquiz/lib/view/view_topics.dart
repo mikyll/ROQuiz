@@ -71,11 +71,11 @@ class ViewTopicsState extends State<ViewTopics> {
 
   @override
   void initState() {
+    super.initState();
+
     setState(() {
       _selectedTopics = widget.selectedTopics;
     });
-
-    super.initState();
   }
 
   @override
@@ -103,81 +103,86 @@ class ViewTopicsState extends State<ViewTopics> {
           ),
         ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Quiz pool: ${widget.quizPool}\nSelected: ${_selectedQuestions().length}",
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 500.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Quiz pool: ${widget.quizPool}\nSelected: ${_selectedQuestions().length}",
+                    ),
+                    // TopicsInfoWidget(
+                    //   text: "Domande Totali: ",
+                    //   value: widget.qRepo.questions.length,
+                    //   color: Colors.indigo.withOpacity(0.35),
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => ViewQuestions(
+                    //           title:
+                    //               "Lista domande (${widget.qRepo.questions.length})",
+                    //           questions: widget.qRepo.questions,
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
+                    // TopicsInfoWidget(
+                    //   text: "Pool Corrente: ",
+                    //   textWeight: FontWeight.bold,
+                    //   value: _currentQuizPool,
+                    //   color: Colors.indigo.withOpacity(0.35),
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => ViewQuestions(
+                    //           title:
+                    //               "Pool corrente (${_getPoolFromSelected().length})",
+                    //           questions: _getPoolFromSelected(),
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
+                    // TopicsInfoWidget(
+                    //   text: "Domande per Quiz: ",
+                    //   value: widget.settings.maxQuestionPerTopic
+                    //       ? _currentQuizPool
+                    //       : widget.settings.questionNumber,
+                    //   color: Colors.indigo.withOpacity(0.35),
+                    // ),
+                    const SizedBox(height: 25),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: widget.questionsPerTopic.length,
+                        itemBuilder: (_, index) {
+                          String topic = _selectedTopics.keys.elementAt(index);
+                          return _TopicTile(
+                            topic: topic,
+                            isSelected: _selectedTopics[topic]!,
+                            onTap: _isDisabled(topic)
+                                ? (value) {
+                                    setState(() {
+                                      _selectedTopics[topic] = value ?? true;
+                                      widget.toggleTopic(_selectedTopics);
+                                    });
+                                  }
+                                : null,
+                            questionNum:
+                                widget.questionsPerTopic[topic]?.length ?? -1,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                // TopicsInfoWidget(
-                //   text: "Domande Totali: ",
-                //   value: widget.qRepo.questions.length,
-                //   color: Colors.indigo.withOpacity(0.35),
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => ViewQuestions(
-                //           title:
-                //               "Lista domande (${widget.qRepo.questions.length})",
-                //           questions: widget.qRepo.questions,
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // ),
-                // TopicsInfoWidget(
-                //   text: "Pool Corrente: ",
-                //   textWeight: FontWeight.bold,
-                //   value: _currentQuizPool,
-                //   color: Colors.indigo.withOpacity(0.35),
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => ViewQuestions(
-                //           title:
-                //               "Pool corrente (${_getPoolFromSelected().length})",
-                //           questions: _getPoolFromSelected(),
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // ),
-                // TopicsInfoWidget(
-                //   text: "Domande per Quiz: ",
-                //   value: widget.settings.maxQuestionPerTopic
-                //       ? _currentQuizPool
-                //       : widget.settings.questionNumber,
-                //   color: Colors.indigo.withOpacity(0.35),
-                // ),
-                const SizedBox(height: 25),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: widget.questionsPerTopic.length,
-                    itemBuilder: (_, index) {
-                      String topic = _selectedTopics.keys.elementAt(index);
-                      return _TopicTile(
-                        topic: topic,
-                        isSelected: _selectedTopics[topic]!,
-                        onTap: _isDisabled(topic)
-                            ? (value) {
-                                setState(() {
-                                  _selectedTopics[topic] = value ?? true;
-                                  widget.toggleTopic(_selectedTopics);
-                                });
-                              }
-                            : null,
-                        questionNum:
-                            widget.questionsPerTopic[topic]?.length ?? -1,
-                      );
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
