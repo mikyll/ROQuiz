@@ -9,12 +9,15 @@ enum QuestionCardMode {
   edit,
 }
 
-class QuestionCard extends StatelessWidget {
+class QuestionCard extends StatefulWidget {
   final QuestionCardMode mode;
   final Question question;
   final int? selectedAnswer;
   final ValueChanged<int?>? onAnswerSelected;
   final bool hideCorrectAnswer;
+  final bool isSelected;
+  final ValueChanged<bool>? onSelected;
+  final bool tapToSelect;
 
   // Constructors(or separate files?):
   // - quiz
@@ -27,6 +30,9 @@ class QuestionCard extends StatelessWidget {
     this.selectedAnswer,
     this.onAnswerSelected,
     this.hideCorrectAnswer = false,
+    this.isSelected = false,
+    this.onSelected,
+    this.tapToSelect = false,
   });
 
   // Present in view_questions
@@ -36,7 +42,10 @@ class QuestionCard extends StatelessWidget {
     this.hideCorrectAnswer = false,
   }) : mode = QuestionCardMode.base,
        selectedAnswer = null,
-       onAnswerSelected = null;
+       onAnswerSelected = null,
+       isSelected = false,
+       onSelected = null,
+       tapToSelect = false;
 
   // Present in view_quiz (when the quiz is still running)
   const QuestionCard.quiz({
@@ -45,7 +54,10 @@ class QuestionCard extends StatelessWidget {
     required this.onAnswerSelected,
     this.selectedAnswer,
   }) : mode = QuestionCardMode.quiz,
-       hideCorrectAnswer = false;
+       hideCorrectAnswer = false,
+       isSelected = false,
+       onSelected = null,
+       tapToSelect = false;
 
   // Present in view_quiz (when the quiz is over)
   const QuestionCard.quizOver({
@@ -54,7 +66,10 @@ class QuestionCard extends StatelessWidget {
     this.selectedAnswer,
   }) : mode = QuestionCardMode.quizOver,
        onAnswerSelected = null,
-       hideCorrectAnswer = false;
+       hideCorrectAnswer = false,
+       isSelected = false,
+       onSelected = null,
+       tapToSelect = false;
 
   // Present in view_edit, in edit mode
   const QuestionCard.hidden({
@@ -63,26 +78,65 @@ class QuestionCard extends StatelessWidget {
     this.selectedAnswer,
   }) : mode = QuestionCardMode.hidden,
        onAnswerSelected = null,
-       hideCorrectAnswer = false;
+       hideCorrectAnswer = false,
+       isSelected = false,
+       onSelected = null,
+       tapToSelect = false;
 
   // Present in view_edit, in edit mode
   const QuestionCard.edit({
     super.key,
     required this.question,
+    required this.onSelected,
     this.selectedAnswer,
-  }) : mode = QuestionCardMode.quizOver,
+    this.isSelected = false,
+    this.tapToSelect = false,
+  }) : mode = QuestionCardMode.edit,
        onAnswerSelected = null,
        hideCorrectAnswer = false;
 
-  Color _getBorderColor() {
-    if (mode == QuestionCardMode.quizOver) {
-      if (selectedAnswer != null && selectedAnswer == question.correctAnswer) {
-        return Colors.green;
-      } else {
-        return Colors.red;
-      }
+  @override
+  State<StatefulWidget> createState() => QuestionCardState();
+}
+
+class QuestionCardState extends State<QuestionCard> {
+  late bool _isSelected;
+
+  Color _getBorderColor(BuildContext context) {
+    switch (widget.mode) {
+      case QuestionCardMode.quizOver:
+        if (widget.selectedAnswer != null &&
+            widget.selectedAnswer == widget.question.correctAnswer) {
+          return Colors.green;
+        } else {
+          return Colors.red;
+        }
+      case QuestionCardMode.edit:
+        if (_isSelected) {
+          return Theme.of(context).primaryColor.withAlpha(50);
+        }
+      default:
     }
     return Colors.grey;
+  }
+
+  Color? _getFillColor(BuildContext context) {
+    switch (widget.mode) {
+      case QuestionCardMode.edit:
+        if (_isSelected) {
+          return const Color.fromARGB(255, 64, 152, 241).withAlpha(50);
+        }
+      default:
+        return null;
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    _isSelected = widget.isSelected;
+
+    super.initState();
   }
 
   @override
@@ -92,9 +146,10 @@ class QuestionCard extends StatelessWidget {
         Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: BorderSide(width: 2.0, color: _getBorderColor()),
+            side: BorderSide(width: 2.0, color: _getBorderColor(context)),
           ),
-          elevation: 10,
+          color: _getFillColor(context),
+          // elevation: 10,
           margin: const EdgeInsets.all(16),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -109,11 +164,11 @@ class QuestionCard extends StatelessWidget {
                       QuestionCardMode.base,
                       QuestionCardMode.hidden,
                       QuestionCardMode.edit,
-                    ].contains(mode))
+                    ].contains(widget.mode))
                       Padding(
                         padding: const EdgeInsets.only(right: 10.0),
                         child: Text(
-                          "Q${question.id}.",
+                          "Q${widget.question.id}.",
                           style: Theme.of(context).textTheme.headlineSmall!
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -122,7 +177,7 @@ class QuestionCard extends StatelessWidget {
                     // Question text
                     Expanded(
                       child: Text(
-                        question.body,
+                        widget.question.body,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ),
@@ -130,25 +185,27 @@ class QuestionCard extends StatelessWidget {
                   ],
                 ),
                 // Answers list
-                ...question.answers.asMap().entries.map((entry) {
+                ...widget.question.answers.asMap().entries.map((entry) {
                   final index = entry.key;
                   final answer = entry.value;
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: _AnswerTile(
-                      mode: mode,
+                      mode: widget.mode,
                       answer: answer,
                       isSelected:
-                          selectedAnswer != null && index == selectedAnswer,
+                          widget.selectedAnswer != null &&
+                          index == widget.selectedAnswer,
                       isCorrect:
-                          !hideCorrectAnswer && index == question.correctAnswer,
-                      onTap: mode == QuestionCardMode.quiz
+                          !widget.hideCorrectAnswer &&
+                          index == widget.question.correctAnswer,
+                      onTap: widget.mode == QuestionCardMode.quiz
                           ? () {
-                              if (selectedAnswer == index) {
-                                onAnswerSelected!(null);
+                              if (widget.selectedAnswer == index) {
+                                widget.onAnswerSelected!(null);
                               } else {
-                                onAnswerSelected!(index);
+                                widget.onAnswerSelected!(index);
                               }
                             }
                           : null,
@@ -160,8 +217,39 @@ class QuestionCard extends StatelessWidget {
           ),
         ),
 
+        // Show selectable layer
+        if (widget.mode == QuestionCardMode.edit)
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(15.0),
+                  splashColor: Colors.transparent,
+                  onTap: widget.tapToSelect && widget.onSelected != null
+                      ? () {
+                          setState(() {
+                            _isSelected = !_isSelected;
+                          });
+                          widget.onSelected!(_isSelected);
+                        }
+                      : null,
+                  onLongPress: !widget.tapToSelect && widget.onSelected != null
+                      ? () {
+                          setState(() {
+                            _isSelected = !_isSelected;
+                          });
+                          widget.onSelected!(_isSelected);
+                        }
+                      : null,
+                ),
+              ),
+            ),
+          ),
+
         // Show report error button only if the question is in list
-        if ([QuestionCardMode.edit].contains(mode))
+        if (widget.mode == QuestionCardMode.edit)
           Positioned(
             top: 25,
             right: 25,
@@ -195,7 +283,7 @@ class _AnswerTile extends StatelessWidget {
     this.onTap,
   });
 
-  Color _getColor(BuildContext context) {
+  Color _getFillColor(BuildContext context) {
     switch (mode) {
       case QuestionCardMode.hidden:
         return Colors.grey.shade300;
@@ -278,7 +366,7 @@ class _AnswerTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: Container(
         decoration: BoxDecoration(
-          color: _getColor(context),
+          color: _getFillColor(context),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: _getBorderColor(context)),
         ),
