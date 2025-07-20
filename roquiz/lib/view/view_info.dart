@@ -84,7 +84,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                       children: [
                         TextSpan(
                           text:
-                              "ROQuiz è un'applicazione per esercitarsi con i quiz del corso ",
+                              "ROQuiz è un'applicazione a quiz per ripassare la teoria del corso ",
                         ),
                         TextSpan(
                           text: "Ricerca Operativa M",
@@ -98,7 +98,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                               );
                             },
                         ),
-                        TextSpan(text: ", dell'Università di Bologna.\n"),
+                        TextSpan(text: ", dell'Università di Bologna. "),
                         // TextSpan(
                         //   text:
                         //       "L'obiettivo di ROQuiz è fornire supporto per il ripasso della teoria. ",
@@ -109,7 +109,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                         // ),
                         TextSpan(
                           text:
-                              "Gli sviluppatori non si assumono responsabilità di alcun tipo nel caso di errori nei quiz, né per usi impropri dell'applicazione. ",
+                              "Gli sviluppatori non si assumono responsabilità nel caso di errori nei quiz, né per usi impropri dell'applicazione. ",
                         ),
                         TextSpan(text: "Fatene buon uso e "),
                         TextSpan(
