@@ -8,6 +8,7 @@ import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/style/theme_provider.dart';
 import 'package:roquiz/view/view_info.dart';
+import 'package:roquiz/view/view_questions.dart';
 import 'package:roquiz/view/view_quiz.dart';
 import 'package:roquiz/view/view_topics.dart';
 
@@ -87,12 +88,12 @@ class ViewMenuState extends State<ViewMenu> {
 
   @override
   void initState() {
+    super.initState();
+
     // From settings
     // TODO: set quiz pool
     // TODO: set quiz timer
     _initQuestionRepository();
-
-    super.initState();
   }
 
   @override
@@ -105,7 +106,7 @@ class ViewMenuState extends State<ViewMenu> {
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: ConstrainedBox(
-              // todo
+              // TODO
               constraints: BoxConstraints(maxWidth: 500.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -243,19 +244,17 @@ class ViewMenuState extends State<ViewMenu> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) {
-                                //       return ViewTopics(
-                                //         questionRepository: _questionRepository,
-                                //         selectedTopics: _selectedTopics,
-                                //         numQuizQuestions: _numQuizQuestions,
-                                //         updateQuizValues: _updateQuizValues,
-                                //       );
-                                //     },
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ViewQuestions(
+                                        questions: _questionRepository
+                                            .getQuestions(),
+                                      );
+                                    },
+                                  ),
+                                );
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -329,6 +328,26 @@ class ViewMenuState extends State<ViewMenu> {
             height: 60,
             width: 60,
             child: IconButton.filled(
+              padding: EdgeInsets.only(right: 2.0),
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) {
+                //       return ViewSettings();
+                //     },
+                //   ),
+                // );
+              },
+              iconSize: 45,
+              icon: Icon(Icons.history),
+            ),
+          ),
+          const SizedBox(height: 10.0),
+          SizedBox(
+            height: 60,
+            width: 60,
+            child: IconButton.filled(
               onPressed: () {
                 // Navigator.push(
                 //   context,
@@ -343,6 +362,7 @@ class ViewMenuState extends State<ViewMenu> {
               icon: Icon(Icons.settings),
             ),
           ),
+          const SizedBox(height: 10.0),
           // IconButtonWidget(
           //   onTap: () {
           //     // Navigator.push(
