@@ -3,6 +3,7 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:roquiz/widget/custom_search_bar.dart' hide SearchBar;
 
 class ViewQuestions extends StatefulWidget {
   final List<Question> questions;
@@ -15,9 +16,12 @@ class ViewQuestions extends StatefulWidget {
 
 class ViewQuestionsState extends State<ViewQuestions> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _textController = TextEditingController();
 
   late List<Question> _questions;
   bool _showAnswers = true; // Todo: save to shared prefs?
+
+  bool _searchBarOpen = false;
 
   Future<void> _toggleAnswers() async {
     setState(() {
@@ -35,9 +39,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
 
   @override
   void initState() {
-    _questions = widget.questions;
-
     super.initState();
+
+    _questions = widget.questions;
   }
 
   @override
@@ -49,7 +53,12 @@ class ViewQuestionsState extends State<ViewQuestions> {
       // },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Lista Domande (${_questions.length})"),
+          title: AnimatedOpacity(
+            opacity: _searchBarOpen ? 0.0 : 1.0,
+            curve: Curves.easeOutSine,
+            duration: const Duration(milliseconds: 250),
+            child: Text("Lista Domande (${_questions.length})"),
+          ),
           centerTitle: true,
           automaticallyImplyLeading: true,
           leading: IconButton(
@@ -57,61 +66,84 @@ class ViewQuestionsState extends State<ViewQuestions> {
             style: ButtonStyle(
               iconColor: WidgetStatePropertyAll(Colors.white),
               overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-              backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+              backgroundColor: WidgetStatePropertyAll(Colors.transparent),
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
+          actions: [
+            CustomSearchBar(
+              textController: _textController,
+              autoFocus: false,
+              onOpen: () {
+                setState(() {
+                  _searchBarOpen = true;
+                });
+              },
+              onClose: () {
+                setState(() {
+                  _searchBarOpen = false;
+                });
+              },
+              onSearch: (_) {},
+            ),
+          ],
         ),
         body: SafeArea(
-          child: Scrollbar(
-            interactive: true,
-            controller: _scrollController,
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: _questions.length,
-              itemBuilder: (_, index) {
-                Widget questionWidget = QuestionCard.base(
-                  question: _questions[index],
-                  hideCorrectAnswer: !_showAnswers,
-                );
-                // Check if we have to display the topic divider
-                if (index == 0 ||
-                    _questions[index - 1].topic != _questions[index].topic) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 10.0,
-                          right: 10.0,
-                          top: index == 0 ? 10.0 : 0,
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: Text(
-                                _questions[index].topic!,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  color: Colors.grey,
-                                ),
-                              ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 800.0),
+              child: Scrollbar(
+                interactive: true,
+                controller: _scrollController,
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: _questions.length,
+                  itemBuilder: (_, index) {
+                    Widget questionWidget = QuestionCard.base(
+                      question: _questions[index],
+                      hideCorrectAnswer: !_showAnswers,
+                    );
+                    // Check if we have to display the topic divider
+                    if (index == 0 ||
+                        _questions[index - 1].topic !=
+                            _questions[index].topic) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 10.0,
+                              right: 10.0,
+                              top: index == 0 ? 10.0 : 0,
                             ),
-                            const Expanded(child: Divider(thickness: 2)),
-                          ],
-                        ),
-                      ),
-                      questionWidget,
-                    ],
-                  );
-                }
-                // Otherwise simply return the card
-                else {
-                  return questionWidget;
-                }
-              },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: Text(
+                                    _questions[index].topic!,
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                const Expanded(child: Divider(thickness: 2)),
+                              ],
+                            ),
+                          ),
+                          questionWidget,
+                        ],
+                      );
+                    }
+                    // Otherwise simply return the card
+                    else {
+                      return questionWidget;
+                    }
+                  },
+                ),
+              ),
             ),
           ),
         ),
