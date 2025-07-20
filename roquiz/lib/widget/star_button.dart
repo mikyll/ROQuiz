@@ -86,14 +86,13 @@ class StarButtonState extends State<StarButton> with TickerProviderStateMixin {
   void dispose() {
     _pulseController.dispose();
     _pressGrowController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final StarButtonTheme starButtonTheme = Theme.of(
-      context,
-    ).extension<StarButtonTheme>()!;
+    final starButtonTheme = Theme.of(context).extension<StarButtonPalette>()!;
 
     return Stack(
       alignment: Alignment.center,
