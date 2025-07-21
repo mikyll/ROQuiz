@@ -75,61 +75,69 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
           ),
         ),
         body: SafeArea(
-          child: Scrollbar(
-            interactive: true,
-            controller: _scrollController,
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: _questions.length,
-              itemBuilder: (_, index) {
-                Widget questionWidget = QuestionCard.edit(
-                  question: _questions[index],
-                  isSelected: _selectedQuestions[index],
-                  onSelected: () {
-                    setState(() {
-                      _selectedQuestions[index] = !_selectedQuestions[index];
-                      _selectedCount =
-                          _selectedCount + (_selectedQuestions[index] ? 1 : -1);
-                    });
-                  },
-                  tapToSelect: _selectedCount > 0,
-                );
-                // Check if we have to display the topic divider
-                if (index == 0 ||
-                    _questions[index - 1].topic != _questions[index].topic) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 10.0,
-                          right: 10.0,
-                          top: index == 0 ? 10.0 : 0,
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: Text(
-                                _questions[index].topic!,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  color: Colors.grey,
-                                ),
-                              ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 700.0),
+              child: Scrollbar(
+                interactive: true,
+                controller: _scrollController,
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: _questions.length,
+                  itemBuilder: (_, index) {
+                    Widget questionWidget = QuestionCard.edit(
+                      question: _questions[index],
+                      isSelected: _selectedQuestions[index],
+                      onSelected: () {
+                        setState(() {
+                          _selectedQuestions[index] =
+                              !_selectedQuestions[index];
+                          _selectedCount =
+                              _selectedCount +
+                              (_selectedQuestions[index] ? 1 : -1);
+                        });
+                      },
+                      tapToSelect: _selectedCount > 0,
+                    );
+                    // Check if we have to display the topic divider
+                    if (index == 0 ||
+                        _questions[index - 1].topic !=
+                            _questions[index].topic) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 10.0,
+                              right: 10.0,
+                              top: index == 0 ? 10.0 : 0,
                             ),
-                            const Expanded(child: Divider(thickness: 2)),
-                          ],
-                        ),
-                      ),
-                      questionWidget,
-                    ],
-                  );
-                }
-                // Otherwise simply return the card
-                else {
-                  return questionWidget;
-                }
-              },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: Text(
+                                    _questions[index].topic!,
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                const Expanded(child: Divider(thickness: 2)),
+                              ],
+                            ),
+                          ),
+                          questionWidget,
+                        ],
+                      );
+                    }
+                    // Otherwise simply return the card
+                    else {
+                      return questionWidget;
+                    }
+                  },
+                ),
+              ),
             ),
           ),
         ),
@@ -145,7 +153,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 child: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.add),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
@@ -156,7 +164,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 child: IconButton(
                   onPressed: _selectedCount > 0 ? () {} : null,
                   icon: Icon(Icons.edit_note),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
@@ -167,7 +175,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 child: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.delete),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
@@ -178,7 +186,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 child: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.undo),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
@@ -189,7 +197,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 child: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.redo),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
             ],

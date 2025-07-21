@@ -93,7 +93,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
         body: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 800.0),
+              constraints: BoxConstraints(maxWidth: 700.0),
               child: Scrollbar(
                 interactive: true,
                 controller: _scrollController,
@@ -166,7 +166,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   icon: Icon(
                     _showAnswers ? Icons.visibility : Icons.visibility_off,
                   ),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
@@ -189,7 +189,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                     );
                   },
                   icon: Icon(Icons.edit),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
@@ -200,7 +200,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 child: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.sync_rounded),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
@@ -211,7 +211,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 child: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.file_open_outlined),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
@@ -222,7 +222,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 child: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.file_download_outlined),
-                  iconSize: 45,
+                  iconSize: 35,
                 ),
               ),
             ],

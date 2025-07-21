@@ -189,7 +189,7 @@ class _ViewQuizState extends State<ViewQuiz> {
           body: SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 800.0),
+                constraints: BoxConstraints(maxWidth: 700.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
