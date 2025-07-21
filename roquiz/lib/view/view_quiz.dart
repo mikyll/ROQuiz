@@ -88,7 +88,7 @@ class _ViewQuizState extends State<ViewQuiz> {
     _timer?.cancel();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_timerCounter > 1) {
+      if (_timerCounter > 0) {
         setState(() {
           _timerCounter--;
         });
@@ -197,9 +197,8 @@ class _ViewQuizState extends State<ViewQuiz> {
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 10.0,
-                        left: 10.0,
-                        right: 10.0,
-                        bottom: 20.0,
+                        left: 20.0,
+                        right: 20.0,
                       ),
                       child: Row(
                         children: [
