@@ -84,9 +84,12 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
               itemBuilder: (_, index) {
                 Widget questionWidget = QuestionCard.edit(
                   question: _questions[index],
-                  onSelected: (bool value) {
+                  isSelected: _selectedQuestions[index],
+                  onSelected: () {
                     setState(() {
-                      _selectedCount = _selectedCount + (value ? 1 : -1);
+                      _selectedQuestions[index] = !_selectedQuestions[index];
+                      _selectedCount =
+                          _selectedCount + (_selectedQuestions[index] ? 1 : -1);
                     });
                   },
                   tapToSelect: _selectedCount > 0,

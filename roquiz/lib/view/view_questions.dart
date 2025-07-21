@@ -100,6 +100,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 child: ListView.builder(
                   controller: _scrollController,
                   itemCount: _questions.length,
+                  addAutomaticKeepAlives: false,
+                  addRepaintBoundaries: true,
+                  cacheExtent: 1000,
                   itemBuilder: (_, index) {
                     Widget questionWidget = QuestionCard.base(
                       question: _questions[index],
