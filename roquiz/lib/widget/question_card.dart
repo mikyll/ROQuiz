@@ -143,8 +143,10 @@ class QuestionCard extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 10.0),
                         child: Text(
                           "Q${question.id}.",
-                          style: Theme.of(context).textTheme.headlineSmall!
-                              .copyWith(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
 
@@ -152,7 +154,7 @@ class QuestionCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         question.body,
-                        style: Theme.of(context).textTheme.headlineSmall,
+                        style: TextStyle(fontSize: 20.0),
                       ),
                     ),
                     const SizedBox(width: 15),
@@ -351,7 +353,7 @@ class _AnswerTile extends StatelessWidget {
                 color: radioColor,
               ),
             const SizedBox(width: 12),
-            Expanded(child: Text(answer)),
+            Expanded(child: Text(answer, style: TextStyle(fontSize: 14.0))),
           ],
         ),
       ),
