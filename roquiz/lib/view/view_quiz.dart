@@ -45,7 +45,7 @@ class _ViewQuizState extends State<ViewQuiz> {
   int _correctAnswers = 0;
   int? _writtenGrade;
   int _quizGrade = 0;
-  double _totalGrade = 0.0;
+  double _totalGrade = -1;
 
   void _previousQuestion() {
     setState(() {
@@ -100,6 +100,11 @@ class _ViewQuizState extends State<ViewQuiz> {
 
       _correctAnswers = _quiz.countCorrectAnswers();
       _quizGrade = _calculateQuizGrade(widget.questionNum, _correctAnswers);
+
+      // Calculate if user had already entered the written grade
+      if (_writtenGrade != null) {
+        _totalGrade = _calculateTotalGrade(_writtenGrade!, _quizGrade);
+      }
     });
   }
 
@@ -346,6 +351,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                       },
                                       onChanged: (value) {
                                         setState(() {
+                                          _totalGrade = -1;
                                           _writtenGrade = int.tryParse(
                                             _writtenGradeController.text,
                                           );
@@ -388,7 +394,11 @@ class _ViewQuizState extends State<ViewQuiz> {
                                       child: const Text("Calcola voto finale"),
                                     ),
                                     Opacity(
-                                      opacity: _totalGrade == 0 ? 0.0 : 1.0,
+                                      opacity:
+                                          _writtenGrade == null ||
+                                              _totalGrade == -1
+                                          ? 0.0
+                                          : 1.0,
                                       child: Padding(
                                         padding: const EdgeInsets.only(
                                           top: 8.0,
