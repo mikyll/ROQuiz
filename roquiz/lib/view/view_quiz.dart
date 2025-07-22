@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
@@ -26,26 +28,30 @@ class ViewQuiz extends StatefulWidget {
 }
 
 class _ViewQuizState extends State<ViewQuiz> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _writtenGradeKey = GlobalKey();
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _writtenGradeController = TextEditingController();
+  int _dragDirectionDX = 0;
 
   Timer? _timer;
   int _timerCounter = -1;
+  bool _showTimer = true;
 
   late Quiz _quiz;
-  Question? _currentQuestion;
+  bool _isQuizOver = false;
   int _iQuestion = 0;
 
-  bool _showTimer = true;
-  bool _isQuizOver = false;
-
-  int _dragDirectionDX = 0;
+  int _correctAnswers = 0;
+  int? _writtenGrade;
+  int _quizGrade = 0;
+  double _totalGrade = 0.0;
 
   void _previousQuestion() {
     setState(() {
       if (_iQuestion > 0) {
         _iQuestion--;
       }
-      _currentQuestion = _quiz.questions[_iQuestion];
     });
   }
 
@@ -54,7 +60,6 @@ class _ViewQuizState extends State<ViewQuiz> {
       if (_iQuestion < widget.questionNum - 1) {
         _iQuestion++;
       }
-      _currentQuestion = _quiz.questions[_iQuestion];
     });
   }
 
@@ -66,17 +71,35 @@ class _ViewQuizState extends State<ViewQuiz> {
         shuffleAnswers: widget.shuffleAnswers,
       );
       _iQuestion = 0;
-      _currentQuestion = _quiz.questions[0];
-
       _isQuizOver = false;
-      _startTimer(10); //widget.timer * 60);
+
+      // TODO
+      // _startTimer(widget.timer * 60);
+      _startTimer(10);
     });
+  }
+
+  bool isGradeValid(int? grade) {
+    return grade != null && grade >= 0 && grade <= 32;
+  }
+
+  int _calculateQuizGrade(int numQuestions, int numCorrectAnswers) {
+    return (numQuestions > 0
+        ? (numCorrectAnswers / numQuestions * 16 * 2).round()
+        : 0);
+  }
+
+  double _calculateTotalGrade(int writtenGrade, int quizGrade) {
+    return writtenGrade * 2 / 3 + quizGrade / 3;
   }
 
   void _endQuiz() {
     setState(() {
       _isQuizOver = true;
       _timer?.cancel();
+
+      _correctAnswers = _quiz.countCorrectAnswers();
+      _quizGrade = _calculateQuizGrade(widget.questionNum, _correctAnswers);
     });
   }
 
@@ -256,12 +279,12 @@ class _ViewQuizState extends State<ViewQuiz> {
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: _isQuizOver
                               ? QuestionCard.quizOver(
-                                  question: _currentQuestion!,
+                                  question: _quiz.questions[_iQuestion],
                                   selectedAnswer:
                                       _quiz.selectedAnswers[_iQuestion],
                                 )
                               : QuestionCard.quiz(
-                                  question: _currentQuestion!,
+                                  question: _quiz.questions[_iQuestion],
                                   selectedAnswer:
                                       _quiz.selectedAnswers[_iQuestion],
                                   onAnswerSelected: (int? iAnswer) {
@@ -294,12 +317,111 @@ class _ViewQuizState extends State<ViewQuiz> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Text(
-                                "todo",
-                                // "Risposte corrette: $_correctAnswers/$_questionNumber\n"
-                                // "Risposte errate: ${_questionNumber - _correctAnswers}/$_questionNumber\n"
-                                // "Range di voto finale, in base allo scritto: [${(11.33 + _correctAnswers ~/ 3).toInt().toString()}, ${22 + _correctAnswers * 2 ~/ 3}]",
-                                maxLines: 4,
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
+                                        "Risposte errate: ${widget.questionNum - _correctAnswers}\n"
+                                        "Voto quiz: $_quizGrade",
+                                        maxLines: 4,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    TextFormField(
+                                      key: _writtenGradeKey,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Il voto dev'essere non nullo.";
+                                        }
+
+                                        final int? grade = int.tryParse(value);
+                                        if (!isGradeValid(grade)) {
+                                          return "Il voto dev'essere compreso tra 0 e 32.";
+                                        }
+
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _writtenGrade = int.tryParse(
+                                            _writtenGradeController.text,
+                                          );
+                                        });
+                                      },
+                                      onFieldSubmitted: (value) {
+                                        if (_formKey.currentState?.validate() ??
+                                            false) {
+                                          setState(() {
+                                            _totalGrade = _calculateTotalGrade(
+                                              _writtenGrade!,
+                                              _quizGrade,
+                                            );
+                                          });
+                                        }
+                                      },
+                                      textInputAction: TextInputAction.none,
+                                      controller: _writtenGradeController,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      decoration: const InputDecoration(
+                                        labelText: "Voto della prova scritta",
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState?.validate() ??
+                                            false) {
+                                          setState(() {
+                                            _totalGrade = _calculateTotalGrade(
+                                              _writtenGrade!,
+                                              _quizGrade,
+                                            );
+                                          });
+                                        }
+                                      },
+                                      child: const Text("Calcola voto finale"),
+                                    ),
+                                    Opacity(
+                                      opacity: _totalGrade == 0 ? 0.0 : 1.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 8.0,
+                                        ),
+                                        child: Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(text: "Voto finale: "),
+                                              TextSpan(
+                                                text:
+                                                    "${min(_totalGrade.round(), 30)}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              if (_totalGrade > 30.5)
+                                                TextSpan(
+                                                  text: "L",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              TextSpan(
+                                                text:
+                                                    " (${_totalGrade.toStringAsFixed(1)})",
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
