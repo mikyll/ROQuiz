@@ -5,17 +5,17 @@
     "url": "https://github.com/TryKatChup"
   },
   {
-    "author": "Federyeeco",
+    "author": "Federicoand98",
     "task": "Build macOS e iOS",
     "url": "https://github.com/Federicoand98"
   },
   {
-    "author": "LolloFred",
+    "author": "lollofred",
     "task": "Spiegazione domande",
     "url": "https://github.com/lollofred"
   },
   {
-    "author": "filovero98",
+    "author": "filippoveronesi",
     "task": "Spiegazione domande",
     "url": "https://github.com/filippoveronesi"
   },
@@ -28,5 +28,10 @@
     "author": "jchergu",
     "task": "Calcolo voto finale e nuove domande",
     "url": "https://github.com/jchergu"
+  },
+  {
+    "author": "VaiTon",
+    "task": "Calcolo voto finale e piccolo refactor",
+    "url": "https://github.com/VaiTon"
   }
 ]
