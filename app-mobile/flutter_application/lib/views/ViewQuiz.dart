@@ -13,8 +13,7 @@ import 'package:roquiz/widget/icon_button_widget.dart';
 import 'package:roquiz/widget/question_widget.dart';
 
 class ViewQuiz extends StatefulWidget {
-  const ViewQuiz({Key? key, required this.questions, required this.settings})
-      : super(key: key);
+  const ViewQuiz({super.key, required this.questions, required this.settings});
 
   final List<Question> questions;
   final Settings settings;
@@ -54,10 +53,20 @@ class _ViewQuizState extends State<ViewQuiz> {
   }
 
   void _calculateQuizGrade() {
+    if (_questionNumber <= 0) {
+      setState(() {
+        _quizGrade = 0;
+      });
+      return;
+    }
+
+    final correctAnswerRatio = _correctAnswers / _questionNumber;
+    final equivalentDefaultQuestions =
+        (correctAnswerRatio * Settings.DEFAULT_QUESTION_NUMBER).round();
+    final calculatedQuizGrade = equivalentDefaultQuestions * 2;
+
     setState(() {
-      _quizGrade = (_questionNumber > 0
-          ? (_correctAnswers / _questionNumber * 2.0).round()
-          : 0);
+      _quizGrade = calculatedQuizGrade;
     });
   }
 
@@ -183,7 +192,7 @@ class _ViewQuizState extends State<ViewQuiz> {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     return PopScope(
       canPop: !widget.settings.confirmAlerts,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, res) {
         if (didPop) {
           return;
         }
@@ -312,16 +321,18 @@ class _ViewQuizState extends State<ViewQuiz> {
                         onTapAnswer: !_isOver
                             ? (int index) => _setUserAnswer(index)
                             : null,
-                        backgroundQuizColor: Colors.cyan.withOpacity(0.1),
-                        defaultAnswerColor: Colors.indigo.withOpacity(0.2),
-                        selectedAnswerColor: Colors.indigo.withOpacity(0.5),
+                        backgroundQuizColor: Colors.cyan.withValues(alpha: 0.1),
+                        defaultAnswerColor:
+                            Colors.indigo.withValues(alpha: 0.2),
+                        selectedAnswerColor:
+                            Colors.indigo.withValues(alpha: 0.5),
                         correctAnswerColor:
                             const Color.fromARGB(255, 42, 255, 49)
-                                .withOpacity(0.5),
+                                .withValues(alpha: 0.5),
                         correctNotSelectedAnswerColor:
                             const Color.fromARGB(255, 27, 94, 32)
-                                .withOpacity(0.8),
-                        wrongAnswerColor: Colors.red.withOpacity(0.8),
+                                .withValues(alpha: 0.8),
+                        wrongAnswerColor: Colors.red.withValues(alpha: 0.8),
                       ),
                     ),
                   ),

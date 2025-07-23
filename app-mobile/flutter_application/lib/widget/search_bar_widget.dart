@@ -49,7 +49,7 @@ class SearchBarWidget extends StatefulWidget {
   final Function()? onOpen;
 
   const SearchBarWidget({
-    Key? key,
+    super.key,
 
     /// The width cannot be null
     required this.width,
@@ -109,7 +109,7 @@ class SearchBarWidget extends StatefulWidget {
 
     /// Is called when the user closes the search bar (either with the close button or by clearing when the search bar is already empty)
     this.onClose,
-  }) : super(key: key);
+  });
 
   @override
   SearchBarWidgetState createState() => SearchBarWidgetState();

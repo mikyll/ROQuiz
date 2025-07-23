@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:roquiz/model/Themes.dart';
 
 class ChangeThemeButtonWidget extends StatelessWidget {
-  const ChangeThemeButtonWidget({Key? key}) : super(key: key);
+  const ChangeThemeButtonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

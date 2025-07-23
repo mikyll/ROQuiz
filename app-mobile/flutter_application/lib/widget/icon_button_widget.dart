@@ -5,7 +5,7 @@ import 'package:roquiz/model/Themes.dart';
 
 class IconButtonWidget extends StatelessWidget {
   const IconButtonWidget({
-    Key? key,
+    super.key,
     this.borderRadius = 30,
     this.onTap,
     this.onDoubleTap,
@@ -17,7 +17,7 @@ class IconButtonWidget extends StatelessWidget {
     this.tooltip,
     this.shadow = false,
     required this.icon,
-  }) : super(key: key);
+  });
 
   final IconData icon;
 

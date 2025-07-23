@@ -5,10 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 class CreditsWidget extends StatefulWidget {
   final List<Contribution> credits;
 
-  const CreditsWidget({
-    Key? key,
-    required this.credits,
-  }) : super(key: key);
+  const CreditsWidget({super.key, required this.credits});
 
   @override
   State<StatefulWidget> createState() => CreditsWidgetState();

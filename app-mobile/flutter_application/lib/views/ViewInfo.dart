@@ -8,10 +8,10 @@ import 'package:roquiz/views/ViewLicenses.dart';
 import 'package:roquiz/model/Themes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const DEFAULT_SIZE = 60.0;
+const defaultSize = 60.0;
 
 class ViewInfo extends StatefulWidget {
-  const ViewInfo({Key? key, required this.settings}) : super(key: key);
+  const ViewInfo({super.key, required this.settings});
 
   final Settings settings;
 
@@ -48,10 +48,10 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
-      value: DEFAULT_SIZE,
+      value: defaultSize,
     );
 
-    _animation = Tween<double>(begin: DEFAULT_SIZE, end: _maxSize).animate(
+    _animation = Tween<double>(begin: defaultSize, end: _maxSize).animate(
         CurvedAnimation(parent: _animationController, curve: Curves.ease));
 
     _animationController.reset();

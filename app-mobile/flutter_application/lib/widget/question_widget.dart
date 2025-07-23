@@ -5,7 +5,7 @@ import 'package:roquiz/model/Themes.dart';
 
 class QuestionWidget extends StatelessWidget {
   const QuestionWidget({
-    Key? key,
+    super.key,
     required this.questionText,
     required this.answers,
     // Correct answer
@@ -24,7 +24,7 @@ class QuestionWidget extends StatelessWidget {
     this.correctNotSelectedAnswerColor = Colors.transparent,
     this.wrongAnswerColor = Colors.transparent,
     this.backgroundQuizColor,
-  }) : super(key: key);
+  });
 
   final String questionText;
   final List<String> answers;

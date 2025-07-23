@@ -8,7 +8,11 @@ import 'package:roquiz/model/Question.dart';
 import 'package:roquiz/widget/question_widget.dart';
 
 class ViewQuestions extends StatefulWidget {
-  const ViewQuestions({Key? key, required this.title, required this.questions});
+  const ViewQuestions({
+    super.key,
+    required this.title,
+    required this.questions,
+  });
 
   final String title;
   final List<Question> questions;

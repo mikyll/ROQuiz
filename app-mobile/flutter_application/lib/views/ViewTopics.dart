@@ -7,13 +7,13 @@ import 'package:roquiz/widget/topics_widget.dart';
 import 'ViewQuestions.dart';
 
 class ViewTopics extends StatefulWidget {
-  const ViewTopics(
-      {Key? key,
-      required this.qRepo,
-      required this.settings,
-      required this.updateQuizPool,
-      required this.selectedTopics})
-      : super(key: key);
+  const ViewTopics({
+    super.key,
+    required this.qRepo,
+    required this.settings,
+    required this.updateQuizPool,
+    required this.selectedTopics,
+  });
 
   final QuestionRepository qRepo;
   final Settings settings;

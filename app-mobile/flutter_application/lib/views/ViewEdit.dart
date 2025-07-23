@@ -7,12 +7,12 @@ import 'package:roquiz/widget/icon_button_widget.dart';
 
 class ViewEdit extends StatefulWidget {
   const ViewEdit({
-    Key? key,
+    super.key,
     required this.qRepo,
     required this.settings,
     required this.reloadTopics,
     required this.updateQuizDefaults,
-  }) : super(key: key);
+  });
 
   final QuestionRepository qRepo;
   final Settings settings;

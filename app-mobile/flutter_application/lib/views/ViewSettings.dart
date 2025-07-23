@@ -18,11 +18,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ViewSettings extends StatefulWidget {
   const ViewSettings({
-    Key? key,
+    super.key,
     required this.qRepo,
     required this.settings,
     required this.reloadTopics,
-  }) : super(key: key);
+  });
 
   final QuestionRepository qRepo;
   final Settings settings;
