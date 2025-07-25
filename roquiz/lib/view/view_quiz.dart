@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +31,16 @@ class ViewQuiz extends StatefulWidget {
 class _ViewQuizState extends State<ViewQuiz> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _writtenGradeKey = GlobalKey();
+
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _writtenGradeController = TextEditingController();
+
+  final List<ConfettiController> _confettiControllers = List.generate(5, (
+    index,
+  ) {
+    return ConfettiController(duration: Duration(milliseconds: 250));
+  });
+
   int _dragDirectionDX = 0;
 
   Timer? _timer;
@@ -46,6 +55,54 @@ class _ViewQuizState extends State<ViewQuiz> {
   int? _writtenGrade;
   int _quizGrade = 0;
   double _totalGrade = -1;
+
+  // This indicates that the confetti animation was already played for this quiz run
+  bool _confettiPlayed = false;
+
+  String _getTimeString(int counter) {
+    String hours = "${counter ~/ 3600}".padLeft(2, '0');
+    String minutes = "${counter ~/ 60}".padLeft(2, '0');
+    String seconds = "${counter % 60}".padLeft(2, '0');
+    return "$hours:$minutes:$seconds";
+  }
+
+  Color? _getTimeColor() {
+    // TODO: yellow, orange, red colors when time is low
+  }
+
+  bool isGradeValid(int? grade) {
+    return grade != null && grade >= 0 && grade <= 32;
+  }
+
+  int _calculateQuizGrade(int numQuestions, int numCorrectAnswers) {
+    return (numQuestions > 0
+        ? (numCorrectAnswers / numQuestions * 16 * 2).round()
+        : 0);
+  }
+
+  bool _canPlayConfetti(List<ConfettiController> controllers) {
+    for (ConfettiController c in controllers) {
+      if (c.state == ConfettiControllerState.playing) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  double _calculateTotalGrade(int writtenGrade, int quizGrade) {
+    double total = writtenGrade * 2 / 3 + quizGrade / 3;
+
+    if (!_confettiPlayed &&
+        total > 30.0 &&
+        _canPlayConfetti(_confettiControllers)) {
+      for (ConfettiController c in _confettiControllers) {
+        c.play();
+      }
+      _confettiPlayed = true;
+    }
+
+    return total;
+  }
 
   void _previousQuestion() {
     setState(() {
@@ -73,38 +130,11 @@ class _ViewQuizState extends State<ViewQuiz> {
       _iQuestion = 0;
       _isQuizOver = false;
 
+      _confettiPlayed = false;
+
       // TODO
       // _startTimer(widget.timer * 60);
       _startTimer(10);
-    });
-  }
-
-  bool isGradeValid(int? grade) {
-    return grade != null && grade >= 0 && grade <= 32;
-  }
-
-  int _calculateQuizGrade(int numQuestions, int numCorrectAnswers) {
-    return (numQuestions > 0
-        ? (numCorrectAnswers / numQuestions * 16 * 2).round()
-        : 0);
-  }
-
-  double _calculateTotalGrade(int writtenGrade, int quizGrade) {
-    return writtenGrade * 2 / 3 + quizGrade / 3;
-  }
-
-  void _endQuiz() {
-    setState(() {
-      _isQuizOver = true;
-      _timer?.cancel();
-
-      _correctAnswers = _quiz.countCorrectAnswers();
-      _quizGrade = _calculateQuizGrade(widget.questionNum, _correctAnswers);
-
-      // Calculate if user had already entered the written grade
-      if (_writtenGrade != null) {
-        _totalGrade = _calculateTotalGrade(_writtenGrade!, _quizGrade);
-      }
     });
   }
 
@@ -126,16 +156,30 @@ class _ViewQuizState extends State<ViewQuiz> {
     });
   }
 
-  String _getTimeString() {
-    String hours = "${_timerCounter ~/ 3600}".padLeft(2, '0');
-    String minutes = "${_timerCounter ~/ 60}".padLeft(2, '0');
-    String seconds = "${_timerCounter % 60}".padLeft(2, '0');
-    return "$hours:$minutes:$seconds";
+  void _endQuiz() {
+    setState(() {
+      _isQuizOver = true;
+      _timer?.cancel();
+
+      _correctAnswers = _quiz.countCorrectAnswers();
+      _correctAnswers = 16;
+      _quizGrade = _calculateQuizGrade(widget.questionNum, _correctAnswers);
+
+      // Calculate if user had already entered the written grade
+      if (_writtenGrade != null) {
+        _totalGrade = _calculateTotalGrade(_writtenGrade!, _quizGrade);
+      }
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _scrollController.dispose();
+    _writtenGradeController.dispose();
+    for (ConfettiController c in _confettiControllers) {
+      c.dispose();
+    }
 
     super.dispose();
   }
@@ -233,10 +277,8 @@ class _ViewQuizState extends State<ViewQuiz> {
                           Text(
                             "D${_iQuestion + 1}/${widget.questionNum}",
                             maxLines: 1,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextTheme.of(context).headlineSmall!
+                                .copyWith(fontWeight: FontWeight.bold),
                           ),
                           const Spacer(flex: 1),
                           InkWell(
@@ -252,21 +294,18 @@ class _ViewQuizState extends State<ViewQuiz> {
                               child: RichText(
                                 maxLines: 1,
                                 text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    // color: themeProvider.isDarkMode
-                                    //     ? Colors.white
-                                    //     : Colors.black,
-                                  ),
+                                  style: TextTheme.of(context).headlineSmall!
+                                      .copyWith(fontWeight: FontWeight.bold),
                                   children: [
                                     const TextSpan(text: 'Time: '),
                                     TextSpan(
-                                      text: _getTimeString(),
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        // color: _getTimerColor(themeProvider),
-                                      ),
+                                      text: _getTimeString(_timerCounter),
+                                      style: TextTheme.of(context)
+                                          .headlineSmall!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: _getTimeColor(),
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -329,9 +368,8 @@ class _ViewQuizState extends State<ViewQuiz> {
                                     Center(
                                       child: Text(
                                         "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
-                                        "Risposte errate: ${widget.questionNum - _correctAnswers}\n"
-                                        "Voto quiz: $_quizGrade",
-                                        maxLines: 4,
+                                        "Voto quiz: ${_quizGrade.toStringAsFixed(1)}",
+                                        maxLines: 2,
                                       ),
                                     ),
                                     const SizedBox(height: 10),
@@ -391,7 +429,13 @@ class _ViewQuizState extends State<ViewQuiz> {
                                           });
                                         }
                                       },
-                                      child: const Text("Calcola voto finale"),
+                                      child: const Text(
+                                        "Calcola voto finale",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
                                     ),
                                     Opacity(
                                       opacity:
@@ -429,6 +473,107 @@ class _ViewQuizState extends State<ViewQuiz> {
                                           ),
                                         ),
                                       ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ConfettiWidget(
+                                          confettiController:
+                                              _confettiControllers[0],
+                                          blastDirection: -pi * 1 / 3,
+                                          emissionFrequency: 0.20,
+                                          numberOfParticles: 10,
+                                          maxBlastForce: 50,
+                                          minBlastForce: 20,
+                                          gravity: 0.3,
+                                          shouldLoop: false,
+                                          particleDrag: 0.10,
+                                          colors: const [
+                                            Colors.green,
+                                            Colors.blue,
+                                            Colors.pink,
+                                            Colors.orange,
+                                            Colors.purple,
+                                          ],
+                                        ),
+                                        ConfettiWidget(
+                                          confettiController:
+                                              _confettiControllers[1],
+                                          blastDirection: -pi * 6 / 10,
+                                          emissionFrequency: 0.20,
+                                          numberOfParticles: 15,
+                                          maxBlastForce: 100,
+                                          minBlastForce: 40,
+                                          gravity: 0.3,
+                                          shouldLoop: false,
+                                          particleDrag: 0.05,
+                                          colors: const [
+                                            Colors.green,
+                                            Colors.blue,
+                                            Colors.pink,
+                                            Colors.orange,
+                                            Colors.purple,
+                                          ],
+                                        ),
+                                        ConfettiWidget(
+                                          confettiController:
+                                              _confettiControllers[2],
+                                          blastDirection: -pi / 2, // upwards
+                                          emissionFrequency: 0.20,
+                                          numberOfParticles: 20,
+                                          maxBlastForce: 150,
+                                          minBlastForce: 60,
+                                          gravity: 0.3,
+                                          shouldLoop: false,
+                                          particleDrag: 0.05,
+                                          colors: const [
+                                            Colors.green,
+                                            Colors.blue,
+                                            Colors.pink,
+                                            Colors.orange,
+                                            Colors.purple,
+                                          ],
+                                        ),
+                                        ConfettiWidget(
+                                          confettiController:
+                                              _confettiControllers[3],
+                                          blastDirection: -pi * 4 / 10,
+                                          emissionFrequency: 0.20,
+                                          numberOfParticles: 15,
+                                          maxBlastForce: 100,
+                                          minBlastForce: 40,
+                                          gravity: 0.3,
+                                          shouldLoop: false,
+                                          particleDrag: 0.05,
+                                          colors: const [
+                                            Colors.green,
+                                            Colors.blue,
+                                            Colors.pink,
+                                            Colors.orange,
+                                            Colors.purple,
+                                          ],
+                                        ),
+                                        ConfettiWidget(
+                                          confettiController:
+                                              _confettiControllers[4],
+                                          blastDirection: -pi * 2 / 3,
+                                          emissionFrequency: 0.20,
+                                          numberOfParticles: 10,
+                                          maxBlastForce: 50,
+                                          minBlastForce: 20,
+                                          gravity: 0.3,
+                                          shouldLoop: false,
+                                          particleDrag: 0.05,
+                                          colors: const [
+                                            Colors.green,
+                                            Colors.blue,
+                                            Colors.pink,
+                                            Colors.orange,
+                                            Colors.purple,
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
