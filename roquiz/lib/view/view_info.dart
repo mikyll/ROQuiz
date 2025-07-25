@@ -64,16 +64,13 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                     "ROQuiz",
                     maxLines: 1,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                    style: TextTheme.of(context).displaySmall,
                   ),
                   Text(
                     "v${widget.packageInfo.version}+${widget.packageInfo.buildNumber}",
                     maxLines: 1,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextTheme.of(context).titleMedium,
                   ),
                   const Spacer(flex: 1),
                   // textAlign: TextAlign.center,
