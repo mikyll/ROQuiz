@@ -168,7 +168,7 @@ List<Question> parseQuestionsFromYaml(String content) {
     if (question is Map) {
       try {
         final body = question["body"] as String;
-        final topic = question["topic"] as String;
+        final topic = question["topic"] as String?;
         final answers = question["answers"] as List;
         final correctAnswer = question["correct_answer"];
 
