@@ -139,15 +139,12 @@ class ViewMenuState extends State<ViewMenu> {
                   Text(
                     "ROQuiz",
                     maxLines: 1,
-                    style: TextStyle(fontSize: 54, fontWeight: FontWeight.bold),
+                    style: TextTheme.of(context).displayLarge,
                   ),
                   Text(
                     "v${widget.packageInfo.version}",
                     maxLines: 1,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextTheme.of(context).headlineSmall,
                   ),
                   const Spacer(flex: 1),
                   Switch(
@@ -186,14 +183,7 @@ class ViewMenuState extends State<ViewMenu> {
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            "Avvia Quiz",
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: Text("Avvia Quiz", maxLines: 1),
                         ),
                       ),
                     ),
@@ -207,6 +197,7 @@ class ViewMenuState extends State<ViewMenu> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
+                              style: ElevatedButtonTheme.of(context).style,
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -229,14 +220,7 @@ class ViewMenuState extends State<ViewMenu> {
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text(
-                                  "Argomenti",
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                child: Text("Argomenti", maxLines: 1),
                               ),
                             ),
                           ),
@@ -258,14 +242,7 @@ class ViewMenuState extends State<ViewMenu> {
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text(
-                                  "Domande",
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                child: Text("Domande", maxLines: 1),
                               ),
                             ),
                           ),
@@ -274,28 +251,33 @@ class ViewMenuState extends State<ViewMenu> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Wrap(
-                    direction: Axis.horizontal,
-                    spacing: 5.0,
+                  Row(
                     children: [
+                      const Spacer(flex: 1),
                       const Icon(Icons.format_list_numbered_rounded),
                       Text(
-                        "Domande: $_numQuizQuestions su ${_calculateNumSelected()}",
+                        "Domande: $_numQuizQuestions su ${_calculateNumSelected()}"
+                            .padRight(22),
                       ),
-                      const SizedBox(width: 20),
+                      const Spacer(flex: 2),
                       const Icon(Icons.timer_rounded),
-                      Text("Tempo: $_timer min"),
+                      Text("Tempo: $_timer min".padRight(22)),
+                      const Spacer(flex: 1),
                     ],
                   ),
-                  false
-                      ? Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Text(
-                            "error",
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        )
-                      : const SizedBox(height: 50),
+                  Visibility(
+                    visible: false,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        "error",
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ),
                   InkWell(
                     onTap: () {
                       // openUrl("https://github.com/mikyll/ROQuiz");
