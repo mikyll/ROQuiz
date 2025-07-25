@@ -2,10 +2,27 @@ import 'package:flutter/material.dart' hide SearchBarTheme;
 import 'package:roquiz/model/style/palettes.dart';
 
 class Themes {
+  static final colorButtonBackgroundLight = Color.fromARGB(255, 81, 91, 146);
+  static final colorButtonOverlayLight = Color.fromARGB(255, 91, 99, 181);
+  static final colorButtonTextLight = Colors.white;
+
+  static final colorButtonBackgroundDark = const Color.fromARGB(
+    255,
+    182,
+    196,
+    255,
+  );
+  static final colorButtonOverlayDark = Color.fromARGB(255, 91, 99, 181);
+  static final colorButtonTextDark = Color.fromARGB(255, 12, 40, 120);
+
   static final themeLight = ThemeData(
     useMaterial3: true,
     colorSchemeSeed: Colors.indigo[400],
     brightness: Brightness.light,
+    textTheme: TextTheme(
+      displayLarge: TextStyle(fontWeight: FontWeight.bold),
+      displaySmall: TextStyle(fontWeight: FontWeight.bold),
+    ),
     appBarTheme: const AppBarTheme(
       titleTextStyle: TextStyle(
         color: Colors.white,
@@ -26,12 +43,14 @@ class Themes {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        splashFactory: InkSplash.splashFactory,
-        overlayColor: WidgetStatePropertyAll(
-          const Color.fromARGB(255, 91, 99, 181),
-        ),
-        textStyle: WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
-          return TextStyle(color: Colors.black, inherit: false);
+        backgroundColor: WidgetStateColor.resolveWith((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.disabled)) {
+            return const Color.fromARGB(150, 77, 86, 175);
+          } else {
+            return Color.fromARGB(255, 81, 91, 146);
+          }
         }),
         foregroundColor: WidgetStateColor.resolveWith((
           Set<WidgetState> states,
@@ -42,14 +61,15 @@ class Themes {
             return const Color.fromARGB(255, 255, 255, 255);
           }
         }),
-        backgroundColor: WidgetStateColor.resolveWith((
-          Set<WidgetState> states,
-        ) {
-          if (states.contains(WidgetState.disabled)) {
-            return const Color.fromARGB(150, 77, 86, 175);
-          } else {
-            return const Color(0xff515b92);
-          }
+        overlayColor: WidgetStatePropertyAll(colorButtonOverlayLight),
+        splashFactory: InkSplash.splashFactory,
+        textStyle: WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
+          return TextStyle(
+            inherit: false,
+            color: Colors.white,
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+          );
         }),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
@@ -89,6 +109,10 @@ class Themes {
     useMaterial3: true,
     colorSchemeSeed: Colors.indigo[100],
     brightness: Brightness.dark,
+    textTheme: TextTheme(
+      displayLarge: TextStyle(fontWeight: FontWeight.bold),
+      displaySmall: TextStyle(fontWeight: FontWeight.bold),
+    ),
     appBarTheme: const AppBarTheme(
       titleTextStyle: TextStyle(
         color: Colors.white,
@@ -110,22 +134,9 @@ class Themes {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        textStyle: WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
-          return TextStyle(color: Colors.black, inherit: false);
-        }),
-        splashFactory: InkSplash.splashFactory,
-        overlayColor: WidgetStatePropertyAll(
-          const Color.fromARGB(255, 91, 99, 181),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         ),
-        foregroundColor: WidgetStateColor.resolveWith((
-          Set<WidgetState> states,
-        ) {
-          if (states.contains(WidgetState.disabled)) {
-            return const Color.fromARGB(149, 17, 28, 59);
-          } else {
-            return const Color.fromARGB(255, 12, 40, 120);
-          }
-        }),
         backgroundColor: WidgetStateColor.resolveWith((
           Set<WidgetState> states,
         ) {
@@ -135,9 +146,25 @@ class Themes {
             return const Color.fromARGB(255, 182, 196, 255);
           }
         }),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        ),
+        foregroundColor: WidgetStateColor.resolveWith((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.disabled)) {
+            return const Color.fromARGB(149, 17, 28, 59);
+          } else {
+            return const Color.fromARGB(255, 12, 40, 120);
+          }
+        }),
+        overlayColor: WidgetStatePropertyAll(colorButtonOverlayDark),
+        splashFactory: InkSplash.splashFactory,
+        textStyle: WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
+          return TextStyle(
+            inherit: false,
+            color: colorButtonTextDark,
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+          );
+        }),
         iconColor: WidgetStatePropertyAll(FOREGROUND_COLOR_DARK),
       ),
     ),
