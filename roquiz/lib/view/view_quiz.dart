@@ -41,6 +41,8 @@ class _ViewQuizState extends State<ViewQuiz> {
     return ConfettiController(duration: Duration(milliseconds: 250));
   });
 
+  late List<ConfettiWidget> _confettiWidgets = [];
+
   int _dragDirectionDX = 0;
 
   Timer? _timer;
@@ -187,6 +189,35 @@ class _ViewQuizState extends State<ViewQuiz> {
   @override
   void initState() {
     super.initState();
+
+    _confettiWidgets = List.generate(_confettiControllers.length, (index) {
+      final int max = _confettiControllers.length;
+      final double tot = 30.0;
+      final double offset = 7.5;
+
+      final double directionStep = (tot - offset * 2) / (max - 1).toDouble();
+      final double particlesMultiplier = index - (max / 2.0);
+
+      return ConfettiWidget(
+        confettiController: _confettiControllers[index],
+        // NB: -pi / 2 is upwards
+        blastDirection: -pi * (offset + directionStep * index) / tot,
+        emissionFrequency: 0.20,
+        numberOfParticles: (20 - (5 * particlesMultiplier).abs()).round(),
+        maxBlastForce: 50,
+        minBlastForce: 20,
+        gravity: 0.3,
+        shouldLoop: false,
+        particleDrag: 0.05,
+        colors: const [
+          Colors.green,
+          Colors.blue,
+          Colors.pink,
+          Colors.orange,
+          Colors.purple,
+        ],
+      );
+    });
 
     _startQuiz();
   }
@@ -477,103 +508,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: [
-                                        ConfettiWidget(
-                                          confettiController:
-                                              _confettiControllers[0],
-                                          blastDirection: -pi * 1 / 3,
-                                          emissionFrequency: 0.20,
-                                          numberOfParticles: 10,
-                                          maxBlastForce: 50,
-                                          minBlastForce: 20,
-                                          gravity: 0.3,
-                                          shouldLoop: false,
-                                          particleDrag: 0.10,
-                                          colors: const [
-                                            Colors.green,
-                                            Colors.blue,
-                                            Colors.pink,
-                                            Colors.orange,
-                                            Colors.purple,
-                                          ],
-                                        ),
-                                        ConfettiWidget(
-                                          confettiController:
-                                              _confettiControllers[1],
-                                          blastDirection: -pi * 6 / 10,
-                                          emissionFrequency: 0.20,
-                                          numberOfParticles: 15,
-                                          maxBlastForce: 100,
-                                          minBlastForce: 40,
-                                          gravity: 0.3,
-                                          shouldLoop: false,
-                                          particleDrag: 0.05,
-                                          colors: const [
-                                            Colors.green,
-                                            Colors.blue,
-                                            Colors.pink,
-                                            Colors.orange,
-                                            Colors.purple,
-                                          ],
-                                        ),
-                                        ConfettiWidget(
-                                          confettiController:
-                                              _confettiControllers[2],
-                                          blastDirection: -pi / 2, // upwards
-                                          emissionFrequency: 0.20,
-                                          numberOfParticles: 20,
-                                          maxBlastForce: 150,
-                                          minBlastForce: 60,
-                                          gravity: 0.3,
-                                          shouldLoop: false,
-                                          particleDrag: 0.05,
-                                          colors: const [
-                                            Colors.green,
-                                            Colors.blue,
-                                            Colors.pink,
-                                            Colors.orange,
-                                            Colors.purple,
-                                          ],
-                                        ),
-                                        ConfettiWidget(
-                                          confettiController:
-                                              _confettiControllers[3],
-                                          blastDirection: -pi * 4 / 10,
-                                          emissionFrequency: 0.20,
-                                          numberOfParticles: 15,
-                                          maxBlastForce: 100,
-                                          minBlastForce: 40,
-                                          gravity: 0.3,
-                                          shouldLoop: false,
-                                          particleDrag: 0.05,
-                                          colors: const [
-                                            Colors.green,
-                                            Colors.blue,
-                                            Colors.pink,
-                                            Colors.orange,
-                                            Colors.purple,
-                                          ],
-                                        ),
-                                        ConfettiWidget(
-                                          confettiController:
-                                              _confettiControllers[4],
-                                          blastDirection: -pi * 2 / 3,
-                                          emissionFrequency: 0.20,
-                                          numberOfParticles: 10,
-                                          maxBlastForce: 50,
-                                          minBlastForce: 20,
-                                          gravity: 0.3,
-                                          shouldLoop: false,
-                                          particleDrag: 0.05,
-                                          colors: const [
-                                            Colors.green,
-                                            Colors.blue,
-                                            Colors.pink,
-                                            Colors.orange,
-                                            Colors.purple,
-                                          ],
-                                        ),
-                                      ],
+                                      children: _confettiWidgets,
                                     ),
                                   ],
                                 ),
