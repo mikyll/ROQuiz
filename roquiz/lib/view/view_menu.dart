@@ -107,7 +107,7 @@ class ViewMenuState extends State<ViewMenu> {
             padding: const EdgeInsets.all(15.0),
             child: ConstrainedBox(
               // TODO
-              constraints: BoxConstraints(maxWidth: 500.0),
+              constraints: BoxConstraints(maxWidth: 400.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,7 +156,7 @@ class ViewMenuState extends State<ViewMenu> {
 
                   // BUTTONS
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -189,68 +189,6 @@ class ViewMenuState extends State<ViewMenu> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButtonTheme.of(context).style,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return ViewTopics(
-                                        quizPool: _numQuizQuestions,
-                                        questionsPerTopic: _questionRepository
-                                            .getGroupedQuestions(),
-                                        selectedTopics: _selectedTopics,
-                                        toggleTopic: (Map<String, bool> v) {
-                                          setState(() {
-                                            _selectedTopics = v;
-                                          });
-                                        },
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text("Argomenti", maxLines: 1),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return ViewQuestions(
-                                        questions: _questionRepository
-                                            .getQuestions(),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text("Domande", maxLines: 1),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
                   Row(
                     children: [
                       const Spacer(flex: 1),
@@ -266,7 +204,7 @@ class ViewMenuState extends State<ViewMenu> {
                     ],
                   ),
                   Visibility(
-                    visible: false,
+                    visible: true,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
@@ -278,25 +216,91 @@ class ViewMenuState extends State<ViewMenu> {
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      // openUrl("https://github.com/mikyll/ROQuiz");
-                    },
-                    child: Container(
-                      color: Colors.indigo.withOpacity(0.35),
-                      alignment: Alignment.center,
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Se l'app ti è piaciuta, considera di lasciare una stellina alla repository GitHub ⭐\n\nBasta un click qui!",
-                          maxLines: 6,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18),
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 100.0),
+                    child: ElevatedButton.icon(
+                      label: Text(
+                        "Domande",
+                        maxLines: 1,
+                        style: TextStyle(fontWeight: FontWeight.normal),
                       ),
+                      icon: Icon(Icons.format_list_numbered),
+                      iconAlignment: IconAlignment.end,
+                      style: ElevatedButtonTheme.of(context).style,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ViewQuestions(
+                                questions: _questionRepository.getQuestions(),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  const Spacer(flex: 5),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 100.0),
+                    child: ElevatedButton.icon(
+                      label: Text(
+                        "Argomenti",
+                        maxLines: 1,
+                        style: TextStyle(fontWeight: FontWeight.normal),
+                      ),
+                      icon: Icon(Icons.checklist),
+                      iconAlignment: IconAlignment.end,
+                      style: ElevatedButtonTheme.of(context).style,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ViewTopics(
+                                quizPool: _numQuizQuestions,
+                                questionsPerTopic: _questionRepository
+                                    .getGroupedQuestions(),
+                                selectedTopics: _selectedTopics,
+                                toggleTopic: (Map<String, bool> v) {
+                                  setState(() {
+                                    _selectedTopics = v;
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 100.0),
+                    child: ElevatedButton.icon(
+                      label: Text(
+                        "Storico",
+                        maxLines: 1,
+                        style: TextStyle(fontWeight: FontWeight.normal),
+                      ),
+                      icon: Icon(Icons.history),
+                      iconAlignment: IconAlignment.end,
+                      style: ElevatedButtonTheme.of(context).style,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              // TODO
+                              return Text("");
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const Spacer(flex: 2),
                 ],
               ),
             ),
