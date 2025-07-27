@@ -18,10 +18,6 @@ class QuestionCard extends StatelessWidget {
   final bool tapToSelect;
   final VoidCallback? onSelected;
 
-  // Constructors(or separate files?):
-  // - quiz
-  // - questions list
-  // - questions editor
   const QuestionCard({
     super.key,
     required this.mode,
