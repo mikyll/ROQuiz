@@ -210,9 +210,14 @@ class ViewMenuState extends State<ViewMenu> {
                     maintainState: true,
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Text(
-                        "error",
-                        style: const TextStyle(color: Colors.red),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: BoxBorder.all(color: Colors.red),
+                        ),
+                        child: Text(
+                          "error",
+                          style: const TextStyle(color: Colors.red),
+                        ),
                       ),
                     ),
                   ),
