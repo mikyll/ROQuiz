@@ -183,7 +183,11 @@ class ViewMenuState extends State<ViewMenu> {
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text("Avvia Quiz", maxLines: 1),
+                          child: Text(
+                            "Avvia Quiz",
+                            maxLines: 1,
+                            style: TextStyle(fontSize: 32),
+                          ),
                         ),
                       ),
                     ),
@@ -221,89 +225,144 @@ class ViewMenuState extends State<ViewMenu> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 100.0),
-                    child: ElevatedButton.icon(
-                      label: Text(
-                        "Domande",
-                        maxLines: 1,
-                        style: TextStyle(fontWeight: FontWeight.normal),
-                      ),
-                      icon: Icon(Icons.format_list_numbered),
-                      iconAlignment: IconAlignment.end,
-                      style: ElevatedButtonTheme.of(context).style,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ViewQuestions(
-                                questions: _questionRepository.getQuestions(),
-                              );
-                            },
-                          ),
-                        );
-                      },
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.format_list_numbered),
+                    iconAlignment: IconAlignment.end,
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Domande",
+                          maxLines: 1,
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                      ],
                     ),
+                    style: ElevatedButtonTheme.of(context).style?.copyWith(
+                      fixedSize: WidgetStateProperty.all(Size(200.0, 30.0)),
+                      padding: WidgetStateProperty.all(
+                        EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ViewQuestions(
+                              questions: _questionRepository.getQuestions(),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 100.0),
-                    child: ElevatedButton.icon(
-                      label: Text(
-                        "Argomenti",
-                        maxLines: 1,
-                        style: TextStyle(fontWeight: FontWeight.normal),
-                      ),
-                      icon: Icon(Icons.checklist),
-                      iconAlignment: IconAlignment.end,
-                      style: ElevatedButtonTheme.of(context).style,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ViewTopics(
-                                quizPool: _numQuizQuestions,
-                                questionsPerTopic: _questionRepository
-                                    .getGroupedQuestions(),
-                                selectedTopics: _selectedTopics,
-                                toggleTopic: (Map<String, bool> v) {
-                                  setState(() {
-                                    _selectedTopics = v;
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        );
-                      },
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.checklist),
+                    iconAlignment: IconAlignment.end,
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Argomenti",
+                          maxLines: 1,
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                      ],
                     ),
+                    style: ElevatedButtonTheme.of(context).style?.copyWith(
+                      fixedSize: WidgetStateProperty.all(Size(200.0, 30.0)),
+                      padding: WidgetStateProperty.all(
+                        EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ViewTopics(
+                              quizPool: _numQuizQuestions,
+                              questionsPerTopic: _questionRepository
+                                  .getGroupedQuestions(),
+                              selectedTopics: _selectedTopics,
+                              toggleTopic: (Map<String, bool> v) {
+                                setState(() {
+                                  _selectedTopics = v;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 100.0),
-                    child: ElevatedButton.icon(
-                      label: Text(
-                        "Storico",
-                        maxLines: 1,
-                        style: TextStyle(fontWeight: FontWeight.normal),
-                      ),
-                      icon: Icon(Icons.history),
-                      iconAlignment: IconAlignment.end,
-                      style: ElevatedButtonTheme.of(context).style,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              // TODO
-                              return Text("");
-                            },
-                          ),
-                        );
-                      },
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.history),
+                    iconAlignment: IconAlignment.end,
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Storico",
+                          maxLines: 1,
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                      ],
                     ),
+                    style: ElevatedButtonTheme.of(context).style?.copyWith(
+                      fixedSize: WidgetStateProperty.all(Size(200.0, 30.0)),
+                      padding: WidgetStateProperty.all(
+                        EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
+                      ),
+                    ),
+                    onPressed: null,
+                    // () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) {
+                    //         // TODO
+                    //         return Text("");
+                    //       },
+                    //     ),
+                    //   );
+                    // },
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.bar_chart),
+                    iconAlignment: IconAlignment.end,
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Statistiche",
+                          maxLines: 1,
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    ),
+                    style: ElevatedButtonTheme.of(context).style?.copyWith(
+                      fixedSize: WidgetStateProperty.all(Size(200.0, 30.0)),
+                      padding: WidgetStateProperty.all(
+                        EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
+                      ),
+                    ),
+                    onPressed: null,
+                    // () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) {
+                    //         // TODO
+                    //         return Text("");
+                    //       },
+                    //     ),
+                    //   );
+                    // },
                   ),
                   const Spacer(flex: 2),
                 ],
@@ -319,61 +378,21 @@ class ViewMenuState extends State<ViewMenu> {
             height: 60,
             width: 60,
             child: IconButton.filled(
-              padding: EdgeInsets.only(right: 2.0),
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) {
-                //       return ViewSettings();
-                //     },
-                //   ),
-                // );
-              },
-              iconSize: 45,
-              icon: Icon(Icons.history),
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          SizedBox(
-            height: 60,
-            width: 60,
-            child: IconButton.filled(
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) {
-                //       return ViewSettings();
-                //     },
-                //   ),
-                // );
-              },
+              onPressed: null,
+              // onPressed: () {
+              //   // Navigator.push(
+              //   //   context,
+              //   //   MaterialPageRoute(
+              //   //     builder: (context) {
+              //   //       return ViewSettings();
+              //   //     },
+              //   //   ),
+              //   // );
+              // },
               iconSize: 45,
               icon: Icon(Icons.settings),
             ),
           ),
-          const SizedBox(height: 10.0),
-          // IconButtonWidget(
-          //   onTap: () {
-          //     // Navigator.push(
-          //     //   context,
-          //     //   MaterialPageRoute(builder: (context) =>
-          //     //     return ViewSettings(
-          //     //       qRepo: qRepo,
-          //     //       settings: _settings,
-          //     //       reloadTopics: loadTopics,
-          //     //   )),
-          //     // );
-          //   },
-          //   width: 60.0,
-          //   height: 60.0,
-          //   lightPalette: MyThemes.lightIconButtonPalette,
-          //   darkPalette: MyThemes.darkIconButtonPalette,
-          //   icon: Icons.settings,
-          //   iconSize: 40,
-          //   shadow: true,
-          // ),
           const SizedBox(height: 10.0),
           SizedBox(
             height: 60,
