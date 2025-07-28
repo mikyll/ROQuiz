@@ -395,162 +395,188 @@ class _ViewQuizState extends State<ViewQuiz> {
                         child: Center(
                           child: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 300.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor,
-                                borderRadius: BorderRadius.circular(10),
-                                border: BoxBorder.all(
-                                  width: 2,
-                                  color: Colors.grey,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context).disabledColor,
-                                    spreadRadius: 0.5,
-                                    blurRadius: 2,
-                                    offset: const Offset(2, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    children: [
-                                      Center(
-                                        child: Text(
-                                          "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
-                                          "Voto quiz: ${_quizGrade.toStringAsFixed(1)}",
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 30),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0,
-                                        ),
-                                        child: TextFormField(
-                                          key: _writtenGradeKey,
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return "Il voto dev'essere non nullo.";
-                                            }
-
-                                            final int? grade = int.tryParse(
-                                              value,
-                                            );
-                                            if (!isGradeValid(grade)) {
-                                              return "Il voto dev'essere compreso tra 0 e 32.";
-                                            }
-
-                                            return null;
-                                          },
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _totalGrade = -1;
-                                              _writtenGrade = int.tryParse(
-                                                _writtenGradeController.text,
-                                              );
-                                            });
-                                          },
-                                          onFieldSubmitted: (value) {
-                                            if (_formKey.currentState
-                                                    ?.validate() ??
-                                                false) {
-                                              setState(() {
-                                                _totalGrade =
-                                                    _calculateTotalGrade(
-                                                      _writtenGrade!,
-                                                      _quizGrade,
-                                                    );
-                                              });
-                                            }
-                                          },
-                                          textInputAction: TextInputAction.none,
-                                          controller: _writtenGradeController,
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: <TextInputFormatter>[
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
-                                          ],
-                                          decoration: const InputDecoration(
-                                            labelText:
-                                                "Voto della prova scritta",
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          if (_formKey.currentState
-                                                  ?.validate() ??
-                                              false) {
-                                            setState(() {
-                                              _totalGrade =
-                                                  _calculateTotalGrade(
-                                                    _writtenGrade!,
-                                                    _quizGrade,
-                                                  );
-                                            });
-                                          }
-                                        },
-                                        child: const Text(
-                                          "Calcola voto finale",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      Opacity(
-                                        opacity:
-                                            _writtenGrade == null ||
-                                                _totalGrade == -1
-                                            ? 0.0
-                                            : 1.0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: 8.0,
-                                          ),
-                                          child: Text.rich(
-                                            TextSpan(
-                                              children: [
-                                                TextSpan(text: "Voto finale: "),
-                                                TextSpan(
-                                                  text:
-                                                      "${min(_totalGrade.round(), 30)}",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                if (_totalGrade > 30.5)
-                                                  TextSpan(
-                                                    text: "L",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                TextSpan(
-                                                  text:
-                                                      " (${_totalGrade.toStringAsFixed(1)})",
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: _confettiWidgets,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: BoxBorder.all(
+                                      width: 2,
+                                      color: Colors.grey,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).disabledColor,
+                                        spreadRadius: 0.5,
+                                        blurRadius: 2,
+                                        offset: const Offset(2, 2),
                                       ),
                                     ],
                                   ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Form(
+                                      key: _formKey,
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
+                                              "Voto quiz: $_quizGrade",
+                                              maxLines: 2,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 30),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0,
+                                            ),
+                                            child: TextFormField(
+                                              key: _writtenGradeKey,
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.isEmpty) {
+                                                  return "Il voto dev'essere non nullo.";
+                                                }
+
+                                                final int? grade = int.tryParse(
+                                                  value,
+                                                );
+                                                if (!isGradeValid(grade)) {
+                                                  return "Il voto dev'essere compreso tra 0 e 32.";
+                                                }
+
+                                                return null;
+                                              },
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _totalGrade = -1;
+                                                  _writtenGrade = int.tryParse(
+                                                    _writtenGradeController
+                                                        .text,
+                                                  );
+                                                });
+                                              },
+                                              onFieldSubmitted: (value) {
+                                                if (_formKey.currentState
+                                                        ?.validate() ??
+                                                    false) {
+                                                  setState(() {
+                                                    _totalGrade =
+                                                        _calculateTotalGrade(
+                                                          _writtenGrade!,
+                                                          _quizGrade,
+                                                        );
+                                                  });
+                                                }
+                                              },
+                                              textInputAction:
+                                                  TextInputAction.none,
+                                              controller:
+                                                  _writtenGradeController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              inputFormatters:
+                                                  <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
+                                              decoration: const InputDecoration(
+                                                labelText:
+                                                    "Voto della prova scritta",
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState
+                                                      ?.validate() ??
+                                                  false) {
+                                                setState(() {
+                                                  _totalGrade =
+                                                      _calculateTotalGrade(
+                                                        _writtenGrade!,
+                                                        _quizGrade,
+                                                      );
+                                                });
+                                              }
+                                            },
+                                            child: const Text(
+                                              "Calcola voto finale",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ),
+                                          Opacity(
+                                            opacity:
+                                                _writtenGrade == null ||
+                                                    _totalGrade == -1
+                                                ? 0.0
+                                                : 1.0,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 8.0,
+                                              ),
+                                              child: Text.rich(
+                                                TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: "Voto finale: ",
+                                                    ),
+                                                    TextSpan(
+                                                      text:
+                                                          "${min(_totalGrade.round(), 30)}",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    if (_totalGrade > 30.5)
+                                                      TextSpan(
+                                                        text: "L",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    TextSpan(
+                                                      text:
+                                                          " (${_totalGrade.toStringAsFixed(1)})",
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: IconButton.filled(
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(),
+                                    icon: Icon(Icons.help, size: 20),
+                                    onPressed: () {
+                                      // Add your button action here
+                                    },
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: _confettiWidgets,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
