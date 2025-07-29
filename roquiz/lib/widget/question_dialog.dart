@@ -3,10 +3,16 @@ import 'package:roquiz/model/quiz/question.dart';
 
 class QuestionDialog extends StatefulWidget {
   // TODO: topics list
-  final List<String>? topics;
+  final List<String>? topicsList;
   final void Function(Question) onSubmit;
+  final Question? question;
 
-  const QuestionDialog({super.key, required this.onSubmit, this.topics});
+  const QuestionDialog({
+    super.key,
+    required this.onSubmit,
+    this.topicsList,
+    this.question,
+  });
 
   @override
   State<StatefulWidget> createState() => _QuestionDialogState();
@@ -39,8 +45,15 @@ class _QuestionDialogState extends State<QuestionDialog> {
   @override
   void initState() {
     super.initState();
-    if (widget.topics != null) {
-      _topic = widget.topics!.first;
+
+    if (widget.topicsList != null) {
+      _topic = widget.topicsList!.first;
+    }
+    if (widget.question != null) {
+      _bodyController.text = widget.question!.body;
+      _topic = widget.question!.topic;
+      _answers = List.from(widget.question!.answers);
+      _correctAnswer = widget.question!.correctAnswer;
     }
   }
 
@@ -60,7 +73,10 @@ class _QuestionDialogState extends State<QuestionDialog> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-              child: Text("Nuova Domanda", textAlign: TextAlign.center),
+              child: Text(
+                widget.question != null ? "Modifica Domanda" : "Nuova Domanda",
+                textAlign: TextAlign.center,
+              ),
             ),
             Positioned(
               top: 10,
@@ -85,6 +101,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
               children: [
                 TextFormField(
                   key: GlobalKey(),
+                  controller: _bodyController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("Corpo"),
@@ -97,7 +114,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
                 if (_topic != null)
                   DropdownButtonFormField(
                     value: _topic,
-                    items: widget.topics!.map<DropdownMenuItem<String>>((
+                    items: widget.topicsList!.map<DropdownMenuItem<String>>((
                       String value,
                     ) {
                       return DropdownMenuItem<String>(
@@ -197,7 +214,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
               Navigator.pop(context);
             },
             child: Text(
-              "Aggiungi",
+              "Conferma",
               style: TextStyle(fontWeight: FontWeight.normal, fontSize: 22),
             ),
           ),
