@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:roquiz/model/edit/command.dart';
+import 'package:roquiz/model/edit/command_executor.dart';
+import 'package:roquiz/model/edit/commands/add.dart';
+import 'package:roquiz/model/edit_question/commands/add_question.dart';
+import 'package:roquiz/model/edit_question/commands/custom_command.dart';
+import 'package:roquiz/model/edit_question/question_command_executor.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/widget/question_card.dart';
+import 'package:roquiz/widget/question_dialog.dart';
 
 class ViewQuestionsEdit extends StatefulWidget {
   final List<Question> questions;
@@ -19,31 +26,168 @@ class ViewQuestionsEdit extends StatefulWidget {
 class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   final ScrollController _scrollController = ScrollController();
 
-  late List<Question> _questions;
-  late List<bool> _selectedQuestions;
+  List<Question> _questions = [];
+  List<bool> _selectedQuestions = [];
   int _selectedCount = 0;
+  bool? _selectedAll = false;
 
-  // TODO: operations buffer
+  final QuestionCommandExecutor _commandExecutor = QuestionCommandExecutor();
 
-  void _addNewQuestion() {}
+  void _selectQuestion(int i) {
+    setState(() {
+      _selectedQuestions[i] = !_selectedQuestions[i];
+      _selectedCount += (_selectedQuestions[i] ? 1 : -1);
+      _selectedAll = null;
 
-  void _editQuestion() {}
+      if (_selectedCount == 0) {
+        _selectedAll = false;
+      }
+      if (_selectedCount == _questions.length) {
+        _selectedAll = true;
+      }
+    });
+  }
 
-  void _removeQuestion() {}
+  void _addNewQuestion() {
+    // TODO: problema: l'ID come lo gestiamo? Si potrebbe togliere del tutto... Tanto nel vecchio file non c'era
+    // Oppure quando si salvano le modifiche, l'ID viene ricalcolato
+    final Question newQuestion = Question(
+      id: _questions.length + 1,
+      body: "Quanto fa 2+2",
+      topic: "Somma",
+      answers: ["2", "3", "4", "5"],
+      correctAnswer: 2,
+    );
 
-  void _undoOperation() {}
+    // TODO: get topics
+    List<String> topics = [];
+    for (Question q in _questions) {
+      if (!topics.contains(q.topic)) {
+        topics.add(q.topic!);
+      }
+    }
 
-  void _redoOperation() {}
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return QuestionDialog(
+          topics: topics,
+          onSubmit: (question) {
+            // _commandExecutor.executeCommand(
+            //   CustomQuestionCommand(
+            //     () {
+            //       int index = _questions.length;
+            //       // Find index where to insert the new question
+            //       for (int i = 0; i < _questions.length; i++) {
+            //         if (_questions[i].topic! == newQuestion.topic!) {
+            //           index = i;
+            //           break;
+            //         }
+            //       }
+            //       setState(() {
+            //         _questions.insert(index, newQuestion);
+            //         _selectedQuestions.insert(index, false);
+            //         _selectedAll = _selectedAll! ? null : false;
+            //       });
+            //     },
+            //     () {
+            //       setState(() {
+            //         final int index = _questions.indexOf(newQuestion);
+            //         _questions.removeAt(index);
+            //         _selectedQuestions.removeAt(index);
+            //         _selectedAll = _selectedAll! ? null : false;
+            //       });
+            //     },
+            //   ),
+            // );
+          },
+        );
+      },
+    );
+  }
+
+  void _editQuestion() {
+    // show dialog
+
+    // if Ok (edit complete)
+    // add new command
+  }
+
+  void _showQuestionModal(Question? question) {
+    // TODO
+    // NB: if null, is for adding new one
+  }
+
+  void _removeQuestion() {
+    final List<Question> previousQuestions = List.from(_questions);
+    final List<bool> previousSelectedQuestions = List.from(_selectedQuestions);
+    final int previousCount = _selectedCount;
+
+    setState(() {
+      _selectedQuestions = List.filled(_questions.length, false);
+      _selectedCount = 0;
+    });
+
+    _commandExecutor.executeCommand(
+      CustomQuestionCommand(
+        () {
+          setState(() {
+            for (int i = previousSelectedQuestions.length - 1; i >= 0; i--) {
+              if (previousSelectedQuestions[i]) {
+                _questions.removeAt(i);
+                _selectedQuestions.removeAt(i);
+                _selectedCount--;
+              }
+            }
+
+            _selectedAll = _selectedAll! ? null : false;
+          });
+        },
+        () {
+          setState(() {
+            _questions = List.from(previousQuestions);
+            _selectedQuestions = List.filled(_questions.length, false);
+            _selectedCount = 0;
+            _selectedAll = _selectedAll! ? null : false;
+          });
+        },
+      ),
+    );
+
+    // setState(() {
+    //   if (_selectedAll != null && _selectedAll!) {
+    //     // Remove all
+    //     _questions = [];
+    //     _selectedQuestions = [];
+    //     _selectedCount = 0;
+    //   } else {
+    //     // Remove selected
+    //     for (int i = 0; i < _selectedQuestions.length; i++) {
+    //       if (_selectedQuestions[i]) {
+    //         // Remove
+    //         _questions.removeAt(i);
+    //         _selectedQuestions.removeAt(i);
+    //         _selectedCount--;
+    //       }
+    //     }
+    //   }
+    // });
+  }
+
+  void _undoOperation() {
+    // TODO
+  }
+
+  void _redoOperation() {
+    // TODO
+  }
 
   @override
   void initState() {
     super.initState();
 
-    _questions = widget.questions;
-    _selectedQuestions = [];
-    for (Question _ in _questions) {
-      _selectedQuestions.add(false);
-    }
+    _questions = List.from(widget.questions);
+    _selectedQuestions = List.filled(_questions.length, false);
   }
 
   @override
@@ -56,10 +200,38 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            _selectedCount > 0
-                ? "Selected: $_selectedCount/${_questions.length}"
-                : "Modifica Domande",
+            "Selezionate: $_selectedCount/${_selectedQuestions.length}",
           ),
+          actions: [
+            Transform.scale(
+              scale: 1.5,
+              child: Checkbox(
+                tristate: true,
+                value: _selectedAll,
+                onChanged: (value) {
+                  setState(() {
+                    if (_selectedAll == null || _selectedAll == false) {
+                      _selectedAll = true;
+                      for (int i = 0; i < _selectedQuestions.length; i++) {
+                        _selectedQuestions[i] = true;
+                      }
+                      _selectedCount = _selectedQuestions.length;
+                      return;
+                    }
+
+                    if (_selectedAll == true) {
+                      _selectedAll = false;
+                      for (int i = 0; i < _selectedQuestions.length; i++) {
+                        _selectedQuestions[i] = false;
+                      }
+                      _selectedCount = 0;
+                      return;
+                    }
+                  });
+                },
+              ),
+            ),
+          ],
           centerTitle: true,
           automaticallyImplyLeading: true,
           leading: IconButton(
@@ -84,18 +256,12 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 child: ListView.builder(
                   controller: _scrollController,
                   itemCount: _questions.length,
-                  itemBuilder: (_, index) {
+                  itemBuilder: (context, index) {
                     Widget questionWidget = QuestionCard.edit(
                       question: _questions[index],
                       isSelected: _selectedQuestions[index],
                       onSelected: () {
-                        setState(() {
-                          _selectedQuestions[index] =
-                              !_selectedQuestions[index];
-                          _selectedCount =
-                              _selectedCount +
-                              (_selectedQuestions[index] ? 1 : -1);
-                        });
+                        _selectQuestion(index);
                       },
                       tapToSelect: _selectedCount > 0,
                     );
@@ -146,56 +312,71 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Show/Hide correct answers
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Aggiungi una nuova domanda",
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: _selectedCount == 0
+                      ? () {
+                          _addNewQuestion();
+                        }
+                      : null,
                   icon: Icon(Icons.add),
                   iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
-              // Edit mode
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Modifica",
                 child: IconButton(
-                  onPressed: _selectedCount > 0 ? () {} : null,
+                  onPressed: _selectedCount == 1 ? () {} : null,
                   icon: Icon(Icons.edit_note),
                   iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
-              // Check if there are new questions
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Rimuovi",
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: _selectedCount > 0
+                      ? () {
+                          _removeQuestion();
+                        }
+                      : null,
                   icon: Icon(Icons.delete),
                   iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
-              // Import questions from a file
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Annulla l'ultima azione",
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: _commandExecutor.canUndo()
+                      ? () {
+                          setState(() {
+                            _commandExecutor.undoCommand();
+                          });
+                        }
+                      : null,
                   icon: Icon(Icons.undo),
                   iconSize: 35,
                 ),
               ),
               const SizedBox(width: 20),
-              // Export questions file
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Ripeti l'ultima azione",
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: _commandExecutor.canRedo()
+                      ? () {
+                          setState(() {
+                            _commandExecutor.redoCommand();
+                          });
+                        }
+                      : null,
                   icon: Icon(Icons.redo),
                   iconSize: 35,
                 ),
