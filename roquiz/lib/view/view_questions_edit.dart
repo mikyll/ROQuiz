@@ -71,7 +71,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       context: context,
       builder: (BuildContext context) {
         return QuestionDialog(
-          topics: topics,
+          topicsList: topics,
           onSubmit: (question) {
             // _commandExecutor.executeCommand(
             //   CustomQuestionCommand(
@@ -107,7 +107,34 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   }
 
   void _editQuestion() {
-    // show dialog
+    // TODO: get topics
+    List<String> topics = [];
+    for (Question q in _questions) {
+      if (!topics.contains(q.topic)) {
+        topics.add(q.topic!);
+      }
+    }
+
+    int iSelected = 0;
+    for (int i = 0; i < _selectedQuestions.length; i++) {
+      if (_selectedQuestions[i]) {
+        iSelected = i;
+        break;
+      }
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return QuestionDialog(
+          topicsList: topics,
+          onSubmit: (question) {
+            print("Hello");
+          },
+          question: _questions[iSelected],
+        );
+      },
+    );
 
     // if Ok (edit complete)
     // add new command
@@ -330,7 +357,11 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 waitDuration: Duration(milliseconds: 500),
                 message: "Modifica",
                 child: IconButton(
-                  onPressed: _selectedCount == 1 ? () {} : null,
+                  onPressed: _selectedCount == 1
+                      ? () {
+                          _editQuestion();
+                        }
+                      : null,
                   icon: Icon(Icons.edit_note),
                   iconSize: 35,
                 ),
