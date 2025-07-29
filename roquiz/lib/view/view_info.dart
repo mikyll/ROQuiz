@@ -78,6 +78,9 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                   RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
+                      style: TextTheme.of(
+                        context,
+                      ).bodyLarge!.copyWith(height: 1.3),
                       children: [
                         TextSpan(
                           text:
@@ -115,7 +118,6 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                         ),
                         TextSpan(text: " con l'esame!"),
                       ],
-                      style: TextStyle(fontSize: 18),
                     ),
                   ),
 
