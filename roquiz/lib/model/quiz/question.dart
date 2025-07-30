@@ -1,5 +1,5 @@
 class Question {
-  int id;
+  int? id;
   String body;
   String? topic;
   List<String> answers;
@@ -7,13 +7,13 @@ class Question {
   String? explaination;
 
   Question({
-    required this.id,
     required this.body,
-    this.topic,
     required this.answers,
     required this.correctAnswer,
+    this.id,
+    this.topic,
   }) {
-    if (id <= 0) {
+    if (id != null && id! <= 0) {
       throw FormatException("Invalid question ID: $id");
     }
 
