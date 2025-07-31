@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/widget/question_card.dart';
+import 'package:roquiz/widget/separator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:roquiz/widget/custom_search_bar.dart' hide SearchBar;
+import 'package:roquiz/widget/custom_search_bar.dart';
 
 class ViewQuestions extends StatefulWidget {
   final List<Question> questions;
@@ -106,6 +107,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   itemBuilder: (_, index) {
                     Widget questionWidget = QuestionCard.base(
                       question: _questions[index],
+                      iQuestion: index + 1,
                       hideCorrectAnswer: !_showAnswers,
                     );
                     // Check if we have to display the topic divider
@@ -116,24 +118,11 @@ class ViewQuestionsState extends State<ViewQuestions> {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(
-                              left: 10.0,
-                              right: 10.0,
                               top: index == 0 ? 10.0 : 0,
                             ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10.0),
-                                  child: Text(
-                                    _questions[index].topic!,
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                                const Expanded(child: Divider(thickness: 2)),
-                              ],
+                            child: Separator(
+                              text: _questions[index].topic!,
+                              indent: 10.0,
                             ),
                           ),
                           questionWidget,

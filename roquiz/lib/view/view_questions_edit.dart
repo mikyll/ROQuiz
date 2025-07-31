@@ -8,6 +8,7 @@ import 'package:roquiz/model/edit_question/question_command_executor.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/question_dialog.dart';
+import 'package:roquiz/widget/separator.dart';
 
 class ViewQuestionsEdit extends StatefulWidget {
   final List<Question> questions;
@@ -233,6 +234,19 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
             Transform.scale(
               scale: 1.5,
               child: Checkbox(
+                side: WidgetStateBorderSide.resolveWith((states) {
+                  return BorderSide(
+                    color: states.contains(WidgetState.selected)
+                        ? Colors.blue
+                        : Colors.white,
+                  );
+                }),
+                fillColor: WidgetStateProperty.resolveWith((states) {
+                  return states.contains(WidgetState.selected)
+                      ? Colors.blue
+                      : Colors.transparent;
+                }),
+                checkColor: Colors.white,
                 tristate: true,
                 value: _selectedAll,
                 onChanged: (value) {
@@ -258,6 +272,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 },
               ),
             ),
+            Text("xxxx"),
           ],
           centerTitle: true,
           automaticallyImplyLeading: true,
@@ -286,6 +301,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                   itemBuilder: (context, index) {
                     Widget questionWidget = QuestionCard.edit(
                       question: _questions[index],
+                      iQuestion: index + 1,
                       isSelected: _selectedQuestions[index],
                       onSelected: () {
                         _selectQuestion(index);
@@ -300,24 +316,11 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(
-                              left: 10.0,
-                              right: 10.0,
                               top: index == 0 ? 10.0 : 0,
                             ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10.0),
-                                  child: Text(
-                                    _questions[index].topic!,
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                                const Expanded(child: Divider(thickness: 2)),
-                              ],
+                            child: Separator(
+                              text: _questions[index].topic!,
+                              indent: 10.0,
                             ),
                           ),
                           questionWidget,
