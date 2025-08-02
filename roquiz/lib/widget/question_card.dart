@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/widget/hidden_text.dart';
 
 enum QuestionCardMode {
   quiz, // answers are selectable
@@ -10,6 +11,7 @@ enum QuestionCardMode {
 
 class QuestionCard extends StatelessWidget {
   final QuestionCardMode mode;
+  final int? iQuestion;
   final Question question;
   final int? selectedAnswer;
   final ValueChanged<int?>? onAnswerSelected;
@@ -22,6 +24,7 @@ class QuestionCard extends StatelessWidget {
     super.key,
     required this.mode,
     required this.question,
+    this.iQuestion,
     this.selectedAnswer,
     this.onAnswerSelected,
     this.hideCorrectAnswer = false,
@@ -34,6 +37,7 @@ class QuestionCard extends StatelessWidget {
   const QuestionCard.base({
     super.key,
     required this.question,
+    this.iQuestion,
     this.hideCorrectAnswer = false,
   }) : mode = QuestionCardMode.base,
        selectedAnswer = null,
@@ -49,6 +53,7 @@ class QuestionCard extends StatelessWidget {
     required this.onAnswerSelected,
     this.selectedAnswer,
   }) : mode = QuestionCardMode.quiz,
+       iQuestion = null,
        hideCorrectAnswer = false,
        isSelected = false,
        tapToSelect = false,
@@ -60,6 +65,7 @@ class QuestionCard extends StatelessWidget {
     required this.question,
     this.selectedAnswer,
   }) : mode = QuestionCardMode.quizOver,
+       iQuestion = null,
        onAnswerSelected = null,
        hideCorrectAnswer = false,
        isSelected = false,
@@ -70,6 +76,7 @@ class QuestionCard extends StatelessWidget {
   const QuestionCard.edit({
     super.key,
     required this.question,
+    this.iQuestion,
     this.selectedAnswer,
     this.isSelected = false,
     this.tapToSelect = false,
@@ -115,75 +122,80 @@ class QuestionCard extends StatelessWidget {
 
     return Stack(
       children: [
-        Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            side: BorderSide(width: 2.0, color: borderColor),
-          ),
-          color: fillColor,
-          margin: const EdgeInsets.all(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Add question number only if not in Quiz
-                    if ([
-                      QuestionCardMode.base,
-                      QuestionCardMode.edit,
-                    ].contains(mode))
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: Text(
-                          "Q${question.id}.",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
+        SelectionArea(
+          onSelectionChanged: (selectedContent) {
+            if (selectedContent != null) {}
+            // TODO: content.plainText = "";
+          },
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              side: BorderSide(width: 2.0, color: borderColor),
+            ),
+            color: fillColor,
+            margin: const EdgeInsets.all(8),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Add question number only if not in Quiz
+                      if (iQuestion != null)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: Text(
+                            "Q$iQuestion. ",
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
 
-                    // Question text
-                    Expanded(
-                      child: Text(
-                        question.body,
-                        style: TextStyle(fontSize: 20.0),
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                  ],
-                ),
-                // Answers list
-                SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
-                  child: Column(
-                    children: List.generate(question.answers.length, (index) {
-                      final answer = question.answers[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: _AnswerTile(
-                          mode: mode,
-                          answer: answer,
-                          isSelected:
-                              selectedAnswer != null && index == selectedAnswer,
-                          isCorrect:
-                              !hideCorrectAnswer &&
-                              index == question.correctAnswer,
-                          hideCorrectAnswer: hideCorrectAnswer,
-                          onTap: mode == QuestionCardMode.quiz
-                              ? () => onAnswerSelected?.call(
-                                  selectedAnswer == index ? null : index,
-                                )
-                              : null,
+                      // Question text
+                      Expanded(
+                        child: Text(
+                          question.body,
+                          style: TextStyle(fontSize: 20.0),
                         ),
-                      );
-                    }),
+                      ),
+                      const SizedBox(width: 30),
+                      if (mode == QuestionCardMode.base) HiddenText(),
+                    ],
                   ),
-                ),
-              ],
+                  // Answers list
+                  SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: List.generate(question.answers.length, (index) {
+                        final answer = question.answers[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: _AnswerTile(
+                            mode: mode,
+                            answer: answer,
+                            isSelected:
+                                selectedAnswer != null &&
+                                index == selectedAnswer,
+                            isCorrect:
+                                !hideCorrectAnswer &&
+                                index == question.correctAnswer,
+                            hideCorrectAnswer: hideCorrectAnswer,
+                            onTap: mode == QuestionCardMode.quiz
+                                ? () => onAnswerSelected?.call(
+                                    selectedAnswer == index ? null : index,
+                                  )
+                                : null,
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -194,7 +206,7 @@ class QuestionCard extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(8),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(15.0),
                   splashColor: Colors.transparent,
@@ -213,7 +225,7 @@ class QuestionCard extends StatelessWidget {
             ),
           ),
 
-        // Show report error button only if the question is in list
+        // NB: needs to be on top of the stack
         if (mode == QuestionCardMode.edit)
           Positioned(
             top: 25,
@@ -348,8 +360,11 @@ class _AnswerTile extends StatelessWidget {
                     : Icons.radio_button_off,
                 color: radioColor,
               ),
+            if (mode == QuestionCardMode.base) HiddenText(text: "- "),
             const SizedBox(width: 12),
             Expanded(child: Text(answer, style: TextStyle(fontSize: 14.0))),
+
+            if (mode == QuestionCardMode.base) HiddenText(),
           ],
         ),
       ),
