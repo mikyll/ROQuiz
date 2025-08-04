@@ -36,7 +36,15 @@ class Themes {
     iconButtonTheme: IconButtonThemeData(
       style: ButtonStyle(
         iconColor: WidgetStatePropertyAll(FOREGROUND_COLOR_LIGHT),
-        backgroundColor: WidgetStatePropertyAll(BACKGROUND_COLOR_LIGHT),
+        backgroundColor: WidgetStateColor.resolveWith((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.disabled)) {
+            return BACKGROUND_COLOR_LIGHT.withAlpha(150);
+          } else {
+            return BACKGROUND_COLOR_LIGHT;
+          }
+        }),
         splashFactory: InkSplash.splashFactory,
         overlayColor: WidgetStatePropertyAll(OVERLAY_COLOR_LIGHT),
       ),
@@ -126,7 +134,15 @@ class Themes {
     iconButtonTheme: IconButtonThemeData(
       style: ButtonStyle(
         iconColor: WidgetStatePropertyAll(FOREGROUND_COLOR_DARK),
-        backgroundColor: WidgetStatePropertyAll(BACKGROUND_COLOR_DARK),
+        backgroundColor: WidgetStateColor.resolveWith((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.disabled)) {
+            return BACKGROUND_COLOR_DARK.withAlpha(150);
+          } else {
+            return BACKGROUND_COLOR_DARK;
+          }
+        }),
         //backgroundColor: WidgetStatePropertyAll(BACKGROUND_COLOR_DARK),
         splashFactory: InkSplash.splashFactory,
         overlayColor: WidgetStatePropertyAll(OVERLAY_COLOR_DARK),
