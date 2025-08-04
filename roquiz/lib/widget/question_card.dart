@@ -122,11 +122,8 @@ class QuestionCard extends StatelessWidget {
 
     return Stack(
       children: [
+        // TODO: conditionally only in list?
         SelectionArea(
-          onSelectionChanged: (selectedContent) {
-            if (selectedContent != null) {}
-            // TODO: content.plainText = "";
-          },
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
