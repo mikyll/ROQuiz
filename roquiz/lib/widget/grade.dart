@@ -62,7 +62,6 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
   }
 
   Color _getTextColor(double grade, double gradeBase) {
-    print(grade / gradeBase);
     final int roundedGrade = grade.round();
 
     if (roundedGrade / gradeBase > 0.9) {
