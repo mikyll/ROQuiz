@@ -5,16 +5,19 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
-import 'package:roquiz/model/style/theme_provider.dart';
+import 'package:roquiz/widget/grade.dart';
 import 'package:roquiz/widget/question_card.dart';
+import 'package:roquiz/widget/result_card.dart';
 
 class ViewQuiz extends StatefulWidget {
   final List<Question> quizPool;
   final int questionNum;
   final int timer;
   final bool shuffleAnswers;
+  final int? writtenGrade;
 
   const ViewQuiz({
     super.key,
@@ -22,6 +25,7 @@ class ViewQuiz extends StatefulWidget {
     required this.questionNum,
     required this.timer,
     required this.shuffleAnswers,
+    this.writtenGrade,
   });
 
   @override
@@ -29,9 +33,6 @@ class ViewQuiz extends StatefulWidget {
 }
 
 class _ViewQuizState extends State<ViewQuiz> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
-  final GlobalKey<FormState> _writtenGradeKey = GlobalKey();
-
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _writtenGradeController = TextEditingController();
 
@@ -54,9 +55,13 @@ class _ViewQuizState extends State<ViewQuiz> {
   int _iQuestion = 0;
 
   int _correctAnswers = 0;
-  int? _writtenGrade;
   int _quizGrade = 0;
   double _totalGrade = -1;
+
+  // TODO
+  bool _showResultCard = false;
+  bool _showConfetti = false;
+  bool _showGrade = false;
 
   // This indicates that the confetti animation was already played for this quiz run
   bool _confettiPlayed = false;
@@ -68,8 +73,10 @@ class _ViewQuizState extends State<ViewQuiz> {
     return "$hours:$minutes:$seconds";
   }
 
-  Color? _getTimeColor() {
+  Color? _getTimerColor() {
     // TODO: yellow, orange, red colors when time is low
+
+    return null;
   }
 
   bool isGradeValid(int? grade) {
@@ -100,10 +107,26 @@ class _ViewQuizState extends State<ViewQuiz> {
       for (ConfettiController c in _confettiControllers) {
         c.play();
       }
-      _confettiPlayed = true;
+
+      setState(() {
+        _confettiPlayed = true;
+      });
     }
 
+    setState(() {
+      _showGrade = true;
+    });
+
     return total;
+  }
+
+  String _getGradeString(double grade) {
+    String gradeString = min(_totalGrade.round(), 30).toString();
+    if (grade > 30.0) {
+      gradeString += "L";
+    }
+
+    return gradeString;
   }
 
   void _previousQuestion() {
@@ -133,6 +156,12 @@ class _ViewQuizState extends State<ViewQuiz> {
       _isQuizOver = false;
 
       _confettiPlayed = false;
+      _showGrade = false;
+      _showResultCard = false;
+
+      for (ConfettiController c in _confettiControllers) {
+        c.stop();
+      }
 
       // TODO
       // _startTimer(widget.timer * 60);
@@ -164,12 +193,12 @@ class _ViewQuizState extends State<ViewQuiz> {
       _timer?.cancel();
 
       _correctAnswers = _quiz.countCorrectAnswers();
-      _correctAnswers = 16;
+      _correctAnswers = 16; // TODO: remove
       _quizGrade = _calculateQuizGrade(widget.questionNum, _correctAnswers);
 
       // Calculate if user had already entered the written grade
-      if (_writtenGrade != null) {
-        _totalGrade = _calculateTotalGrade(_writtenGrade!, _quizGrade);
+      if (widget.writtenGrade != null) {
+        _totalGrade = _calculateTotalGrade(widget.writtenGrade!, _quizGrade);
       }
     });
   }
@@ -200,6 +229,7 @@ class _ViewQuizState extends State<ViewQuiz> {
 
       return ConfettiWidget(
         confettiController: _confettiControllers[index],
+        blastDirectionality: BlastDirectionality.explosive,
         // NB: -pi / 2 is upwards
         blastDirection: -pi * (offset + directionStep * index) / tot,
         emissionFrequency: 0.20,
@@ -224,6 +254,8 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<Settings>(context);
+
     return PopScope(
       canPop: true, //!widget.settings.confirmAlerts,
       onPopInvokedWithResult: (didPop, Object? result) {
@@ -231,419 +263,465 @@ class _ViewQuizState extends State<ViewQuiz> {
           return;
         }
 
-        // ConfirmationAlert.showConfirmationDialog(
-        //   context,
-        //   "Conferma",
-        //   "Sei sicuro di voler uscire dal quiz?",
-        //   onConfirm: () {
-        //     _endQuiz(); // end quiz and stop timer
-        //     Navigator.pop(context);
-        //   },
-        //   onCancel: () {},
-        // );
+        // TODO: confirmation alert
       },
-      child: GestureDetector(
-        onTapDown: (details) {},
-        onPanUpdate: (details) {
-          setState(() {
-            details.delta.dx > 5
-                ? _dragDirectionDX = -1
-                : (details.delta.dx < -5 ? _dragDirectionDX = 1 : null);
-          });
-        },
-        onPanEnd: (details) {
-          _dragDirectionDX > 0
-              ? _nextQuestion()
-              : (_dragDirectionDX < 0 ? _previousQuestion() : null);
-          // _loadQuestion();
-          _dragDirectionDX = 0;
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text("Quiz"),
-            centerTitle: true,
-            automaticallyImplyLeading: true,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              style: ButtonStyle(
-                iconColor: WidgetStatePropertyAll(Colors.white),
-                overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-                backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+      child:
+          // TODO: move with arrow keys
+          GestureDetector(
+            onTapDown: (details) {},
+            onPanUpdate: (details) {
+              setState(() {
+                details.delta.dx > 5
+                    ? _dragDirectionDX = -1
+                    : (details.delta.dx < -5 ? _dragDirectionDX = 1 : null);
+              });
+            },
+            onPanEnd: (details) {
+              _dragDirectionDX > 0
+                  ? _nextQuestion()
+                  : (_dragDirectionDX < 0 ? _previousQuestion() : null);
+              // _loadQuestion();
+              _dragDirectionDX = 0;
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text("Quiz"),
+                centerTitle: true,
+                automaticallyImplyLeading: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios),
+                  style: ButtonStyle(
+                    iconColor: WidgetStatePropertyAll(Colors.white),
+                    overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
+                    backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+                  ),
+                  onPressed: () {
+                    // if (widget.settings.confirmAlerts) {
+                    //   ConfirmationAlert.showConfirmationDialog(
+                    //     context,
+                    //     "Conferma",
+                    //     "Sei sicuro di voler uscire dal quiz?",
+                    //     onConfirm: () {
+                    //       _endQuiz(); // end quiz and stop timer
+                    //       Navigator.pop(context);
+                    //     },
+                    //     onCancel: () {},
+                    //   );
+                    // } else {
+                    _endQuiz();
+                    Navigator.pop(context);
+                    // }
+                  },
+                ),
+                // TODO: add toggle dark mode?
+                // actions: [InkWell(child: Icon(Icons.light_mode))],
               ),
-              onPressed: () {
-                // if (widget.settings.confirmAlerts) {
-                //   ConfirmationAlert.showConfirmationDialog(
-                //     context,
-                //     "Conferma",
-                //     "Sei sicuro di voler uscire dal quiz?",
-                //     onConfirm: () {
-                //       _endQuiz(); // end quiz and stop timer
-                //       Navigator.pop(context);
-                //     },
-                //     onCancel: () {},
-                //   );
-                // } else {
-                _endQuiz();
-                Navigator.pop(context);
-                // }
-              },
-            ),
-          ),
-          body: SafeArea(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 700.0),
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              body: SafeArea(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 700.0),
+                    child: Stack(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 10.0,
-                            left: 20.0,
-                            right: 20.0,
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                "D${_iQuestion + 1}/${widget.questionNum}",
-                                maxLines: 1,
-                                style: TextTheme.of(context).headlineSmall!
-                                    .copyWith(fontWeight: FontWeight.bold),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 10.0,
+                                left: 20.0,
+                                right: 20.0,
                               ),
-                              const Spacer(flex: 1),
-                              InkWell(
-                                onTap: _isQuizOver
-                                    ? null
-                                    : () {
-                                        setState(() {
-                                          _showTimer = !_showTimer;
-                                        });
-                                      },
-                                child: Opacity(
-                                  opacity: _showTimer || _isQuizOver
-                                      ? 1.0
-                                      : 0.0,
-                                  child: RichText(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "D${_iQuestion + 1}/${widget.questionNum}",
                                     maxLines: 1,
-                                    text: TextSpan(
-                                      style: TextTheme.of(context)
-                                          .headlineSmall!
-                                          .copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                      children: [
-                                        const TextSpan(text: 'Time: '),
-                                        TextSpan(
-                                          text: _getTimeString(_timerCounter),
+                                    style: TextTheme.of(context).headlineSmall!
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  const Spacer(flex: 1),
+                                  InkWell(
+                                    onTap: _isQuizOver
+                                        ? null
+                                        : () {
+                                            setState(() {
+                                              _showTimer = !_showTimer;
+                                            });
+                                          },
+                                    child: Opacity(
+                                      opacity: _showTimer || _isQuizOver
+                                          ? 1.0
+                                          : 0.0,
+                                      child: RichText(
+                                        maxLines: 1,
+                                        text: TextSpan(
                                           style: TextTheme.of(context)
                                               .headlineSmall!
                                               .copyWith(
                                                 fontWeight: FontWeight.bold,
-                                                color: _getTimeColor(),
                                               ),
+                                          children: [
+                                            const TextSpan(text: 'Time: '),
+                                            TextSpan(
+                                              text: _getTimeString(
+                                                _timerCounter,
+                                              ),
+                                              style: TextTheme.of(context)
+                                                  .headlineSmall!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: _getTimerColor(),
+                                                  ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                controller: _scrollController,
+                                primary: false,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    // TODO: get result card height using key
+                                    bottom: _isQuizOver ? 220.0 : 0,
+                                  ),
+                                  child: _isQuizOver
+                                      ? QuestionCard.quizOver(
+                                          question: _quiz.questions[_iQuestion],
+                                          selectedAnswer:
+                                              _quiz.selectedAnswers[_iQuestion],
+                                        )
+                                      : QuestionCard.quiz(
+                                          question: _quiz.questions[_iQuestion],
+                                          selectedAnswer:
+                                              _quiz.selectedAnswers[_iQuestion],
+                                          onAnswerSelected: (int? iAnswer) {
+                                            setState(() {
+                                              _quiz.selectedAnswers[_iQuestion] =
+                                                  iAnswer;
+                                            });
+                                          },
+                                        ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            primary: false,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left: 10.0,
-                                right: 10.0,
-                                bottom: _isQuizOver ? 220.0 : 0,
-                              ),
-                              child: _isQuizOver
-                                  ? QuestionCard.quizOver(
-                                      question: _quiz.questions[_iQuestion],
-                                      selectedAnswer:
-                                          _quiz.selectedAnswers[_iQuestion],
-                                    )
-                                  : QuestionCard.quiz(
-                                      question: _quiz.questions[_iQuestion],
-                                      selectedAnswer:
-                                          _quiz.selectedAnswers[_iQuestion],
-                                      onAnswerSelected: (int? iAnswer) {
-                                        setState(() {
-                                          _quiz.selectedAnswers[_iQuestion] =
-                                              iAnswer;
-                                        });
-                                      },
-                                    ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                        // Results card
+                        // if (_isQuizOver)
+                        //   ResultCard(
+                        //     correctAnswers: _correctAnswers,
+                        //     totalQuestions: widget.questionNum,
+                        //     quizGrade: _quizGrade,
+                        //   ),
 
-                    // Results card
-                    if (_isQuizOver)
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 10,
-                        child: Center(
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: 300.0),
-                            child: Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: BoxBorder.all(
-                                      width: 2,
-                                      color: Colors.grey,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Theme.of(context).disabledColor,
-                                        spreadRadius: 0.5,
-                                        blurRadius: 2,
-                                        offset: const Offset(2, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Form(
-                                      key: _formKey,
-                                      child: Column(
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
-                                              "Voto quiz: $_quizGrade",
-                                              maxLines: 2,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 30),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 20.0,
-                                            ),
-                                            child: TextFormField(
-                                              key: _writtenGradeKey,
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty) {
-                                                  return "Il voto dev'essere non nullo.";
-                                                }
-
-                                                final int? grade = int.tryParse(
-                                                  value,
-                                                );
-                                                if (!isGradeValid(grade)) {
-                                                  return "Il voto dev'essere compreso tra 0 e 32.";
-                                                }
-
-                                                return null;
-                                              },
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  _totalGrade = -1;
-                                                  _writtenGrade = int.tryParse(
-                                                    _writtenGradeController
-                                                        .text,
-                                                  );
-                                                });
-                                              },
-                                              onFieldSubmitted: (value) {
-                                                if (_formKey.currentState
-                                                        ?.validate() ??
-                                                    false) {
-                                                  setState(() {
-                                                    _totalGrade =
-                                                        _calculateTotalGrade(
-                                                          _writtenGrade!,
-                                                          _quizGrade,
-                                                        );
-                                                  });
-                                                }
-                                              },
-                                              textInputAction:
-                                                  TextInputAction.none,
-                                              controller:
-                                                  _writtenGradeController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              inputFormatters:
-                                                  <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly,
-                                                  ],
-                                              decoration: const InputDecoration(
-                                                labelText:
-                                                    "Voto della prova scritta",
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              if (_formKey.currentState
-                                                      ?.validate() ??
-                                                  false) {
-                                                setState(() {
-                                                  _totalGrade =
-                                                      _calculateTotalGrade(
-                                                        _writtenGrade!,
-                                                        _quizGrade,
-                                                      );
-                                                });
-                                              }
-                                            },
-                                            child: const Text(
-                                              "Calcola voto finale",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ),
-                                          Opacity(
-                                            opacity:
-                                                _writtenGrade == null ||
-                                                    _totalGrade == -1
-                                                ? 0.0
-                                                : 1.0,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                top: 8.0,
-                                              ),
-                                              child: Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Voto finale: ",
-                                                    ),
-                                                    TextSpan(
-                                                      text:
-                                                          "${min(_totalGrade.round(), 30)}",
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    if (_totalGrade > 30.5)
-                                                      TextSpan(
-                                                        text: "L",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    TextSpan(
-                                                      text:
-                                                          " (${_totalGrade.toStringAsFixed(1)})",
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
+                        // Results card
+                        if (_isQuizOver && _showResultCard)
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 10,
+                            child: Center(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: 300.0),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).cardColor,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: BoxBorder.all(
+                                          width: 2,
+                                          color: Colors.grey,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Theme.of(
+                                              context,
+                                            ).disabledColor,
+                                            spreadRadius: 0.5,
+                                            blurRadius: 2,
+                                            offset: const Offset(2, 2),
                                           ),
                                         ],
                                       ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(25.0),
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            spacing: 25.0,
+                                            children: [
+                                              Text(
+                                                "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
+                                                "Voto scritto: ${settings.writtenGrade}\n"
+                                                "Voto quiz: $_quizGrade (${min(_quizGrade / 30 * 100, 100).round()}%)\n",
+                                                maxLines: 3,
+                                              ),
+                                              Text(
+                                                "Voto finale: ${_getGradeString(_totalGrade)} (${_totalGrade.toStringAsFixed(1)})",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 24,
+                                                ),
+                                              ),
+                                              // TODO: style (bold, etc.)
+                                            ],
+                                          ),
+                                        ),
+                                        // child: Form(
+                                        //   key: _formKey,
+                                        //   child: Column(
+                                        //     children: [
+                                        //       Center(
+                                        //         child: Text(
+                                        //           "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
+                                        //           "Voto quiz: $_quizGrade",
+                                        //           maxLines: 2,
+                                        //         ),
+                                        //       ),
+                                        //       const SizedBox(height: 30),
+                                        //       Padding(
+                                        //         padding: const EdgeInsets.symmetric(
+                                        //           horizontal: 20.0,
+                                        //         ),
+                                        //         child: TextFormField(
+                                        //           key: _writtenGradeKey,
+                                        //           validator: (value) {
+                                        //             if (value == null ||
+                                        //                 value.isEmpty) {
+                                        //               return "Il voto dev'essere non nullo.";
+                                        //             }
+
+                                        //             final int? grade = int.tryParse(
+                                        //               value,
+                                        //             );
+                                        //             if (!isGradeValid(grade)) {
+                                        //               return "Il voto dev'essere compreso tra 0 e 32.";
+                                        //             }
+
+                                        //             return null;
+                                        //           },
+                                        //           onChanged: (value) {
+                                        //             setState(() {
+                                        //               _totalGrade = -1;
+                                        //               _writtenGrade = int.tryParse(
+                                        //                 _writtenGradeController
+                                        //                     .text,
+                                        //               );
+                                        //             });
+                                        //           },
+                                        //           onFieldSubmitted: (value) {
+                                        //             if (_formKey.currentState
+                                        //                     ?.validate() ??
+                                        //                 false) {
+                                        //               setState(() {
+                                        //                 _totalGrade =
+                                        //                     _calculateTotalGrade(
+                                        //                       _writtenGrade!,
+                                        //                       _quizGrade,
+                                        //                     );
+                                        //               });
+                                        //             }
+                                        //           },
+                                        //           textInputAction:
+                                        //               TextInputAction.none,
+                                        //           controller:
+                                        //               _writtenGradeController,
+                                        //           keyboardType:
+                                        //               TextInputType.number,
+                                        //           inputFormatters:
+                                        //               <TextInputFormatter>[
+                                        //                 FilteringTextInputFormatter
+                                        //                     .digitsOnly,
+                                        //               ],
+                                        //           decoration: const InputDecoration(
+                                        //             labelText:
+                                        //                 "Voto della prova scritta",
+                                        //           ),
+                                        //         ),
+                                        //       ),
+                                        //       const SizedBox(height: 10),
+                                        //       ElevatedButton(
+                                        //         onPressed: () {
+                                        //           if (_formKey.currentState
+                                        //                   ?.validate() ??
+                                        //               false) {
+                                        //             setState(() {
+                                        //               _totalGrade =
+                                        //                   _calculateTotalGrade(
+                                        //                     _writtenGrade!,
+                                        //                     _quizGrade,
+                                        //                   );
+                                        //             });
+                                        //           }
+                                        //         },
+                                        //         child: const Text(
+                                        //           "Calcola voto finale",
+                                        //           style: TextStyle(
+                                        //             fontSize: 16,
+                                        //             fontWeight: FontWeight.normal,
+                                        //           ),
+                                        //         ),
+                                        //       ),
+                                        //       Opacity(
+                                        //         opacity:
+                                        //             _writtenGrade == null ||
+                                        //                 _totalGrade == -1
+                                        //             ? 0.0
+                                        //             : 1.0,
+                                        //         child: Padding(
+                                        //           padding: const EdgeInsets.only(
+                                        //             top: 8.0,
+                                        //           ),
+                                        //           child: Text.rich(
+                                        //             TextSpan(
+                                        //               children: [
+                                        //                 TextSpan(
+                                        //                   text: "Voto finale: ",
+                                        //                 ),
+                                        //                 TextSpan(
+                                        //                   text: _getGradeString(
+                                        //                     _totalGrade,
+                                        //                   ),
+                                        //                   style: TextStyle(
+                                        //                     fontWeight:
+                                        //                         FontWeight.bold,
+                                        //                   ),
+                                        //                 ),
+                                        //                 TextSpan(
+                                        //                   text:
+                                        //                       " (${_totalGrade.toStringAsFixed(1)})",
+                                        //                 ),
+                                        //               ],
+                                        //             ),
+                                        //           ),
+                                        //         ),
+                                        //       ),
+                                        //     ],
+                                        //   ),
+                                        // ),
+                                      ),
                                     ),
-                                  ),
+                                    Positioned(
+                                      top: 10,
+                                      right: 10,
+                                      child: Tooltip(
+                                        textAlign: TextAlign.center,
+                                        message:
+                                            "Il voto finale è calcolato come segue:\n"
+                                            "(voto_scritto * 2/3) + (voto_quiz * 1/3)\n\n"
+                                            "Entrambe le prove sono in 30esimi, ma è possibile ottenere punti\n"
+                                            "extra e arrivare a 32. La lode viene assegnata se il totale supera 30.",
+                                        child: IconButton.filled(
+                                          padding: EdgeInsets.zero,
+                                          constraints: BoxConstraints(),
+                                          icon: Icon(Icons.help, size: 20),
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: IconButton.filled(
-                                    padding: EdgeInsets.zero,
-                                    constraints: BoxConstraints(),
-                                    icon: Icon(Icons.help, size: 20),
-                                    onPressed: () {
-                                      // Add your button action here
-                                    },
-                                  ),
-                                ),
-                                Positioned.fill(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: _confettiWidgets,
-                                  ),
-                                ),
-                              ],
+                              ),
+                            ),
+                          ),
+
+                        if (_isQuizOver)
+                          Positioned.fill(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: _confettiWidgets,
+                            ),
+                          ),
+
+                        // TODO
+                        if (_showGrade)
+                          Positioned.fill(
+                            child: Grade(
+                              grade: _totalGrade,
+                              gradeBase: 30.0,
+                              onTapAfterAnimationFinished: () {
+                                setState(() {
+                                  _showGrade = false;
+                                  _showResultCard = true;
+                                });
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              bottomNavigationBar: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  border: Border(
+                    top: BorderSide(color: Theme.of(context).disabledColor),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      // Show previous question
+                      IconButton(
+                        onPressed: () {
+                          _previousQuestion();
+                        },
+                        icon: Icon(Icons.arrow_back_ios_rounded),
+                        iconSize: 35,
+                      ),
+                      const SizedBox(width: 20),
+                      // Show next question
+                      IconButton(
+                        onPressed: () {
+                          _nextQuestion();
+                        },
+                        icon: Icon(Icons.arrow_forward_ios_rounded),
+                        iconSize: 35,
+                      ),
+                      const SizedBox(width: 20),
+                      const Spacer(flex: 5),
+                      // End/Restart quiz
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_isQuizOver) {
+                            _startQuiz();
+                          } else {
+                            _endQuiz();
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 50.0,
+                          width: 100.0,
+                          child: Text(
+                            !_isQuizOver ? "Termina" : "Riavvia",
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-          bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              border: Border(
-                top: BorderSide(color: Theme.of(context).disabledColor),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  // Show previous question
-                  IconButton(
-                    onPressed: () {
-                      _previousQuestion();
-                    },
-                    icon: Icon(Icons.arrow_back_ios_rounded),
-                    iconSize: 35,
-                  ),
-                  const SizedBox(width: 20),
-                  // Show next question
-                  IconButton(
-                    onPressed: () {
-                      _nextQuestion();
-                    },
-                    icon: Icon(Icons.arrow_forward_ios_rounded),
-                    iconSize: 35,
-                  ),
-                  const SizedBox(width: 20),
-                  const Spacer(flex: 5),
-                  // End/Restart quiz
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_isQuizOver) {
-                        _startQuiz();
-                      } else {
-                        _endQuiz();
-                      }
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 50.0,
-                      width: 100.0,
-                      child: Text(
-                        !_isQuizOver ? "Termina" : "Riavvia",
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
