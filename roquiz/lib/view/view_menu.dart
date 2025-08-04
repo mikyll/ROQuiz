@@ -5,17 +5,24 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 import 'package:roquiz/model/persistence/question_repository.dart';
+import 'package:roquiz/model/persistence/settings.dart';
+import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
-import 'package:roquiz/model/style/theme_provider.dart';
 import 'package:roquiz/view/view_info.dart';
 import 'package:roquiz/view/view_questions.dart';
 import 'package:roquiz/view/view_quiz.dart';
+import 'package:roquiz/view/view_settings.dart';
 import 'package:roquiz/view/view_topics.dart';
 
 class ViewMenu extends StatefulWidget {
   final PackageInfo packageInfo;
+  final Settings settings;
 
-  const ViewMenu({super.key, required this.packageInfo});
+  const ViewMenu({
+    super.key,
+    required this.packageInfo,
+    required this.settings,
+  });
 
   @override
   State<StatefulWidget> createState() => ViewMenuState();
@@ -26,7 +33,9 @@ class ViewMenuState extends State<ViewMenu> {
   Map<String, bool> _selectedTopics = {};
 
   int _numQuizQuestions = 16;
+  int _totQuestions = 0;
   int _timer = 18;
+  String? _error = "Error";
 
   int _calculateNumSelected() {
     int num = 0;
@@ -75,15 +84,24 @@ class ViewMenuState extends State<ViewMenu> {
     print(curr);
   }
 
-  void _initQuestionRepository() {
-    _questionRepository.loadFromAsset().then((_) {
-      setState(() {
-        _selectedTopics = {
-          for (var value in _questionRepository.getGroupedQuestions().keys)
-            value: true,
-        };
-      });
-    });
+  void _initQuestionRepository() async {
+    _questionRepository
+        .init()
+        .then((_) {
+          setState(() {
+            _totQuestions = _questionRepository.questions.length;
+            _selectedTopics = {
+              for (var value in _questionRepository.getGroupedQuestions().keys)
+                value: true,
+            };
+            _error = null;
+          });
+        })
+        .onError((error, stackTrace) {
+          setState(() {
+            _error = error.toString();
+          });
+        });
   }
 
   @override
@@ -98,7 +116,7 @@ class ViewMenuState extends State<ViewMenu> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
+    final settings = Provider.of<Settings>(context, listen: true);
 
     return Scaffold(
       body: SafeArea(
@@ -147,10 +165,18 @@ class ViewMenuState extends State<ViewMenu> {
                     style: TextTheme.of(context).headlineSmall,
                   ),
                   const Spacer(flex: 1),
+                  IconButton(
+                    onPressed: () {
+                      // TODO
+                    },
+                    icon: Icon(Icons.refresh),
+                  ),
                   Switch(
-                    value: themeProvider.themeMode == ThemeMode.dark,
-                    onChanged: (isDarkMode) {
-                      themeProvider.toggleTheme();
+                    value: settings.themeDark,
+                    onChanged: (_) {
+                      // TODO
+                      settings.themeDark = !settings.themeDark;
+                      SettingsManager.save(settings);
                     },
                   ),
 
@@ -171,6 +197,7 @@ class ViewMenuState extends State<ViewMenu> {
                                   timer: _timer,
                                   // TODO
                                   shuffleAnswers: false,
+                                  writtenGrade: settings.writtenGrade,
                                 );
                               },
                             ),
@@ -198,7 +225,7 @@ class ViewMenuState extends State<ViewMenu> {
                       const Spacer(flex: 1),
                       const Icon(Icons.format_list_numbered_rounded),
                       Text(
-                        "Domande: $_numQuizQuestions su ${_calculateNumSelected()}"
+                        "Domande: ${widget.settings.quizPool} su $_totQuestions"
                             .padRight(22),
                       ),
                       const Spacer(flex: 2),
@@ -208,19 +235,25 @@ class ViewMenuState extends State<ViewMenu> {
                     ],
                   ),
                   Visibility(
-                    visible: true,
+                    visible: _error != null,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: BoxBorder.all(color: Colors.red),
-                        ),
-                        child: Text(
-                          "error",
-                          style: const TextStyle(color: Colors.red),
+                      child: InkWell(
+                        onTap: () {
+                          // Expand Stacktrace
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: BoxBorder.all(color: Colors.red),
+                          ),
+                          child: Text(
+                            "Error",
+                            style: const TextStyle(color: Colors.red),
+                          ),
                         ),
                       ),
                     ),
@@ -250,7 +283,7 @@ class ViewMenuState extends State<ViewMenu> {
                         MaterialPageRoute(
                           builder: (context) {
                             return ViewQuestions(
-                              questions: _questionRepository.getQuestions(),
+                              questions: _questionRepository.questions,
                             );
                           },
                         ),
@@ -378,17 +411,18 @@ class ViewMenuState extends State<ViewMenu> {
             height: 60,
             width: 60,
             child: IconButton.filled(
-              onPressed: null,
-              // onPressed: () {
-              //   // Navigator.push(
-              //   //   context,
-              //   //   MaterialPageRoute(
-              //   //     builder: (context) {
-              //   //       return ViewSettings();
-              //   //     },
-              //   //   ),
-              //   // );
-              // },
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ViewSettings(
+                        maxQuizPool: _questionRepository.questions.length,
+                      );
+                    },
+                  ),
+                );
+              },
               iconSize: 45,
               icon: Icon(Icons.settings),
             ),
