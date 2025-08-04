@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:roquiz/model/persistence/settings.dart';
+import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:roquiz/widget/setting_entry.dart';
 
-class ViewSettings extends StatefulWidget {
-  const ViewSettings({super.key});
+class ViewSettings extends StatelessWidget {
+  final int maxQuizPool;
 
-  @override
-  State<StatefulWidget> createState() => ViewSettingsState();
-}
+  const ViewSettings({super.key, required this.maxQuizPool});
 
-class ViewSettingsState extends State<ViewSettings> {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
+  bool _isGradeValid(int? grade) {
+    return grade != null && grade >= 0 && grade <= 32;
   }
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController();
+    // TODO
+    final TextEditingController writtenGradeController =
+        TextEditingController();
+
+    final settings = Provider.of<Settings>(context);
+
     return PopScope(
       canPop: true,
-      // onPopInvoked: (_) {
-      //   // todo
+      // onPopInvokedWithResult: (didPop, result) {
+
       // },
       child: Scaffold(
         appBar: AppBar(
@@ -40,6 +45,20 @@ class ViewSettingsState extends State<ViewSettings> {
               Navigator.pop(context);
             },
           ),
+          actionsPadding: EdgeInsets.only(right: 8.0),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.help_outline, color: Colors.white),
+              style: ButtonStyle(
+                iconColor: WidgetStatePropertyAll(Colors.white),
+                overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
+                backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+              ),
+              onPressed: () {
+                // TODO
+              },
+            ),
+          ],
         ),
         body: SafeArea(
           child: Center(
@@ -48,24 +67,29 @@ class ViewSettingsState extends State<ViewSettings> {
               child: Form(
                 // TODO: key
                 child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  controller: _scrollController,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  controller: scrollController,
                   shrinkWrap: true,
                   primary: false,
                   children: [
+                    SizedBox(height: 10),
                     Separator(text: "Generale"),
                     SettingEntry(
                       label: "Lingua:",
                       child: DropdownButtonFormField(
-                        value: "Italiano",
-                        items: ["Italiano", "English"]
-                            .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            })
-                            .toList(),
+                        value: settings.language,
+                        items: ["Italiano"].map<DropdownMenuItem<String>>((
+                          String value,
+                        ) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                            onTap: () {
+                              settings.language = value;
+                              SettingsManager.save(settings);
+                            },
+                          );
+                        }).toList(),
                         onChanged: (_) {},
                       ),
                     ),
@@ -73,21 +97,42 @@ class ViewSettingsState extends State<ViewSettings> {
                       label: "Controllo release app:",
                       child: Transform.scale(
                         scale: 1.5,
-                        child: Checkbox(value: false, onChanged: (_) {}),
+                        child: Checkbox(
+                          value: settings.autoCheckRelease,
+                          onChanged: (value) {
+                            settings.autoCheckRelease = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
+                        ),
                       ),
                     ),
                     SettingEntry(
                       label: "Controllo nuove domande:",
                       child: Transform.scale(
                         scale: 1.5,
-                        child: Checkbox(value: false, onChanged: (_) {}),
+                        child: Checkbox(
+                          value: settings.autoCheckQuestions,
+                          onChanged: (value) {
+                            settings.autoCheckQuestions = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
+                        ),
                       ),
                     ),
                     SettingEntry(
                       label: "Animazioni:",
                       child: Transform.scale(
                         scale: 1.5,
-                        child: Checkbox(value: false, onChanged: (_) {}),
+                        child: Checkbox(
+                          value: settings.animations,
+                          onChanged: (value) {
+                            settings.animations = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
+                        ),
                       ),
                     ),
                     SettingEntry(
@@ -96,8 +141,12 @@ class ViewSettingsState extends State<ViewSettings> {
                         scale: 1.5,
                         child: Checkbox(
                           tristate: true,
-                          value: null,
-                          onChanged: (_) {},
+                          value: settings.confirmationAlert,
+                          onChanged: (value) {
+                            settings.confirmationAlert = value;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
                         ),
                       ),
                     ),
@@ -107,21 +156,104 @@ class ViewSettingsState extends State<ViewSettings> {
                     //     - new version/new questions
                     SettingEntry(
                       label: "Tema scuro:",
-                      child: Switch(value: false, onChanged: (_) {}),
+                      child: Switch(
+                        value: settings.themeDark,
+                        onChanged: (value) {
+                          // TODO: why it's slow?
+                          settings.themeDark = value;
+                          SettingsManager.save(settings);
+                        },
+                      ),
                     ),
+                    SettingEntry(
+                      label: "GitHub token:",
+                      child: TextFormField(
+                        decoration: InputDecoration(hint: Text("token")),
+                        // TODO: pattern
+                      ),
+                    ),
+
                     SizedBox(height: 20.0),
                     Separator(text: "Quiz"),
                     SettingEntry(
-                      label: "Quiz su argomenti:",
-                      child: Switch(value: false, onChanged: (_) {}),
+                      label: "Voto scritto:",
+                      child: TextFormField(
+                        initialValue: settings.writtenGrade?.toString() ?? "",
+                        decoration: InputDecoration(hint: Text("es: 32")),
+                        maxLength: 2,
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return null;
+                          }
+
+                          final int? grade = int.tryParse(value);
+
+                          if (!_isGradeValid(grade)) {
+                            return "Il voto dev'essere compreso tra 0 e 32.";
+                          }
+
+                          return null;
+                        },
+                        // TODO: fix this
+                        onFieldSubmitted: (newValue) {
+                          settings.writtenGrade = int.tryParse(newValue!);
+                          SettingsManager.save(settings);
+                        },
+                        // onChanged: (value) {
+                        //   print(writtenGradeController.text);
+                        //   settings.writtenGrade = int.tryParse(
+                        //     writtenGradeController.text,
+                        //   );
+                        //   SettingsManager.save(settings);
+                        // },
+                      ),
                     ),
                     SettingEntry(
-                      label: "Pool quiz:",
+                      label: "Argomenti interi:",
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                          value: settings.fullTopics,
+                          onChanged: (value) {
+                            settings.fullTopics = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
+                        ),
+                      ),
+                    ),
+                    SettingEntry(
+                      label: "Domande quiz:",
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 10.0,
                         children: [
                           IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-                          Text("  __  "),
+                          SizedBox(
+                            width: 40.0,
+                            child: TextFormField(
+                              maxLength: 3,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(),
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                counterStyle: TextStyle(
+                                  height: double.minPositive,
+                                ),
+                                counterText: "",
+                              ),
+                            ),
+                          ),
                           IconButton(
                             onPressed: () {},
                             icon: Icon(Icons.remove),
@@ -133,9 +265,29 @@ class ViewSettingsState extends State<ViewSettings> {
                       label: "Timer (minuti):",
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 10.0,
                         children: [
                           IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-                          Text("  __  "),
+                          SizedBox(
+                            width: 40.0,
+                            child: TextFormField(
+                              maxLength: 3,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(),
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                counterStyle: TextStyle(
+                                  height: double.minPositive,
+                                ),
+                                counterText: "",
+                              ),
+                            ),
+                          ),
                           IconButton(
                             onPressed: () {},
                             icon: Icon(Icons.remove),
@@ -147,7 +299,29 @@ class ViewSettingsState extends State<ViewSettings> {
                       label: "Mescola risposte:",
                       child: Transform.scale(
                         scale: 1.5,
-                        child: Checkbox(value: true, onChanged: (_) {}),
+                        child: Checkbox(
+                          value: settings.shuffleAnswers,
+                          onChanged: (value) {
+                            settings.shuffleAnswers = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
+                        ),
+                      ),
+                    ),
+
+                    SettingEntry(
+                      label: "Termina quiz allo scadere del tempo:",
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                          value: settings.exceedTimeout,
+                          onChanged: (value) {
+                            settings.exceedTimeout = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
+                        ),
                       ),
                     ),
 
@@ -157,21 +331,41 @@ class ViewSettingsState extends State<ViewSettings> {
                       label: "Layout per mancini:",
                       child: Transform.scale(
                         scale: 1.5,
-                        child: Checkbox(value: false, onChanged: (_) {}),
+                        child: Checkbox(
+                          value: settings.leftHandedLayout,
+                          onChanged: (value) {
+                            settings.leftHandedLayout = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
+                        ),
                       ),
                     ),
                     SettingEntry(
-                      label: "Tema daltonici:",
+                      label: "Tema per daltonici:",
                       child: Transform.scale(
                         scale: 1.5,
-                        child: Checkbox(value: false, onChanged: (_) {}),
+                        child: Checkbox(
+                          value: false,
+                          onChanged: null,
+                          splashRadius: 15,
+                        ),
                       ),
                     ),
+                    SizedBox(height: 100),
                   ],
                 ),
               ),
             ),
           ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: IconButton.filled(
+          onPressed: () {
+            // TODO
+          },
+          iconSize: 45,
+          icon: Icon(Icons.refresh, size: 40.0),
         ),
       ),
     );
