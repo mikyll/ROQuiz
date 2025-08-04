@@ -20,6 +20,7 @@ class ViewTopics extends StatefulWidget {
 }
 
 class ViewTopicsState extends State<ViewTopics> {
+  late int _totQuestions;
   late Map<String, bool> _selectedTopics;
 
   // Check if selected topics have default values (used to enable/disable "Reset" button)
@@ -54,14 +55,14 @@ class ViewTopicsState extends State<ViewTopics> {
     return result;
   }
 
-  bool _isDisabled(String topic) {
+  bool _isEnabled(String topic) {
     if (!_selectedTopics.keys.contains(topic)) {
       return false;
     }
 
     // Topic is disabled only if:
     // - the current topic is not deselected
-    // - deselecting the topic will still leave enough questions for the quiz pool
+    // - deselecting the topic would still leave enough questions for the quiz pool
     int numCurrent = _selectedQuestions().length;
     int numDeselecting = widget.questionsPerTopic[topic]!.length;
 
@@ -76,6 +77,10 @@ class ViewTopicsState extends State<ViewTopics> {
     setState(() {
       _selectedTopics = widget.selectedTopics;
     });
+    _totQuestions = 0;
+    for (List<Question> qList in widget.questionsPerTopic.values) {
+      _totQuestions += qList.length;
+    }
   }
 
   @override
@@ -112,9 +117,78 @@ class ViewTopicsState extends State<ViewTopics> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "Quiz pool: ${widget.quizPool}\nSelected: ${_selectedQuestions().length}",
+                    Stack(
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            side: BorderSide(width: 2.0, color: Colors.grey),
+                          ),
+                          elevation: 0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: 300.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 10.0,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          "Selezionate: ",
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
+                                      ),
+                                      Text(
+                                        "${_selectedQuestions().length}/$_totQuestions",
+                                        style: TextStyle(fontSize: 20.0),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          "Domande quiz: ",
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
+                                      ),
+                                      Text(
+                                        "${widget.quizPool}/${_selectedQuestions().length}",
+                                        style: TextStyle(fontSize: 20.0),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned.fill(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  onTap: () {
+                                    // TODO: show view_questions with only selected questions
+                                    // NB: not editable in this mode, we do not pass question repo(?)
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+
                     // TopicsInfoWidget(
                     //   text: "Domande Totali: ",
                     //   value: widget.qRepo.questions.length,
@@ -166,7 +240,7 @@ class ViewTopicsState extends State<ViewTopics> {
                           return _TopicTile(
                             topic: topic,
                             isSelected: _selectedTopics[topic]!,
-                            onTap: _isDisabled(topic)
+                            onTap: _isEnabled(topic)
                                 ? (value) {
                                     setState(() {
                                       _selectedTopics[topic] = value ?? true;
@@ -283,7 +357,22 @@ class _TopicTile extends StatelessWidget {
             ),
             Transform.scale(
               scale: 1.5,
-              child: Checkbox(value: isSelected, onChanged: onTap),
+              child: Checkbox(
+                value: isSelected,
+                onChanged: onTap,
+                splashRadius: 15,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                // TODO
+              },
+              icon: Icon(Icons.arrow_forward_ios_rounded),
+              style: ButtonStyle(
+                iconColor: WidgetStatePropertyAll(Colors.black),
+                overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
+                backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+              ),
             ),
           ],
         ),
