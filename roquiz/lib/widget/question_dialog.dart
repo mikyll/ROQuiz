@@ -73,9 +73,16 @@ class _QuestionDialogState extends State<QuestionDialog> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-              child: Text(
-                widget.question != null ? "Modifica Domanda" : "Nuova Domanda",
-                textAlign: TextAlign.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.question != null
+                        ? "Modifica Domanda"
+                        : "Nuova Domanda",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
             Positioned(
