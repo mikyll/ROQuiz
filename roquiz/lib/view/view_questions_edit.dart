@@ -12,12 +12,12 @@ import 'package:roquiz/widget/separator.dart';
 
 class ViewQuestionsEdit extends StatefulWidget {
   final List<Question> questions;
-  final bool showAnswers;
+  final bool hideAnswers;
 
   const ViewQuestionsEdit({
     super.key,
     required this.questions,
-    this.showAnswers = true,
+    this.hideAnswers = true,
   });
 
   @override
@@ -222,9 +222,12 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      // onPopInvoked: (_) {
-      //   // todo
-      // },
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        }
+        Navigator.pop(context);
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -303,6 +306,8 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                       question: _questions[index],
                       iQuestion: index + 1,
                       isSelected: _selectedQuestions[index],
+                      // TODO
+                      //hideCorrectAnswer: !widget.showAnswers,
                       onSelected: () {
                         _selectQuestion(index);
                       },
@@ -341,6 +346,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 15.0,
             children: [
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
@@ -355,7 +361,6 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                   iconSize: 35,
                 ),
               ),
-              const SizedBox(width: 20),
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Modifica",
@@ -369,7 +374,6 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                   iconSize: 35,
                 ),
               ),
-              const SizedBox(width: 20),
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Rimuovi",
@@ -383,7 +387,6 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                   iconSize: 35,
                 ),
               ),
-              const SizedBox(width: 20),
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Annulla l'ultima azione",
@@ -399,7 +402,6 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                   iconSize: 35,
                 ),
               ),
-              const SizedBox(width: 20),
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Ripeti l'ultima azione",
