@@ -79,11 +79,11 @@ class QuestionCard extends StatelessWidget {
     this.iQuestion,
     this.selectedAnswer,
     this.isSelected = false,
+    this.hideCorrectAnswer = false,
     this.tapToSelect = false,
     this.onSelected,
   }) : mode = QuestionCardMode.edit,
-       onAnswerSelected = null,
-       hideCorrectAnswer = false;
+       onAnswerSelected = null;
 
   Color _getBorderColor(BuildContext context) {
     switch (mode) {
@@ -180,6 +180,7 @@ class QuestionCard extends StatelessWidget {
                             isCorrect:
                                 !hideCorrectAnswer &&
                                 index == question.correctAnswer,
+                            isCardSelected: isSelected,
                             hideCorrectAnswer: hideCorrectAnswer,
                             onTap: mode == QuestionCardMode.quiz
                                 ? () => onAnswerSelected?.call(
@@ -245,6 +246,7 @@ class QuestionCard extends StatelessWidget {
 class _AnswerTile extends StatelessWidget {
   final QuestionCardMode mode;
   final String answer;
+  final bool isCardSelected;
   final bool isSelected;
   final bool isCorrect;
   final bool hideCorrectAnswer;
@@ -256,6 +258,7 @@ class _AnswerTile extends StatelessWidget {
     required this.isSelected,
     required this.isCorrect,
     this.onTap,
+    this.isCardSelected = false,
     this.hideCorrectAnswer = false,
   });
 
@@ -313,6 +316,9 @@ class _AnswerTile extends StatelessWidget {
       case QuestionCardMode.edit:
         if (!hideCorrectAnswer && isCorrect) {
           return Colors.green.shade400.withAlpha(200);
+        }
+        if (isCardSelected) {
+          return Theme.of(context).primaryColor.withAlpha(50);
         }
     }
 
