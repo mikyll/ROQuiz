@@ -151,6 +151,21 @@ class ViewSettings extends StatelessWidget {
                       ),
                     ),
 
+                    SettingEntry(
+                      label: "Nascondi risposte corrette nella lista domande:",
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                          value: settings.hideCorrectAnswersInEditMode,
+                          onChanged: (value) {
+                            settings.hideCorrectAnswersInEditMode = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
+                        ),
+                      ),
+                    ),
+
                     //   some:
                     //     - end quiz when there are answers not given
                     //     - new version/new questions
@@ -168,7 +183,10 @@ class ViewSettings extends StatelessWidget {
                     SettingEntry(
                       label: "GitHub token:",
                       child: TextFormField(
-                        decoration: InputDecoration(hint: Text("token")),
+                        decoration: InputDecoration(
+                          hint: Text("token", textAlign: TextAlign.center),
+                        ),
+                        textAlign: TextAlign.center,
                         // TODO: pattern
                       ),
                     ),
@@ -179,13 +197,16 @@ class ViewSettings extends StatelessWidget {
                       label: "Voto scritto:",
                       child: TextFormField(
                         initialValue: settings.writtenGrade?.toString() ?? "",
-                        decoration: InputDecoration(hint: Text("es: 32")),
+                        decoration: InputDecoration(
+                          hint: Text("[0, 32]", textAlign: TextAlign.center),
+                        ),
                         maxLength: 2,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.digitsOnly,
                         ],
+                        textAlign: TextAlign.center,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return null;
@@ -201,7 +222,7 @@ class ViewSettings extends StatelessWidget {
                         },
                         // TODO: fix this
                         onFieldSubmitted: (newValue) {
-                          settings.writtenGrade = int.tryParse(newValue!);
+                          settings.writtenGrade = int.tryParse(newValue);
                           SettingsManager.save(settings);
                         },
                         // onChanged: (value) {
@@ -233,10 +254,16 @@ class ViewSettings extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 10.0,
                         children: [
-                          IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                          IconButton(
+                            onPressed: () {
+                              // TODO
+                            },
+                            icon: Icon(Icons.remove),
+                          ),
                           SizedBox(
                             width: 40.0,
                             child: TextFormField(
+                              initialValue: "${settings.quizQuestions}",
                               maxLength: 3,
                               maxLengthEnforcement:
                                   MaxLengthEnforcement.enforced,
@@ -252,11 +279,19 @@ class ViewSettings extends StatelessWidget {
                                 ),
                                 counterText: "",
                               ),
+                              onFieldSubmitted: (newValue) {
+                                // TODO: validate
+                                settings.quizQuestions =
+                                    int.tryParse(newValue) ?? 16;
+                                SettingsManager.save(settings);
+                              },
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              // TODO
+                            },
+                            icon: Icon(Icons.add),
                           ),
                         ],
                       ),
@@ -267,10 +302,16 @@ class ViewSettings extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 10.0,
                         children: [
-                          IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                          IconButton(
+                            onPressed: () {
+                              // TODO
+                            },
+                            icon: Icon(Icons.remove),
+                          ),
                           SizedBox(
                             width: 40.0,
                             child: TextFormField(
+                              initialValue: "${settings.quizTime}",
                               maxLength: 3,
                               maxLengthEnforcement:
                                   MaxLengthEnforcement.enforced,
@@ -286,11 +327,19 @@ class ViewSettings extends StatelessWidget {
                                 ),
                                 counterText: "",
                               ),
+                              onFieldSubmitted: (newValue) {
+                                // TODO: validate
+                                settings.quizTime =
+                                    int.tryParse(newValue) ?? 16;
+                                SettingsManager.save(settings);
+                              },
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              // TODO
+                            },
+                            icon: Icon(Icons.add),
                           ),
                         ],
                       ),
