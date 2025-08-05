@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
+import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/utils/navigation.dart';
 import 'package:roquiz/view/view_licenses.dart';
 import 'package:roquiz/widget/star_button.dart';
@@ -27,6 +29,8 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<Settings>(context);
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -289,9 +293,12 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: StarButton(
             size: 70.0,
-            onMaxSize: () {
-              openUrl("https://github.com/mikyll/ROQuiz");
-            },
+            animate: settings.animations,
+            onMaxSize: settings.animations
+                ? () {
+                    openUrl("https://github.com/mikyll/ROQuiz");
+                  }
+                : null,
           ),
           // CircleAvatar(
           //   radius: 50,
