@@ -3,20 +3,20 @@ import 'dart:math';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
+import 'package:roquiz/model/utils/utils.dart';
 import 'package:roquiz/widget/grade.dart';
 import 'package:roquiz/widget/question_card.dart';
+import 'package:roquiz/widget/result_card.dart';
 
 class ViewQuiz extends StatefulWidget {
   final List<Question> quizPool;
   final int questionNum;
   final int timer;
   final bool shuffleAnswers;
-  final int? writtenGrade;
 
   const ViewQuiz({
     super.key,
@@ -24,7 +24,6 @@ class ViewQuiz extends StatefulWidget {
     required this.questionNum,
     required this.timer,
     required this.shuffleAnswers,
-    this.writtenGrade,
   });
 
   @override
@@ -55,37 +54,24 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   int _correctAnswers = 0;
   int _quizGrade = 0;
-  double _totalGrade = -1;
+  double? _totalGrade;
+  (double, double)? _totalGradeRange;
 
   // TODO
   bool _showResultCard = false;
   bool _showConfetti = false;
   bool _showGrade = false;
 
+  // TODO: test (remove this)
+  bool _maxQuizGrade = false;
+
   // This indicates that the confetti animation was already played for this quiz run
   bool _confettiPlayed = false;
-
-  String _getTimeString(int counter) {
-    String hours = "${counter ~/ 3600}".padLeft(2, '0');
-    String minutes = "${counter ~/ 60}".padLeft(2, '0');
-    String seconds = "${counter % 60}".padLeft(2, '0');
-    return "$hours:$minutes:$seconds";
-  }
 
   Color? _getTimerColor() {
     // TODO: yellow, orange, red colors when time is low
 
     return null;
-  }
-
-  bool isGradeValid(int? grade) {
-    return grade != null && grade >= 0 && grade <= 32;
-  }
-
-  int _calculateQuizGrade(int numQuestions, int numCorrectAnswers) {
-    return (numQuestions > 0
-        ? (numCorrectAnswers / numQuestions * 16 * 2).round()
-        : 0);
   }
 
   bool _canPlayConfetti(List<ConfettiController> controllers) {
@@ -95,37 +81,6 @@ class _ViewQuizState extends State<ViewQuiz> {
       }
     }
     return true;
-  }
-
-  double _calculateTotalGrade(int writtenGrade, int quizGrade) {
-    double total = writtenGrade * 2 / 3 + quizGrade / 3;
-
-    if (!_confettiPlayed &&
-        total > 30.0 &&
-        _canPlayConfetti(_confettiControllers)) {
-      for (ConfettiController c in _confettiControllers) {
-        c.play();
-      }
-
-      setState(() {
-        _confettiPlayed = true;
-      });
-    }
-
-    setState(() {
-      _showGrade = true;
-    });
-
-    return total;
-  }
-
-  String _getGradeString(double grade) {
-    String gradeString = min(_totalGrade.round(), 30).toString();
-    if (grade > 30.0) {
-      gradeString += "L";
-    }
-
-    return gradeString;
   }
 
   void _previousQuestion() {
@@ -158,6 +113,9 @@ class _ViewQuizState extends State<ViewQuiz> {
       _showGrade = false;
       _showResultCard = false;
 
+      _totalGrade = null;
+      _totalGradeRange = null;
+
       for (ConfettiController c in _confettiControllers) {
         c.stop();
       }
@@ -181,24 +139,47 @@ class _ViewQuizState extends State<ViewQuiz> {
           _timerCounter--;
         });
       } else {
-        _endQuiz();
+        _endQuiz(null);
       }
     });
   }
 
-  void _endQuiz() {
+  void _endQuiz(int? writtenGrade) {
     setState(() {
       _isQuizOver = true;
       _timer?.cancel();
 
       _correctAnswers = _quiz.countCorrectAnswers();
-      _correctAnswers = 16; // TODO: remove
-      _quizGrade = _calculateQuizGrade(widget.questionNum, _correctAnswers);
+      if (_maxQuizGrade) {
+        _correctAnswers = widget.questionNum;
+      }
+      _quizGrade = calculateQuizGrade(widget.questionNum, _correctAnswers);
 
       // Calculate if user had already entered the written grade
-      if (widget.writtenGrade != null) {
-        _totalGrade = _calculateTotalGrade(widget.writtenGrade!, _quizGrade);
+      if (writtenGrade != null) {
+        _totalGrade = calculateTotalGrade(writtenGrade, _quizGrade);
+
+        if (!_confettiPlayed &&
+            _totalGrade! > 30.0 &&
+            _canPlayConfetti(_confettiControllers)) {
+          for (ConfettiController c in _confettiControllers) {
+            c.play();
+          }
+
+          setState(() {
+            _confettiPlayed = true;
+          });
+        }
+
+        setState(() {
+          _showGrade = true;
+        });
+      } else {
+        _totalGradeRange = calculateTotalGradeRange(_quizGrade);
       }
+      setState(() {
+        _showResultCard = true;
+      });
     });
   }
 
@@ -253,7 +234,7 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<Settings>(context);
+    final Settings settings = Provider.of<Settings>(context);
 
     return PopScope(
       canPop: true, //!widget.settings.confirmAlerts,
@@ -307,13 +288,23 @@ class _ViewQuizState extends State<ViewQuiz> {
                     //     onCancel: () {},
                     //   );
                     // } else {
-                    _endQuiz();
+                    _endQuiz(settings.writtenGrade);
                     Navigator.pop(context);
                     // }
                   },
                 ),
                 // TODO: add toggle dark mode?
-                // actions: [InkWell(child: Icon(Icons.light_mode))],
+                actions: [
+                  Switch(
+                    value: _maxQuizGrade,
+                    onChanged: (value) {
+                      setState(() {
+                        _maxQuizGrade = value;
+                      });
+                    },
+                    activeTrackColor: Colors.white,
+                  ),
+                ],
               ),
               body: SafeArea(
                 child: Center(
@@ -363,7 +354,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                           children: [
                                             const TextSpan(text: 'Time: '),
                                             TextSpan(
-                                              text: _getTimeString(
+                                              text: getTimeString(
                                                 _timerCounter,
                                               ),
                                               style: TextTheme.of(context)
@@ -388,7 +379,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                     // TODO: get result card height using key
-                                    bottom: _isQuizOver ? 220.0 : 0,
+                                    bottom: _isQuizOver ? 240.0 : 0,
                                   ),
                                   child: _isQuizOver
                                       ? QuestionCard.quizOver(
@@ -413,229 +404,27 @@ class _ViewQuizState extends State<ViewQuiz> {
                           ],
                         ),
                         // Results card
-                        // if (_isQuizOver)
-                        //   ResultCard(
-                        //     correctAnswers: _correctAnswers,
-                        //     totalQuestions: widget.questionNum,
-                        //     quizGrade: _quizGrade,
-                        //   ),
-
-                        // Results card
                         if (_isQuizOver && _showResultCard)
                           Positioned(
                             left: 0,
                             right: 0,
                             bottom: 10,
                             child: Center(
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(maxWidth: 300.0),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).cardColor,
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: BoxBorder.all(
-                                          width: 2,
-                                          color: Colors.grey,
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Theme.of(
-                                              context,
-                                            ).disabledColor,
-                                            spreadRadius: 0.5,
-                                            blurRadius: 2,
-                                            offset: const Offset(2, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(25.0),
-                                        child: Center(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            spacing: 25.0,
-                                            children: [
-                                              Text(
-                                                "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
-                                                "Voto scritto: ${settings.writtenGrade}\n"
-                                                "Voto quiz: $_quizGrade (${min(_quizGrade / 30 * 100, 100).round()}%)\n",
-                                                maxLines: 3,
-                                              ),
-                                              Text(
-                                                "Voto finale: ${_getGradeString(_totalGrade)} (${_totalGrade.toStringAsFixed(1)})",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 24,
-                                                ),
-                                              ),
-                                              // TODO: style (bold, etc.)
-                                            ],
-                                          ),
-                                        ),
-                                        // child: Form(
-                                        //   key: _formKey,
-                                        //   child: Column(
-                                        //     children: [
-                                        //       Center(
-                                        //         child: Text(
-                                        //           "Risposte corrette: $_correctAnswers/${widget.questionNum}\n"
-                                        //           "Voto quiz: $_quizGrade",
-                                        //           maxLines: 2,
-                                        //         ),
-                                        //       ),
-                                        //       const SizedBox(height: 30),
-                                        //       Padding(
-                                        //         padding: const EdgeInsets.symmetric(
-                                        //           horizontal: 20.0,
-                                        //         ),
-                                        //         child: TextFormField(
-                                        //           key: _writtenGradeKey,
-                                        //           validator: (value) {
-                                        //             if (value == null ||
-                                        //                 value.isEmpty) {
-                                        //               return "Il voto dev'essere non nullo.";
-                                        //             }
-
-                                        //             final int? grade = int.tryParse(
-                                        //               value,
-                                        //             );
-                                        //             if (!isGradeValid(grade)) {
-                                        //               return "Il voto dev'essere compreso tra 0 e 32.";
-                                        //             }
-
-                                        //             return null;
-                                        //           },
-                                        //           onChanged: (value) {
-                                        //             setState(() {
-                                        //               _totalGrade = -1;
-                                        //               _writtenGrade = int.tryParse(
-                                        //                 _writtenGradeController
-                                        //                     .text,
-                                        //               );
-                                        //             });
-                                        //           },
-                                        //           onFieldSubmitted: (value) {
-                                        //             if (_formKey.currentState
-                                        //                     ?.validate() ??
-                                        //                 false) {
-                                        //               setState(() {
-                                        //                 _totalGrade =
-                                        //                     _calculateTotalGrade(
-                                        //                       _writtenGrade!,
-                                        //                       _quizGrade,
-                                        //                     );
-                                        //               });
-                                        //             }
-                                        //           },
-                                        //           textInputAction:
-                                        //               TextInputAction.none,
-                                        //           controller:
-                                        //               _writtenGradeController,
-                                        //           keyboardType:
-                                        //               TextInputType.number,
-                                        //           inputFormatters:
-                                        //               <TextInputFormatter>[
-                                        //                 FilteringTextInputFormatter
-                                        //                     .digitsOnly,
-                                        //               ],
-                                        //           decoration: const InputDecoration(
-                                        //             labelText:
-                                        //                 "Voto della prova scritta",
-                                        //           ),
-                                        //         ),
-                                        //       ),
-                                        //       const SizedBox(height: 10),
-                                        //       ElevatedButton(
-                                        //         onPressed: () {
-                                        //           if (_formKey.currentState
-                                        //                   ?.validate() ??
-                                        //               false) {
-                                        //             setState(() {
-                                        //               _totalGrade =
-                                        //                   _calculateTotalGrade(
-                                        //                     _writtenGrade!,
-                                        //                     _quizGrade,
-                                        //                   );
-                                        //             });
-                                        //           }
-                                        //         },
-                                        //         child: const Text(
-                                        //           "Calcola voto finale",
-                                        //           style: TextStyle(
-                                        //             fontSize: 16,
-                                        //             fontWeight: FontWeight.normal,
-                                        //           ),
-                                        //         ),
-                                        //       ),
-                                        //       Opacity(
-                                        //         opacity:
-                                        //             _writtenGrade == null ||
-                                        //                 _totalGrade == -1
-                                        //             ? 0.0
-                                        //             : 1.0,
-                                        //         child: Padding(
-                                        //           padding: const EdgeInsets.only(
-                                        //             top: 8.0,
-                                        //           ),
-                                        //           child: Text.rich(
-                                        //             TextSpan(
-                                        //               children: [
-                                        //                 TextSpan(
-                                        //                   text: "Voto finale: ",
-                                        //                 ),
-                                        //                 TextSpan(
-                                        //                   text: _getGradeString(
-                                        //                     _totalGrade,
-                                        //                   ),
-                                        //                   style: TextStyle(
-                                        //                     fontWeight:
-                                        //                         FontWeight.bold,
-                                        //                   ),
-                                        //                 ),
-                                        //                 TextSpan(
-                                        //                   text:
-                                        //                       " (${_totalGrade.toStringAsFixed(1)})",
-                                        //                 ),
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //         ),
-                                        //       ),
-                                        //     ],
-                                        //   ),
-                                        // ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 10,
-                                      right: 10,
-                                      child: Tooltip(
-                                        textAlign: TextAlign.center,
-                                        message:
-                                            "Il voto finale è calcolato come segue:\n"
-                                            "(voto_scritto * 2/3) + (voto_quiz * 1/3)\n\n"
-                                            "Entrambe le prove sono in 30esimi, ma è possibile ottenere punti\n"
-                                            "extra e arrivare a 32. La lode viene assegnata se il totale supera 30.",
-                                        child: IconButton.filled(
-                                          padding: EdgeInsets.zero,
-                                          constraints: BoxConstraints(),
-                                          icon: Icon(Icons.help, size: 20),
-                                          onPressed: () {},
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              child: ResultCard(
+                                correctAnswers: _correctAnswers,
+                                questionNum: widget.questionNum,
+                                quizGrade: _quizGrade,
+                                timerString: getTimeString(
+                                  (_timerCounter - settings.quizTime).abs(),
                                 ),
+                                writtenGrade: settings.writtenGrade,
+                                totalGrade: _totalGrade,
+                                totalGradeRange: _totalGradeRange,
                               ),
                             ),
                           ),
 
-                        if (_isQuizOver)
+                        if (settings.animations && _isQuizOver)
                           Positioned.fill(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -645,15 +434,15 @@ class _ViewQuizState extends State<ViewQuiz> {
                           ),
 
                         // TODO
-                        if (_showGrade)
+                        if (_showGrade && _totalGrade != null)
                           Positioned.fill(
                             child: Grade(
-                              grade: _totalGrade,
+                              grade: _totalGrade!,
                               gradeBase: 30.0,
+                              animate: settings.animations,
                               onTapAfterAnimationFinished: () {
                                 setState(() {
                                   _showGrade = false;
-                                  _showResultCard = true;
                                 });
                               },
                             ),
@@ -664,6 +453,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                 ),
               ),
               bottomNavigationBar: Container(
+                constraints: BoxConstraints(maxWidth: 700.0),
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
                   border: Border(
@@ -674,18 +464,20 @@ class _ViewQuizState extends State<ViewQuiz> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      // Show previous question
                       IconButton(
                         onPressed: () {
+                          // TODO: long press
                           _previousQuestion();
                         },
                         icon: Icon(Icons.arrow_back_ios_rounded),
                         iconSize: 35,
                       ),
                       const SizedBox(width: 20),
-                      // Show next question
                       IconButton(
+                        onLongPress: () {},
                         onPressed: () {
+                          // TODO: long press
+
                           _nextQuestion();
                         },
                         icon: Icon(Icons.arrow_forward_ios_rounded),
@@ -693,13 +485,12 @@ class _ViewQuizState extends State<ViewQuiz> {
                       ),
                       const SizedBox(width: 20),
                       const Spacer(flex: 5),
-                      // End/Restart quiz
                       ElevatedButton(
                         onPressed: () {
                           if (_isQuizOver) {
                             _startQuiz();
                           } else {
-                            _endQuiz();
+                            _endQuiz(settings.writtenGrade);
                           }
                         },
                         child: Container(
