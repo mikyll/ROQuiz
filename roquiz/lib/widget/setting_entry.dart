@@ -12,11 +12,8 @@ class SettingEntry extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Row(
         children: [
-          Expanded(
-            flex: 2,
-            child: Text(label, style: TextStyle(fontSize: 18.0)),
-          ),
-          Flexible(fit: FlexFit.tight, child: child),
+          Expanded(child: Text(label, style: TextStyle(fontSize: 18.0))),
+          SizedBox(width: 150.0, child: child),
         ],
       ),
     );
