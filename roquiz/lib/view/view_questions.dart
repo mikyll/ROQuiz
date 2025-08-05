@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:roquiz/model/persistence/settings.dart';
+import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
+import 'package:roquiz/view/view_questions_edit_file.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,14 +24,13 @@ class ViewQuestionsState extends State<ViewQuestions> {
   final TextEditingController _textController = TextEditingController();
 
   late List<Question> _questions;
-  bool _showAnswers = true; // Todo: save to shared prefs?
 
   bool _searchBarOpen = false;
 
-  Future<void> _toggleAnswers() async {
-    setState(() {
-      _showAnswers = !_showAnswers;
-    });
+  void _toggleAnswers(Settings settings) {
+    settings.hideCorrectAnswersInEditMode =
+        !settings.hideCorrectAnswersInEditMode;
+    SettingsManager.save(settings);
   }
 
   void _enterEditMode() {}
@@ -47,6 +50,8 @@ class ViewQuestionsState extends State<ViewQuestions> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<Settings>(context);
+
     return PopScope(
       canPop: true,
       // onPopInvoked: (_) {
@@ -108,7 +113,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                     Widget questionWidget = QuestionCard.base(
                       question: _questions[index],
                       iQuestion: index + 1,
-                      hideCorrectAnswer: !_showAnswers,
+                      hideCorrectAnswer: settings.hideCorrectAnswersInEditMode,
                     );
                     // Check if we have to display the topic divider
                     if (index == 0 ||
@@ -143,6 +148,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 15.0,
             children: [
               // Show/Hide correct answers
               Tooltip(
@@ -150,30 +156,56 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 message: "Mostra/nascondi le risposte corrette",
                 child: IconButton(
                   onPressed: () {
-                    _toggleAnswers();
+                    _toggleAnswers(settings);
                   },
                   icon: Icon(
-                    _showAnswers ? Icons.visibility : Icons.visibility_off,
+                    settings.hideCorrectAnswersInEditMode
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
                   iconSize: 35,
                 ),
               ),
-              const SizedBox(width: 20),
+              // Check if there are new questions
+              Tooltip(
+                waitDuration: Duration(milliseconds: 500),
+                message: "Controlla se ci sono nuove domande",
+                child: IconButton(
+                  onPressed: null,
+                  icon: Icon(Icons.sync_rounded),
+                  iconSize: 35,
+                ),
+              ),
               // Edit mode
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
                 message: "Modifica",
                 child: IconButton(
                   onPressed: () {
+                    // TODO: change animation
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) {
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) {
                           return ViewQuestionsEdit(
                             questions: _questions,
-                            showAnswers: _showAnswers,
+                            hideAnswers: settings.hideCorrectAnswersInEditMode,
                           );
                         },
+                        transitionDuration: Duration.zero,
+                        // transitionDuration: Duration(milliseconds: 300),
+                        // transitionsBuilder: (_, animation, __, c) {
+                        //   const begin = Offset(1.0, 0.0);
+                        //   const end = Offset.zero;
+                        //   var tween = Tween(
+                        //     begin: begin,
+                        //     end: end,
+                        //   ).chain(CurveTween(curve: Curves.easeOut));
+                        //   return SlideTransition(
+                        //     position: animation.drive(tween),
+                        //     child: c,
+                        //   );
+                        // },
                       ),
                     );
                   },
@@ -181,36 +213,48 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   iconSize: 35,
                 ),
               ),
-              const SizedBox(width: 20),
-              // Check if there are new questions
+              // Edit mode (file)
               Tooltip(
                 waitDuration: Duration(milliseconds: 500),
-                message: "Controlla se ci sono nuove domande",
+                message: "Modifica File",
                 child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.sync_rounded),
-                  iconSize: 35,
-                ),
-              ),
-              const SizedBox(width: 20),
-              // Import questions from a file
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Importa le domande da un file",
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.file_open_outlined),
-                  iconSize: 35,
-                ),
-              ),
-              const SizedBox(width: 20),
-              // Export questions file
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Esporta il file delle domande",
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.file_download_outlined),
+                  onPressed: () {
+                    // Prompt for format
+
+                    // TODO: change animation
+                    Navigator.push(
+                      context,
+                      // PageRouteBuilder(
+                      //   pageBuilder: (_, __, ___) {
+                      //     return ViewQuestionsEditFile();
+                      //   },
+                      //   transitionDuration: Duration.zero,
+                      //   transitionsBuilder: (_, animation, __, child) {
+                      //     return child;
+                      //   },
+                      // ),
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) {
+                          return ViewQuestionsEditFile(fileContent: "");
+                        },
+                        transitionDuration: Duration.zero,
+                        // transitionDuration: Duration(milliseconds: 300),
+                        // transitionsBuilder: (_, animation, __, c) {
+                        //   const begin = Offset(1.0, 0.0);
+                        //   const end = Offset.zero;
+                        //   var tween = Tween(
+                        //     begin: begin,
+                        //     end: end,
+                        //   ).chain(CurveTween(curve: Curves.easeOut));
+                        //   return SlideTransition(
+                        //     position: animation.drive(tween),
+                        //     child: c,
+                        //   );
+                        // },
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.edit_document),
                   iconSize: 35,
                 ),
               ),
