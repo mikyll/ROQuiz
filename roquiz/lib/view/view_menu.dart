@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -16,13 +15,8 @@ import 'package:roquiz/view/view_topics.dart';
 
 class ViewMenu extends StatefulWidget {
   final PackageInfo packageInfo;
-  final Settings settings;
 
-  const ViewMenu({
-    super.key,
-    required this.packageInfo,
-    required this.settings,
-  });
+  const ViewMenu({super.key, required this.packageInfo});
 
   @override
   State<StatefulWidget> createState() => ViewMenuState();
@@ -32,24 +26,22 @@ class ViewMenuState extends State<ViewMenu> {
   final QuestionRepository _questionRepository = QuestionRepository();
   Map<String, bool> _selectedTopics = {};
 
-  int _numQuizQuestions = 16;
   int _totQuestions = 0;
-  int _timer = 18;
   String? _error = "Error";
 
-  int _calculateNumSelected() {
-    int num = 0;
+  // int _calculateNumSelected() {
+  //   int num = 0;
 
-    Map<String, List<Question>> topicSizes = _questionRepository
-        .getGroupedQuestions();
-    for (String topic in topicSizes.keys) {
-      if (_selectedTopics[topic] != null && _selectedTopics[topic]!) {
-        num += topicSizes[topic]!.length;
-      }
-    }
+  //   Map<String, List<Question>> topicSizes = _questionRepository
+  //       .getGroupedQuestions();
+  //   for (String topic in topicSizes.keys) {
+  //     if (_selectedTopics[topic] != null && _selectedTopics[topic]!) {
+  //       num += topicSizes[topic]!.length;
+  //     }
+  //   }
 
-    return num;
-  }
+  //   return num;
+  // }
 
   // Get the question list
   List<Question> _getQuizPool() {
@@ -64,24 +56,6 @@ class ViewMenuState extends State<ViewMenu> {
     }
 
     return questions;
-  }
-
-  void _test() {
-    String res = "\n";
-    int curr = 0;
-    for (String topic in _selectedTopics.keys) {
-      bool isSelected = _selectedTopics[topic] ?? false;
-      int num = _questionRepository.getGroupedQuestions()[topic]?.length ?? 0;
-
-      res += "- [";
-      res += isSelected ? "x" : " ";
-      res += "] $topic: $num (+$curr)\n";
-      if (isSelected) {
-        curr += num;
-      }
-    }
-    print(res);
-    print(curr);
   }
 
   void _initQuestionRepository() async {
@@ -108,9 +82,6 @@ class ViewMenuState extends State<ViewMenu> {
   void initState() {
     super.initState();
 
-    // From settings
-    // TODO: set quiz pool
-    // TODO: set quiz timer
     _initQuestionRepository();
   }
 
@@ -165,20 +136,6 @@ class ViewMenuState extends State<ViewMenu> {
                     style: TextTheme.of(context).headlineSmall,
                   ),
                   const Spacer(flex: 1),
-                  IconButton(
-                    onPressed: () {
-                      // TODO
-                    },
-                    icon: Icon(Icons.refresh),
-                  ),
-                  Switch(
-                    value: settings.themeDark,
-                    onChanged: (_) {
-                      // TODO
-                      settings.themeDark = !settings.themeDark;
-                      SettingsManager.save(settings);
-                    },
-                  ),
 
                   // BUTTONS
                   Padding(
@@ -193,11 +150,10 @@ class ViewMenuState extends State<ViewMenu> {
                               builder: (context) {
                                 return ViewQuiz(
                                   quizPool: _getQuizPool(),
-                                  questionNum: _numQuizQuestions,
-                                  timer: _timer,
+                                  questionNum: settings.quizQuestions,
+                                  timer: settings.quizTime,
                                   // TODO
                                   shuffleAnswers: false,
-                                  writtenGrade: settings.writtenGrade,
                                 );
                               },
                             ),
@@ -225,17 +181,20 @@ class ViewMenuState extends State<ViewMenu> {
                       const Spacer(flex: 1),
                       const Icon(Icons.format_list_numbered_rounded),
                       Text(
-                        "Domande: ${widget.settings.quizPool} su $_totQuestions"
-                            .padRight(22),
+                        "Domande: ${settings.quizQuestions.toString().padLeft(3)} "
+                        "su ${_totQuestions.toString().padLeft(3)}",
                       ),
                       const Spacer(flex: 2),
                       const Icon(Icons.timer_rounded),
-                      Text("Tempo: $_timer min".padRight(22)),
+                      Text(
+                        "Tempo: ${settings.quizTime.toString().padLeft(3)} min",
+                      ),
                       const Spacer(flex: 1),
                     ],
                   ),
                   Visibility(
-                    visible: _error != null,
+                    // TODO
+                    visible: true, // _error != null,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
@@ -243,7 +202,7 @@ class ViewMenuState extends State<ViewMenu> {
                       padding: const EdgeInsets.all(15.0),
                       child: InkWell(
                         onTap: () {
-                          // Expand Stacktrace
+                          // Expand Stacktrace (modal, which obscures the rest)
                         },
                         child: Container(
                           width: double.infinity,
@@ -267,12 +226,15 @@ class ViewMenuState extends State<ViewMenu> {
                         Text(
                           "Domande",
                           maxLines: 1,
-                          style: TextStyle(fontWeight: FontWeight.normal),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
                       ],
                     ),
                     style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      fixedSize: WidgetStateProperty.all(Size(200.0, 30.0)),
+                      fixedSize: WidgetStateProperty.all(Size(170.0, 30.0)),
                       padding: WidgetStateProperty.all(
                         EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
                       ),
@@ -300,12 +262,15 @@ class ViewMenuState extends State<ViewMenu> {
                         Text(
                           "Argomenti",
                           maxLines: 1,
-                          style: TextStyle(fontWeight: FontWeight.normal),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
                       ],
                     ),
                     style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      fixedSize: WidgetStateProperty.all(Size(200.0, 30.0)),
+                      fixedSize: WidgetStateProperty.all(Size(170.0, 30.0)),
                       padding: WidgetStateProperty.all(
                         EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
                       ),
@@ -316,7 +281,7 @@ class ViewMenuState extends State<ViewMenu> {
                         MaterialPageRoute(
                           builder: (context) {
                             return ViewTopics(
-                              quizPool: _numQuizQuestions,
+                              questionsNum: settings.quizQuestions,
                               questionsPerTopic: _questionRepository
                                   .getGroupedQuestions(),
                               selectedTopics: _selectedTopics,
@@ -341,12 +306,15 @@ class ViewMenuState extends State<ViewMenu> {
                         Text(
                           "Storico",
                           maxLines: 1,
-                          style: TextStyle(fontWeight: FontWeight.normal),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
                       ],
                     ),
                     style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      fixedSize: WidgetStateProperty.all(Size(200.0, 30.0)),
+                      fixedSize: WidgetStateProperty.all(Size(170.0, 30.0)),
                       padding: WidgetStateProperty.all(
                         EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
                       ),
@@ -374,12 +342,15 @@ class ViewMenuState extends State<ViewMenu> {
                         Text(
                           "Statistiche",
                           maxLines: 1,
-                          style: TextStyle(fontWeight: FontWeight.normal),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
                       ],
                     ),
                     style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      fixedSize: WidgetStateProperty.all(Size(200.0, 30.0)),
+                      fixedSize: WidgetStateProperty.all(Size(170.0, 30.0)),
                       padding: WidgetStateProperty.all(
                         EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
                       ),
