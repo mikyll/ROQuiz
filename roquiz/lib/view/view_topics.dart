@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
 class ViewTopics extends StatefulWidget {
-  final int quizPool;
+  final int questionsNum;
   final Map<String, List<Question>> questionsPerTopic;
   final Map<String, bool> selectedTopics;
   final Function(Map<String, bool>) toggleTopic;
 
   const ViewTopics({
     super.key,
-    required this.quizPool,
+    required this.questionsNum,
     required this.questionsPerTopic,
     required this.selectedTopics,
     required this.toggleTopic,
@@ -67,7 +67,7 @@ class ViewTopicsState extends State<ViewTopics> {
     int numDeselecting = widget.questionsPerTopic[topic]!.length;
 
     return !_selectedTopics[topic]! ||
-        (numCurrent - numDeselecting) >= widget.quizPool;
+        (numCurrent - numDeselecting) >= widget.questionsNum;
   }
 
   @override
@@ -158,7 +158,7 @@ class ViewTopicsState extends State<ViewTopics> {
                                         ),
                                       ),
                                       Text(
-                                        "${widget.quizPool}/${_selectedQuestions().length}",
+                                        "${widget.questionsNum}/${_selectedQuestions().length}",
                                         style: TextStyle(fontSize: 20.0),
                                       ),
                                     ],
