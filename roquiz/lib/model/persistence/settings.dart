@@ -11,13 +11,14 @@ class Settings with ChangeNotifier {
   bool autoCheckQuestions;
   bool animations;
   bool? confirmationAlert;
+  bool hideCorrectAnswersInEditMode;
   bool themeDark;
   String githubToken;
 
   // Quiz
   int? writtenGrade;
   bool fullTopics;
-  int quizPool;
+  int quizQuestions;
   int quizTime;
   bool shuffleAnswers;
   bool exceedTimeout;
@@ -31,10 +32,11 @@ class Settings with ChangeNotifier {
     this.autoCheckQuestions = true,
     this.animations = true,
     this.confirmationAlert = true,
+    this.hideCorrectAnswersInEditMode = false,
     this.themeDark = false,
     this.githubToken = "",
     this.fullTopics = false,
-    this.quizPool = 16,
+    this.quizQuestions = 16,
     this.quizTime = 18,
     this.shuffleAnswers = true,
     this.exceedTimeout = false,
