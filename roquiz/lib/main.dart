@@ -41,7 +41,7 @@ class ROQuizApp extends StatelessWidget {
           themeMode: settings.themeDark ? ThemeMode.dark : ThemeMode.light,
           theme: Themes.themeLight,
           darkTheme: Themes.themeDark,
-          home: ViewMenu(packageInfo: packageInfo, settings: settings),
+          home: ViewMenu(packageInfo: packageInfo),
         );
       },
     );
