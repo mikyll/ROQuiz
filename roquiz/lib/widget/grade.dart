@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class Grade extends StatefulWidget {
   final double grade;
   final double gradeBase;
+  final bool animate; // TODO
   final Function()? onAnimationFinished;
   final Function()? onTapAfterAnimationFinished;
 
@@ -13,9 +14,13 @@ class Grade extends StatefulWidget {
     super.key,
     required this.grade,
     required this.gradeBase,
+    this.animate = true,
     this.onAnimationFinished,
     this.onTapAfterAnimationFinished,
-  });
+  }) : assert(
+         !(!animate && onAnimationFinished != null),
+         "Cannot set onAnimationFinished if the animation is disabled",
+       );
 
   @override
   State<StatefulWidget> createState() => GradeState();
@@ -28,6 +33,7 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
 
   bool _show = true;
   bool _tapEnabled = false;
+  double _maxScale = 4.0;
 
   String _getGradeText(double grade, double gradeBase, {String extra = "L"}) {
     String gradeText = min(grade, gradeBase).round().toString();
@@ -94,7 +100,7 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
 
     _scaleAnimation = Tween<double>(
       begin: 0.0,
-      end: 4.0,
+      end: _maxScale,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _opacityAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
@@ -137,9 +143,9 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
                 animation: _controller,
                 builder: (context, child) {
                   return Transform.scale(
-                    scale: _scaleAnimation.value,
+                    scale: widget.animate ? _scaleAnimation.value : _maxScale,
                     child: Opacity(
-                      opacity: _opacityAnimation.value,
+                      opacity: widget.animate ? _opacityAnimation.value : 1.0,
                       child: Center(
                         child: Stack(
                           children: <Widget>[
@@ -177,7 +183,7 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
               ),
               Positioned.fill(
                 child: GestureDetector(
-                  onTap: _tapEnabled
+                  onTap: !widget.animate || _tapEnabled
                       ? () {
                           if (widget.onTapAfterAnimationFinished != null) {
                             widget.onTapAfterAnimationFinished!();
