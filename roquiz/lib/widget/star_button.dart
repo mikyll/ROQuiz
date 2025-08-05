@@ -5,9 +5,24 @@ import 'package:roquiz/model/style/palettes.dart';
 
 class StarButton extends StatefulWidget {
   final double size;
-  final Function() onMaxSize;
+  final bool animate;
+  final Function()? onTap;
+  final Function()? onMaxSize;
 
-  const StarButton({super.key, required this.size, required this.onMaxSize});
+  const StarButton({
+    super.key,
+    required this.size,
+    this.animate = true,
+    this.onTap,
+    this.onMaxSize,
+  }) : assert(
+         !(!animate && onMaxSize != null),
+         "Cannot set onMaxSize() if animate is false",
+       ),
+       assert(
+         !(animate && onTap != null),
+         "Cannot set onTap() if animate is true",
+       );
 
   @override
   State<StatefulWidget> createState() => StarButtonState();
@@ -77,7 +92,9 @@ class StarButtonState extends State<StarButton> with TickerProviderStateMixin {
     _pressGrowController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _pressGrowController.reverse();
-        widget.onMaxSize();
+        if (widget.onMaxSize != null) {
+          widget.onMaxSize!();
+        }
       }
     });
   }
@@ -97,28 +114,29 @@ class StarButtonState extends State<StarButton> with TickerProviderStateMixin {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Opacity(
-          opacity: _hasBeenPressed ? 0.0 : 1.0,
-          child: AnimatedBuilder(
-            animation: _pulseController,
-            builder: (context, _) {
-              return FadeTransition(
-                opacity: _pulseFadeAnimation,
-                child: ScaleTransition(
-                  scale: _pulseScaleAnimation,
-                  child: Container(
-                    width: widget.size * 1.5,
-                    height: widget.size * 1.5,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.indigo.shade300,
+        if (widget.animate)
+          Opacity(
+            opacity: _hasBeenPressed ? 0.0 : 1.0,
+            child: AnimatedBuilder(
+              animation: _pulseController,
+              builder: (context, _) {
+                return FadeTransition(
+                  opacity: _pulseFadeAnimation,
+                  child: ScaleTransition(
+                    scale: _pulseScaleAnimation,
+                    child: Container(
+                      width: widget.size * 1.5,
+                      height: widget.size * 1.5,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.indigo.shade300,
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
         AnimatedBuilder(
           animation: _growAnimation,
           builder: (context, _) {
@@ -131,19 +149,26 @@ class StarButtonState extends State<StarButton> with TickerProviderStateMixin {
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(1000),
-                onTapDown: (_) {
-                  _pressGrowController.forward();
-                  _pulseController.stop();
-                  setState(() {
-                    _hasBeenPressed = true;
-                  });
-                },
-                onTapUp: (_) {
-                  _pressGrowController.reverse();
-                },
-                onTapCancel: () {
-                  _pressGrowController.reverse();
-                },
+                onTap: widget.onTap,
+                onTapDown: widget.animate
+                    ? (_) {
+                        _pressGrowController.forward();
+                        _pulseController.stop();
+                        setState(() {
+                          _hasBeenPressed = true;
+                        });
+                      }
+                    : null,
+                onTapUp: widget.animate
+                    ? (_) {
+                        _pressGrowController.reverse();
+                      }
+                    : null,
+                onTapCancel: widget.animate
+                    ? () {
+                        _pressGrowController.reverse();
+                      }
+                    : null,
                 child: Icon(
                   Icons.star,
                   color: starButtonTheme.starColor,
