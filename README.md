@@ -25,6 +25,12 @@
   [Feature Request | Bug Report](https://github.com/mikyll/ROQuiz/issues/new/choose)
 </div>
 
+> [!NOTE]
+> 🚧 L'app è in corso di refactoring 🚧
+> 
+> La nuova versione (**v2.0**) avrà nuove funzionalità, tra cui _storico dei quiz_, _statistiche_, _impostazioni aggiuntive_.\
+> L'obiettivo principale è fare pulizia nel progetto e rendere il codice più leggibile e, sperabilmente, mantenibile.
+
 ## Demo
 
 ### Mobile
