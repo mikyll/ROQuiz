@@ -10,7 +10,6 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
 import 'package:roquiz/widget/grade.dart';
 import 'package:roquiz/widget/question_card.dart';
-import 'package:roquiz/widget/result_card.dart';
 
 class ViewQuiz extends StatefulWidget {
   final List<Question> quizPool;
