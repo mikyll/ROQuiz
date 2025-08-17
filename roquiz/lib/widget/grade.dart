@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:roquiz/model/utils/utils.dart';
 
 class Grade extends StatefulWidget {
   final double grade;
@@ -31,19 +32,9 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
 
+  final double _maxScale = 4.0;
   bool _show = true;
   bool _tapEnabled = false;
-  double _maxScale = 4.0;
-
-  String _getGradeText(double grade, double gradeBase, {String extra = "L"}) {
-    String gradeText = min(grade, gradeBase).round().toString();
-
-    if (grade > gradeBase) {
-      gradeText += extra;
-    }
-
-    return gradeText;
-  }
 
   Color _getTextBorderColor(double grade, double gradeBase) {
     final int roundedGrade = grade.round();
@@ -95,7 +86,7 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1500),
+      duration: Duration(milliseconds: widget.animate ? 1500 : 0),
     );
 
     _scaleAnimation = Tween<double>(
@@ -143,15 +134,18 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
                 animation: _controller,
                 builder: (context, child) {
                   return Transform.scale(
-                    scale: widget.animate ? _scaleAnimation.value : _maxScale,
+                    scale: _scaleAnimation.value,
                     child: Opacity(
-                      opacity: widget.animate ? _opacityAnimation.value : 1.0,
+                      opacity: _opacityAnimation.value,
                       child: Center(
                         child: Stack(
                           children: <Widget>[
                             // Stroked text as border.
                             Text(
-                              _getGradeText(widget.grade, widget.gradeBase),
+                              getGradeString(
+                                widget.grade,
+                                gradeBase: widget.gradeBase,
+                              ),
                               style: TextStyle(
                                 fontSize: 40,
                                 foreground: Paint()
@@ -165,7 +159,10 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
                             ),
                             // Solid text as fill.
                             Text(
-                              _getGradeText(widget.grade, widget.gradeBase),
+                              getGradeString(
+                                widget.grade,
+                                gradeBase: widget.gradeBase,
+                              ),
                               style: TextStyle(
                                 fontSize: 40,
                                 color: _getTextColor(
@@ -183,7 +180,7 @@ class GradeState extends State<Grade> with TickerProviderStateMixin {
               ),
               Positioned.fill(
                 child: GestureDetector(
-                  onTap: !widget.animate || _tapEnabled
+                  onTap: _tapEnabled
                       ? () {
                           if (widget.onTapAfterAnimationFinished != null) {
                             widget.onTapAfterAnimationFinished!();
