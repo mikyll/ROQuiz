@@ -79,7 +79,7 @@ class StarButtonState extends State<StarButton> with TickerProviderStateMixin {
     // Setup grow on press animation
     _pressGrowController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: widget.animate ? 600 : 0),
       value: widget.size,
     );
 
