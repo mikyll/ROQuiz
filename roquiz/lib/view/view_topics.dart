@@ -110,7 +110,7 @@ class ViewTopicsState extends State<ViewTopics> {
         body: SafeArea(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(8.0),
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 500.0),
                 child: Column(
