@@ -5,6 +5,8 @@ part 'settings.g.dart'; // This will be generated
 
 @JsonSerializable()
 class Settings with ChangeNotifier {
+  // NB: after editing this class, run `dart run build_runner build`
+
   // General
   String language;
   bool autoCheckRelease;
