@@ -116,7 +116,7 @@ class _ViewQuestionsEditFileState extends State<ViewQuestionsEditFile> {
                 child: IconButton(
                   onPressed: null,
                   // TODO: cercare altra icona?
-                  icon: Icon(Icons.file_download_outlined),
+                  icon: Icon(Icons.file_download),
                   iconSize: 35,
                 ),
               ),
