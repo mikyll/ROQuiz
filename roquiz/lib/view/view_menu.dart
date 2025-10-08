@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -7,11 +9,15 @@ import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/model/quiz/quiz_completed.dart';
+import 'package:roquiz/view/view_history.dart';
 import 'package:roquiz/view/view_info.dart';
 import 'package:roquiz/view/view_questions.dart';
 import 'package:roquiz/view/view_quiz.dart';
 import 'package:roquiz/view/view_settings.dart';
 import 'package:roquiz/view/view_topics.dart';
+
+import 'package:flutter/foundation.dart';
 
 class ViewMenu extends StatefulWidget {
   final PackageInfo packageInfo;
@@ -24,10 +30,12 @@ class ViewMenu extends StatefulWidget {
 
 class ViewMenuState extends State<ViewMenu> {
   final QuestionRepository _questionRepository = QuestionRepository();
+  // TODO:  QuizRepository
+
   Map<String, bool> _selectedTopics = {};
 
   int _totQuestions = 0;
-  String? _error = "Error";
+  String? _error = kDebugMode ? "Error" : null;
 
   // int _calculateNumSelected() {
   //   int num = 0;
@@ -182,7 +190,7 @@ class ViewMenuState extends State<ViewMenu> {
                       const Icon(Icons.format_list_numbered_rounded),
                       Text(
                         "Domande: ${settings.quizQuestions.toString().padLeft(3)} "
-                        "su ${_totQuestions.toString().padLeft(3)}",
+                        "su ${_getQuizPool().length.toString().padLeft(3)}",
                       ),
                       const Spacer(flex: 2),
                       const Icon(Icons.timer_rounded),
@@ -194,7 +202,7 @@ class ViewMenuState extends State<ViewMenu> {
                   ),
                   Visibility(
                     // TODO
-                    visible: true, // _error != null,
+                    visible: _error != null,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
@@ -319,18 +327,40 @@ class ViewMenuState extends State<ViewMenu> {
                         EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
                       ),
                     ),
-                    onPressed: null,
-                    // () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) {
-                    //         // TODO
-                    //         return Text("");
-                    //       },
-                    //     ),
-                    //   );
-                    // },
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            // TODO: remove
+                            final random = Random();
+                            return ViewHistory(
+                              quizList: [
+                                // TODO: remove, this is a mock
+                                QuizCompleted(
+                                  questions: [],
+                                  questionNum: 0,
+                                  shuffleAnswers: true,
+                                  timestamp: DateTime.now(),
+                                  timeSpent: random.nextInt(60 * 16),
+                                  correctAnswers: random.nextInt(16),
+                                  grade: random.nextDouble() * 32,
+                                ),
+                                QuizCompleted(
+                                  questions: [],
+                                  questionNum: 0,
+                                  shuffleAnswers: true,
+                                  timestamp: DateTime.now(),
+                                  timeSpent: random.nextInt(60 * 16),
+                                  correctAnswers: random.nextInt(16),
+                                  grade: random.nextDouble() * 32,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton.icon(
