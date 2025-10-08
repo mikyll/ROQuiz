@@ -30,6 +30,8 @@
 > 
 > La nuova versione (**v2.0**) avrà nuove funzionalità, tra cui _storico dei quiz_, _statistiche_, _impostazioni aggiuntive_.\
 > L'obiettivo principale è fare pulizia nel progetto e rendere il codice più leggibile e, sperabilmente, mantenibile.
+>
+> È possibile provare la versione beta a [questo link](https://mikyll.github.io/projects/roquiz/play-beta).
 
 ## Demo
 
