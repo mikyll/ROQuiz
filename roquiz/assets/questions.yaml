@@ -16,8 +16,8 @@
     - "Che N è un intorno esatto"
     - "Che N è un intorno euclideo"
     - "Che N è un intorno non euclideo"
-    - "Nessuna di queste caratterizzazioni"
     - "Che N è un intorno convesso"
+    - "Nessuna di queste caratterizzazioni"
   correct_answer: 0
 
 - body: |
@@ -138,6 +138,16 @@
     - "Ax < b"
     - "Ax > b"
     - "Ax >= b, Ax < b"
+    - "Nessuna di queste"
+  correct_answer: 0
+
+- body: |
+    Quando un problema in forma canonica viene posto in forma standard
+  topic: "Programmazione Lineare"
+  answers:
+    - "Aumenta il numero di variabili"
+    - "Aumentano sia il numero di vincoli che il numero di variabili"
+    - "Aumenta il numero di vincoli"
     - "Nessuna di queste"
   correct_answer: 0
 
@@ -347,7 +357,7 @@
     - "Combinazione convessa delle colonne di B, con coefficienti positivi"
     - "Combinazione convessa delle colonne di B, con coefficienti non negativi"
     - "Combinazione lineare delle colonne di B, con coefficienti positivi"
-    - "combinazione lineare delle colonne di B, con coefficienti di segno qualunque"
+    - "Combinazione lineare delle colonne di B, con coefficienti di segno qualunque"
   correct_answer: 4
 
 - body: |
@@ -360,6 +370,17 @@
     - "Una faccia di dimensione d"
     - "Una faccia di dimensione d + 1"
   correct_answer: 2
+
+- body: |
+    Dato il problema min_{x in F} f(x) (trovare il minimo di una funzione f(x) per x appartenente all'insieme F),  il valore max_{x in F} f(x) è dato da
+  topic: "Programmazione Lineare"
+  answers:
+    - "min_{x in F} (-f(x))"
+    - "-min_{x in F} (-f(x))"
+    - "max_{x in F} (f(1-x))"
+    - "-min_{x in F} f(x)"
+    - "-max_{x in F} (-f(x))"
+  correct_answer: 1
 
 - body: |
     Se yij è minore o uguale a 0 per ogni i, in relazione a theta, cosa succede?
@@ -574,12 +595,12 @@
     Si consideri un tableau dell'algoritmo del simplesso primale. I costi relativi si trovano:
   topic: "Algoritmo del Simplesso"
   answers:
-    - "In nessuna di queste posizioni"
     - "Nella riga 0, nelle colonne corrispondenti alla base"
     - "Nella riga 0, nelle colonne non corrispondenti alla base"
     - "Nella colonna 0, nelle righe corrispondenti alla base"
     - "Nella colonna 0, nelle righe non corrispondenti alla base"
-  correct_answer: 2
+    - "In nessuna di queste posizioni"
+  correct_answer: 1
 
 - body: |
     Si consideri una sottomatrice B di ordine m di una matrice A m x n. La soluzione base corrispondente a B:
@@ -596,12 +617,12 @@
     Si consideri un tableau dell'algoritmo del simplesso primale. Gli elementi della riga 0 corrispondenti alle colonne della base
   topic: "Algoritmo del Simplesso"
   answers:
-    - "Nessuna di queste"
     - "Possono avere segno qualunque"
     - "Sono tutti nulli"
     - "Contengono i costi relativi"
     - "Valgono tutti 1"
-  correct_answer: 2
+    - "Nessuna di queste"
+  correct_answer: 1
 
 - body: |
     Sia A_j una colonna corrispondente ad un costo relativo negativo nell'algoritmo del simplesso primale. Se tutti i coefficienti della colonna sono negativi o nulli, ciò implica che:
@@ -609,9 +630,9 @@
   answers:
     - "Il problema ha soluzione illimitata"
     - "Il sistema Ax = b è ridondante"
-    - "Nessuna di queste"
     - "La soluzione attuale è ottima"
     - "La regione ammissibile è vuota"
+    - "Nessuna di queste"
   correct_answer: 0
 
 - body: |
@@ -650,12 +671,12 @@
     Ad una variabile primale non negativa corrisponde
   topic: "Dualità"
   answers:
-    - "Nessuna di queste"
     - "Un vincolo duale della forma pi'a^ <= c"
     - "Un vincolo duale nella forma pi'a^ = c"
     - "Una variabile duale non negativa"
     - "Una variabile duale libera (non ristretta in segno)"
-  correct_answer: 1
+    - "Nessuna di queste"
+  correct_answer: 0
 
 - body: |
     Quale tra queste affermazioni è falsa rispetto ad una corrispondenza primale-duale?
@@ -774,8 +795,8 @@
     - "Nella riga 0, colonne corrispondenti alla base"
     - "Nella riga 0, colonne non corrispondenti alla base"
     - "Nella colonna 0, righe non corrispondenti alla base"
-    - "In nessuna di queste posizioni"
     - "Nella colonna 0, nelle righe corrispondenti alla base"
+    - "In nessuna di queste posizioni"
   correct_answer: 1
 
 - body: |
@@ -848,12 +869,12 @@
     Nell'operazione di pivoting dell'algoritmo del simplesso duale:
   topic: "Dualità"
   answers:
-    - "Nessuna di queste."
     - "La colonna del pivot viene moltiplicata per il pivot"
     - "La riga del pivot viene moltiplicata per il pivot"
     - "La colonna del pivot viene divisa per il pivot"
     - "La riga del pivot viene divisa per il pivot"
-  correct_answer: 4
+    - "Nessuna di queste."
+  correct_answer: 3
 
 - body: |
     Nel duale di un problema di minimizzazione in forma standard
@@ -882,11 +903,20 @@
   topic: "Dualità"
   answers:
     - "Il sistema (I) è impossible se e solo se il sistema (II) è possibile"
-    - "Nessuna di queste"
     - "Il sistema (I) è impossible se e solo se il sistema (II) è impossibile"
     - "Il sistema (I) è possible se e solo se il sistema (II) è possibile"
-    - "Risposta vuota"
+    - "Nessuna di queste"
   correct_answer: 0
+
+- body: |
+    Dati un problema LP e la corrispondente base ottima B, si consideri la modifica di un dato di input. L'analisi di sensitività definisce un intervallo di confidenza tale che
+  topic: "Dualità"
+  answers:
+    - "Se il nuovo valore del dato ricade all'interno di tale intervallo, la soluzione corrispondente a B è ancora ottima"
+    - "Se il nuovo valore del dato ricade all'esterno di tale intervallo, la soluzione corrispondente a B è ancora ottima"
+    - "Se il nuovo valore del dato ricade all'interno di tale intervallo, i valori delle variabili nella soluzione ottima non cambiano"
+    - "Nessuna di queste"
+  correct_answer: 2
 
 - body: |
     Relativamente ad un problema ILP e il suo rilassamento continuo LP
@@ -931,6 +961,26 @@
     - "Il simplesso risolve i problemi in forma standard e generale, ma non in forma canonica."
     - "Nessuna di queste."
   correct_answer: 0
+
+- body: |
+    Se la matrice m x n (con m < n) dei vincoli di un problema di programmazione lineare intera è unimodulare
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "Ciò non è possibile: solo le matrici quadrate possono essere unimodulari"
+    - "La soluzione del rilassamento continuo del problema è sempre intera"
+    - "L'ottimalità della soluzione può essere verificata in tempo polinomiale"
+    - "La soluzione del rilassamento continuo del problema è ottima per l'ILP"
+  correct_answer: 0
+
+- body: |
+    Sia x la soluzione ottima del rilassamento continuo di un problema ILP di massimizzazione. Se x contiene un solo valore non intero
+  topic: "Programmazione Lineare Intera"
+  answers:
+    - "Sostituendo a tale valore il suo troncamento, si ottiene la soluzione ottima dell'ILP"
+    - "Sostituendo a tale valore il suo arrotondamento, si ottiene un upper bound sulla soluzione ottima dell'ILP"
+    - "Sostituendo a tale valore il suo arrotondamento, si ottiene la soluzione ottima dell'ILP"
+    - "Nessuna di queste"
+  correct_answer: 3
 
 - body: |
     Scelta una riga generatrice, un taglio di Gomory impone che
@@ -981,10 +1031,10 @@
   topic: "Programmazione Lineare Intera"
   answers:
     - "P è impossibile salvo casi molto particolari"
-    - "non si può dire nulla su P"
+    - "Non si può dire nulla su P"
     - "P è sempre impossibile"
     - "P è illimitato"
-    - "nessuna di queste"
+    - "Nessuna di queste"
   correct_answer: 2
 
 - body: |
@@ -995,7 +1045,7 @@
     - "U è minore o uguale al valore della soluzione ottima finale"
     - "U è maggiore o uguale al valore della soluzione ottima corrente"
     - "U è maggiore o uguale al valore della soluzione ottima finale"
-    - "nessuna di queste"
+    - "Nessuna di queste"
   correct_answer: 0
 
 - body: |
@@ -1168,7 +1218,7 @@
   topic: "Complessità"
   answers:
     - "È risolubile in tempo polinomiale, ma non dall'algoritmo del simplesso."
-    - "non è risolubile in tempo polinomiale."
+    - "Non è risolubile in tempo polinomiale."
     - "È risolubile in tempo polinomiale dall'algoritmo del simplesso."
     - "È risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso."
     - "Nessuna di queste."
@@ -1181,7 +1231,7 @@
     - "È risolvibile solo mediante un albero decisionale."
     - "È risolvibile in tempo polinomiale."
     - "È risolvibile mediante la programmazione dinamica."
-    - "non esiste algoritmo pseudo-polinomiale."
+    - "Non esiste algoritmo pseudo-polinomiale."
     - "Nessuna di queste."
   correct_answer: 2
 
