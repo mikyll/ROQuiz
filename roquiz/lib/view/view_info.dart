@@ -294,6 +294,11 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
           floatingActionButton: StarButton(
             size: 70.0,
             animate: settings.animations,
+            onTap: !settings.animations
+                ? () {
+                    openUrl("https://github.com/mikyll/ROQuiz");
+                  }
+                : null,
             onMaxSize: settings.animations
                 ? () {
                     openUrl("https://github.com/mikyll/ROQuiz");
