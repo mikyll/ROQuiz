@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/edit_question/commands/custom_command.dart';
 import 'package:roquiz/model/edit_question/question_command_executor.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/question_dialog.dart';
 import 'package:roquiz/widget/separator.dart';
@@ -24,10 +25,9 @@ class _ViewQuestionsEditFileState extends State<ViewQuestionsEditFile> {
       //   // todo
       // },
       child: Scaffold(
-        appBar: AppBar(
+        appBar: ConstrainedAppBar(
+          maxWidth: 500.0,
           title: Text("Modifica File"),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             style: ButtonStyle(
@@ -43,7 +43,7 @@ class _ViewQuestionsEditFileState extends State<ViewQuestionsEditFile> {
         body: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 700.0),
+              constraints: BoxConstraints(maxWidth: 500.0),
               child: Text("todo"),
             ),
           ),

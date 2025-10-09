@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/utils/navigation.dart';
 import 'package:roquiz/view/view_licenses.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/star_button.dart';
 // import 'package:roquiz/cli/utils/navigation.dart';
 // import 'package:roquiz/model/palette.dart';
@@ -36,10 +37,9 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
       children: [
         Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: AppBar(
+          appBar: ConstrainedAppBar(
+            maxWidth: 500.0,
             title: const Text("Info"),
-            centerTitle: true,
-            automaticallyImplyLeading: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               style: ButtonStyle(
@@ -55,7 +55,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
           body: SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 700.0),
+                constraints: BoxConstraints(maxWidth: 500.0),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(

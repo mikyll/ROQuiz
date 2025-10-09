@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/persistence/license.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/licenses.dart';
 
 class ViewLicenses extends StatelessWidget {
@@ -21,10 +22,9 @@ class ViewLicenses extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
+      appBar: ConstrainedAppBar(
+        maxWidth: 500.0,
         title: const Text("Licenses"),
-        centerTitle: true,
-        automaticallyImplyLeading: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {

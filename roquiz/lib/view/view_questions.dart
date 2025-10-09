@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
@@ -5,6 +6,7 @@ import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/view/view_questions_edit_file.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,15 +60,8 @@ class ViewQuestionsState extends State<ViewQuestions> {
       //   // todo
       // },
       child: Scaffold(
-        appBar: AppBar(
-          title: AnimatedOpacity(
-            opacity: _searchBarOpen ? 0.0 : 1.0,
-            curve: Curves.easeOutSine,
-            duration: const Duration(milliseconds: 250),
-            child: Text("Lista Domande (${_questions.length})"),
-          ),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
+        appBar: ConstrainedAppBar(
+          maxWidth: 500.0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             style: ButtonStyle(
@@ -77,6 +72,12 @@ class ViewQuestionsState extends State<ViewQuestions> {
             onPressed: () {
               Navigator.pop(context);
             },
+          ),
+          title: AnimatedOpacity(
+            opacity: _searchBarOpen ? 0.0 : 1.0,
+            curve: Curves.easeOutSine,
+            duration: const Duration(milliseconds: 250),
+            child: Text("Lista Domande (${_questions.length})"),
           ),
           actions: [
             CustomSearchBar(
@@ -99,7 +100,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
         body: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 700.0),
+              constraints: BoxConstraints(maxWidth: 500.0),
               child: Scrollbar(
                 interactive: true,
                 controller: _scrollController,
@@ -181,7 +182,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 waitDuration: Duration(milliseconds: 500),
                 message: "Modifica",
                 child: IconButton(
-                  onPressed: true
+                  onPressed: !kDebugMode
                       ? null
                       : () {
                           // TODO: change animation
@@ -221,7 +222,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 waitDuration: Duration(milliseconds: 500),
                 message: "Modifica File",
                 child: IconButton(
-                  onPressed: true
+                  onPressed: !kDebugMode
                       ? null
                       : () {
                           // Prompt for format

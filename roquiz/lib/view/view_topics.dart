@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 
 class ViewTopics extends StatefulWidget {
   final int questionsNum;
@@ -91,10 +92,9 @@ class ViewTopicsState extends State<ViewTopics> {
         // todo
       },
       child: Scaffold(
-        appBar: AppBar(
+        appBar: ConstrainedAppBar(
+          maxWidth: 500.0,
           title: const Text("Argomenti"),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             style: ButtonStyle(

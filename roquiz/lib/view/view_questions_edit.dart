@@ -6,6 +6,7 @@ import 'package:roquiz/model/edit_question/commands/add_question.dart';
 import 'package:roquiz/model/edit_question/commands/custom_command.dart';
 import 'package:roquiz/model/edit_question/question_command_executor.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/question_dialog.dart';
 import 'package:roquiz/widget/separator.dart';
@@ -229,9 +230,21 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
         Navigator.pop(context);
       },
       child: Scaffold(
-        appBar: AppBar(
+        appBar: ConstrainedAppBar(
+          maxWidth: 500.0,
           title: Text(
             "Selezionate: $_selectedCount/${_selectedQuestions.length}",
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            style: ButtonStyle(
+              iconColor: WidgetStatePropertyAll(Colors.white),
+              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
+              backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
           actions: [
             Transform.scale(
@@ -277,24 +290,11 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
             ),
             Text("xxxx"),
           ],
-          centerTitle: true,
-          automaticallyImplyLeading: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            style: ButtonStyle(
-              iconColor: WidgetStatePropertyAll(Colors.white),
-              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-              backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
         ),
         body: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 700.0),
+              constraints: BoxConstraints(maxWidth: 500.0),
               child: Scrollbar(
                 interactive: true,
                 controller: _scrollController,

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:roquiz/widget/setting_entry.dart';
 
@@ -30,10 +31,9 @@ class ViewSettings extends StatelessWidget {
 
       // },
       child: Scaffold(
-        appBar: AppBar(
+        appBar: ConstrainedAppBar(
+          maxWidth: 500.0,
           title: Text("Impostazioni"),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             style: ButtonStyle(
@@ -45,7 +45,8 @@ class ViewSettings extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          actionsPadding: EdgeInsets.only(right: 8.0),
+          // TODO
+          // actionsPadding: EdgeInsets.only(right: 8.0),
           actions: [
             IconButton(
               icon: const Icon(Icons.help_outline, color: Colors.white),

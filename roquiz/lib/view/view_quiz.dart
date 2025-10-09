@@ -8,9 +8,12 @@ import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
 import 'package:roquiz/model/utils/utils.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/grade.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/result_card.dart';
+
+import 'package:flutter/foundation.dart';
 
 class ViewQuiz extends StatefulWidget {
   final List<Question> quizPool;
@@ -121,8 +124,11 @@ class _ViewQuizState extends State<ViewQuiz> {
       }
 
       // TODO
-      // _startTimer(widget.timer * 60);
-      _startTimer(10);
+      if (kDebugMode) {
+        _startTimer(10);
+      } else {
+        _startTimer(widget.timer * 60);
+      }
     });
   }
 
@@ -264,10 +270,9 @@ class _ViewQuizState extends State<ViewQuiz> {
               _dragDirectionDX = 0;
             },
             child: Scaffold(
-              appBar: AppBar(
+              appBar: ConstrainedAppBar(
+                maxWidth: 500.0,
                 title: const Text("Quiz"),
-                centerTitle: true,
-                automaticallyImplyLeading: true,
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back_ios),
                   style: ButtonStyle(
@@ -295,21 +300,22 @@ class _ViewQuizState extends State<ViewQuiz> {
                 ),
                 // TODO: add toggle dark mode?
                 actions: [
-                  Switch(
-                    value: _maxQuizGrade,
-                    onChanged: (value) {
-                      setState(() {
-                        _maxQuizGrade = value;
-                      });
-                    },
-                    activeTrackColor: Colors.white,
-                  ),
+                  if (kDebugMode)
+                    Switch(
+                      value: _maxQuizGrade,
+                      onChanged: (value) {
+                        setState(() {
+                          _maxQuizGrade = value;
+                        });
+                      },
+                      activeTrackColor: Colors.white,
+                    ),
                 ],
               ),
               body: SafeArea(
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 700.0),
+                    constraints: BoxConstraints(maxWidth: 500.0),
                     child: Stack(
                       children: [
                         Column(

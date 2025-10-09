@@ -3,6 +3,7 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/utils.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,10 +34,9 @@ class ViewHistoryState extends State<ViewHistory> {
       //   // todo
       // },
       child: Scaffold(
-        appBar: AppBar(
+        appBar: ConstrainedAppBar(
+          maxWidth: 500.0,
           title: Text("Storico Quiz"),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             style: ButtonStyle(
@@ -52,7 +52,7 @@ class ViewHistoryState extends State<ViewHistory> {
         body: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 700.0),
+              constraints: BoxConstraints(maxWidth: 500.0),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
