@@ -145,125 +145,141 @@ class ViewQuestionsState extends State<ViewQuestions> {
             ),
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).highlightColor.withAlpha(70),
+            // border: Border(
+            //   top: BorderSide(color: Theme.of(context).disabledColor),
+            // ),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 15.0,
             children: [
-              // Show/Hide correct answers
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Mostra/nascondi le risposte corrette",
-                child: IconButton(
-                  onPressed: () {
-                    _toggleAnswers(settings);
-                  },
-                  icon: Icon(
-                    settings.hideCorrectAnswersInEditMode
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  ),
-                  iconSize: 35,
-                ),
-              ),
-              // Check if there are new questions
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Controlla se ci sono nuove domande",
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.sync_rounded),
-                  iconSize: 35,
-                ),
-              ),
-              // Edit mode
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Modifica",
-                child: IconButton(
-                  onPressed: !kDebugMode
-                      ? null
-                      : () {
-                          // TODO: change animation
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (_, __, ___) {
-                                return ViewQuestionsEdit(
-                                  questions: _questions,
-                                  hideAnswers:
-                                      settings.hideCorrectAnswersInEditMode,
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 15.0,
+                  children: [
+                    // Show/Hide correct answers
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Mostra/nascondi le risposte corrette",
+                      child: IconButton(
+                        onPressed: () {
+                          _toggleAnswers(settings);
+                        },
+                        icon: Icon(
+                          settings.hideCorrectAnswersInEditMode
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        iconSize: 35,
+                      ),
+                    ),
+                    // Check if there are new questions
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Controlla se ci sono nuove domande",
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.sync_rounded),
+                        iconSize: 35,
+                      ),
+                    ),
+                    // Edit mode
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Modifica",
+                      child: IconButton(
+                        onPressed: !kDebugMode
+                            ? null
+                            : () {
+                                // TODO: change animation
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) {
+                                      return ViewQuestionsEdit(
+                                        questions: _questions,
+                                        hideAnswers: settings
+                                            .hideCorrectAnswersInEditMode,
+                                      );
+                                    },
+                                    transitionDuration: Duration.zero,
+                                    // transitionDuration: Duration(milliseconds: 300),
+                                    // transitionsBuilder: (_, animation, __, c) {
+                                    //   const begin = Offset(1.0, 0.0);
+                                    //   const end = Offset.zero;
+                                    //   var tween = Tween(
+                                    //     begin: begin,
+                                    //     end: end,
+                                    //   ).chain(CurveTween(curve: Curves.easeOut));
+                                    //   return SlideTransition(
+                                    //     position: animation.drive(tween),
+                                    //     child: c,
+                                    //   );
+                                    // },
+                                  ),
                                 );
                               },
-                              transitionDuration: Duration.zero,
-                              // transitionDuration: Duration(milliseconds: 300),
-                              // transitionsBuilder: (_, animation, __, c) {
-                              //   const begin = Offset(1.0, 0.0);
-                              //   const end = Offset.zero;
-                              //   var tween = Tween(
-                              //     begin: begin,
-                              //     end: end,
-                              //   ).chain(CurveTween(curve: Curves.easeOut));
-                              //   return SlideTransition(
-                              //     position: animation.drive(tween),
-                              //     child: c,
-                              //   );
-                              // },
-                            ),
-                          );
-                        },
-                  icon: Icon(Icons.edit),
-                  iconSize: 35,
-                ),
-              ),
-              // Edit mode (file)
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Modifica File",
-                child: IconButton(
-                  onPressed: !kDebugMode
-                      ? null
-                      : () {
-                          // Prompt for format
+                        icon: Icon(Icons.edit),
+                        iconSize: 35,
+                      ),
+                    ),
+                    // Edit mode (file)
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Modifica File",
+                      child: IconButton(
+                        onPressed: !kDebugMode
+                            ? null
+                            : () {
+                                // Prompt for format
 
-                          // TODO: change animation
-                          Navigator.push(
-                            context,
-                            // PageRouteBuilder(
-                            //   pageBuilder: (_, __, ___) {
-                            //     return ViewQuestionsEditFile();
-                            //   },
-                            //   transitionDuration: Duration.zero,
-                            //   transitionsBuilder: (_, animation, __, child) {
-                            //     return child;
-                            //   },
-                            // ),
-                            PageRouteBuilder(
-                              pageBuilder: (_, __, ___) {
-                                return ViewQuestionsEditFile(fileContent: "");
+                                // TODO: change animation
+                                Navigator.push(
+                                  context,
+                                  // PageRouteBuilder(
+                                  //   pageBuilder: (_, __, ___) {
+                                  //     return ViewQuestionsEditFile();
+                                  //   },
+                                  //   transitionDuration: Duration.zero,
+                                  //   transitionsBuilder: (_, animation, __, child) {
+                                  //     return child;
+                                  //   },
+                                  // ),
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) {
+                                      return ViewQuestionsEditFile(
+                                        fileContent: "",
+                                      );
+                                    },
+                                    transitionDuration: Duration.zero,
+                                    // transitionDuration: Duration(milliseconds: 300),
+                                    // transitionsBuilder: (_, animation, __, c) {
+                                    //   const begin = Offset(1.0, 0.0);
+                                    //   const end = Offset.zero;
+                                    //   var tween = Tween(
+                                    //     begin: begin,
+                                    //     end: end,
+                                    //   ).chain(CurveTween(curve: Curves.easeOut));
+                                    //   return SlideTransition(
+                                    //     position: animation.drive(tween),
+                                    //     child: c,
+                                    //   );
+                                    // },
+                                  ),
+                                );
                               },
-                              transitionDuration: Duration.zero,
-                              // transitionDuration: Duration(milliseconds: 300),
-                              // transitionsBuilder: (_, animation, __, c) {
-                              //   const begin = Offset(1.0, 0.0);
-                              //   const end = Offset.zero;
-                              //   var tween = Tween(
-                              //     begin: begin,
-                              //     end: end,
-                              //   ).chain(CurveTween(curve: Curves.easeOut));
-                              //   return SlideTransition(
-                              //     position: animation.drive(tween),
-                              //     child: c,
-                              //   );
-                              // },
-                            ),
-                          );
-                        },
-                  icon: Icon(Icons.edit_document),
-                  iconSize: 35,
+                        icon: Icon(Icons.edit_document),
+                        iconSize: 35,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              Spacer(),
             ],
           ),
         ),

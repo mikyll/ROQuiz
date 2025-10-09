@@ -342,81 +342,96 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
             ),
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
+
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).highlightColor.withAlpha(70),
+            // border: Border(
+            //   top: BorderSide(color: Theme.of(context).disabledColor),
+            // ),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 15.0,
             children: [
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Aggiungi una nuova domanda",
-                child: IconButton(
-                  onPressed: _selectedCount == 0
-                      ? () {
-                          _addNewQuestion();
-                        }
-                      : null,
-                  icon: Icon(Icons.add),
-                  iconSize: 35,
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 15.0,
+                  children: [
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Aggiungi una nuova domanda",
+                      child: IconButton(
+                        onPressed: _selectedCount == 0
+                            ? () {
+                                _addNewQuestion();
+                              }
+                            : null,
+                        icon: Icon(Icons.add),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Modifica",
+                      child: IconButton(
+                        onPressed: _selectedCount == 1
+                            ? () {
+                                _editQuestion();
+                              }
+                            : null,
+                        icon: Icon(Icons.edit_note),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Rimuovi",
+                      child: IconButton(
+                        onPressed: _selectedCount > 0
+                            ? () {
+                                _removeQuestion();
+                              }
+                            : null,
+                        icon: Icon(Icons.delete),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Annulla l'ultima azione",
+                      child: IconButton(
+                        onPressed: _commandExecutor.canUndo()
+                            ? () {
+                                setState(() {
+                                  _commandExecutor.undoCommand();
+                                });
+                              }
+                            : null,
+                        icon: Icon(Icons.undo),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Ripeti l'ultima azione",
+                      child: IconButton(
+                        onPressed: _commandExecutor.canRedo()
+                            ? () {
+                                setState(() {
+                                  _commandExecutor.redoCommand();
+                                });
+                              }
+                            : null,
+                        icon: Icon(Icons.redo),
+                        iconSize: 35,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Modifica",
-                child: IconButton(
-                  onPressed: _selectedCount == 1
-                      ? () {
-                          _editQuestion();
-                        }
-                      : null,
-                  icon: Icon(Icons.edit_note),
-                  iconSize: 35,
-                ),
-              ),
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Rimuovi",
-                child: IconButton(
-                  onPressed: _selectedCount > 0
-                      ? () {
-                          _removeQuestion();
-                        }
-                      : null,
-                  icon: Icon(Icons.delete),
-                  iconSize: 35,
-                ),
-              ),
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Annulla l'ultima azione",
-                child: IconButton(
-                  onPressed: _commandExecutor.canUndo()
-                      ? () {
-                          setState(() {
-                            _commandExecutor.undoCommand();
-                          });
-                        }
-                      : null,
-                  icon: Icon(Icons.undo),
-                  iconSize: 35,
-                ),
-              ),
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Ripeti l'ultima azione",
-                child: IconButton(
-                  onPressed: _commandExecutor.canRedo()
-                      ? () {
-                          setState(() {
-                            _commandExecutor.redoCommand();
-                          });
-                        }
-                      : null,
-                  icon: Icon(Icons.redo),
-                  iconSize: 35,
-                ),
-              ),
+              Spacer(),
             ],
           ),
         ),

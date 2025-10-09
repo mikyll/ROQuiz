@@ -7,10 +7,19 @@ import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:roquiz/widget/setting_entry.dart';
 
-class ViewSettings extends StatelessWidget {
+class ViewSettings extends StatefulWidget {
   final int maxQuizPool;
 
   const ViewSettings({super.key, required this.maxQuizPool});
+
+  @override
+  State<StatefulWidget> createState() => ViewSettingsState();
+}
+
+class ViewSettingsState extends State<ViewSettings> {
+  final ScrollController scrollController = ScrollController();
+  // TODO
+  final TextEditingController writtenGradeController = TextEditingController();
 
   bool _isGradeValid(int? grade) {
     return grade != null && grade >= 0 && grade <= 32;
@@ -18,12 +27,8 @@ class ViewSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
-    // TODO
-    final TextEditingController writtenGradeController =
-        TextEditingController();
-
     final settings = Provider.of<Settings>(context);
+    writtenGradeController.text = settings.writtenGrade?.toString() ?? "";
 
     return PopScope(
       canPop: true,
@@ -64,9 +69,10 @@ class ViewSettings extends StatelessWidget {
         body: SafeArea(
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 700.0),
+              constraints: BoxConstraints(maxWidth: 500.0),
               child: Form(
                 // TODO: key
+                key: GlobalKey<FormState>(),
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   controller: scrollController,
@@ -197,7 +203,7 @@ class ViewSettings extends StatelessWidget {
                     SettingEntry(
                       label: "Voto scritto:",
                       child: TextFormField(
-                        initialValue: settings.writtenGrade?.toString() ?? "",
+                        controller: writtenGradeController,
                         decoration: InputDecoration(
                           hint: Text("[0, 32]", textAlign: TextAlign.center),
                         ),
@@ -222,17 +228,17 @@ class ViewSettings extends StatelessWidget {
                           return null;
                         },
                         // TODO: fix this
-                        onFieldSubmitted: (newValue) {
-                          settings.writtenGrade = int.tryParse(newValue);
-                          SettingsManager.save(settings);
-                        },
-                        // onChanged: (value) {
-                        //   print(writtenGradeController.text);
-                        //   settings.writtenGrade = int.tryParse(
-                        //     writtenGradeController.text,
-                        //   );
+                        // onFieldSubmitted: (newValue) {
+                        //   settings.writtenGrade = int.tryParse(newValue);
                         //   SettingsManager.save(settings);
                         // },
+                        onChanged: (value) {
+                          print(writtenGradeController.text);
+                          settings.writtenGrade = int.tryParse(
+                            writtenGradeController.text,
+                          );
+                          SettingsManager.save(settings);
+                        },
                       ),
                     ),
                     SettingEntry(

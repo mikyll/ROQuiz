@@ -48,78 +48,93 @@ class _ViewQuestionsEditFileState extends State<ViewQuestionsEditFile> {
             ),
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
+
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).highlightColor.withAlpha(70),
+            // border: Border(
+            //   top: BorderSide(color: Theme.of(context).disabledColor),
+            // ),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 15.0,
             children: [
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Salva le domande",
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.save),
-                  iconSize: 35,
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 15.0,
+                  children: [
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Salva le domande",
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.save),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Valida le domande",
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.checklist),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Ripristina",
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.refresh),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Annulla l'ultima azione",
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.undo),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Ripeti l'ultima azione",
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.redo),
+                        iconSize: 35,
+                      ),
+                    ),
+                    // Import questions from a file
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Importa le domande da un file",
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.file_open_outlined),
+                        iconSize: 35,
+                      ),
+                    ),
+                    // Export questions file
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Esporta il file delle domande",
+                      child: IconButton(
+                        onPressed: null,
+                        // TODO: cercare altra icona?
+                        icon: Icon(Icons.file_download),
+                        iconSize: 35,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Valida le domande",
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.checklist),
-                  iconSize: 35,
-                ),
-              ),
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Ripristina",
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.refresh),
-                  iconSize: 35,
-                ),
-              ),
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Annulla l'ultima azione",
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.undo),
-                  iconSize: 35,
-                ),
-              ),
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Ripeti l'ultima azione",
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.redo),
-                  iconSize: 35,
-                ),
-              ),
-              // Import questions from a file
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Importa le domande da un file",
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.file_open_outlined),
-                  iconSize: 35,
-                ),
-              ),
-              // Export questions file
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Esporta il file delle domande",
-                child: IconButton(
-                  onPressed: null,
-                  // TODO: cercare altra icona?
-                  icon: Icon(Icons.file_download),
-                  iconSize: 35,
-                ),
-              ),
+              Spacer(),
             ],
           ),
         ),

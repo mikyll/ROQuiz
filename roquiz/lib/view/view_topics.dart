@@ -260,43 +260,53 @@ class ViewTopicsState extends State<ViewTopics> {
             ),
           ),
         ),
+
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            border: Border(
-              top: BorderSide(color: Theme.of(context).disabledColor),
-            ),
+            color: Theme.of(context).highlightColor.withAlpha(70),
+            // border: Border(
+            //   top: BorderSide(color: Theme.of(context).disabledColor),
+            // ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              heightFactor: 1,
-              alignment: Alignment.center,
-              child: SizedBox(
-                height: 50,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.refresh, size: 40.0),
-                  onPressed: _isDefault()
-                      ? null
-                      : () {
-                          _resetSelectedTopics();
-                          // _resetTopics();
-                          // _updatePool();
-                          // _updateEnabledTopics();
-                        },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+          child: Row(
+            children: [
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  heightFactor: 1,
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    height: 50,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.refresh, size: 40.0),
+                      onPressed: _isDefault()
+                          ? null
+                          : () {
+                              _resetSelectedTopics();
+                              // _resetTopics();
+                              // _updatePool();
+                              // _updateEnabledTopics();
+                            },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      label: const Text(
+                        "Ripristina",
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                  label: const Text(
-                    "Ripristina",
-                    maxLines: 1,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-            ),
+              Spacer(),
+            ],
           ),
         ),
       ),

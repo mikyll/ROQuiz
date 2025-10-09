@@ -130,22 +130,37 @@ class ViewHistoryState extends State<ViewHistory> {
           //   },
           // ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
+
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).highlightColor.withAlpha(70),
+            // border: Border(
+            //   top: BorderSide(color: Theme.of(context).disabledColor),
+            // ),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Tooltip(
-                waitDuration: Duration(milliseconds: 500),
-                message: "Esporta",
-                child: IconButton(
-                  onPressed: () {
-                    // TODO
-                  },
-                  icon: Icon(Icons.file_download),
-                  iconSize: 35,
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Esporta",
+                      child: IconButton(
+                        onPressed: () {
+                          // TODO
+                        },
+                        icon: Icon(Icons.file_download),
+                        iconSize: 35,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              Spacer(),
             ],
           ),
         ),
