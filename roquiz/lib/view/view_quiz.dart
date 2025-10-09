@@ -459,61 +459,69 @@ class _ViewQuizState extends State<ViewQuiz> {
                 ),
               ),
               bottomNavigationBar: Container(
-                constraints: BoxConstraints(maxWidth: 700.0),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  border: Border(
-                    top: BorderSide(color: Theme.of(context).disabledColor),
-                  ),
+                  color: Theme.of(context).highlightColor.withAlpha(70),
+                  // border: Border(
+                  //   top: BorderSide(color: Theme.of(context).disabledColor),
+                  // ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          // TODO: long press
-                          _previousQuestion();
-                        },
-                        icon: Icon(Icons.arrow_back_ios_rounded),
-                        iconSize: 35,
-                      ),
-                      const SizedBox(width: 20),
-                      IconButton(
-                        onLongPress: () {},
-                        onPressed: () {
-                          // TODO: long press
-
-                          _nextQuestion();
-                        },
-                        icon: Icon(Icons.arrow_forward_ios_rounded),
-                        iconSize: 35,
-                      ),
-                      const SizedBox(width: 20),
-                      const Spacer(flex: 5),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_isQuizOver) {
-                            _startQuiz();
-                          } else {
-                            _endQuiz(settings.writtenGrade);
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 50.0,
-                          width: 100.0,
-                          child: Text(
-                            !_isQuizOver ? "Termina" : "Riavvia",
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                child: Row(
+                  children: [
+                    Spacer(),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 500.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                // TODO: long press
+                                _previousQuestion();
+                              },
+                              icon: Icon(Icons.arrow_back_ios_rounded),
+                              iconSize: 35,
                             ),
-                          ),
+                            const SizedBox(width: 20),
+                            IconButton(
+                              onLongPress: () {},
+                              onPressed: () {
+                                // TODO: long press
+
+                                _nextQuestion();
+                              },
+                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                              iconSize: 35,
+                            ),
+                            const SizedBox(width: 20),
+                            const Spacer(flex: 5),
+                            ElevatedButton(
+                              onPressed: () {
+                                if (_isQuizOver) {
+                                  _startQuiz();
+                                } else {
+                                  _endQuiz(settings.writtenGrade);
+                                }
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 50.0,
+                                width: 100.0,
+                                child: Text(
+                                  !_isQuizOver ? "Termina" : "Riavvia",
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Spacer(),
+                  ],
                 ),
               ),
             ),
