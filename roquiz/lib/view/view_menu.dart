@@ -405,71 +405,84 @@ class ViewMenuState extends State<ViewMenu> {
           ),
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          SizedBox(
-            height: 60,
-            width: 60,
-            child: IconButton.filled(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ViewSettings(
-                        maxQuizPool: _questionRepository.questions.length,
-                      );
-                    },
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 500.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: IconButton.filled(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ViewSettings(
+                                maxQuizPool:
+                                    _questionRepository.questions.length,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      iconSize: 45,
+                      icon: Icon(Icons.settings),
+                    ),
                   ),
-                );
-              },
-              iconSize: 45,
-              icon: Icon(Icons.settings),
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          SizedBox(
-            height: 60,
-            width: 60,
-            child: IconButton.filled(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ViewInfo(packageInfo: widget.packageInfo);
-                    },
+                  const SizedBox(height: 10.0),
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: IconButton.filled(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ViewInfo(packageInfo: widget.packageInfo);
+                            },
+                          ),
+                        );
+                      },
+                      iconSize: 45,
+                      icon: Icon(
+                        Icons.info,
+                        // TODO
+                        // color:
+                        //     themeProvider.isDarkMode ? Color(0xff515b92) : Colors.white,
+                      ),
+                    ),
                   ),
-                );
-              },
-              iconSize: 45,
-              icon: Icon(
-                Icons.info,
-                // TODO
-                // color:
-                //     themeProvider.isDarkMode ? Color(0xff515b92) : Colors.white,
-              ),
-            ),
-          ),
-          // IconButtonWidget(
-          //   onTap: () {
-          //     Navigator.push(context, MaterialPageRoute(builder: (context) {
-          //       // return ViewInfo(settings: _settings);
+                  // IconButtonWidget(
+                  //   onTap: () {
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  //       // return ViewInfo(settings: _settings);
 
-          //       // TODO
-          //       return ViewMenu();
-          //     }));
-          //   },
-          //   width: 60.0,
-          //   height: 60.0,
-          //   lightPalette: MyThemes.lightIconButtonPalette,
-          //   darkPalette: MyThemes.darkIconButtonPalette,
-          //   icon: Icons.info,
-          //   iconSize: 40,
-          //   shadow: true,
-          // ),
-        ],
+                  //       // TODO
+                  //       return ViewMenu();
+                  //     }));
+                  //   },
+                  //   width: 60.0,
+                  //   height: 60.0,
+                  //   lightPalette: MyThemes.lightIconButtonPalette,
+                  //   darkPalette: MyThemes.darkIconButtonPalette,
+                  //   icon: Icons.info,
+                  //   iconSize: 40,
+                  //   shadow: true,
+                  // ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

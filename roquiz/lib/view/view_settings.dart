@@ -415,13 +415,24 @@ class ViewSettingsState extends State<ViewSettings> {
             ),
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: IconButton.filled(
-          onPressed: () {
-            // TODO
-          },
-          iconSize: 45,
-          icon: Icon(Icons.refresh, size: 40.0),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 500.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton.filled(
+                  onPressed: () {
+                    // TODO
+                  },
+                  iconSize: 45,
+                  icon: Icon(Icons.refresh, size: 40.0),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
