@@ -103,8 +103,7 @@ class ViewMenuState extends State<ViewMenu> {
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: ConstrainedBox(
-              // TODO
-              constraints: BoxConstraints(maxWidth: 400.0),
+              constraints: BoxConstraints(maxWidth: 500.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
