@@ -141,7 +141,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    // openUrl("https://github.com/mikyll");
+                                    openUrl("https://github.com/mikyll");
                                   },
                                   child: Row(
                                     children: [
@@ -200,7 +200,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    // openUrl("https://github.com/mikyll/ROQuiz");
+                                    openUrl("https://github.com/mikyll/ROQuiz");
                                   },
                                   child: const Text(
                                     "mikyll/ROQuiz",
