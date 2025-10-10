@@ -83,6 +83,8 @@ class ViewSettingsState extends State<ViewSettings> {
                     Separator(text: "Generale"),
                     SettingEntry(
                       label: "Lingua:",
+                      tooltip:
+                          "Permette di impostare la lingua dell'applicazione.",
                       child: DropdownButtonFormField(
                         value: settings.language,
                         items: ["Italiano"].map<DropdownMenuItem<String>>((
@@ -101,7 +103,22 @@ class ViewSettingsState extends State<ViewSettings> {
                       ),
                     ),
                     SettingEntry(
+                      label: "Tema scuro:",
+                      tooltip:
+                          "Permette di impostare il tema dell'applicazione: chiaro o scuro.",
+                      child: Switch(
+                        value: settings.themeDark,
+                        onChanged: (value) {
+                          // TODO: why it's slow?
+                          settings.themeDark = value;
+                          SettingsManager.save(settings);
+                        },
+                      ),
+                    ),
+                    SettingEntry(
                       label: "Controllo release app:",
+                      tooltip:
+                          "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -116,6 +133,8 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                     SettingEntry(
                       label: "Controllo nuove domande:",
+                      tooltip:
+                          "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -130,6 +149,8 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                     SettingEntry(
                       label: "Animazioni:",
+                      tooltip:
+                          "Se selezionato, abilita le animazioni (voto del quiz, stella, ...).",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -144,6 +165,8 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                     SettingEntry(
                       label: "Alert conferma:",
+                      tooltip:
+                          "Se selezionata, mostra degli alert di conferma.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -159,7 +182,9 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
 
                     SettingEntry(
-                      label: "Nascondi risposte corrette nella lista domande:",
+                      label: "Nascondi risposte corrette:",
+                      tooltip:
+                          "Se selezionata, nasconde le risposte corrette nella lista delle domande.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -177,18 +202,10 @@ class ViewSettingsState extends State<ViewSettings> {
                     //     - end quiz when there are answers not given
                     //     - new version/new questions
                     SettingEntry(
-                      label: "Tema scuro:",
-                      child: Switch(
-                        value: settings.themeDark,
-                        onChanged: (value) {
-                          // TODO: why it's slow?
-                          settings.themeDark = value;
-                          SettingsManager.save(settings);
-                        },
-                      ),
-                    ),
-                    SettingEntry(
                       label: "GitHub token:",
+                      tooltip:
+                          "GitHub API token per poter fare richieste alla repository con rate limit incrementato."
+                          " Le chiamate alla repository vengono effettuate ad esempio per controllare se ci sono aggiornamenti dell'app o delle domande.",
                       child: TextFormField(
                         decoration: InputDecoration(
                           hint: Text("token", textAlign: TextAlign.center),
@@ -201,7 +218,9 @@ class ViewSettingsState extends State<ViewSettings> {
                     SizedBox(height: 20.0),
                     Separator(text: "Quiz"),
                     SettingEntry(
-                      label: "Voto scritto:",
+                      label: "Voto prova scritta:",
+                      tooltip:
+                          "Permette di impostare il voto della prova scritta. Se impostato, il calcolo del voto dei quiz sarà più accurato.",
                       child: TextFormField(
                         controller: writtenGradeController,
                         decoration: InputDecoration(
@@ -243,6 +262,9 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                     SettingEntry(
                       label: "Argomenti interi:",
+                      tooltip:
+                          "Se selezionata, come pool del quiz utilizza tutte le domande di ciascun argomento selezionato."
+                          " È particolarmente utile quando si vogliono ripassare solamente certi argomenti.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -257,6 +279,7 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                     SettingEntry(
                       label: "Domande quiz:",
+                      tooltip: "Numero di domande presenti in ciascun quiz.",
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 10.0,
@@ -305,6 +328,8 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                     SettingEntry(
                       label: "Timer (minuti):",
+                      tooltip:
+                          "Numero di minuti a disposizione per completare il quiz.",
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 10.0,
@@ -353,6 +378,9 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                     SettingEntry(
                       label: "Mescola risposte:",
+                      tooltip:
+                          "Se selezionata, mescola l'ordine delle risposte dei quiz."
+                          " Questa opzione è utile per evitare di imparere l'ordine delle risposte nelle domande.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -368,6 +396,8 @@ class ViewSettingsState extends State<ViewSettings> {
 
                     SettingEntry(
                       label: "Termina quiz allo scadere del tempo:",
+                      tooltip:
+                          "Se selezionata, termina il quiz allo scadere del tempo.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -385,6 +415,8 @@ class ViewSettingsState extends State<ViewSettings> {
                     Separator(text: "Accessibilità"),
                     SettingEntry(
                       label: "Layout per mancini:",
+                      tooltip:
+                          "Se selezionata, imposta il layout dell'applicazione per facilitarne l'utilizzo ai mancini.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -399,6 +431,8 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
                     SettingEntry(
                       label: "Tema per daltonici:",
+                      tooltip:
+                          "Se selezionata, imposta il layout dell'applicazione per facilitarne l'utilizzo anche per le persone affette da daltonismo.",
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
