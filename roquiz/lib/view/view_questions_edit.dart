@@ -288,7 +288,6 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                 },
               ),
             ),
-            Text("xxxx"),
           ],
         ),
         body: SafeArea(
