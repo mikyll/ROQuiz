@@ -25,25 +25,21 @@ class CustomSearchBar extends StatefulWidget {
   final double openWidth;
   final TextEditingController textController;
 
-  final Icon? searchIcon;
+  final IconData? searchIcon;
   final Color? searchIconColor;
   final Color? searchIconColorOpen;
 
-  final Icon? closeIcon;
+  final IconData? closeIcon;
   final Color? closeIconColor;
   final String helpText;
   final int animationDuration;
 
   final bool rtl;
   final bool autoFocus;
-  final TextStyle? style;
   final bool closeSearchOnSuffixTap;
   final Color? fillColor;
   final Color? fillColorOpen;
-  final Color? textFieldBackgroundLightColor;
-  final Color? textFieldBackgroundDarkColor;
-  final Color? textFieldTextLightColor;
-  final Color? textFieldTextDarkColor;
+  final Color? textFieldTextColor;
   final Color? textFieldIconColor;
   final List<TextInputFormatter>? inputFormatters;
   final bool boxShadow;
@@ -56,13 +52,13 @@ class CustomSearchBar extends StatefulWidget {
     super.key,
     this.openWidth = 300,
     required this.textController,
-    this.searchIcon = const Icon(Icons.search),
+    this.searchIcon = Icons.search,
 
     /// choose your custom color for the search when it is expanded
     this.searchIconColor = Colors.white,
     this.searchIconColorOpen = Colors.black,
 
-    this.closeIcon = const Icon(Icons.close),
+    this.closeIcon = Icons.close,
     this.closeIconColor = Colors.black,
 
     /// The textController cannot be null
@@ -72,13 +68,8 @@ class CustomSearchBar extends StatefulWidget {
     this.fillColor = Colors.transparent,
     this.fillColorOpen = Colors.white,
 
-    /// choose your custom color for the search when it is expanded
-    this.textFieldBackgroundLightColor = Colors.white,
-    this.textFieldBackgroundDarkColor = Colors.black,
-
     /// choose your custom color for the text when it is expanded
-    this.textFieldTextLightColor = Colors.black,
-    this.textFieldTextDarkColor = Colors.white,
+    this.textFieldTextColor = Colors.black,
 
     /// choose your custom color for the search when it is expanded
     this.textFieldIconColor = Colors.black,
@@ -91,9 +82,6 @@ class CustomSearchBar extends StatefulWidget {
 
     /// make the keyboard to show automatically when the searchbar is expanded
     this.autoFocus = false,
-
-    /// TextStyle of the contents inside the searchbar
-    this.style,
 
     /// close the search on suffix tap
     this.closeSearchOnSuffixTap = false,
@@ -280,13 +268,11 @@ class CustomSearchBarState extends State<CustomSearchBar>
                         },
 
                         ///suffixIcon is of type Icon
-                        child:
-                            widget.closeIcon ??
-                            Icon(
-                              Icons.close,
-                              size: 20.0,
-                              color: widget.textFieldIconColor,
-                            ),
+                        child: Icon(
+                          widget.closeIcon,
+                          size: 20.0,
+                          color: widget.closeIconColor,
+                        ),
                       ),
                     ),
                   ),
@@ -335,10 +321,8 @@ class CustomSearchBarState extends State<CustomSearchBar>
                       },
 
                       ///style is of type TextStyle, the default is just a color black
-                      // style:
-                      //     widget.style ??
-                      //     TextStyle(color: searchBarTheme.textColor),
-                      cursorColor: searchBarTheme.textColor,
+                      style: TextStyle(color: widget.textFieldTextColor),
+                      cursorColor: widget.textFieldTextColor,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(5.0),
                         isDense: true,
