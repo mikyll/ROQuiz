@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/view/view_questions.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 
 class ViewTopics extends StatefulWidget {
@@ -114,6 +115,7 @@ class ViewTopicsState extends State<ViewTopics> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 500.0),
                 child: Column(
+                  spacing: 25.0,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -178,8 +180,18 @@ class ViewTopicsState extends State<ViewTopics> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(15.0),
                                   onTap: () {
-                                    // TODO: show view_questions with only selected questions
-                                    // NB: not editable in this mode, we do not pass question repo(?)
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ViewQuestions(
+                                            questions: _selectedQuestions(),
+                                            title: "Pool Corrente",
+                                            editable: false,
+                                          );
+                                        },
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
@@ -188,50 +200,6 @@ class ViewTopicsState extends State<ViewTopics> {
                         ),
                       ],
                     ),
-
-                    // TopicsInfoWidget(
-                    //   text: "Domande Totali: ",
-                    //   value: widget.qRepo.questions.length,
-                    //   color: Colors.indigo.withOpacity(0.35),
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => ViewQuestions(
-                    //           title:
-                    //               "Lista domande (${widget.qRepo.questions.length})",
-                    //           questions: widget.qRepo.questions,
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
-                    // TopicsInfoWidget(
-                    //   text: "Pool Corrente: ",
-                    //   textWeight: FontWeight.bold,
-                    //   value: _currentQuizPool,
-                    //   color: Colors.indigo.withOpacity(0.35),
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => ViewQuestions(
-                    //           title:
-                    //               "Pool corrente (${_getPoolFromSelected().length})",
-                    //           questions: _getPoolFromSelected(),
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
-                    // TopicsInfoWidget(
-                    //   text: "Domande per Quiz: ",
-                    //   value: widget.settings.maxQuestionPerTopic
-                    //       ? _currentQuizPool
-                    //       : widget.settings.questionNumber,
-                    //   color: Colors.indigo.withOpacity(0.35),
-                    // ),
-                    const SizedBox(height: 25),
                     Expanded(
                       child: ListView.builder(
                         itemCount: widget.questionsPerTopic.length,
@@ -248,6 +216,23 @@ class ViewTopicsState extends State<ViewTopics> {
                                     });
                                   }
                                 : null,
+                            onIconTap: widget.questionsPerTopic[topic] == null
+                                ? null
+                                : () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ViewQuestions(
+                                            questions: widget
+                                                .questionsPerTopic[topic]!,
+                                            title: topic,
+                                            editable: false,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
                             questionNum:
                                 widget.questionsPerTopic[topic]?.length ?? -1,
                           );
@@ -300,12 +285,14 @@ class _TopicTile extends StatelessWidget {
   final int questionNum;
   final bool isSelected;
   final Function(bool?)? onTap;
+  final Function()? onIconTap;
 
   const _TopicTile({
     required this.topic,
+    required this.questionNum,
     required this.isSelected,
     required this.onTap,
-    required this.questionNum,
+    required this.onIconTap,
   });
 
   @override
@@ -351,13 +338,11 @@ class _TopicTile extends StatelessWidget {
               child: Checkbox(
                 value: isSelected,
                 onChanged: onTap,
-                splashRadius: 15,
+                splashRadius: 15.0,
               ),
             ),
             IconButton(
-              onPressed: () {
-                // TODO
-              },
+              onPressed: onIconTap,
               icon: Icon(Icons.arrow_forward_ios_rounded),
               style: ButtonStyle(
                 iconColor: WidgetStatePropertyAll(Colors.black),
