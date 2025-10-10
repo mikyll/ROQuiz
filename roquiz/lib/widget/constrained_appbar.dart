@@ -25,19 +25,24 @@ class ConstrainedAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (leading != null) leading!,
-            Spacer(),
-            if (title != null) title!,
-            Spacer(),
-            if (leading != null) Opacity(opacity: 0.0, child: leading!),
+            Expanded(
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  if (title != null) Positioned(child: title!),
+                  if (leading != null) Positioned(left: 0, child: leading!),
+                  if (actions != null)
+                    Positioned(right: 0, child: Row(children: actions!)),
+                ],
+              ),
+            ),
           ],
         ),
       ),
       centerTitle: true,
       automaticallyImplyLeading: false,
-      actions: actions,
     );
     preferredSize = appBar.preferredSize;
   }
