@@ -33,22 +33,27 @@ class ViewLicenses extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: FutureBuilder<List<License>>(
-          future: loadLicenses(context),
-          builder: (context, snapshot) {
-            final licenses = snapshot.data;
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 500.0),
+            child: FutureBuilder<List<License>>(
+              future: loadLicenses(context),
+              builder: (context, snapshot) {
+                final licenses = snapshot.data;
 
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return const Center(child: CircularProgressIndicator());
-              default:
-                if (snapshot.hasError) {
-                  return const Center(child: Text('Some error occurred!'));
-                } else {
-                  return LicensesWidget(licenses: licenses!);
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const Center(child: CircularProgressIndicator());
+                  default:
+                    if (snapshot.hasError) {
+                      return const Center(child: Text('Some error occurred!'));
+                    } else {
+                      return LicensesWidget(licenses: licenses!);
+                    }
                 }
-            }
-          },
+              },
+            ),
+          ),
         ),
       ),
     );
