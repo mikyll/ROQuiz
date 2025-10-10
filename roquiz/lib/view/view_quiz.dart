@@ -241,6 +241,7 @@ class _ViewQuizState extends State<ViewQuiz> {
   @override
   Widget build(BuildContext context) {
     final Settings settings = Provider.of<Settings>(context);
+    final Size windowSize = getLogicalSize();
 
     return PopScope(
       canPop: true, //!widget.settings.confirmAlerts,
@@ -461,66 +462,84 @@ class _ViewQuizState extends State<ViewQuiz> {
               bottomNavigationBar: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor.withAlpha(70),
-                  // border: Border(
-                  //   top: BorderSide(color: Theme.of(context).disabledColor),
-                  // ),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Spacer(),
                     ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 500.0),
+                      constraints: BoxConstraints(
+                        maxWidth: 500.0,
+                        maxHeight: 70.0,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          alignment: Alignment.bottomCenter,
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                // TODO: long press
-                                _previousQuestion();
-                              },
-                              icon: Icon(Icons.arrow_back_ios_rounded),
-                              iconSize: 35,
-                            ),
-                            const SizedBox(width: 20),
-                            IconButton(
-                              onLongPress: () {},
-                              onPressed: () {
-                                // TODO: long press
-
-                                _nextQuestion();
-                              },
-                              icon: Icon(Icons.arrow_forward_ios_rounded),
-                              iconSize: 35,
-                            ),
-                            const SizedBox(width: 20),
-                            const Spacer(flex: 5),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (_isQuizOver) {
-                                  _startQuiz();
-                                } else {
-                                  _endQuiz(settings.writtenGrade);
-                                }
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 50.0,
-                                width: 100.0,
-                                child: Text(
-                                  !_isQuizOver ? "Termina" : "Riavvia",
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
+                            Positioned(
+                              left: 0,
+                              bottom: 0,
+                              child: Row(
+                                spacing: 20.0,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      // TODO: long press
+                                      _previousQuestion();
+                                    },
+                                    icon: Icon(Icons.arrow_back_ios_rounded),
+                                    iconSize: 35,
                                   ),
-                                ),
+                                  IconButton(
+                                    onLongPress: () {},
+                                    onPressed: () {
+                                      // TODO: long press
+
+                                      _nextQuestion();
+                                    },
+                                    icon: Icon(Icons.arrow_forward_ios_rounded),
+                                    iconSize: 35,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              right: windowSize.width < 500
+                                  ? 500 - windowSize.width
+                                  : 0,
+                              bottom: 0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      if (_isQuizOver) {
+                                        _startQuiz();
+                                      } else {
+                                        _endQuiz(settings.writtenGrade);
+                                      }
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 50.0,
+                                      width: 100.0,
+                                      child: Text(
+                                        !_isQuizOver ? "Termina" : "Riavvia",
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    Spacer(),
                   ],
                 ),
               ),
