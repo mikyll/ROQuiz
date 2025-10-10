@@ -1,4 +1,7 @@
 import 'dart:math';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 
 bool isGradeValid(int? grade) {
   return grade != null && grade >= 0 && grade <= 32;
@@ -37,4 +40,18 @@ String getTimeString(int counter) {
   String minutes = "${counter ~/ 60}".padLeft(2, '0');
   String seconds = "${counter % 60}".padLeft(2, '0');
   return "$hours:$minutes:$seconds";
+}
+
+// Dimensions in physical pixels (px)
+Size getPhysicalSize() {
+  FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+
+  return view.physicalSize;
+}
+
+// Dimensions in physical pixels (px)
+Size getLogicalSize() {
+  FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+
+  return view.physicalSize / view.devicePixelRatio;
 }
