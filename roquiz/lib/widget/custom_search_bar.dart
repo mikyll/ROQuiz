@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:roquiz/model/style/palettes.dart';
 
 class CustomSearchBar extends StatefulWidget {
   ///  width - double ,isRequired : Yes
@@ -151,10 +150,6 @@ class CustomSearchBarState extends State<CustomSearchBar>
 
   @override
   Widget build(BuildContext context) {
-    final searchBarTheme = Theme.of(
-      context,
-    ).extension<CustomSearchBarPalette>()!;
-
     return Container(
       height: 100.0,
 
@@ -347,10 +342,6 @@ class CustomSearchBarState extends State<CustomSearchBar>
               ///Using material widget here to get the ripple effect on the prefix icon
               Positioned(
                 left: 6.0,
-                // Workaround
-                // TODO
-                // top: getPlatformType() == PlatformType.MOBILE ? 0.0 : 4.0,
-                // left: getPlatformType() == PlatformType.MOBILE ? 0.0 : 4.0,
                 child: IconButton(
                   splashRadius: 19.0,
 
