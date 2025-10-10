@@ -32,9 +32,9 @@ class ConstrainedAppBar extends StatelessWidget implements PreferredSizeWidget {
                 alignment: Alignment.center,
                 children: [
                   if (title != null) Positioned(child: title!),
-                  if (leading != null) Positioned(left: 0, child: leading!),
+                  if (leading != null) Positioned(left: -10, child: leading!),
                   if (actions != null)
-                    Positioned(right: 0, child: Row(children: actions!)),
+                    Positioned(right: -10, child: Row(children: actions!)),
                 ],
               ),
             ),
