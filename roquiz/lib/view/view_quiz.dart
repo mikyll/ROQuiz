@@ -123,12 +123,7 @@ class _ViewQuizState extends State<ViewQuiz> {
         c.stop();
       }
 
-      // TODO
-      if (kDebugMode) {
-        _startTimer(10);
-      } else {
-        _startTimer(widget.timer * 60);
-      }
+      _startTimer(widget.timer * 60);
     });
   }
 
