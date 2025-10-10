@@ -31,7 +31,13 @@ class ConstrainedAppBar extends StatelessWidget implements PreferredSizeWidget {
                 clipBehavior: Clip.none,
                 alignment: Alignment.center,
                 children: [
-                  if (title != null) Positioned(child: title!),
+                  if (title != null)
+                    Positioned(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                        child: title!,
+                      ),
+                    ),
                   if (leading != null) Positioned(left: -10, child: leading!),
                   if (actions != null)
                     Positioned(right: -10, child: Row(children: actions!)),
