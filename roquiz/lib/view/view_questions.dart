@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
@@ -13,8 +12,15 @@ import 'package:roquiz/widget/custom_search_bar.dart';
 
 class ViewQuestions extends StatefulWidget {
   final List<Question> questions;
+  final String title;
+  final bool editable;
 
-  const ViewQuestions({super.key, required this.questions});
+  const ViewQuestions({
+    super.key,
+    required this.questions,
+    this.title = "Lista Domande",
+    this.editable = true,
+  });
 
   @override
   State<StatefulWidget> createState() => ViewQuestionsState();
@@ -121,7 +127,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
             opacity: _searchBarOpen ? 0.0 : 1.0,
             curve: Curves.easeOutSine,
             duration: const Duration(milliseconds: 250),
-            child: Text("Lista Domande (${_questions.length})"),
+            child: Text("${widget.title} (${_questions.length})"),
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
@@ -137,7 +143,8 @@ class ViewQuestionsState extends State<ViewQuestions> {
           actions: [
             CustomSearchBar(
               textController: _textController,
-              autoFocus: true,
+              autoFocus: false,
+              helpText: "Cerca...",
               onOpen: () {
                 setState(() {
                   _searchBarOpen = true;
@@ -208,9 +215,6 @@ class ViewQuestionsState extends State<ViewQuestions> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor.withAlpha(70),
-            // border: Border(
-            //   top: BorderSide(color: Theme.of(context).disabledColor),
-            // ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -249,7 +253,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   waitDuration: Duration(milliseconds: 500),
                   message: "Modifica",
                   child: IconButton(
-                    onPressed: !kDebugMode
+                    onPressed: !widget.editable
                         ? null
                         : () {
                             // TODO: change animation
@@ -289,7 +293,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   waitDuration: Duration(milliseconds: 500),
                   message: "Modifica File",
                   child: IconButton(
-                    onPressed: !kDebugMode
+                    onPressed: !widget.editable
                         ? null
                         : () {
                             // Prompt for format
