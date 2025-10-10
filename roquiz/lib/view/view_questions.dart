@@ -9,7 +9,6 @@ import 'package:roquiz/view/view_questions_edit_file.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/separator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:roquiz/widget/custom_search_bar.dart';
 
 class ViewQuestions extends StatefulWidget {
@@ -29,7 +28,63 @@ class ViewQuestionsState extends State<ViewQuestions> {
 
   bool _searchBarOpen = false;
 
-  void _toggleAnswers(Settings settings) {
+  void _resetQuestions() {
+    setState(() {
+      _questions = List.from(widget.questions);
+    });
+  }
+
+  void _searchQuestions(String value, {bool ignoreCase = true}) {
+    if (ignoreCase) {
+      value = value.toLowerCase();
+    }
+    print(
+      "_search() | Before search. widget.questions: ${widget.questions.length}, _questions: ${_questions.length}",
+    );
+
+    _scrollController.jumpTo(0.0);
+    setState(() {
+      _questions.clear();
+
+      print(
+        "_search() | After clear:  widget.questions: ${widget.questions.length}, _questions: ${_questions.length}",
+      );
+
+      // Loop over the question list
+      for (int i = 0; i < widget.questions.length; i++) {
+        String questionBody = widget.questions[i].body;
+        if (ignoreCase) {
+          questionBody = questionBody.toLowerCase();
+        }
+
+        print(
+          "_search().for() \"$value\" |\n"
+          "  widget.questions.body: $questionBody",
+        );
+
+        // Add the question if the search string is contained in question body
+        if (questionBody.contains(value)) {
+          _questions.add(widget.questions[i]);
+          continue;
+        }
+
+        // Add the question if the search string is contained in a question answer
+        for (int j = 0; j < widget.questions[i].answers.length; j++) {
+          String answer = widget.questions[i].answers[j];
+          if (ignoreCase) {
+            answer = answer.toLowerCase();
+          }
+
+          if (answer.contains(value)) {
+            _questions.add(widget.questions[i]);
+            break;
+          }
+        }
+      }
+    });
+  }
+
+  void _toggleShowAnswers(Settings settings) {
     settings.hideCorrectAnswersInEditMode =
         !settings.hideCorrectAnswersInEditMode;
     SettingsManager.save(settings);
@@ -47,7 +102,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
   void initState() {
     super.initState();
 
-    _questions = widget.questions;
+    _resetQuestions();
   }
 
   @override
@@ -62,6 +117,12 @@ class ViewQuestionsState extends State<ViewQuestions> {
       child: Scaffold(
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
+          title: AnimatedOpacity(
+            opacity: _searchBarOpen ? 0.0 : 1.0,
+            curve: Curves.easeOutSine,
+            duration: const Duration(milliseconds: 250),
+            child: Text("Lista Domande (${_questions.length})"),
+          ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             style: ButtonStyle(
@@ -73,16 +134,10 @@ class ViewQuestionsState extends State<ViewQuestions> {
               Navigator.pop(context);
             },
           ),
-          title: AnimatedOpacity(
-            opacity: _searchBarOpen ? 0.0 : 1.0,
-            curve: Curves.easeOutSine,
-            duration: const Duration(milliseconds: 250),
-            child: Text("Lista Domande (${_questions.length})"),
-          ),
           actions: [
             CustomSearchBar(
               textController: _textController,
-              autoFocus: false,
+              autoFocus: true,
               onOpen: () {
                 setState(() {
                   _searchBarOpen = true;
@@ -93,7 +148,12 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   _searchBarOpen = false;
                 });
               },
-              onSearch: (_) {},
+              onSearch: (searchString) {
+                _searchQuestions(searchString);
+              },
+              onClear: () {
+                _resetQuestions();
+              },
             ),
           ],
         ),
@@ -152,135 +212,127 @@ class ViewQuestionsState extends State<ViewQuestions> {
             //   top: BorderSide(color: Theme.of(context).disabledColor),
             // ),
           ),
-          child: Row(
-            children: [
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 15.0,
-                  children: [
-                    // Show/Hide correct answers
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Mostra/nascondi le risposte corrette",
-                      child: IconButton(
-                        onPressed: () {
-                          _toggleAnswers(settings);
-                        },
-                        icon: Icon(
-                          settings.hideCorrectAnswersInEditMode
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        iconSize: 35,
-                      ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 15.0,
+              children: [
+                // Show/Hide correct answers
+                Tooltip(
+                  waitDuration: Duration(milliseconds: 500),
+                  message: "Mostra/nascondi le risposte corrette",
+                  child: IconButton(
+                    onPressed: () {
+                      _toggleShowAnswers(settings);
+                    },
+                    icon: Icon(
+                      settings.hideCorrectAnswersInEditMode
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
-                    // Check if there are new questions
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Controlla se ci sono nuove domande",
-                      child: IconButton(
-                        onPressed: null,
-                        icon: Icon(Icons.sync_rounded),
-                        iconSize: 35,
-                      ),
-                    ),
-                    // Edit mode
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Modifica",
-                      child: IconButton(
-                        onPressed: !kDebugMode
-                            ? null
-                            : () {
-                                // TODO: change animation
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) {
-                                      return ViewQuestionsEdit(
-                                        questions: _questions,
-                                        hideAnswers: settings
-                                            .hideCorrectAnswersInEditMode,
-                                      );
-                                    },
-                                    transitionDuration: Duration.zero,
-                                    // transitionDuration: Duration(milliseconds: 300),
-                                    // transitionsBuilder: (_, animation, __, c) {
-                                    //   const begin = Offset(1.0, 0.0);
-                                    //   const end = Offset.zero;
-                                    //   var tween = Tween(
-                                    //     begin: begin,
-                                    //     end: end,
-                                    //   ).chain(CurveTween(curve: Curves.easeOut));
-                                    //   return SlideTransition(
-                                    //     position: animation.drive(tween),
-                                    //     child: c,
-                                    //   );
-                                    // },
-                                  ),
-                                );
-                              },
-                        icon: Icon(Icons.edit),
-                        iconSize: 35,
-                      ),
-                    ),
-                    // Edit mode (file)
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Modifica File",
-                      child: IconButton(
-                        onPressed: !kDebugMode
-                            ? null
-                            : () {
-                                // Prompt for format
-
-                                // TODO: change animation
-                                Navigator.push(
-                                  context,
-                                  // PageRouteBuilder(
-                                  //   pageBuilder: (_, __, ___) {
-                                  //     return ViewQuestionsEditFile();
-                                  //   },
-                                  //   transitionDuration: Duration.zero,
-                                  //   transitionsBuilder: (_, animation, __, child) {
-                                  //     return child;
-                                  //   },
-                                  // ),
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) {
-                                      return ViewQuestionsEditFile(
-                                        fileContent: "",
-                                      );
-                                    },
-                                    transitionDuration: Duration.zero,
-                                    // transitionDuration: Duration(milliseconds: 300),
-                                    // transitionsBuilder: (_, animation, __, c) {
-                                    //   const begin = Offset(1.0, 0.0);
-                                    //   const end = Offset.zero;
-                                    //   var tween = Tween(
-                                    //     begin: begin,
-                                    //     end: end,
-                                    //   ).chain(CurveTween(curve: Curves.easeOut));
-                                    //   return SlideTransition(
-                                    //     position: animation.drive(tween),
-                                    //     child: c,
-                                    //   );
-                                    // },
-                                  ),
-                                );
-                              },
-                        icon: Icon(Icons.edit_document),
-                        iconSize: 35,
-                      ),
-                    ),
-                  ],
+                    iconSize: 35,
+                  ),
                 ),
-              ),
-              Spacer(),
-            ],
+                // Check if there are new questions
+                Tooltip(
+                  waitDuration: Duration(milliseconds: 500),
+                  message: "Controlla se ci sono nuove domande",
+                  child: IconButton(
+                    onPressed: null,
+                    icon: Icon(Icons.sync_rounded),
+                    iconSize: 35,
+                  ),
+                ),
+                // Edit mode
+                Tooltip(
+                  waitDuration: Duration(milliseconds: 500),
+                  message: "Modifica",
+                  child: IconButton(
+                    onPressed: !kDebugMode
+                        ? null
+                        : () {
+                            // TODO: change animation
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (_, __, ___) {
+                                  return ViewQuestionsEdit(
+                                    questions: _questions,
+                                    hideAnswers:
+                                        settings.hideCorrectAnswersInEditMode,
+                                  );
+                                },
+                                transitionDuration: Duration.zero,
+                                // transitionDuration: Duration(milliseconds: 300),
+                                // transitionsBuilder: (_, animation, __, c) {
+                                //   const begin = Offset(1.0, 0.0);
+                                //   const end = Offset.zero;
+                                //   var tween = Tween(
+                                //     begin: begin,
+                                //     end: end,
+                                //   ).chain(CurveTween(curve: Curves.easeOut));
+                                //   return SlideTransition(
+                                //     position: animation.drive(tween),
+                                //     child: c,
+                                //   );
+                                // },
+                              ),
+                            );
+                          },
+                    icon: Icon(Icons.edit),
+                    iconSize: 35,
+                  ),
+                ),
+                // Edit mode (file)
+                Tooltip(
+                  waitDuration: Duration(milliseconds: 500),
+                  message: "Modifica File",
+                  child: IconButton(
+                    onPressed: !kDebugMode
+                        ? null
+                        : () {
+                            // Prompt for format
+
+                            // TODO: change animation
+                            Navigator.push(
+                              context,
+                              // PageRouteBuilder(
+                              //   pageBuilder: (_, __, ___) {
+                              //     return ViewQuestionsEditFile();
+                              //   },
+                              //   transitionDuration: Duration.zero,
+                              //   transitionsBuilder: (_, animation, __, child) {
+                              //     return child;
+                              //   },
+                              // ),
+                              PageRouteBuilder(
+                                pageBuilder: (_, __, ___) {
+                                  return ViewQuestionsEditFile(fileContent: "");
+                                },
+                                transitionDuration: Duration.zero,
+                                // transitionDuration: Duration(milliseconds: 300),
+                                // transitionsBuilder: (_, animation, __, c) {
+                                //   const begin = Offset(1.0, 0.0);
+                                //   const end = Offset.zero;
+                                //   var tween = Tween(
+                                //     begin: begin,
+                                //     end: end,
+                                //   ).chain(CurveTween(curve: Curves.easeOut));
+                                //   return SlideTransition(
+                                //     position: animation.drive(tween),
+                                //     child: c,
+                                //   );
+                                // },
+                              ),
+                            );
+                          },
+                    icon: Icon(Icons.edit_document),
+                    iconSize: 35,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
