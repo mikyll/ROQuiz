@@ -256,33 +256,45 @@ class ViewQuestionsState extends State<ViewQuestions> {
                     onPressed: !widget.editable
                         ? null
                         : () {
-                            // TODO: change animation
                             Navigator.push(
                               context,
-                              PageRouteBuilder(
-                                pageBuilder: (_, __, ___) {
+                              MaterialPageRoute(
+                                builder: (context) {
                                   return ViewQuestionsEdit(
                                     questions: _questions,
                                     hideAnswers:
                                         settings.hideCorrectAnswersInEditMode,
                                   );
                                 },
-                                transitionDuration: Duration.zero,
-                                // transitionDuration: Duration(milliseconds: 300),
-                                // transitionsBuilder: (_, animation, __, c) {
-                                //   const begin = Offset(1.0, 0.0);
-                                //   const end = Offset.zero;
-                                //   var tween = Tween(
-                                //     begin: begin,
-                                //     end: end,
-                                //   ).chain(CurveTween(curve: Curves.easeOut));
-                                //   return SlideTransition(
-                                //     position: animation.drive(tween),
-                                //     child: c,
-                                //   );
-                                // },
                               ),
                             );
+                            // TODO: change animation?
+                            // Navigator.push(
+                            //   context,
+                            //   PageRouteBuilder(
+                            //     pageBuilder: (_, __, ___) {
+                            //       return ViewQuestionsEdit(
+                            //         questions: _questions,
+                            //         hideAnswers:
+                            //             settings.hideCorrectAnswersInEditMode,
+                            //       );
+                            //     },
+                            //     transitionDuration: Duration.zero,
+                            //     // transitionDuration: Duration(milliseconds: 300),
+                            //     // transitionsBuilder: (_, animation, __, c) {
+                            //     //   const begin = Offset(1.0, 0.0);
+                            //     //   const end = Offset.zero;
+                            //     //   var tween = Tween(
+                            //     //     begin: begin,
+                            //     //     end: end,
+                            //     //   ).chain(CurveTween(curve: Curves.easeOut));
+                            //     //   return SlideTransition(
+                            //     //     position: animation.drive(tween),
+                            //     //     child: c,
+                            //     //   );
+                            //     // },
+                            //   ),
+                            // );
                           },
                     icon: Icon(Icons.edit),
                     iconSize: 35,
@@ -299,6 +311,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                             // Prompt for format
 
                             // TODO: change animation
+
                             Navigator.push(
                               context,
                               // PageRouteBuilder(
