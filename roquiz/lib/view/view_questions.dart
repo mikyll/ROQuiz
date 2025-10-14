@@ -13,12 +13,14 @@ import 'package:roquiz/widget/custom_search_bar.dart';
 
 class ViewQuestions extends StatefulWidget {
   final List<Question> questions;
+  final int startId;
   final String title;
   final bool editable;
 
   const ViewQuestions({
     super.key,
     required this.questions,
+    this.startId = 0,
     this.title = "Lista Domande",
     this.editable = true,
   });
@@ -45,17 +47,10 @@ class ViewQuestionsState extends State<ViewQuestions> {
     if (ignoreCase) {
       value = value.toLowerCase();
     }
-    print(
-      "_search() | Before search. widget.questions: ${widget.questions.length}, _questions: ${_questions.length}",
-    );
 
     _scrollController.jumpTo(0.0);
     setState(() {
       _questions.clear();
-
-      print(
-        "_search() | After clear:  widget.questions: ${widget.questions.length}, _questions: ${_questions.length}",
-      );
 
       // Loop over the question list
       for (int i = 0; i < widget.questions.length; i++) {
@@ -63,11 +58,6 @@ class ViewQuestionsState extends State<ViewQuestions> {
         if (ignoreCase) {
           questionBody = questionBody.toLowerCase();
         }
-
-        print(
-          "_search().for() \"$value\" |\n"
-          "  widget.questions.body: $questionBody",
-        );
 
         // Add the question if the search string is contained in question body
         if (questionBody.contains(value)) {
@@ -181,7 +171,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   itemBuilder: (_, index) {
                     Widget questionWidget = QuestionCard.base(
                       question: _questions[index],
-                      iQuestion: index + 1,
+                      iQuestion: widget.startId + index + 1,
                       hideCorrectAnswer: settings.hideCorrectAnswersInEditMode,
                     );
 
