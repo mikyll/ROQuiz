@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -81,27 +82,29 @@ class ViewSettingsState extends State<ViewSettings> {
                   children: [
                     SizedBox(height: 10),
                     Separator(text: "Generale"),
-                    SettingEntry(
-                      label: "Lingua:",
-                      tooltip:
-                          "Permette di impostare la lingua dell'applicazione.",
-                      child: DropdownButtonFormField(
-                        value: settings.language,
-                        items: ["Italiano"].map<DropdownMenuItem<String>>((
-                          String value,
-                        ) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                            onTap: () {
-                              settings.language = value;
-                              SettingsManager.save(settings);
-                            },
-                          );
-                        }).toList(),
-                        onChanged: (_) {},
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Lingua:",
+                        tooltip:
+                            "Permette di impostare la lingua dell'applicazione.",
+                        child: DropdownButtonFormField(
+                          value: settings.language,
+                          items: ["Italiano"].map<DropdownMenuItem<String>>((
+                            String value,
+                          ) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                              onTap: () {
+                                settings.language = value;
+                                SettingsManager.save(settings);
+                              },
+                            );
+                          }).toList(),
+                          onChanged: (_) {},
+                        ),
                       ),
-                    ),
                     SettingEntry(
                       label: "Tema scuro:",
                       tooltip:
@@ -115,38 +118,42 @@ class ViewSettingsState extends State<ViewSettings> {
                         },
                       ),
                     ),
-                    SettingEntry(
-                      label: "Controllo release app:",
-                      tooltip:
-                          "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: settings.autoCheckRelease,
-                          onChanged: (value) {
-                            settings.autoCheckRelease = value!;
-                            SettingsManager.save(settings);
-                          },
-                          splashRadius: 15,
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Controllo release app:",
+                        tooltip:
+                            "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                            value: settings.autoCheckRelease,
+                            onChanged: (value) {
+                              settings.autoCheckRelease = value!;
+                              SettingsManager.save(settings);
+                            },
+                            splashRadius: 15,
+                          ),
                         ),
                       ),
-                    ),
-                    SettingEntry(
-                      label: "Controllo nuove domande:",
-                      tooltip:
-                          "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: settings.autoCheckQuestions,
-                          onChanged: (value) {
-                            settings.autoCheckQuestions = value!;
-                            SettingsManager.save(settings);
-                          },
-                          splashRadius: 15,
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Controllo nuove domande:",
+                        tooltip:
+                            "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                            value: settings.autoCheckQuestions,
+                            onChanged: (value) {
+                              settings.autoCheckQuestions = value!;
+                              SettingsManager.save(settings);
+                            },
+                            splashRadius: 15,
+                          ),
                         ),
                       ),
-                    ),
                     SettingEntry(
                       label: "Animazioni:",
                       tooltip:
@@ -163,23 +170,25 @@ class ViewSettingsState extends State<ViewSettings> {
                         ),
                       ),
                     ),
-                    SettingEntry(
-                      label: "Alert conferma:",
-                      tooltip:
-                          "Se selezionata, mostra degli alert di conferma.",
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          tristate: true,
-                          value: settings.confirmationAlert,
-                          onChanged: (value) {
-                            settings.confirmationAlert = value;
-                            SettingsManager.save(settings);
-                          },
-                          splashRadius: 15,
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Alert conferma:",
+                        tooltip:
+                            "Se selezionata, mostra degli alert di conferma.",
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                            tristate: true,
+                            value: settings.confirmationAlert,
+                            onChanged: (value) {
+                              settings.confirmationAlert = value;
+                              SettingsManager.save(settings);
+                            },
+                            splashRadius: 15,
+                          ),
                         ),
                       ),
-                    ),
 
                     SettingEntry(
                       label: "Nascondi risposte corrette:",
@@ -198,22 +207,23 @@ class ViewSettingsState extends State<ViewSettings> {
                       ),
                     ),
 
-                    //   some:
+                    // TODO some:
                     //     - end quiz when there are answers not given
                     //     - new version/new questions
-                    SettingEntry(
-                      label: "GitHub token:",
-                      tooltip:
-                          "GitHub API token per poter fare richieste alla repository con rate limit incrementato."
-                          " Le chiamate alla repository vengono effettuate ad esempio per controllare se ci sono aggiornamenti dell'app o delle domande.",
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hint: Text("token", textAlign: TextAlign.center),
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "GitHub token:",
+                        tooltip:
+                            "GitHub API token per poter fare richieste alla repository con rate limit incrementato."
+                            " Le chiamate alla repository vengono effettuate ad esempio per controllare se ci sono aggiornamenti dell'app o delle domande.",
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hint: Text("token", textAlign: TextAlign.center),
+                          ),
+                          textAlign: TextAlign.center,
+                          // TODO: pattern
                         ),
-                        textAlign: TextAlign.center,
-                        // TODO: pattern
                       ),
-                    ),
 
                     SizedBox(height: 20.0),
                     Separator(text: "Quiz"),
@@ -260,122 +270,128 @@ class ViewSettingsState extends State<ViewSettings> {
                         },
                       ),
                     ),
-                    SettingEntry(
-                      label: "Argomenti interi:",
-                      tooltip:
-                          "Se selezionata, come pool del quiz utilizza tutte le domande di ciascun argomento selezionato."
-                          " È particolarmente utile quando si vogliono ripassare solamente certi argomenti.",
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: settings.fullTopics,
-                          onChanged: (value) {
-                            settings.fullTopics = value!;
-                            SettingsManager.save(settings);
-                          },
-                          splashRadius: 15,
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Argomenti interi:",
+                        tooltip:
+                            "Se selezionata, come pool del quiz utilizza tutte le domande di ciascun argomento selezionato."
+                            " È particolarmente utile quando si vogliono ripassare solamente certi argomenti.",
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                            value: settings.fullTopics,
+                            onChanged: (value) {
+                              settings.fullTopics = value!;
+                              SettingsManager.save(settings);
+                            },
+                            splashRadius: 15,
+                          ),
                         ),
                       ),
-                    ),
-                    SettingEntry(
-                      label: "Domande quiz:",
-                      tooltip: "Numero di domande presenti in ciascun quiz.",
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 10.0,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              // TODO
-                            },
-                            icon: Icon(Icons.remove),
-                          ),
-                          SizedBox(
-                            width: 40.0,
-                            child: TextFormField(
-                              initialValue: "${settings.quizQuestions}",
-                              maxLength: 3,
-                              maxLengthEnforcement:
-                                  MaxLengthEnforcement.enforced,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              textAlign: TextAlign.center,
-                              decoration: const InputDecoration(
-                                counterStyle: TextStyle(
-                                  height: double.minPositive,
-                                ),
-                                counterText: "",
-                              ),
-                              onFieldSubmitted: (newValue) {
-                                // TODO: validate
-                                settings.quizQuestions =
-                                    int.tryParse(newValue) ?? 16;
-                                SettingsManager.save(settings);
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Domande quiz:",
+                        tooltip: "Numero di domande presenti in ciascun quiz.",
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 10.0,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                // TODO
                               },
+                              icon: Icon(Icons.remove),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              // TODO
-                            },
-                            icon: Icon(Icons.add),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SettingEntry(
-                      label: "Timer (minuti):",
-                      tooltip:
-                          "Numero di minuti a disposizione per completare il quiz.",
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 10.0,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              // TODO
-                            },
-                            icon: Icon(Icons.remove),
-                          ),
-                          SizedBox(
-                            width: 40.0,
-                            child: TextFormField(
-                              initialValue: "${settings.quizTime}",
-                              maxLength: 3,
-                              maxLengthEnforcement:
-                                  MaxLengthEnforcement.enforced,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              textAlign: TextAlign.center,
-                              decoration: const InputDecoration(
-                                counterStyle: TextStyle(
-                                  height: double.minPositive,
+                            SizedBox(
+                              width: 40.0,
+                              child: TextFormField(
+                                initialValue: "${settings.quizQuestions}",
+                                maxLength: 3,
+                                maxLengthEnforcement:
+                                    MaxLengthEnforcement.enforced,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(),
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                textAlign: TextAlign.center,
+                                decoration: const InputDecoration(
+                                  counterStyle: TextStyle(
+                                    height: double.minPositive,
+                                  ),
+                                  counterText: "",
                                 ),
-                                counterText: "",
+                                onFieldSubmitted: (newValue) {
+                                  // TODO: validate
+                                  settings.quizQuestions =
+                                      int.tryParse(newValue) ?? 16;
+                                  SettingsManager.save(settings);
+                                },
                               ),
-                              onFieldSubmitted: (newValue) {
-                                // TODO: validate
-                                settings.quizTime =
-                                    int.tryParse(newValue) ?? 16;
-                                SettingsManager.save(settings);
-                              },
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              // TODO
-                            },
-                            icon: Icon(Icons.add),
-                          ),
-                        ],
+                            IconButton(
+                              onPressed: () {
+                                // TODO
+                              },
+                              icon: Icon(Icons.add),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Timer (minuti):",
+                        tooltip:
+                            "Numero di minuti a disposizione per completare il quiz.",
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 10.0,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                // TODO
+                              },
+                              icon: Icon(Icons.remove),
+                            ),
+                            SizedBox(
+                              width: 40.0,
+                              child: TextFormField(
+                                initialValue: "${settings.quizTime}",
+                                maxLength: 3,
+                                maxLengthEnforcement:
+                                    MaxLengthEnforcement.enforced,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(),
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                textAlign: TextAlign.center,
+                                decoration: const InputDecoration(
+                                  counterStyle: TextStyle(
+                                    height: double.minPositive,
+                                  ),
+                                  counterText: "",
+                                ),
+                                onFieldSubmitted: (newValue) {
+                                  // TODO: validate
+                                  settings.quizTime =
+                                      int.tryParse(newValue) ?? 16;
+                                  SettingsManager.save(settings);
+                                },
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                // TODO
+                              },
+                              icon: Icon(Icons.add),
+                            ),
+                          ],
+                        ),
+                      ),
                     SettingEntry(
                       label: "Mescola risposte:",
                       tooltip:
@@ -394,54 +410,59 @@ class ViewSettingsState extends State<ViewSettings> {
                       ),
                     ),
 
-                    SettingEntry(
-                      label: "Termina quiz allo scadere del tempo:",
-                      tooltip:
-                          "Se selezionata, termina il quiz allo scadere del tempo.",
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: settings.exceedTimeout,
-                          onChanged: (value) {
-                            settings.exceedTimeout = value!;
-                            SettingsManager.save(settings);
-                          },
-                          splashRadius: 15,
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Termina quiz allo scadere del tempo:",
+                        tooltip:
+                            "Se selezionata, termina il quiz allo scadere del tempo.",
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                            value: settings.exceedTimeout,
+                            onChanged: (value) {
+                              settings.exceedTimeout = value!;
+                              SettingsManager.save(settings);
+                            },
+                            splashRadius: 15,
+                          ),
                         ),
                       ),
-                    ),
 
                     SizedBox(height: 20.0),
                     Separator(text: "Accessibilità"),
-                    SettingEntry(
-                      label: "Layout per mancini:",
-                      tooltip:
-                          "Se selezionata, imposta il layout dell'applicazione per facilitarne l'utilizzo ai mancini.",
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: settings.leftHandedLayout,
-                          onChanged: (value) {
-                            settings.leftHandedLayout = value!;
-                            SettingsManager.save(settings);
-                          },
-                          splashRadius: 15,
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Layout per mancini:",
+                        tooltip:
+                            "Se selezionata, imposta il layout dell'applicazione per facilitarne l'utilizzo ai mancini.",
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                            value: settings.leftHandedLayout,
+                            onChanged: (value) {
+                              settings.leftHandedLayout = value!;
+                              SettingsManager.save(settings);
+                            },
+                            splashRadius: 15,
+                          ),
                         ),
                       ),
-                    ),
-                    SettingEntry(
-                      label: "Tema per daltonici:",
-                      tooltip:
-                          "Se selezionata, imposta il layout dell'applicazione per facilitarne l'utilizzo anche per le persone affette da daltonismo.",
-                      child: Transform.scale(
-                        scale: 1.5,
-                        child: Checkbox(
-                          value: false,
-                          onChanged: null,
-                          splashRadius: 15,
+
+                    if (kDebugMode)
+                      SettingEntry(
+                        label: "Tema per daltonici:",
+                        tooltip:
+                            "Se selezionata, imposta il layout dell'applicazione per facilitarne l'utilizzo anche per le persone affette da daltonismo.",
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Checkbox(
+                            value: false,
+                            onChanged: null,
+                            splashRadius: 15,
+                          ),
                         ),
                       ),
-                    ),
                     SizedBox(height: 100),
                   ],
                 ),
