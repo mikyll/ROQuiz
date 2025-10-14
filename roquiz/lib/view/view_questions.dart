@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
@@ -183,10 +184,12 @@ class ViewQuestionsState extends State<ViewQuestions> {
                       iQuestion: index + 1,
                       hideCorrectAnswer: settings.hideCorrectAnswersInEditMode,
                     );
+
                     // Check if we have to display the topic divider
-                    if (index == 0 ||
-                        _questions[index - 1].topic !=
-                            _questions[index].topic) {
+                    if (_questions.first.topic != _questions.last.topic &&
+                        (index == 0 ||
+                            _questions[index].topic !=
+                                _questions[index - 1].topic)) {
                       return Column(
                         children: [
                           Padding(
@@ -248,106 +251,111 @@ class ViewQuestionsState extends State<ViewQuestions> {
                     iconSize: 35,
                   ),
                 ),
+
                 // Edit mode
-                Tooltip(
-                  waitDuration: Duration(milliseconds: 500),
-                  message: "Modifica",
-                  child: IconButton(
-                    onPressed: !widget.editable
-                        ? null
-                        : () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return ViewQuestionsEdit(
-                                    questions: _questions,
-                                    hideAnswers:
-                                        settings.hideCorrectAnswersInEditMode,
-                                  );
-                                },
-                              ),
-                            );
-                            // TODO: change animation?
-                            // Navigator.push(
-                            //   context,
-                            //   PageRouteBuilder(
-                            //     pageBuilder: (_, __, ___) {
-                            //       return ViewQuestionsEdit(
-                            //         questions: _questions,
-                            //         hideAnswers:
-                            //             settings.hideCorrectAnswersInEditMode,
-                            //       );
-                            //     },
-                            //     transitionDuration: Duration.zero,
-                            //     // transitionDuration: Duration(milliseconds: 300),
-                            //     // transitionsBuilder: (_, animation, __, c) {
-                            //     //   const begin = Offset(1.0, 0.0);
-                            //     //   const end = Offset.zero;
-                            //     //   var tween = Tween(
-                            //     //     begin: begin,
-                            //     //     end: end,
-                            //     //   ).chain(CurveTween(curve: Curves.easeOut));
-                            //     //   return SlideTransition(
-                            //     //     position: animation.drive(tween),
-                            //     //     child: c,
-                            //     //   );
-                            //     // },
-                            //   ),
-                            // );
-                          },
-                    icon: Icon(Icons.edit),
-                    iconSize: 35,
+                if (kDebugMode)
+                  Tooltip(
+                    waitDuration: Duration(milliseconds: 500),
+                    message: "Modifica",
+                    child: IconButton(
+                      onPressed: !widget.editable
+                          ? null
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return ViewQuestionsEdit(
+                                      questions: _questions,
+                                      hideAnswers:
+                                          settings.hideCorrectAnswersInEditMode,
+                                    );
+                                  },
+                                ),
+                              );
+                              // TODO: change animation?
+                              // Navigator.push(
+                              //   context,
+                              //   PageRouteBuilder(
+                              //     pageBuilder: (_, __, ___) {
+                              //       return ViewQuestionsEdit(
+                              //         questions: _questions,
+                              //         hideAnswers:
+                              //             settings.hideCorrectAnswersInEditMode,
+                              //       );
+                              //     },
+                              //     transitionDuration: Duration.zero,
+                              //     // transitionDuration: Duration(milliseconds: 300),
+                              //     // transitionsBuilder: (_, animation, __, c) {
+                              //     //   const begin = Offset(1.0, 0.0);
+                              //     //   const end = Offset.zero;
+                              //     //   var tween = Tween(
+                              //     //     begin: begin,
+                              //     //     end: end,
+                              //     //   ).chain(CurveTween(curve: Curves.easeOut));
+                              //     //   return SlideTransition(
+                              //     //     position: animation.drive(tween),
+                              //     //     child: c,
+                              //     //   );
+                              //     // },
+                              //   ),
+                              // );
+                            },
+                      icon: Icon(Icons.edit),
+                      iconSize: 35,
+                    ),
                   ),
-                ),
                 // Edit mode (file)
-                Tooltip(
-                  waitDuration: Duration(milliseconds: 500),
-                  message: "Modifica File",
-                  child: IconButton(
-                    onPressed: !widget.editable
-                        ? null
-                        : () {
-                            // Prompt for format
+                if (kDebugMode)
+                  Tooltip(
+                    waitDuration: Duration(milliseconds: 500),
+                    message: "Modifica File",
+                    child: IconButton(
+                      onPressed: !widget.editable
+                          ? null
+                          : () {
+                              // Prompt for format
 
-                            // TODO: change animation
+                              // TODO: change animation
 
-                            Navigator.push(
-                              context,
-                              // PageRouteBuilder(
-                              //   pageBuilder: (_, __, ___) {
-                              //     return ViewQuestionsEditFile();
-                              //   },
-                              //   transitionDuration: Duration.zero,
-                              //   transitionsBuilder: (_, animation, __, child) {
-                              //     return child;
-                              //   },
-                              // ),
-                              PageRouteBuilder(
-                                pageBuilder: (_, __, ___) {
-                                  return ViewQuestionsEditFile(fileContent: "");
-                                },
-                                transitionDuration: Duration.zero,
-                                // transitionDuration: Duration(milliseconds: 300),
-                                // transitionsBuilder: (_, animation, __, c) {
-                                //   const begin = Offset(1.0, 0.0);
-                                //   const end = Offset.zero;
-                                //   var tween = Tween(
-                                //     begin: begin,
-                                //     end: end,
-                                //   ).chain(CurveTween(curve: Curves.easeOut));
-                                //   return SlideTransition(
-                                //     position: animation.drive(tween),
-                                //     child: c,
-                                //   );
-                                // },
-                              ),
-                            );
-                          },
-                    icon: Icon(Icons.edit_document),
-                    iconSize: 35,
+                              Navigator.push(
+                                context,
+                                // PageRouteBuilder(
+                                //   pageBuilder: (_, __, ___) {
+                                //     return ViewQuestionsEditFile();
+                                //   },
+                                //   transitionDuration: Duration.zero,
+                                //   transitionsBuilder: (_, animation, __, child) {
+                                //     return child;
+                                //   },
+                                // ),
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) {
+                                    return ViewQuestionsEditFile(
+                                      fileContent: "",
+                                    );
+                                  },
+                                  transitionDuration: Duration.zero,
+                                  // transitionDuration: Duration(milliseconds: 300),
+                                  // transitionsBuilder: (_, animation, __, c) {
+                                  //   const begin = Offset(1.0, 0.0);
+                                  //   const end = Offset.zero;
+                                  //   var tween = Tween(
+                                  //     begin: begin,
+                                  //     end: end,
+                                  //   ).chain(CurveTween(curve: Curves.easeOut));
+                                  //   return SlideTransition(
+                                  //     position: animation.drive(tween),
+                                  //     child: c,
+                                  //   );
+                                  // },
+                                ),
+                              );
+                            },
+                      icon: Icon(Icons.edit_document),
+                      iconSize: 35,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
