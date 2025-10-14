@@ -72,6 +72,17 @@ class ViewTopicsState extends State<ViewTopics> {
         (numCurrent - numDeselecting) >= widget.questionsNum;
   }
 
+  int _calculateStartId(String topic) {
+    int startId = 0;
+    for (String t in widget.questionsPerTopic.keys) {
+      if (t == topic) {
+        break;
+      }
+      startId += widget.questionsPerTopic[t]!.length;
+    }
+    return startId;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -226,6 +237,7 @@ class ViewTopicsState extends State<ViewTopics> {
                                           return ViewQuestions(
                                             questions: widget
                                                 .questionsPerTopic[topic]!,
+                                            startId: _calculateStartId(topic),
                                             title: topic,
                                             editable: false,
                                           );
