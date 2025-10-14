@@ -67,6 +67,15 @@ class _ViewQuestionsEditFileState extends State<ViewQuestionsEditFile> {
                   children: [
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
+                      message: "Ripristina",
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.refresh),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
                       message: "Salva le domande",
                       child: IconButton(
                         onPressed: null,
@@ -80,15 +89,6 @@ class _ViewQuestionsEditFileState extends State<ViewQuestionsEditFile> {
                       child: IconButton(
                         onPressed: null,
                         icon: Icon(Icons.checklist),
-                        iconSize: 35,
-                      ),
-                    ),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Ripristina",
-                      child: IconButton(
-                        onPressed: null,
-                        icon: Icon(Icons.refresh),
                         iconSize: 35,
                       ),
                     ),
