@@ -20,7 +20,7 @@ body:
       required: true
   
   - type: dropdown
-    id: platform
+    id: app-platform
     attributes:
       label: Piattaforma
       options:
@@ -38,6 +38,14 @@ body:
     attributes:
       label: Domanda
       placeholder: Scrivi qui il corpo della domanda
+    validations:
+      required: true
+
+  - type: input
+    id: answer-to-be-corrected
+    attributes:
+      label: Risposta Da Correggere
+      placeholder: Scrivi qui la vecchia risposta corretta
     validations:
       required: true
 
