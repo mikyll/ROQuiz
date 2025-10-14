@@ -18,20 +18,6 @@ body:
         Corpo della **domanda**
     validations:
       required: true
-  
-  - type: dropdown
-    id: app-platform
-    attributes:
-      label: Piattaforma
-      options:
-        - Web
-        - Mobile (Android)
-        - Mobile (iOS)
-        - Desktop (Windows)
-        - Desktop (Linux)
-        - Desktop (MacOS)
-    validations:
-      required: false
 
   - type: textarea
     id: question-body
