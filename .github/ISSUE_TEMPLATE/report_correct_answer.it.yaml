@@ -1,0 +1,58 @@
+name: "Segnalazione Domanda: Risposta Corretta"
+description: |
+  Segnala la presenza di un errore nella **risposta corretta** di una domanda
+title: "[Segnalazione Domanda]: Errore nella Risposta Corretta"
+labels:
+  - report_correct_answer
+projects:
+  - mikyll/ROQuiz
+# assignees:
+#  - mikyll
+
+body:
+  - type: input
+    id: app-version
+    attributes:
+      label: Versione App
+      description: 
+        Corpo della **domanda**
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Piattaforma
+      options:
+        - Web
+        - Mobile (Android)
+        - Mobile (iOS)
+        - Desktop (Windows)
+        - Desktop (Linux)
+        - Desktop (MacOS)
+    validations:
+      required: false
+
+  - type: textarea
+    id: question-body
+    attributes:
+      label: Domanda
+      placeholder: Scrivi qui il corpo della domanda
+    validations:
+      required: true
+
+  - type: input
+    id: correct-answer
+    attributes:
+      label: Risposta Corretta
+      placeholder: Scrivi qui la nuova risposta corretta
+    validations:
+      required: true
+      
+  - type: textarea
+    id: comment
+    attributes:
+      label: Commento
+      placeholder: Scrivi qui eventuali informazioni aggiuntive (es. motivazione della riposta).
+    validations:
+      required: false
