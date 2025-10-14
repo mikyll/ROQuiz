@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/widget/hidden_text.dart';
+import 'package:roquiz/widget/report_question_dialog.dart';
 
 enum QuestionCardMode {
   quiz, // answers are selectable
@@ -224,17 +225,27 @@ class QuestionCard extends StatelessWidget {
           ),
 
         // NB: needs to be on top of the stack
-        if (mode == QuestionCardMode.edit)
+        // TODO: only if not custom question file? Or not custom single question
+        if (mode == QuestionCardMode.base)
           Positioned(
-            top: 25,
-            right: 25,
+            top: 15,
+            right: 15,
             child: IconButton(
-              padding: EdgeInsets.zero,
+              padding: EdgeInsets.all(5.0),
               constraints: BoxConstraints(),
               style: IconButton.styleFrom(backgroundColor: Colors.transparent),
               icon: Icon(Icons.report, size: 30, color: Colors.red),
+              hoverColor: Color(0x50BBBBBB),
               onPressed: () {
-                // Add your button action here
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ReportQuestionDialog(
+                      question: question,
+                      id: iQuestion,
+                    );
+                  },
+                );
               },
             ),
           ),
