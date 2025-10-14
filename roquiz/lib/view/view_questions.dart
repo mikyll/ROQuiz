@@ -33,6 +33,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
 
+  late String _title;
   late List<Question> _questions;
 
   bool _searchBarOpen = false;
@@ -100,6 +101,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
     super.initState();
 
     _resetQuestions();
+    _title = "${widget.title} (${_questions.length})";
   }
 
   @override
@@ -118,7 +120,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
             opacity: _searchBarOpen ? 0.0 : 1.0,
             curve: Curves.easeOutSine,
             duration: const Duration(milliseconds: 250),
-            child: Text("${widget.title} (${_questions.length})"),
+            child: Text(_title),
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
@@ -148,9 +150,14 @@ class ViewQuestionsState extends State<ViewQuestions> {
               },
               onSearch: (searchString) {
                 _searchQuestions(searchString);
+                setState(() {
+                  _title =
+                      "Trovate: ${_questions.length}/${widget.questions.length}";
+                });
               },
               onClear: () {
                 _resetQuestions();
+                _title = "${widget.title} (${widget.questions.length})";
               },
             ),
           ],
