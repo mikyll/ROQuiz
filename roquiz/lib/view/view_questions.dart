@@ -136,7 +136,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
           actions: [
             CustomSearchBar(
               textController: _textController,
-              autoFocus: false,
+              autoFocus: _textController.text.isEmpty,
               helpText: "Cerca...",
               onOpen: () {
                 setState(() {
