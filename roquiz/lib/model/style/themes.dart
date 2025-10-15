@@ -96,6 +96,13 @@ class Themes {
         const Color.fromARGB(255, 77, 86, 175),
       ),
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(),
+      fillColor: Colors.white,
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.black),
+      ),
+    ),
     extensions: <ThemeExtension<dynamic>>[
       const StarButtonPalette(
         backgroundColor: Color(0xff515b92),
@@ -199,6 +206,13 @@ class Themes {
       ),
       trackColor: WidgetStatePropertyAll(
         const Color.fromARGB(100, 182, 196, 255),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(),
+      fillColor: Colors.white,
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
