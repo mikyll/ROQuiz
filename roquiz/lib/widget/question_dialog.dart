@@ -77,7 +77,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
   void initState() {
     super.initState();
 
-    if (widget.topicsList != null) {
+    if (widget.topicsList != null && widget.topicsList!.isNotEmpty) {
       _topic = widget.topicsList!.first;
     }
     if (widget.question != null) {
