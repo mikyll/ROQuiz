@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/utils/navigation.dart';
+import 'package:roquiz/model/utils/utils.dart';
 import 'package:roquiz/widget/separator.dart';
 
 class ReportQuestionDialog extends StatefulWidget {
@@ -36,6 +37,7 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
     PackageInfo.fromPlatform().then((value) {
       appVersion = value.version;
     });
+    final Size windowSize = getLogicalSize();
 
     return Form(
       key: _formKey,
@@ -49,39 +51,25 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
         title: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Segnala Domanda Q${widget.id}",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
+              padding: const EdgeInsets.only(
+                top: 24.0,
+                bottom: 0.0,
+                left: 24.0,
+                right: 24.0,
               ),
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: InkWell(
-                child: Icon(Icons.close),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
-        ),
-        content: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: 500, maxWidth: 400),
-          child: Padding(
-            padding: const EdgeInsets.all(0),
-            child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 10.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Segnala Domanda Q${widget.id}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
                   DropdownButtonFormField(
                     value: "correct-answer",
                     items: issueTemplates.entries.map<DropdownMenuItem<String>>(
@@ -100,9 +88,35 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
                       // TODO: set widget below
                     },
                   ),
-                  SizedBox(height: 10.0),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: InkWell(
+                child: Icon(Icons.close),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ],
+        ),
+        content: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: windowSize.height * 1 / 4,
+            maxWidth: 400.0,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                   Separator(text: "Nuova Risposta Corretta", size: 16.0),
-                  SizedBox(height: 10.0),
+                  SizedBox(height: 15.0),
                   FormField(
                     key: _correctAnswerKey,
                     validator: (value) {
@@ -167,7 +181,10 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
                                                 color: Colors.green,
                                                 width: 2.0,
                                               )
-                                            : BorderSide(width: 2.0),
+                                            : Theme.of(context)
+                                                  .inputDecorationTheme
+                                                  .focusedBorder!
+                                                  .borderSide,
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: _newCorrectAnswer == index
@@ -175,7 +192,10 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
                                                 color: Colors.green,
                                                 width: 2.0,
                                               )
-                                            : BorderSide(),
+                                            : Theme.of(context)
+                                                  .inputDecorationTheme
+                                                  .focusedBorder!
+                                                  .borderSide,
                                       ),
 
                                       label: Text(
@@ -275,7 +295,8 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
                   String queryUrl =
                       "https://github.com/$repoIssueUrl?template=$issueTemplate"
                       "&title=[Segnalazione Domanda]: Errore nella Risposta Corretta Q${widget.id}"
-                      "&app-version=v$appVersion&question-body=${widget.question.body}"
+                      "&app-version=v$appVersion"
+                      "&question-id=${widget.question.id}&question-body=${widget.question.body}"
                       "&answer-to-be-corrected=${String.fromCharCode(65 + widget.question.correctAnswer)}. ${widget.question.answers[widget.question.correctAnswer]}"
                       "&correct-answer=${String.fromCharCode(65 + _newCorrectAnswer!)}. ${widget.question.answers[_newCorrectAnswer!]}&comment=${_controllerComment.text}";
                   openUrl(queryUrl);
