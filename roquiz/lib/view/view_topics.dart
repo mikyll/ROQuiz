@@ -237,7 +237,6 @@ class ViewTopicsState extends State<ViewTopics> {
                                           return ViewQuestions(
                                             questions: widget
                                                 .questionsPerTopic[topic]!,
-                                            startId: _calculateStartId(topic),
                                             title: topic,
                                             editable: false,
                                           );

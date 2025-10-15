@@ -13,14 +13,12 @@ import 'package:roquiz/widget/custom_search_bar.dart';
 
 class ViewQuestions extends StatefulWidget {
   final List<Question> questions;
-  final int startId;
   final String title;
   final bool editable;
 
   const ViewQuestions({
     super.key,
     required this.questions,
-    this.startId = 0,
     this.title = "Lista Domande",
     this.editable = true,
   });
@@ -178,7 +176,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   itemBuilder: (_, index) {
                     Widget questionWidget = QuestionCard.base(
                       question: _questions[index],
-                      iQuestion: widget.startId + index + 1,
+                      iQuestion: _questions[index].id,
                       hideCorrectAnswer: settings.hideCorrectAnswersInEditMode,
                     );
 
