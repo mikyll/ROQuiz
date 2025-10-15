@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roquiz/cli/questions_parser.dart';
 import 'package:roquiz/model/edit/command.dart';
 import 'package:roquiz/model/edit/command_executor.dart';
 import 'package:roquiz/model/edit/commands/add.dart';
@@ -6,6 +7,7 @@ import 'package:roquiz/model/edit_question/commands/add_question.dart';
 import 'package:roquiz/model/edit_question/commands/custom_command.dart';
 import 'package:roquiz/model/edit_question/question_command_executor.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/model/utils/utils.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/question_card.dart';
@@ -36,7 +38,19 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
 
   final QuestionCommandExecutor _commandExecutor = QuestionCommandExecutor();
 
-  void _selectQuestion(int i) {
+  void _resetSelectedQuestions() {
+    setState(() {
+      _selectedQuestions = List.filled(
+        _questions.length,
+        false,
+        growable: true,
+      );
+      _selectedCount = 0;
+      _selectedAll = false;
+    });
+  }
+
+  void _toggleQuestionSelection(int i) {
     setState(() {
       _selectedQuestions[i] = !_selectedQuestions[i];
       _selectedCount += (_selectedQuestions[i] ? 1 : -1);
@@ -51,18 +65,28 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     });
   }
 
+  /// Adds a new question, inserting it at the end of the topic
+  ///
+  /// Returns the id of the new question
   void _addNewQuestion() {
+    // TODO:
+    //   - open modal
+    //   - insert new question data
+    //   - validate fields:
+    //     - question is not duplicated (no equal-ignore-case to another question body)
+    //     - no
+
     // TODO: problema: l'ID come lo gestiamo? Si potrebbe togliere del tutto... Tanto nel vecchio file non c'era
     // Oppure quando si salvano le modifiche, l'ID viene ricalcolato
     final Question newQuestion = Question(
       id: _questions.length + 1,
       body: "Quanto fa 2+2",
-      topic: "Somma",
+      topic: "Programmazione Matematica",
       answers: ["2", "3", "4", "5"],
       correctAnswer: 2,
     );
 
-    // TODO: get topics
+    // TODO: get topics list
     List<String> topics = [];
     for (Question q in _questions) {
       if (!topics.contains(q.topic)) {
@@ -75,7 +99,21 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       builder: (BuildContext context) {
         return QuestionDialog(
           topicsList: topics,
+          questions: _questions,
           onSubmit: (question) {
+            // Retrieve ID
+            int questionId = getFirstAvailableId(_questions, question.topic);
+            print(questionId);
+
+            setState(() {
+              print(_questions.length);
+              question.id = questionId;
+              _questions.insert(questionId, question);
+              print(_questions.length);
+            });
+
+            _resetSelectedQuestions();
+
             // _commandExecutor.executeCommand(
             //   CustomQuestionCommand(
             //     () {
@@ -131,6 +169,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       builder: (BuildContext context) {
         return QuestionDialog(
           topicsList: topics,
+          questions: _questions,
           onSubmit: (question) {
             print("Hello");
           },
@@ -149,40 +188,54 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   }
 
   void _removeQuestion() {
-    final List<Question> previousQuestions = List.from(_questions);
-    final List<bool> previousSelectedQuestions = List.from(_selectedQuestions);
-    final int previousCount = _selectedCount;
+    for (int i = 0, j = 0; j < _selectedCount;) {
+      if (_selectedQuestions[i]) {
+        setState(() {
+          _questions.removeAt(i);
+          _selectedQuestions.removeAt(i);
+        });
+        j++;
+        continue;
+      }
 
+      i++;
+    }
     setState(() {
-      _selectedQuestions = List.filled(_questions.length, false);
       _selectedCount = 0;
+      _selectedAll = false;
     });
 
-    _commandExecutor.executeCommand(
-      CustomQuestionCommand(
-        () {
-          setState(() {
-            for (int i = previousSelectedQuestions.length - 1; i >= 0; i--) {
-              if (previousSelectedQuestions[i]) {
-                _questions.removeAt(i);
-                _selectedQuestions.removeAt(i);
-                _selectedCount--;
-              }
-            }
+    // final List<Question> previousQuestions = List.from(_questions);
+    // final List<bool> previousSelectedQuestions = List.from(_selectedQuestions);
+    // final int previousCount = _selectedCount;
 
-            _selectedAll = _selectedAll! ? null : false;
-          });
-        },
-        () {
-          setState(() {
-            _questions = List.from(previousQuestions);
-            _selectedQuestions = List.filled(_questions.length, false);
-            _selectedCount = 0;
-            _selectedAll = _selectedAll! ? null : false;
-          });
-        },
-      ),
-    );
+    // _resetSelectedQuestions();
+
+    // _commandExecutor.executeCommand(
+    //   CustomQuestionCommand(
+    //     () {
+    //       setState(() {
+    //         for (int i = previousSelectedQuestions.length - 1; i >= 0; i--) {
+    //           if (previousSelectedQuestions[i]) {
+    //             _questions.removeAt(i);
+    //             _selectedQuestions.removeAt(i);
+    //             _selectedCount--;
+    //           }
+    //         }
+
+    //         _selectedAll = _selectedAll! ? null : false;
+    //       });
+    //     },
+    //     () {
+    //       setState(() {
+    //         _questions = List.from(previousQuestions);
+    //         _selectedQuestions = List.filled(_questions.length, false);
+    //         _selectedCount = 0;
+    //         _selectedAll = _selectedAll! ? null : false;
+    //       });
+    //     },
+    //   ),
+    // );
 
     // setState(() {
     //   if (_selectedAll != null && _selectedAll!) {
@@ -217,7 +270,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     super.initState();
 
     _questions = List.from(widget.questions);
-    _selectedQuestions = List.filled(_questions.length, false);
+    _selectedQuestions = List.filled(_questions.length, false, growable: true);
   }
 
   @override
@@ -299,7 +352,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                       // TODO
                       //hideCorrectAnswer: !widget.showAnswers,
                       onSelected: () {
-                        _selectQuestion(index);
+                        _toggleQuestionSelection(index);
                       },
                       tapToSelect: _selectedCount > 0,
                     );
@@ -388,6 +441,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                         iconSize: 35,
                       ),
                     ),
+                    SizedBox(width: 10.0),
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
                       message: "Annulla l'ultima azione",
