@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:roquiz/model/quiz/question.dart';
 
 bool isGradeValid(int? grade) {
   return grade != null && grade >= 0 && grade <= 32;
@@ -54,4 +55,29 @@ Size getLogicalSize() {
   FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
 
   return view.physicalSize / view.devicePixelRatio;
+}
+
+int getFirstAvailableId(List<Question> questions, String? topic) {
+  bool topicFound = false;
+  int id = 0;
+
+  if (topic == null) {
+    return questions.length;
+  }
+
+  for (; id < questions.length; id++) {
+    Question question = questions[id];
+
+    if (topicFound) {
+      if (topic != question.topic) {
+        break;
+      }
+    }
+
+    if (topic == question.topic) {
+      topicFound = true;
+    }
+  }
+
+  return id;
 }
