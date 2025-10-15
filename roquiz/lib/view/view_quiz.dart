@@ -9,6 +9,7 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
 import 'package:roquiz/model/utils/utils.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/grade.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/result_card.dart';
@@ -269,13 +270,7 @@ class _ViewQuizState extends State<ViewQuiz> {
               appBar: ConstrainedAppBar(
                 maxWidth: 500.0,
                 title: const Text("Quiz"),
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios),
-                  style: ButtonStyle(
-                    iconColor: WidgetStatePropertyAll(Colors.white),
-                    overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-                    backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
-                  ),
+                leading: CustomBackButton(
                   onPressed: () {
                     // if (widget.settings.confirmAlerts) {
                     //   ConfirmationAlert.showConfirmationDialog(

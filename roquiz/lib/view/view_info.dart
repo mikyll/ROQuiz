@@ -8,6 +8,7 @@ import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/utils/navigation.dart';
 import 'package:roquiz/view/view_licenses.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/star_button.dart';
 // import 'package:roquiz/cli/utils/navigation.dart';
 // import 'package:roquiz/model/palette.dart';
@@ -40,17 +41,7 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
           appBar: ConstrainedAppBar(
             maxWidth: 500.0,
             title: const Text("Info"),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              style: ButtonStyle(
-                iconColor: WidgetStatePropertyAll(Colors.white),
-                overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-                backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+            leading: CustomBackButton(),
           ),
           body: SafeArea(
             child: Center(

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:roquiz/widget/setting_entry.dart';
 
@@ -40,17 +41,7 @@ class ViewSettingsState extends State<ViewSettings> {
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
           title: Text("Impostazioni"),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            style: ButtonStyle(
-              iconColor: WidgetStatePropertyAll(Colors.white),
-              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-              backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          leading: CustomBackButton(),
           // TODO
           // actionsPadding: EdgeInsets.only(right: 8.0),
           actions: [

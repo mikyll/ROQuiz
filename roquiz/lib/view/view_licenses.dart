@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/persistence/license.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/licenses.dart';
 
 class ViewLicenses extends StatelessWidget {
@@ -25,12 +26,7 @@ class ViewLicenses extends StatelessWidget {
       appBar: ConstrainedAppBar(
         maxWidth: 500.0,
         title: const Text("Licenses"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: CustomBackButton(),
       ),
       body: SafeArea(
         child: Center(

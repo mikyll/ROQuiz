@@ -1,53 +1,123 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
-class BackButtonPalette extends ThemeExtension<BackButtonPalette> {
-  // final Color iconColor;
-  // final Color overlayColor;
-  // final Color backgroundColor;
-  // final double iconSize;
+class ClearButtonTheme extends ThemeExtension<ClearButtonTheme> {
+  final Color iconColor;
+  final Color overlayColor;
+  final Color backgroundColor;
+  final double iconSize;
+
+  const ClearButtonTheme({
+    required this.iconColor,
+    this.overlayColor = Colors.transparent,
+    this.backgroundColor = Colors.transparent,
+    this.iconSize = 24.0,
+  });
 
   @override
-  ThemeExtension<BackButtonPalette> copyWith() {
-    // TODO: implement copyWith
-    throw UnimplementedError();
+  ThemeExtension<ClearButtonTheme> copyWith({
+    Color? iconColor,
+    Color? overlayColor,
+    Color? backgroundColor,
+    double? iconSize,
+  }) {
+    return ClearButtonTheme(
+      iconColor: iconColor ?? this.iconColor,
+      overlayColor: overlayColor ?? this.overlayColor,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      iconSize: iconSize ?? this.iconSize,
+    );
   }
 
   @override
-  ThemeExtension<BackButtonPalette> lerp(
-    covariant ThemeExtension<BackButtonPalette>? other,
+  ThemeExtension<ClearButtonTheme> lerp(
+    covariant ThemeExtension<ClearButtonTheme>? other,
     double t,
   ) {
-    // TODO: implement lerp
-    throw UnimplementedError();
+    if (other is! ClearButtonTheme) {
+      return this;
+    }
+    return ClearButtonTheme(
+      iconColor: Color.lerp(iconColor, other.iconColor, t)!,
+      overlayColor: Color.lerp(overlayColor, other.overlayColor, t)!,
+      backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
+      iconSize: lerpDouble(iconSize, other.iconSize, t)!,
+    );
+  }
+}
+
+class BackButtonTheme extends ThemeExtension<BackButtonTheme> {
+  final Color iconColor;
+  final Color overlayColor;
+  final Color backgroundColor;
+  final double iconSize;
+
+  const BackButtonTheme({
+    this.iconColor = Colors.white,
+    this.overlayColor = const Color(0x19ffffff),
+    this.backgroundColor = const Color(0x00ffffff),
+    this.iconSize = 24.0,
+  });
+
+  @override
+  ThemeExtension<BackButtonTheme> copyWith({
+    Color? iconColor,
+    Color? overlayColor,
+    Color? backgroundColor,
+    double? iconSize,
+  }) {
+    return BackButtonTheme(
+      iconColor: iconColor ?? this.iconColor,
+      overlayColor: overlayColor ?? this.overlayColor,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      iconSize: iconSize ?? this.iconSize,
+    );
+  }
+
+  @override
+  ThemeExtension<BackButtonTheme> lerp(
+    covariant ThemeExtension<BackButtonTheme>? other,
+    double t,
+  ) {
+    if (other is! BackButtonTheme) {
+      return this;
+    }
+    return BackButtonTheme(
+      iconColor: Color.lerp(iconColor, other.iconColor, t)!,
+      overlayColor: Color.lerp(overlayColor, other.overlayColor, t)!,
+      backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
+      iconSize: lerpDouble(iconSize, other.iconSize, t)!,
+    );
   }
 }
 
 // TODO: small button on top of card
 //class QuestionCardButton
 
-class StarButtonPalette extends ThemeExtension<StarButtonPalette> {
+class StarButtonTheme extends ThemeExtension<StarButtonTheme> {
   final Color backgroundColor;
   final Color starColor;
 
-  const StarButtonPalette({
+  const StarButtonTheme({
     required this.backgroundColor,
     required this.starColor,
   });
 
   @override
-  StarButtonPalette copyWith({Color? backgroundColor, Color? starColor}) {
-    return StarButtonPalette(
+  StarButtonTheme copyWith({Color? backgroundColor, Color? starColor}) {
+    return StarButtonTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       starColor: starColor ?? this.starColor,
     );
   }
 
   @override
-  StarButtonPalette lerp(StarButtonPalette? other, double t) {
-    if (other is! StarButtonPalette) {
+  StarButtonTheme lerp(StarButtonTheme? other, double t) {
+    if (other is! StarButtonTheme) {
       return this;
     }
-    return StarButtonPalette(
+    return StarButtonTheme(
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
       starColor: Color.lerp(starColor, other.starColor, t)!,
     );
@@ -98,8 +168,8 @@ class QuestionCardPalette extends ThemeExtension<QuestionCardPalette> {
   }
 }
 
-class CustomSearchBarPalette extends ThemeExtension<CustomSearchBarPalette> {
-  const CustomSearchBarPalette({
+class CustomSearchBarTheme extends ThemeExtension<CustomSearchBarTheme> {
+  const CustomSearchBarTheme({
     required this.lensIconColor,
     required this.lensIconOpenColor,
     required this.lensIconOverlayColor,
@@ -118,7 +188,7 @@ class CustomSearchBarPalette extends ThemeExtension<CustomSearchBarPalette> {
   final Color crossIconColor;
 
   @override
-  CustomSearchBarPalette copyWith({
+  CustomSearchBarTheme copyWith({
     Color? lensIconColor,
     Color? lensIconOpenColor,
     Color? lensIconOverlayColor,
@@ -127,7 +197,7 @@ class CustomSearchBarPalette extends ThemeExtension<CustomSearchBarPalette> {
     Color? labelTextColor,
     Color? crossIconColor,
   }) {
-    return CustomSearchBarPalette(
+    return CustomSearchBarTheme(
       lensIconColor: lensIconColor ?? this.lensIconColor,
       lensIconOpenColor: lensIconOpenColor ?? this.lensIconOpenColor,
       lensIconOverlayColor: lensIconOverlayColor ?? this.lensIconOverlayColor,
@@ -139,11 +209,11 @@ class CustomSearchBarPalette extends ThemeExtension<CustomSearchBarPalette> {
   }
 
   @override
-  CustomSearchBarPalette lerp(CustomSearchBarPalette? other, double t) {
-    if (other is! CustomSearchBarPalette) {
+  CustomSearchBarTheme lerp(CustomSearchBarTheme? other, double t) {
+    if (other is! CustomSearchBarTheme) {
       return this;
     }
-    return CustomSearchBarPalette(
+    return CustomSearchBarTheme(
       lensIconColor: Color.lerp(lensIconColor, other.lensIconColor, t)!,
       lensIconOpenColor: Color.lerp(
         lensIconOpenColor,

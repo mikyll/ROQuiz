@@ -150,6 +150,8 @@ class CustomSearchBarState extends State<CustomSearchBar>
 
   @override
   Widget build(BuildContext context) {
+    // TODO: use custom theme
+
     return Container(
       height: 100.0,
 

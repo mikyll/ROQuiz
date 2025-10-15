@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide SearchBarTheme;
-import 'package:roquiz/model/style/palettes.dart';
+import 'package:roquiz/model/style/theme_extensions.dart';
 
 class Themes {
   static final colorButtonBackgroundLight = Color.fromARGB(255, 81, 91, 146);
@@ -104,11 +104,13 @@ class Themes {
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const StarButtonPalette(
+      const BackButtonTheme(),
+      const ClearButtonTheme(iconColor: Colors.black),
+      const StarButtonTheme(
         backgroundColor: Color(0xff515b92),
         starColor: Color(0xffffeb3b),
       ),
-      const CustomSearchBarPalette(
+      const CustomSearchBarTheme(
         lensIconColor: Color(0xffffffff),
         lensIconOpenColor: Color(0xff9e9e9e),
         lensIconOverlayColor: Color(0x7f5b63b5),
@@ -216,11 +218,13 @@ class Themes {
       ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const StarButtonPalette(
+      const BackButtonTheme(),
+      const ClearButtonTheme(iconColor: Colors.white),
+      const StarButtonTheme(
         backgroundColor: Color(0xffb7c4ff),
         starColor: Color(0xffb71c1c),
       ),
-      const CustomSearchBarPalette(
+      const CustomSearchBarTheme(
         lensIconColor: Color(0xffffffff),
         lensIconOpenColor: Color(0xff9e9e9e),
         lensIconOverlayColor: Color(0x7fb7c4ff),

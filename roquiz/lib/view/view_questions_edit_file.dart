@@ -3,6 +3,7 @@ import 'package:roquiz/model/edit_question/commands/custom_command.dart';
 import 'package:roquiz/model/edit_question/question_command_executor.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/question_dialog.dart';
 import 'package:roquiz/widget/separator.dart';
@@ -28,17 +29,7 @@ class _ViewQuestionsEditFileState extends State<ViewQuestionsEditFile> {
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
           title: Text("Modifica File"),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            style: ButtonStyle(
-              iconColor: WidgetStatePropertyAll(Colors.white),
-              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-              backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          leading: CustomBackButton(),
         ),
         body: SafeArea(
           child: Center(

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/style/palettes.dart';
+import 'package:roquiz/model/style/theme_extensions.dart';
 
 class StarButton extends StatefulWidget {
   final double size;
@@ -109,7 +109,7 @@ class StarButtonState extends State<StarButton> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final starButtonTheme = Theme.of(context).extension<StarButtonPalette>()!;
+    final starButtonTheme = Theme.of(context).extension<StarButtonTheme>()!;
 
     return Stack(
       alignment: Alignment.center,

@@ -7,6 +7,7 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/view/view_questions_edit_file.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:roquiz/widget/custom_search_bar.dart';
@@ -120,17 +121,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
             duration: const Duration(milliseconds: 250),
             child: Text(_title),
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            style: ButtonStyle(
-              iconColor: WidgetStatePropertyAll(Colors.white),
-              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-              backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          leading: CustomBackButton(),
           actions: [
             CustomSearchBar(
               textController: _textController,
@@ -237,120 +228,122 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   ),
                 ),
                 // Check if there are new questions
-                Tooltip(
-                  waitDuration: Duration(milliseconds: 500),
-                  message: "Controlla se ci sono nuove domande",
-                  child: IconButton(
-                    onPressed: null,
-                    icon: Icon(Icons.sync_rounded),
-                    iconSize: 35,
+                if (widget.editable)
+                  Tooltip(
+                    waitDuration: Duration(milliseconds: 500),
+                    message: "Controlla se ci sono nuove domande",
+                    child: IconButton(
+                      onPressed: null,
+                      icon: Icon(Icons.sync_rounded),
+                      iconSize: 35,
+                    ),
                   ),
-                ),
 
                 // Edit mode
-                if (kDebugMode)
-                  Tooltip(
-                    waitDuration: Duration(milliseconds: 500),
-                    message: "Modifica",
-                    child: IconButton(
-                      onPressed: !widget.editable
-                          ? null
-                          : () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return ViewQuestionsEdit(
-                                      questions: _questions,
-                                      hideAnswers:
-                                          settings.hideCorrectAnswersInEditMode,
-                                    );
-                                  },
-                                ),
-                              );
-                              // TODO: change animation?
-                              // Navigator.push(
-                              //   context,
-                              //   PageRouteBuilder(
-                              //     pageBuilder: (_, __, ___) {
-                              //       return ViewQuestionsEdit(
-                              //         questions: _questions,
-                              //         hideAnswers:
-                              //             settings.hideCorrectAnswersInEditMode,
-                              //       );
-                              //     },
-                              //     transitionDuration: Duration.zero,
-                              //     // transitionDuration: Duration(milliseconds: 300),
-                              //     // transitionsBuilder: (_, animation, __, c) {
-                              //     //   const begin = Offset(1.0, 0.0);
-                              //     //   const end = Offset.zero;
-                              //     //   var tween = Tween(
-                              //     //     begin: begin,
-                              //     //     end: end,
-                              //     //   ).chain(CurveTween(curve: Curves.easeOut));
-                              //     //   return SlideTransition(
-                              //     //     position: animation.drive(tween),
-                              //     //     child: c,
-                              //     //   );
-                              //     // },
-                              //   ),
-                              // );
-                            },
-                      icon: Icon(Icons.edit),
-                      iconSize: 35,
+                if (widget.editable)
+                  if (kDebugMode)
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Modifica",
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ViewQuestionsEdit(
+                                  questions: _questions,
+                                  hideAnswers:
+                                      settings.hideCorrectAnswersInEditMode,
+                                );
+                              },
+                            ),
+                          );
+                          // TODO: change animation?
+                          // Navigator.push(
+                          //   context,
+                          //   PageRouteBuilder(
+                          //     pageBuilder: (_, __, ___) {
+                          //       return ViewQuestionsEdit(
+                          //         questions: _questions,
+                          //         hideAnswers:
+                          //             settings.hideCorrectAnswersInEditMode,
+                          //       );
+                          //     },
+                          //     transitionDuration: Duration.zero,
+                          //     // transitionDuration: Duration(milliseconds: 300),
+                          //     // transitionsBuilder: (_, animation, __, c) {
+                          //     //   const begin = Offset(1.0, 0.0);
+                          //     //   const end = Offset.zero;
+                          //     //   var tween = Tween(
+                          //     //     begin: begin,
+                          //     //     end: end,
+                          //     //   ).chain(CurveTween(curve: Curves.easeOut));
+                          //     //   return SlideTransition(
+                          //     //     position: animation.drive(tween),
+                          //     //     child: c,
+                          //     //   );
+                          //     // },
+                          //   ),
+                          // );
+                        },
+                        icon: Icon(Icons.edit),
+                        iconSize: 35,
+                      ),
                     ),
-                  ),
+
                 // Edit mode (file)
-                if (kDebugMode)
-                  Tooltip(
-                    waitDuration: Duration(milliseconds: 500),
-                    message: "Modifica File",
-                    child: IconButton(
-                      onPressed: !widget.editable
-                          ? null
-                          : () {
-                              // Prompt for format
+                if (widget.editable)
+                  if (kDebugMode)
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Modifica File",
+                      child: IconButton(
+                        onPressed: !widget.editable
+                            ? null
+                            : () {
+                                // Prompt for format
 
-                              // TODO: change animation
+                                // TODO: change animation
 
-                              Navigator.push(
-                                context,
-                                // PageRouteBuilder(
-                                //   pageBuilder: (_, __, ___) {
-                                //     return ViewQuestionsEditFile();
-                                //   },
-                                //   transitionDuration: Duration.zero,
-                                //   transitionsBuilder: (_, animation, __, child) {
-                                //     return child;
-                                //   },
-                                // ),
-                                PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) {
-                                    return ViewQuestionsEditFile(
-                                      fileContent: "",
-                                    );
-                                  },
-                                  transitionDuration: Duration.zero,
-                                  // transitionDuration: Duration(milliseconds: 300),
-                                  // transitionsBuilder: (_, animation, __, c) {
-                                  //   const begin = Offset(1.0, 0.0);
-                                  //   const end = Offset.zero;
-                                  //   var tween = Tween(
-                                  //     begin: begin,
-                                  //     end: end,
-                                  //   ).chain(CurveTween(curve: Curves.easeOut));
-                                  //   return SlideTransition(
-                                  //     position: animation.drive(tween),
-                                  //     child: c,
-                                  //   );
-                                  // },
-                                ),
-                              );
-                            },
-                      icon: Icon(Icons.edit_document),
-                      iconSize: 35,
+                                Navigator.push(
+                                  context,
+                                  // PageRouteBuilder(
+                                  //   pageBuilder: (_, __, ___) {
+                                  //     return ViewQuestionsEditFile();
+                                  //   },
+                                  //   transitionDuration: Duration.zero,
+                                  //   transitionsBuilder: (_, animation, __, child) {
+                                  //     return child;
+                                  //   },
+                                  // ),
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) {
+                                      return ViewQuestionsEditFile(
+                                        fileContent: "",
+                                      );
+                                    },
+                                    transitionDuration: Duration.zero,
+                                    // transitionDuration: Duration(milliseconds: 300),
+                                    // transitionsBuilder: (_, animation, __, c) {
+                                    //   const begin = Offset(1.0, 0.0);
+                                    //   const end = Offset.zero;
+                                    //   var tween = Tween(
+                                    //     begin: begin,
+                                    //     end: end,
+                                    //   ).chain(CurveTween(curve: Curves.easeOut));
+                                    //   return SlideTransition(
+                                    //     position: animation.drive(tween),
+                                    //     child: c,
+                                    //   );
+                                    // },
+                                  ),
+                                );
+                              },
+                        icon: Icon(Icons.edit_document),
+                        iconSize: 35,
+                      ),
                     ),
-                  ),
               ],
             ),
           ),

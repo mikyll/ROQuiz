@@ -4,6 +4,7 @@ import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/utils.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,17 +38,7 @@ class ViewHistoryState extends State<ViewHistory> {
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
           title: Text("Storico Quiz"),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            style: ButtonStyle(
-              iconColor: WidgetStatePropertyAll(Colors.white),
-              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-              backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          leading: CustomBackButton(),
         ),
         body: SafeArea(
           child: Center(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/model/style/theme_extensions.dart';
 import 'package:roquiz/view/view_questions.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
 
 class ViewTopics extends StatefulWidget {
   final int questionsNum;
@@ -107,17 +109,7 @@ class ViewTopicsState extends State<ViewTopics> {
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
           title: const Text("Argomenti"),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            style: ButtonStyle(
-              iconColor: WidgetStatePropertyAll(Colors.white),
-              overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-              backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          leading: CustomBackButton(),
         ),
         body: SafeArea(
           child: Center(
@@ -308,6 +300,8 @@ class _TopicTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final clearButtonTheme = Theme.of(context).extension<ClearButtonTheme>()!;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: InkWell(
@@ -356,9 +350,14 @@ class _TopicTile extends StatelessWidget {
               onPressed: onIconTap,
               icon: Icon(Icons.arrow_forward_ios_rounded),
               style: ButtonStyle(
-                iconColor: WidgetStatePropertyAll(Colors.black),
-                overlayColor: WidgetStatePropertyAll(Color(0x19ffffff)),
-                backgroundColor: WidgetStatePropertyAll(Color(0x00ffffff)),
+                iconColor: WidgetStatePropertyAll(clearButtonTheme.iconColor),
+                overlayColor: WidgetStatePropertyAll(
+                  clearButtonTheme.overlayColor,
+                ),
+                backgroundColor: WidgetStatePropertyAll(
+                  clearButtonTheme.backgroundColor,
+                ),
+                iconSize: WidgetStatePropertyAll(clearButtonTheme.iconSize),
               ),
             ),
           ],
