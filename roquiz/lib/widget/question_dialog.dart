@@ -170,7 +170,11 @@ class _QuestionDialogState extends State<QuestionDialog> {
                       border: OutlineInputBorder(),
                       label: Text("Argomento"),
                     ),
-                    onChanged: (_) {},
+                    onChanged: (topic) {
+                      setState(() {
+                        _topic = topic;
+                      });
+                    },
                   ),
 
                 SingleChildScrollView(
@@ -298,8 +302,6 @@ class _QuestionDialogState extends State<QuestionDialog> {
                 print("Wrong correct Answer");
                 return;
               }
-
-              print("TEST");
 
               Question? q = _getQuestion();
 
