@@ -65,10 +65,27 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     });
   }
 
+  void _addQuestion(int index, Question question) {
+    question.id = index;
+    setState(() {
+      _questions.insert(index, question);
+    });
+
+    _resetSelectedQuestions();
+  }
+
+  void _removeQuestion(int index) {
+    setState(() {
+      _questions.removeAt(index);
+    });
+
+    _resetSelectedQuestions();
+  }
+
   /// Adds a new question, inserting it at the end of the topic
   ///
   /// Returns the id of the new question
-  void _addNewQuestion() {
+  void _commandAddNewQuestion() {
     // TODO:
     //   - open modal
     //   - insert new question data
@@ -76,23 +93,16 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     //     - question is not duplicated (no equal-ignore-case to another question body)
     //     - no
 
-    // TODO: problema: l'ID come lo gestiamo? Si potrebbe togliere del tutto... Tanto nel vecchio file non c'era
-    // Oppure quando si salvano le modifiche, l'ID viene ricalcolato
-    final Question newQuestion = Question(
-      id: _questions.length + 1,
-      body: "Quanto fa 2+2",
-      topic: "Programmazione Matematica",
-      answers: ["2", "3", "4", "5"],
-      correctAnswer: 2,
-    );
-
-    // TODO: get topics list
+    // TODO: get topics list (need this to show the dropdown menu)
     List<String> topics = [];
     for (Question q in _questions) {
       if (!topics.contains(q.topic)) {
         topics.add(q.topic!);
       }
     }
+
+    // TODO: problema: l'ID come lo gestiamo? Si potrebbe togliere del tutto... Tanto nel vecchio file non c'era
+    // Oppure quando si salvano le modifiche, l'ID viene ricalcolato
 
     showDialog(
       context: context,
@@ -103,44 +113,17 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
           onSubmit: (question) {
             // Retrieve ID
             int questionId = getFirstAvailableId(_questions, question.topic);
-            print(questionId);
 
-            setState(() {
-              print(_questions.length);
-              question.id = questionId;
-              _questions.insert(questionId, question);
-              print(_questions.length);
-            });
-
-            _resetSelectedQuestions();
-
-            // _commandExecutor.executeCommand(
-            //   CustomQuestionCommand(
-            //     () {
-            //       int index = _questions.length;
-            //       // Find index where to insert the new question
-            //       for (int i = 0; i < _questions.length; i++) {
-            //         if (_questions[i].topic! == newQuestion.topic!) {
-            //           index = i;
-            //           break;
-            //         }
-            //       }
-            //       setState(() {
-            //         _questions.insert(index, newQuestion);
-            //         _selectedQuestions.insert(index, false);
-            //         _selectedAll = _selectedAll! ? null : false;
-            //       });
-            //     },
-            //     () {
-            //       setState(() {
-            //         final int index = _questions.indexOf(newQuestion);
-            //         _questions.removeAt(index);
-            //         _selectedQuestions.removeAt(index);
-            //         _selectedAll = _selectedAll! ? null : false;
-            //       });
-            //     },
-            //   ),
-            // );
+            _commandExecutor.executeCommand(
+              CustomQuestionCommand(
+                onExecute: () {
+                  _addQuestion(questionId, question);
+                },
+                onUndo: () {
+                  _removeQuestion(questionId);
+                },
+              ),
+            );
           },
         );
       },
@@ -182,12 +165,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     // add new command
   }
 
-  void _showQuestionModal(Question? question) {
-    // TODO
-    // NB: if null, is for adding new one
-  }
-
-  void _removeQuestion() {
+  void _commandRemoveQuestion() {
     for (int i = 0, j = 0; j < _selectedCount;) {
       if (_selectedQuestions[i]) {
         setState(() {
@@ -408,7 +386,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                       child: IconButton(
                         onPressed: _selectedCount == 0
                             ? () {
-                                _addNewQuestion();
+                                _commandAddNewQuestion();
                               }
                             : null,
                         icon: Icon(Icons.add),
@@ -434,7 +412,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                       child: IconButton(
                         onPressed: _selectedCount > 0
                             ? () {
-                                _removeQuestion();
+                                _commandRemoveQuestion();
                               }
                             : null,
                         icon: Icon(Icons.delete),
