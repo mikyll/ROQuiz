@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/utils/utils.dart';
+import 'package:roquiz/model/utils/grade.dart';
 
 class ResultCard extends StatefulWidget {
   final int correctAnswers;
