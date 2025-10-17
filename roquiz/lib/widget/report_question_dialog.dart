@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/model/utils/device.dart';
 import 'package:roquiz/model/utils/navigation.dart';
-import 'package:roquiz/model/utils/utils.dart';
 import 'package:roquiz/widget/separator.dart';
 
 class ReportQuestionDialog extends StatefulWidget {

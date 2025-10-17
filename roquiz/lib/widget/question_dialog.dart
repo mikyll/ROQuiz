@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/utils/utils.dart';
+import 'package:roquiz/model/utils/question.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
 class QuestionDialog extends StatefulWidget {

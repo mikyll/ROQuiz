@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
-import 'package:roquiz/model/utils/utils.dart';
+import 'package:roquiz/model/utils/grade.dart';
+import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';

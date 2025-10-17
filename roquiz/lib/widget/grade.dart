@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/utils/utils.dart';
+import 'package:roquiz/model/utils/grade.dart';
 
 class Grade extends StatefulWidget {
   final double grade;

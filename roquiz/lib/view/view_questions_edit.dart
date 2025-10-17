@@ -7,7 +7,7 @@ import 'package:roquiz/model/edit_question/commands/add_question.dart';
 import 'package:roquiz/model/edit_question/commands/custom_command.dart';
 import 'package:roquiz/model/edit_question/question_command_executor.dart';
 import 'package:roquiz/model/quiz/question.dart';
-import 'package:roquiz/model/utils/utils.dart';
+import 'package:roquiz/model/utils/question.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/question_card.dart';
