@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/model/utils/question.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/view/view_questions_edit_file.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
@@ -167,7 +169,6 @@ class ViewQuestionsState extends State<ViewQuestions> {
                   itemBuilder: (_, index) {
                     Widget questionWidget = QuestionCard.base(
                       question: _questions[index],
-                      iQuestion: _questions[index].id,
                       hideCorrectAnswer: settings.hideCorrectAnswersInEditMode,
                     );
 
@@ -251,8 +252,13 @@ class ViewQuestionsState extends State<ViewQuestions> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
+                                final List<String> topics = getTopicsList(
+                                  _questions,
+                                );
+
                                 return ViewQuestionsEdit(
                                   questions: _questions,
+                                  topics: topics,
                                   hideAnswers:
                                       settings.hideCorrectAnswersInEditMode,
                                 );

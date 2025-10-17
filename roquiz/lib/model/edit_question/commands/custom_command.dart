@@ -1,10 +1,18 @@
-import 'package:roquiz/model/edit_question/question_command.dart';
+import 'package:roquiz/model/edit_question/command.dart';
 
-class CustomQuestionCommand implements QuestionCommand {
+class CustomCommand implements Command {
+  @override
+  String name;
   final Function() onExecute;
   final Function() onUndo;
+  final Function()? onRedo;
 
-  CustomQuestionCommand(this.onExecute, this.onUndo);
+  CustomCommand({
+    required this.onExecute,
+    required this.onUndo,
+    this.onRedo,
+    this.name = "",
+  });
 
   @override
   void execute() {
@@ -14,5 +22,10 @@ class CustomQuestionCommand implements QuestionCommand {
   @override
   void undo() {
     onUndo();
+  }
+
+  @override
+  void redo() {
+    onRedo!();
   }
 }

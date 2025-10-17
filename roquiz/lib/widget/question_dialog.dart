@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:roquiz/model/utils/device.dart';
 import 'package:roquiz/model/utils/question.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
 class QuestionDialog extends StatefulWidget {
-  // TODO: topics list? check
-  final List<String>? topicsList;
-  final void Function(Question) onSubmit;
   final List<Question> questions;
+  final List<String>? topics;
+  final void Function(Question) onSubmit;
   final Question? question;
+  final int minAnswers;
+  final int maxAnswers;
 
   const QuestionDialog({
     super.key,
-    required this.onSubmit,
     required this.questions,
-    this.topicsList,
+    this.topics,
     this.question,
+    required this.onSubmit,
+    this.minAnswers = 2,
+    this.maxAnswers = 6,
   });
 
   @override
@@ -23,17 +27,25 @@ class QuestionDialog extends StatefulWidget {
 
 class _QuestionDialogState extends State<QuestionDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _answersKey = GlobalKey();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _bodyController = TextEditingController();
 
   String? _topic;
   List<String> _answers = [""];
   int? _correctAnswer;
+  String? _errorText;
+  bool _errorBody = false;
+  bool _errorAnswers = false;
 
   Question? _getQuestion() {
-    Question? question;
+    for (String a in _answers) {
+      if (a.isEmpty) {
+        _answers.remove(a);
+      }
+    }
 
-    // Retrieve ID
+    Question? question;
     int id = getFirstAvailableId(widget.questions, _topic);
 
     question = Question(
@@ -47,42 +59,68 @@ class _QuestionDialogState extends State<QuestionDialog> {
     return question;
   }
 
-  // String? _validateQuestion(Question question) {
-  //   if (isQuestionBodyDuplicate(widget.questions, question)) {
-  //     return "Esiste già una domanda con questo corpo.";
-  //   }
-
-  //   return null;
-  // }
-
-  String? _validateBody(String? value) {
+  String? _validateBody(String? value, {bool checkDuplicates = true}) {
     if (value == null || value.isEmpty) {
       return "Il corpo della domanda dev'essere non vuoto";
     }
 
-    if (isQuestionBodyDuplicate(widget.questions, value)) {
+    if (checkDuplicates && isQuestionBodyDuplicate(widget.questions, value)) {
       return "Esiste già una domanda con questo corpo.";
     }
 
     return null;
   }
 
-  String? _validateAnswer(String? value) {
-    // TODO: validate:
-    // - no empty body
-    // - ok topic
-    // - at least 2 answers
-    // - selected correct answer
+  String? _validateAnswers(
+    List<String> answers,
+    int? correctAnswer, {
+    bool checkDuplicates = true,
+  }) {
+    if (answers.length - _numEmptyAnswers() < widget.minAnswers) {
+      return "Devono essere presenti almeno ${widget.minAnswers} risposte non vuote";
+    }
+
+    if (answers.length - _numEmptyAnswers() > widget.maxAnswers) {
+      return "Non possono esserci più di ${widget.minAnswers} risposte";
+    }
+
+    if (checkDuplicates) {
+      for (int i = 0; i < answers.length; i++) {
+        if (isAnswerDuplicate(answers, answers[i])) {
+          return "La risposta ${i + 1} '${answers[i]}' è duplicata";
+        }
+      }
+    }
+
+    if (correctAnswer == null) {
+      return "La risposta corretta non è stata selezionata";
+    }
+
+    if (correctAnswer < 0 || correctAnswer >= answers.length) {
+      return "La risposta corretta dev'essere nel range [0, ${answers.length - 1}]";
+    }
+
+    // TODO?
 
     return null;
+  }
+
+  int _numEmptyAnswers() {
+    int emptyAnswers = 0;
+    for (String a in _answers) {
+      if (a.isEmpty) {
+        emptyAnswers++;
+      }
+    }
+    return emptyAnswers;
   }
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.topicsList != null && widget.topicsList!.isNotEmpty) {
-      _topic = widget.topicsList!.first;
+    if (widget.topics != null && widget.topics!.isNotEmpty) {
+      _topic = widget.topics!.first;
     }
     if (widget.question != null) {
       _bodyController.text = widget.question!.body;
@@ -94,6 +132,8 @@ class _QuestionDialogState extends State<QuestionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final Size windowSize = getLogicalSize();
+
     return Form(
       key: _formKey,
       child: AlertDialog(
@@ -107,7 +147,12 @@ class _QuestionDialogState extends State<QuestionDialog> {
         title: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
+              padding: const EdgeInsets.only(
+                top: 24.0,
+                bottom: 0.0,
+                left: 12.0,
+                right: 12.0,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -115,7 +160,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
                     widget.question != null
                         ? "Modifica Domanda"
                         : "Nuova Domanda",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
@@ -135,195 +180,263 @@ class _QuestionDialogState extends State<QuestionDialog> {
         content: ConstrainedBox(
           constraints: BoxConstraints(
             // TODO
-            // maxHeight: windowSize.height * 1 / 4,
+            maxHeight: windowSize.height * 2 / 5,
             maxWidth: 400.0,
           ),
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 10.0,
-              children: [
-                SizedBox(height: 10),
-                TextFormField(
-                  key: GlobalKey(),
-                  validator: _validateBody,
-                  controller: _bodyController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    label: Text("Corpo"),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    errorMaxLines: 2,
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  minLines: 4,
-                ),
-                if (_topic != null)
-                  DropdownButtonFormField(
-                    value: _topic,
-                    items: widget.topicsList!.map<DropdownMenuItem<String>>((
-                      String value,
-                    ) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+            controller: _scrollController,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                spacing: 10.0,
+                children: [
+                  SizedBox(height: 10),
+                  if (_topic != null)
+                    DropdownButtonFormField(
+                      value: _topic,
+                      items: widget.topics!.map<DropdownMenuItem<String>>((
+                        String value,
+                      ) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text("Argomento"),
+                      ),
+                      onChanged: (topic) {
+                        setState(() {
+                          _topic = topic;
+                        });
+                      },
+                    ),
+                  TextFormField(
+                    controller: _bodyController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      label: Text("Argomento"),
+                      labelText: "Corpo",
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      labelStyle: TextStyle(
+                        color: !_errorBody ? null : Colors.red,
+                      ),
+                      enabledBorder: !_errorBody
+                          ? null
+                          : OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
                     ),
-                    onChanged: (topic) {
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    minLines: 4,
+                    onChanged: (value) {
                       setState(() {
-                        _topic = topic;
+                        if (_errorBody) {
+                          _errorText = null;
+                          _errorBody = false;
+                        }
                       });
                     },
                   ),
 
-                SingleChildScrollView(
-                  controller: _scrollController,
-                  physics: NeverScrollableScrollPhysics(),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 10.0,
-                    children: List.generate(_answers.length, (index) {
-                      bool isAnswer = _answers[index].isNotEmpty;
+                  FormField(
+                    key: _answersKey,
+                    builder: (FormFieldState<dynamic> field) {
+                      return SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: "Risposte",
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            labelStyle: TextStyle(
+                              color: !_errorAnswers ? null : Colors.red,
+                            ),
+                            enabledBorder: !_errorAnswers
+                                ? null
+                                : OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 10.0,
+                              children: List.generate(_answers.length, (index) {
+                                return Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: _answers[index].isEmpty
+                                          ? null
+                                          : () {
+                                              setState(() {
+                                                if (_correctAnswer == index) {
+                                                  _correctAnswer = null;
+                                                  return;
+                                                }
 
-                      return Row(
-                        children: [
-                          Opacity(
-                            opacity: isAnswer ? 1.0 : 0.0,
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (_correctAnswer == index) {
-                                    _correctAnswer = null;
-                                    return;
-                                  }
+                                                _correctAnswer = index;
+                                              });
+                                            },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Icon(
+                                          _correctAnswer != null &&
+                                                  _correctAnswer! == index
+                                              ? Icons.radio_button_on
+                                              : Icons.radio_button_off,
+                                          color: _answers[index].isEmpty
+                                              ? Colors.grey.withAlpha(100)
+                                              : null,
+                                        ),
+                                      ),
+                                    ),
+                                    if (index < _answers.length)
+                                      Flexible(
+                                        child: TextFormField(
+                                          controller: TextEditingController(
+                                            text: _answers[index],
+                                          ),
+                                          minLines: 1,
+                                          maxLines: 3,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            label: Text(
+                                              "Risposta ${index + 1}",
+                                            ),
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              if (_errorAnswers) {
+                                                _errorText = null;
+                                                _errorAnswers = false;
+                                              }
+                                              _answers[index] = value;
+                                              if (value.isEmpty &&
+                                                  _correctAnswer == index) {
+                                                _correctAnswer = null;
+                                              }
 
-                                  _correctAnswer = index;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Icon(
-                                  _correctAnswer != null &&
-                                          _correctAnswer! == index
-                                      ? Icons.radio_button_on
-                                      : Icons.radio_button_off,
-                                ),
-                              ),
+                                              // Checks before adding a new empty answer
+                                              if (_numEmptyAnswers() > 0) {
+                                                return;
+                                              }
+                                              if (_answers.length >=
+                                                  widget.maxAnswers) {
+                                                return;
+                                              }
+
+                                              _answers.add("");
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    SizedBox(width: 10),
+                                    InkWell(
+                                      onTap:
+                                          _answers.length > 1 &&
+                                              (_answers[index].isNotEmpty ||
+                                                  _numEmptyAnswers() > 1)
+                                          ? () {
+                                              setState(() {
+                                                if (_correctAnswer == index) {
+                                                  _correctAnswer = null;
+                                                }
+
+                                                _answers.removeAt(index);
+
+                                                if (_numEmptyAnswers() == 0) {
+                                                  _answers.add("");
+                                                }
+                                              });
+                                            }
+                                          : null,
+                                      child: Icon(
+                                        Icons.delete,
+                                        color:
+                                            _answers.length > 1 &&
+                                                (_answers[index].isNotEmpty ||
+                                                    _numEmptyAnswers() > 1)
+                                            ? null
+                                            : Colors.grey.withAlpha(100),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
                             ),
                           ),
-                          Flexible(
-                            child: TextFormField(
-                              key: GlobalKey(),
-                              initialValue: _answers[index],
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                label: Text("Risposta ${index + 1}"),
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                              ),
-
-                              onChanged: (value) {
-                                setState(() {
-                                  _answers[index] = value;
-                                });
-                              },
-                              // TODO: on change, if not empty, add new empty answer
-                            ),
-                          ),
-                          SizedBox(width: 10),
-
-                          Opacity(
-                            opacity: isAnswer ? 1.0 : 0.0,
-                            child: InkWell(
-                              child: Icon(Icons.close),
-                              onTap: () {
-                                if (_answers.length > 2) {
-                                  setState(() {
-                                    _answers.removeAt(index);
-
-                                    if (_correctAnswer == index) {
-                                      _correctAnswer = null;
-                                    }
-                                  });
-                                }
-                              },
-                            ),
-                          ),
-                        ],
+                        ),
                       );
-                    }),
+                    },
                   ),
-                ),
-                ElevatedButton.icon(
-                  label: Icon(Icons.add),
-                  onPressed: () {
-                    if (_answers.length < 6) {
-                      setState(() {
-                        _answers.add("");
-                      });
-                    }
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
         actionsAlignment: MainAxisAlignment.center,
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              // if (_formKey.currentState == null ||
-              //     !_formKey.currentState!.validate()) {
-              //   return;
-              // }
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 10.0,
+            children: [
+              Opacity(
+                opacity: _errorText != null ? 1.0 : 0.0,
+                child: Text(
+                  "$_errorText",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    // Remove extra empty answers
+                    for (int i = 0; i < _answers.length; i++) {
+                      if (_answers[i].isEmpty && i != _answers.length - 1) {
+                        _answers.removeAt(i);
+                        if (_correctAnswer != null && _correctAnswer! > i) {
+                          _correctAnswer = _correctAnswer! - 1;
+                        }
+                      }
+                    }
 
-              // TODO: call validate
-              if (_bodyController.text.isEmpty) {
-                print("Empty Body");
-                return;
-              }
+                    _errorText = _validateBody(_bodyController.text);
+                    if (_errorText != null) {
+                      _errorBody = true;
+                      return;
+                    }
 
-              if (_answers.length < 2) {
-                print("Not enough Answers");
-                return;
-              }
+                    _errorText = _validateAnswers(_answers, _correctAnswer);
+                    if (_errorText != null) {
+                      _errorAnswers = true;
+                      return;
+                    }
 
-              for (String a in _answers) {
-                if (a.isEmpty) {
-                  print("Empty Answer");
-                  return;
-                }
-              }
+                    // TODO
+                    Question? q = _getQuestion();
+                    if (q != null) {
+                      widget.onSubmit(q);
+                    }
 
-              if (_correctAnswer == null ||
-                  _correctAnswer! < 0 ||
-                  _correctAnswer! > _answers.length - 1) {
-                print("Wrong correct Answer");
-                return;
-              }
-
-              Question? q = _getQuestion();
-
-              if (q == null) {
-                print("error");
-              }
-
-              // TODO
-              if (q != null) {
-                widget.onSubmit(q);
-              }
-
-              Navigator.pop(context);
-            },
-            child: Text(
-              "Conferma",
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 22),
-            ),
+                    Navigator.pop(context);
+                  });
+                },
+                child: Text(
+                  "Conferma",
+                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 22),
+                ),
+              ),
+            ],
           ),
         ],
       ),
