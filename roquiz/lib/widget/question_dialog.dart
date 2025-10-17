@@ -33,7 +33,11 @@ class _QuestionDialogState extends State<QuestionDialog> {
   Question? _getQuestion() {
     Question? question;
 
+    // Retrieve ID
+    int id = getFirstAvailableId(widget.questions, _topic);
+
     question = Question(
+      id: id,
       body: _bodyController.text,
       topic: _topic,
       answers: _answers,

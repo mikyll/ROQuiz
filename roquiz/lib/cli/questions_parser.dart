@@ -80,7 +80,7 @@ List<Question> parseQuestionsFromTxt(String content) {
       continue;
     }
 
-    id = questions.length + 1;
+    id = questions.length;
     body = lines[iLine];
     iLine++;
 
@@ -163,7 +163,7 @@ List<Question> parseQuestionsFromYaml(String content) {
     throw FormatException("Invalid YAML format: expected a list of questions");
   }
 
-  int iQ = 1;
+  int iQ = 0;
   for (final question in parsedData) {
     if (question is Map) {
       try {
@@ -180,8 +180,8 @@ List<Question> parseQuestionsFromYaml(String content) {
           correctAnswer: correctAnswer,
         );
 
-        iQ++;
         questions.add(q);
+        iQ++;
       } catch (e) {
         rethrow;
       }

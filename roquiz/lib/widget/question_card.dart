@@ -12,7 +12,6 @@ enum QuestionCardMode {
 
 class QuestionCard extends StatelessWidget {
   final QuestionCardMode mode;
-  final int? iQuestion;
   final Question question;
   final int? selectedAnswer;
   final ValueChanged<int?>? onAnswerSelected;
@@ -25,7 +24,6 @@ class QuestionCard extends StatelessWidget {
     super.key,
     required this.mode,
     required this.question,
-    this.iQuestion,
     this.selectedAnswer,
     this.onAnswerSelected,
     this.hideCorrectAnswer = false,
@@ -38,7 +36,6 @@ class QuestionCard extends StatelessWidget {
   const QuestionCard.base({
     super.key,
     required this.question,
-    this.iQuestion,
     this.hideCorrectAnswer = false,
   }) : mode = QuestionCardMode.base,
        selectedAnswer = null,
@@ -54,7 +51,6 @@ class QuestionCard extends StatelessWidget {
     required this.onAnswerSelected,
     this.selectedAnswer,
   }) : mode = QuestionCardMode.quiz,
-       iQuestion = null,
        hideCorrectAnswer = false,
        isSelected = false,
        tapToSelect = false,
@@ -66,7 +62,6 @@ class QuestionCard extends StatelessWidget {
     required this.question,
     this.selectedAnswer,
   }) : mode = QuestionCardMode.quizOver,
-       iQuestion = null,
        onAnswerSelected = null,
        hideCorrectAnswer = false,
        isSelected = false,
@@ -77,7 +72,6 @@ class QuestionCard extends StatelessWidget {
   const QuestionCard.edit({
     super.key,
     required this.question,
-    this.iQuestion,
     this.selectedAnswer,
     this.isSelected = false,
     this.hideCorrectAnswer = false,
@@ -141,11 +135,11 @@ class QuestionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Add question number only if not in Quiz
-                      if (iQuestion != null)
+                      if (mode != QuestionCardMode.quiz)
                         Padding(
                           padding: const EdgeInsets.only(right: 5.0),
                           child: Text(
-                            "Q$iQuestion. ",
+                            "Q${question.id + 1}. ",
                             style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -242,7 +236,7 @@ class QuestionCard extends StatelessWidget {
                   builder: (BuildContext context) {
                     return ReportQuestionDialog(
                       question: question,
-                      id: iQuestion,
+                      id: question.id,
                     );
                   },
                 );

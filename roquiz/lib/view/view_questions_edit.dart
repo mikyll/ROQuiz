@@ -325,7 +325,6 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                   itemBuilder: (context, index) {
                     Widget questionWidget = QuestionCard.edit(
                       question: _questions[index],
-                      iQuestion: index + 1,
                       isSelected: _selectedQuestions[index],
                       // TODO
                       //hideCorrectAnswer: !widget.showAnswers,
