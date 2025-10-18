@@ -8,11 +8,11 @@ class CustomCommand implements Command {
   final Function()? onRedo;
 
   CustomCommand({
+    this.name = "",
     required this.onExecute,
     required this.onUndo,
-    this.onRedo,
-    this.name = "",
-  });
+    Function()? onRedo,
+  }) : onRedo = onRedo ?? onExecute;
 
   @override
   void execute() {
