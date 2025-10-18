@@ -3,13 +3,16 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/utils/device.dart';
 import 'package:roquiz/model/utils/navigation.dart';
-import 'package:roquiz/widget/separator.dart';
 
 class ReportQuestionDialog extends StatefulWidget {
   final Question question;
-  final int? id;
+  final int id;
 
-  const ReportQuestionDialog({super.key, required this.question, this.id});
+  const ReportQuestionDialog({
+    super.key,
+    required this.question,
+    required this.id,
+  });
 
   @override
   State<StatefulWidget> createState() => _ReportQuestionDialogState();
@@ -20,7 +23,7 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
   final GlobalKey<FormState> _correctAnswerKey = GlobalKey();
 
   final Map<String, String> issueTemplates = {
-    "correct-answer": "Risposta corretta",
+    "correct-answer": "Errore nella risposta corretta",
     // TODO
     //"question-body": "Corpo domanda",
     //"answer": "Risposta singola",
@@ -30,6 +33,41 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
   final TextEditingController _controllerComment = TextEditingController(
     text: "",
   );
+
+  String _errorText = "";
+
+  String _validateCorrectAnswer() {
+    // Missing correct answer
+    if (_newCorrectAnswer == null) {
+      return "Selezionare la nuova risposta corretta";
+    }
+
+    return "";
+  }
+
+  bool _validateReport() {
+    setState(() {
+      _errorText = _validateCorrectAnswer();
+    });
+    if (_errorText.isNotEmpty) {
+      return false;
+    }
+
+    return true;
+  }
+
+  void _selectCorrectAnswer(int iAnswer) {
+    setState(() {
+      _errorText = "";
+
+      if (_newCorrectAnswer == iAnswer) {
+        _newCorrectAnswer = null;
+        return;
+      }
+
+      _newCorrectAnswer = iAnswer;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +80,13 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
     return Form(
       key: _formKey,
       child: AlertDialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
           side: BorderSide(width: 2.0, color: Colors.grey),
         ),
         alignment: Alignment.center,
+        // Remove default padding
         titlePadding: EdgeInsets.all(0),
         title: Stack(
           children: [
@@ -54,8 +94,8 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
               padding: const EdgeInsets.only(
                 top: 24.0,
                 bottom: 0.0,
-                left: 24.0,
-                right: 24.0,
+                left: 12.0,
+                right: 12.0,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -64,29 +104,34 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Segnala Domanda Q${widget.id}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        "Segnala Domanda Q${widget.id + 1}",
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                   SizedBox(height: 20),
-                  DropdownButtonFormField(
-                    value: "correct-answer",
-                    items: issueTemplates.entries.map<DropdownMenuItem<String>>(
-                      (MapEntry<String, String> entry) {
-                        return DropdownMenuItem<String>(
-                          value: entry.key,
-                          child: Text(entry.value),
-                        );
+                  Padding(
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 24.0),
+                    child: DropdownButtonFormField(
+                      value: "correct-answer",
+                      items: issueTemplates.entries
+                          .map<DropdownMenuItem<String>>((
+                            MapEntry<String, String> entry,
+                          ) {
+                            return DropdownMenuItem<String>(
+                              value: entry.key,
+                              child: Text(entry.value),
+                            );
+                          })
+                          .toList(),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text("Template"),
+                      ),
+                      onChanged: (_) {
+                        // TODO: set widget below
                       },
-                    ).toList(),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text("Template"),
                     ),
-                    onChanged: (_) {
-                      // TODO: set widget below
-                    },
                   ),
                 ],
               ),
@@ -105,143 +150,146 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
         ),
         content: ConstrainedBox(
           constraints: BoxConstraints(
-            maxHeight: windowSize.height * 1 / 4,
+            maxHeight: windowSize.height * 1 / 2,
             maxWidth: 400.0,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(0),
-            child: SingleChildScrollView(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
+                spacing: 15.0,
                 children: [
-                  Separator(text: "Nuova Risposta Corretta", size: 16.0),
-                  SizedBox(height: 15.0),
                   FormField(
                     key: _correctAnswerKey,
-                    validator: (value) {
-                      if (_newCorrectAnswer == null) {
-                        print("error");
-                        return "Selezionare la nuova risposta corretta";
-                      }
-
-                      return null;
+                    validator: (_) {
+                      return _validateCorrectAnswer();
                     },
                     builder: (FormFieldState<dynamic> field) {
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        spacing: 10.0,
-                        children: [
-                          ...List.generate(widget.question.answers.length, (
-                            index,
-                          ) {
-                            return Row(
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: 'Risposta Corretta',
+                            labelStyle: TextStyle(
+                              color: _errorText.isEmpty ? null : Colors.red,
+                            ),
+                            enabledBorder: _errorText.isEmpty
+                                ? null
+                                : OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              spacing: 10.0,
                               children: [
-                                InkWell(
-                                  onTap: widget.question.correctAnswer == index
-                                      ? null
-                                      : () {
-                                          setState(() {
-                                            if (_newCorrectAnswer == index) {
-                                              _newCorrectAnswer = null;
-                                              return;
-                                            }
-
-                                            _newCorrectAnswer = index;
-                                          });
-                                        },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Icon(
-                                      widget.question.correctAnswer == index ||
-                                              _newCorrectAnswer == index
-                                          ? Icons.radio_button_on
-                                          : Icons.radio_button_off,
-                                      color:
-                                          widget.question.correctAnswer == index
-                                          ? Colors.grey
-                                          : _newCorrectAnswer == index
-                                          ? Colors.green
-                                          : null,
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  child: TextFormField(
-                                    key: GlobalKey(),
-                                    initialValue:
-                                        widget.question.answers[index],
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Colors.white,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: _newCorrectAnswer == index
-                                            ? BorderSide(
-                                                color: Colors.green,
-                                                width: 2.0,
-                                              )
-                                            : Theme.of(context)
-                                                  .inputDecorationTheme
-                                                  .focusedBorder!
-                                                  .borderSide,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: _newCorrectAnswer == index
-                                            ? BorderSide(
-                                                color: Colors.green,
-                                                width: 2.0,
-                                              )
-                                            : Theme.of(context)
-                                                  .inputDecorationTheme
-                                                  .focusedBorder!
-                                                  .borderSide,
-                                      ),
-
-                                      label: Text(
-                                        "Risposta ${index + 1}",
-                                        style: TextStyle(
-                                          color: _newCorrectAnswer == index
-                                              ? Colors.green
-                                              : null,
+                                //Separator(text: "Nuova Risposta Corretta", size: 16.0),
+                                ...List.generate(
+                                  widget.question.answers.length,
+                                  (index) {
+                                    return Row(
+                                      children: [
+                                        InkWell(
+                                          onTap:
+                                              widget.question.correctAnswer ==
+                                                  index
+                                              ? null
+                                              : () {
+                                                  _selectCorrectAnswer(index);
+                                                },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Icon(
+                                              widget.question.correctAnswer ==
+                                                          index ||
+                                                      _newCorrectAnswer == index
+                                                  ? Icons.radio_button_on
+                                                  : Icons.radio_button_off,
+                                              color:
+                                                  widget
+                                                          .question
+                                                          .correctAnswer ==
+                                                      index
+                                                  ? Colors.grey.withAlpha(100)
+                                                  : _newCorrectAnswer == index
+                                                  ? Colors.green
+                                                  : null,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.always,
-                                    ),
-                                    maxLines: 1,
-                                    readOnly: true,
-                                    showCursor: false,
-                                    onTapAlwaysCalled: true,
-                                    onTap:
-                                        widget.question.correctAnswer == index
-                                        ? null
-                                        : () {
-                                            setState(() {
-                                              if (_newCorrectAnswer == index) {
-                                                _newCorrectAnswer = null;
-                                                return;
-                                              }
+                                        Flexible(
+                                          child: TextFormField(
+                                            key: GlobalKey(),
+                                            initialValue:
+                                                widget.question.answers[index],
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              fillColor: Colors.white,
+                                              focusedBorder:
+                                                  _newCorrectAnswer == index
+                                                  ? OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.green,
+                                                        width: 2.0,
+                                                      ),
+                                                    )
+                                                  : null,
 
-                                              _newCorrectAnswer = index;
-                                            });
-                                          },
-                                  ),
+                                              enabledBorder:
+                                                  _newCorrectAnswer == index
+                                                  ? OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.green,
+                                                        width: 2.0,
+                                                      ),
+                                                    )
+                                                  : null,
+
+                                              label: Text(
+                                                "Risposta ${index + 1}",
+                                                style: TextStyle(
+                                                  color:
+                                                      _newCorrectAnswer == index
+                                                      ? Colors.green
+                                                      : null,
+                                                ),
+                                              ),
+                                              floatingLabelBehavior:
+                                                  FloatingLabelBehavior.always,
+                                            ),
+                                            maxLines: 1,
+                                            readOnly: true,
+                                            enabled:
+                                                widget.question.correctAnswer !=
+                                                index,
+                                            showCursor: false,
+                                            onTapAlwaysCalled: true,
+                                            onTap:
+                                                widget.question.correctAnswer ==
+                                                    index
+                                                ? null
+                                                : () {
+                                                    _selectCorrectAnswer(index);
+                                                  },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ],
-                            );
-                          }),
-                          if (field.hasError)
-                            Text(
-                              field.errorText!,
-                              style: TextStyle(color: Colors.red, fontSize: 12),
                             ),
-                        ],
+                          ),
+                        ),
                       );
                     },
                   ),
-                  SizedBox(height: 20.0),
-
                   TextFormField(
                     key: GlobalKey(),
                     validator: null,
@@ -263,13 +311,33 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
             ),
           ),
         ),
+        contentPadding: EdgeInsets.only(
+          top: 24.0,
+          bottom: 12.0,
+          left: 24.0,
+          right: 24.0,
+        ),
         actionsAlignment: MainAxisAlignment.center,
         actions: [
           Column(
-            spacing: 10.0,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 12.0,
             children: [
-              Text.rich(
-                TextSpan(
+              Opacity(
+                opacity: _errorText.isNotEmpty ? 1.0 : 0.0,
+                child: Text(
+                  _errorText,
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              Tooltip(
+                waitDuration: Duration(milliseconds: 500),
+                textAlign: TextAlign.center,
+                margin: EdgeInsets.all(5.0),
+                constraints: BoxConstraints(maxWidth: 300.0),
+                richMessage: TextSpan(
                   children: [
                     TextSpan(
                       text: "NB",
@@ -281,31 +349,33 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
                     ),
                   ],
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState == null ||
-                      !_formKey.currentState!.validate()) {
-                    return;
-                  }
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (!_validateReport()) {
+                      return;
+                    }
 
-                  String repoIssueUrl = "mikyll/ROQuiz/issues/new";
-                  String issueTemplate = "report_correct_answer.it.yaml";
+                    String repoIssueUrl = "mikyll/ROQuiz/issues/new";
+                    String issueTemplate = "report_correct_answer.it.yaml";
 
-                  String queryUrl =
-                      "https://github.com/$repoIssueUrl?template=$issueTemplate"
-                      "&title=[Segnalazione Domanda]: Errore nella Risposta Corretta Q${widget.id}"
-                      "&app-version=v$appVersion"
-                      "&question-id=${widget.question.id}&question-body=${widget.question.body}"
-                      "&answer-to-be-corrected=${String.fromCharCode(65 + widget.question.correctAnswer)}. ${widget.question.answers[widget.question.correctAnswer]}"
-                      "&correct-answer=${String.fromCharCode(65 + _newCorrectAnswer!)}. ${widget.question.answers[_newCorrectAnswer!]}&comment=${_controllerComment.text}";
-                  openUrl(queryUrl);
+                    String queryUrl =
+                        "https://github.com/$repoIssueUrl?template=$issueTemplate"
+                        "&title=[Segnalazione Domanda]: Errore nella Risposta Corretta Q${widget.id}"
+                        "&app-version=v$appVersion"
+                        "&question-id=${widget.question.id}&question-body=${widget.question.body}"
+                        "&answer-to-be-corrected=${String.fromCharCode(65 + widget.question.correctAnswer)}. ${widget.question.answers[widget.question.correctAnswer]}"
+                        "&correct-answer=${String.fromCharCode(65 + _newCorrectAnswer!)}. ${widget.question.answers[_newCorrectAnswer!]}&comment=${_controllerComment.text}";
+                    openUrl(queryUrl);
 
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Conferma",
-                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 22),
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "Conferma",
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 22,
+                    ),
+                  ),
                 ),
               ),
             ],
