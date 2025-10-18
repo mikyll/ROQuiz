@@ -275,6 +275,10 @@ class _QuestionDialogState extends State<QuestionDialog> {
                                           ? null
                                           : () {
                                               setState(() {
+                                                if (_errorAnswers) {
+                                                  _errorText = null;
+                                                  _errorAnswers = false;
+                                                }
                                                 if (_correctAnswer == index) {
                                                   _correctAnswer = null;
                                                   return;
@@ -346,6 +350,11 @@ class _QuestionDialogState extends State<QuestionDialog> {
                                                   _numEmptyAnswers() > 1)
                                           ? () {
                                               setState(() {
+                                                if (_errorAnswers) {
+                                                  _errorText = null;
+                                                  _errorAnswers = false;
+                                                }
+
                                                 if (_correctAnswer == index) {
                                                   _correctAnswer = null;
                                                 }
