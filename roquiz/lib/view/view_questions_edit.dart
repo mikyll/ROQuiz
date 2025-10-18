@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/edit_question/commands/custom_command.dart';
 import 'package:roquiz/model/edit_question/command_executor.dart';
@@ -498,19 +499,20 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                         iconSize: 35,
                       ),
                     ),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Modifica",
-                      child: IconButton(
-                        onPressed: _selectedCount == 1
-                            ? () {
-                                _commandEditQuestion();
-                              }
-                            : null,
-                        icon: Icon(Icons.edit_note),
-                        iconSize: 35,
+                    if (kDebugMode)
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Modifica",
+                        child: IconButton(
+                          onPressed: _selectedCount == 1
+                              ? () {
+                                  _commandEditQuestion();
+                                }
+                              : null,
+                          icon: Icon(Icons.edit_note),
+                          iconSize: 35,
+                        ),
                       ),
-                    ),
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
                       message: "Rimuovi",
