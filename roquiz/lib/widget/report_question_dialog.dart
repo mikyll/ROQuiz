@@ -263,7 +263,8 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
                                               floatingLabelBehavior:
                                                   FloatingLabelBehavior.always,
                                             ),
-                                            maxLines: 1,
+                                            minLines: 1,
+                                            maxLines: 3,
                                             readOnly: true,
                                             enabled:
                                                 widget.question.correctAnswer !=
