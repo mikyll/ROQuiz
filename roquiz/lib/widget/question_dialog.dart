@@ -29,21 +29,22 @@ class _QuestionDialogState extends State<QuestionDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _answersKey = GlobalKey();
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _bodyController = TextEditingController();
 
   String? _topic;
-  List<String> _answers = [""];
+  final TextEditingController _bodyController = TextEditingController();
+  final List<TextEditingController> _answerControllers = [
+    TextEditingController(text: ""),
+  ];
   int? _correctAnswer;
   String? _errorText;
   bool _errorBody = false;
   bool _errorAnswers = false;
 
   Question? _getQuestion() {
-    for (String a in _answers) {
-      if (a.isEmpty) {
-        _answers.remove(a);
-      }
-    }
+    final List<String> answers = _getAnswers(
+      _answerControllers,
+      removeEmpty: true,
+    );
 
     Question? question;
     int id = getFirstAvailableId(widget.questions, _topic);
@@ -52,7 +53,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
       id: id,
       body: _bodyController.text,
       topic: _topic,
-      answers: _answers,
+      answers: answers,
       correctAnswer: _correctAnswer!,
     );
 
@@ -105,10 +106,24 @@ class _QuestionDialogState extends State<QuestionDialog> {
     return null;
   }
 
+  List<String> _getAnswers(
+    List<TextEditingController> controllers, {
+    bool removeEmpty = false,
+  }) {
+    final List<String> answers = [];
+    for (TextEditingController c in controllers) {
+      if (removeEmpty && c.text.isEmpty) {
+        continue;
+      }
+      answers.add(c.text);
+    }
+    return answers;
+  }
+
   int _numEmptyAnswers() {
     int emptyAnswers = 0;
-    for (String a in _answers) {
-      if (a.isEmpty) {
+    for (TextEditingController c in _answerControllers) {
+      if (c.text.isEmpty) {
         emptyAnswers++;
       }
     }
@@ -125,7 +140,6 @@ class _QuestionDialogState extends State<QuestionDialog> {
     if (widget.question != null) {
       _bodyController.text = widget.question!.body;
       _topic = widget.question!.topic;
-      _answers = List.from(widget.question!.answers);
       _correctAnswer = widget.question!.correctAnswer;
     }
   }
@@ -267,11 +281,14 @@ class _QuestionDialogState extends State<QuestionDialog> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               spacing: 10.0,
-                              children: List.generate(_answers.length, (index) {
+                              children: List.generate(_answerControllers.length, (
+                                index,
+                              ) {
                                 return Row(
                                   children: [
                                     InkWell(
-                                      onTap: _answers[index].isEmpty
+                                      onTap:
+                                          _answerControllers[index].text.isEmpty
                                           ? null
                                           : () {
                                               setState(() {
@@ -294,18 +311,19 @@ class _QuestionDialogState extends State<QuestionDialog> {
                                                   _correctAnswer! == index
                                               ? Icons.radio_button_on
                                               : Icons.radio_button_off,
-                                          color: _answers[index].isEmpty
+                                          color:
+                                              _answerControllers[index]
+                                                  .text
+                                                  .isEmpty
                                               ? Colors.grey.withAlpha(100)
                                               : null,
                                         ),
                                       ),
                                     ),
-                                    if (index < _answers.length)
+                                    if (index < _answerControllers.length)
                                       Flexible(
                                         child: TextFormField(
-                                          controller: TextEditingController(
-                                            text: _answers[index],
-                                          ),
+                                          controller: _answerControllers[index],
                                           minLines: 1,
                                           maxLines: 3,
                                           decoration: InputDecoration(
@@ -322,7 +340,8 @@ class _QuestionDialogState extends State<QuestionDialog> {
                                                 _errorText = null;
                                                 _errorAnswers = false;
                                               }
-                                              _answers[index] = value;
+                                              _answerControllers[index].text =
+                                                  value;
                                               if (value.isEmpty &&
                                                   _correctAnswer == index) {
                                                 _correctAnswer = null;
@@ -332,12 +351,14 @@ class _QuestionDialogState extends State<QuestionDialog> {
                                               if (_numEmptyAnswers() > 0) {
                                                 return;
                                               }
-                                              if (_answers.length >=
+                                              if (_answerControllers.length >=
                                                   widget.maxAnswers) {
                                                 return;
                                               }
 
-                                              _answers.add("");
+                                              _answerControllers.add(
+                                                TextEditingController(text: ""),
+                                              );
                                             });
                                           },
                                         ),
@@ -345,8 +366,10 @@ class _QuestionDialogState extends State<QuestionDialog> {
                                     SizedBox(width: 10),
                                     InkWell(
                                       onTap:
-                                          _answers.length > 1 &&
-                                              (_answers[index].isNotEmpty ||
+                                          _answerControllers.length > 1 &&
+                                              (_answerControllers[index]
+                                                      .text
+                                                      .isNotEmpty ||
                                                   _numEmptyAnswers() > 1)
                                           ? () {
                                               setState(() {
@@ -359,10 +382,16 @@ class _QuestionDialogState extends State<QuestionDialog> {
                                                   _correctAnswer = null;
                                                 }
 
-                                                _answers.removeAt(index);
+                                                _answerControllers.removeAt(
+                                                  index,
+                                                );
 
                                                 if (_numEmptyAnswers() == 0) {
-                                                  _answers.add("");
+                                                  _answerControllers.add(
+                                                    TextEditingController(
+                                                      text: "",
+                                                    ),
+                                                  );
                                                 }
                                               });
                                             }
@@ -370,8 +399,10 @@ class _QuestionDialogState extends State<QuestionDialog> {
                                       child: Icon(
                                         Icons.delete,
                                         color:
-                                            _answers.length > 1 &&
-                                                (_answers[index].isNotEmpty ||
+                                            _answerControllers.length > 1 &&
+                                                (_answerControllers[index]
+                                                        .text
+                                                        .isNotEmpty ||
                                                     _numEmptyAnswers() > 1)
                                             ? null
                                             : Colors.grey.withAlpha(100),
@@ -410,9 +441,10 @@ class _QuestionDialogState extends State<QuestionDialog> {
                 onPressed: () {
                   setState(() {
                     // Remove extra empty answers
-                    for (int i = 0; i < _answers.length; i++) {
-                      if (_answers[i].isEmpty && i != _answers.length - 1) {
-                        _answers.removeAt(i);
+                    for (int i = 0; i < _answerControllers.length; i++) {
+                      if (_answerControllers[i].text.isEmpty &&
+                          i != _answerControllers.length - 1) {
+                        _answerControllers.removeAt(i);
                         if (_correctAnswer != null && _correctAnswer! > i) {
                           _correctAnswer = _correctAnswer! - 1;
                         }
@@ -425,7 +457,10 @@ class _QuestionDialogState extends State<QuestionDialog> {
                       return;
                     }
 
-                    _errorText = _validateAnswers(_answers, _correctAnswer);
+                    _errorText = _validateAnswers(
+                      _getAnswers(_answerControllers),
+                      _correctAnswer,
+                    );
                     if (_errorText != null) {
                       _errorAnswers = true;
                       return;
