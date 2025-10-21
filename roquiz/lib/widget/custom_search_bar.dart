@@ -300,6 +300,10 @@ class CustomSearchBarState extends State<CustomSearchBar>
                         textFieldValue = value;
                       },
                       onSubmitted: (value) {
+                        if (value.isEmpty) {
+                          return;
+                        }
+
                         widget.onSearch(value);
                         if (widget.onClose != null) {
                           widget.onClose!();
@@ -332,6 +336,10 @@ class CustomSearchBarState extends State<CustomSearchBar>
                         ),
                         alignLabelWithHint: true,
                         border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide.none,
                         ),
@@ -378,6 +386,10 @@ class CustomSearchBarState extends State<CustomSearchBar>
                         // expand
                         _con.forward();
                       } else {
+                        if (widget.textController.text.isEmpty) {
+                          return;
+                        }
+
                         isOpen = false;
 
                         widget.onSearch(widget.textController.text);
