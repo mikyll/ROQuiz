@@ -30,12 +30,16 @@ bool isAnswerDuplicate(
   String answer, {
   bool ignoreCase = true,
 }) {
-  for (String s in answers) {
+  for (int i = 0, counter = 0; i < answers.length; i++) {
+    String a = answers[i];
     if (ignoreCase) {
-      s = s.toLowerCase();
+      a = a.toLowerCase();
       answer = answer.toLowerCase();
     }
-    if (s == answer) {
+    if (a == answer) {
+      counter++;
+    }
+    if (counter > 1) {
       return true;
     }
   }
@@ -43,22 +47,30 @@ bool isAnswerDuplicate(
   return false;
 }
 
-bool isQuestionBodyDuplicate(
+int containsDuplicateAnswers(List<String> answers) {
+  for (int i = 0; i < answers.length; i++) {
+    if (isAnswerDuplicate(answers, answers[i])) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+int isQuestionBodyDuplicate(
   List<Question> questions,
   String questionBody, {
   bool ignoreCase = true,
 }) {
+  final String target = ignoreCase ? questionBody.toLowerCase() : questionBody;
+
   for (Question q in questions) {
-    if (ignoreCase) {
-      q.body = q.body.toLowerCase();
-      questionBody = questionBody.toLowerCase();
-    }
-    if (q.body == questionBody) {
-      return true;
+    final String body = ignoreCase ? q.body.toLowerCase() : q.body;
+    if (body == target) {
+      return q.id;
     }
   }
 
-  return false;
+  return -1;
 }
 
 bool isQuestionDuplicate(
@@ -66,16 +78,34 @@ bool isQuestionDuplicate(
   Question question, {
   bool ignoreCase = true,
 }) {
-  for (Question q in questions) {
-    if (isQuestionBodyDuplicate(questions, q.body, ignoreCase: ignoreCase)) {
-      return true;
-    }
-    for (String a in q.answers) {
-      if (isAnswerDuplicate(q.answers, a, ignoreCase: ignoreCase)) {
-        return true;
-      }
-    }
+  // The candidate's body matches an existing question.
+  if (isQuestionBodyDuplicate(
+        questions,
+        question.body,
+        ignoreCase: ignoreCase,
+      ) !=
+      -1) {
+    return true;
+  }
+
+  // The candidate itself contains duplicate answers.
+  if (containsDuplicateAnswers(question.answers) != -1) {
+    return true;
   }
 
   return false;
+}
+
+List<String> getTopicsList(List<Question> questions) {
+  final Set<String> topics = {};
+
+  if (questions.isEmpty || questions.first.topic == null) {
+    return [];
+  }
+
+  for (Question q in questions) {
+    topics.add(q.topic!);
+  }
+
+  return topics.toList();
 }
