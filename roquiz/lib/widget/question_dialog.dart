@@ -46,18 +46,19 @@ class _QuestionDialogState extends State<QuestionDialog> {
       removeEmpty: true,
     );
 
-    Question? question;
-    int id = getFirstAvailableId(widget.questions, _topic);
+    // In edit mode, preserve the edited question's id (which doubles as its
+    // index in the list); otherwise compute the insertion id for its topic.
+    final int id = widget.question != null
+        ? widget.question!.id
+        : getFirstAvailableId(widget.questions, _topic);
 
-    question = Question(
+    return Question(
       id: id,
       body: _bodyController.text,
       topic: _topic,
       answers: answers,
       correctAnswer: _correctAnswer!,
     );
-
-    return question;
   }
 
   String? _validateBody(String? value, {bool checkDuplicates = true}) {
