@@ -146,6 +146,15 @@ class _QuestionDialogState extends State<QuestionDialog> {
       _bodyController.text = widget.question!.body;
       _topic = widget.question!.topic;
       _correctAnswer = widget.question!.correctAnswer;
+      // Dispose the placeholder controllers before replacing them, otherwise
+      // they leak (clear() drops the references without disposing).
+      for (TextEditingController c in _answerControllers) {
+        c.dispose();
+      }
+      _answerControllers.clear();
+      for (String a in widget.question!.answers) {
+        _answerControllers.add(TextEditingController(text: a));
+      }
     }
   }
 
