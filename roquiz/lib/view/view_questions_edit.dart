@@ -37,7 +37,8 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
 
   late CommandExecutor _commandExecutor;
 
-  void _calculateSelectedAll() {
+  /// Utility to update the checkbox tristate
+  void _updateSelectedAll() {
     setState(() {
       _selectedAll = null;
       if (_selectedCount == _questions.length) {
@@ -57,7 +58,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
         growable: true,
       );
       _selectedCount = 0;
-      _calculateSelectedAll();
+      _updateSelectedAll();
     });
   }
 
@@ -65,7 +66,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     setState(() {
       _selectedQuestions[i] = !_selectedQuestions[i];
       _selectedCount += (_selectedQuestions[i] ? 1 : -1);
-      _calculateSelectedAll();
+      _updateSelectedAll();
     });
   }
 
@@ -74,7 +75,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       _questions.insert(id, question);
       _selectedQuestions.insert(id, select);
       _selectedCount += select ? 1 : 0;
-      _calculateSelectedAll();
+      _updateSelectedAll();
 
       // Update IDs
       for (int i = id + 1; i < _questions.length; i++) {
@@ -100,7 +101,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       _questions.removeAt(id);
       _selectedQuestions.removeAt(id);
       _selectedCount += deselect ? -1 : 0;
-      _calculateSelectedAll();
+      _updateSelectedAll();
 
       // Update IDs
       for (int i = id; i < _questions.length; i++) {
@@ -115,69 +116,17 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     }
   }
 
-  // void _removeSelectedQuestions(List<bool> selectedQuestions) {
-  //   final List<Question> newQuestions = [];
-
-  //   for (int iSelect = 0; iSelect < selectedQuestions.length; iSelect++) {
-  //     if (!selectedQuestions[iSelect]) {
-  //       newQuestions.add(_questions[iSelect]);
-  //       int id = newQuestions.length - 1;
-  //       newQuestions[id].id = id;
-  //     }
-  //   }
-
-  //   setState(() {
-  //     _questions = newQuestions;
-  //   });
-
-  //   _resetSelectedQuestions();
-  // }
-
-  // TODO: functions to shoot and restore a snapshot of state (dynamic obj)
-  // Map<String, dynamic> _createStateSnapshot() {
-  //   return {
-  //     'questions': _questions
-  //         .map(
-  //           (q) => Question.copy(q),
-  //         ) // Make sure Question.copy() creates a proper deep copy
-  //         .toList(), // Deep copy
-  //     'selectedQuestions': List<bool>.from(_selectedQuestions),
-  //     'selectedCount': _selectedCount,
-  //     'selectedAll': _selectedAll,
-  //   };
-  // }
-
-  // void _restoreState(Map<String, dynamic> state) {
-  //   setState(() {
-  //     _questions = state['questions'] as List<Question>;
-  //     _selectedQuestions = state['selectedQuestions'] as List<bool>;
-  //     _selectedCount = state['selectedCount'] as int;
-  //     _selectedAll = state['selectedAll'] as bool?;
-  //   });
-  // }
+  void _editQuestion(int id, Question q) {
+    setState(() {
+      _questions[id].topic = q.topic;
+      _questions[id].body = q.body;
+      _questions[id].answers = List.from(q.answers);
+      _questions[id].correctAnswer = q.correctAnswer;
+    });
+  }
 
   /// Adds a new question, inserting it at the end of the topic
   void _commandAddNewQuestion() {
-    // TODO:
-    //   - open modal
-    //   - insert new question data
-    //   - validate fields:
-    //     - question is not duplicated (no equal-ignore-case to another question body)
-    //     - no
-
-    // TODO: problema: l'ID come lo gestiamo? Si potrebbe togliere del tutto... Tanto nel vecchio file non c'era
-    // Oppure quando si salvano le modifiche, l'ID viene ricalcolato
-    // Random r = Random(0);
-    // Question test = Question(
-    //   id: getFirstAvailableId(
-    //     _questions,
-    //     widget.topics[r.nextInt(widget.topics.length)],
-    //   ),
-    //   body: "Test question ${r.nextInt(200000)}",
-    //   answers: ["a", "b", "c"],
-    //   correctAnswer: r.nextInt(3),
-    // );
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -203,44 +152,6 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       },
     );
   }
-
-  // // TODO: questo funzionava, ma si spacca se selezioni tutte le domande
-  // // TODO: fix (Non è colpa della remove (provare a fare 2 remove, poi 2 undo e poi 2 redo, la seconda redo si bugga)
-  // void _commandRemoveQuestions() {
-  //   List<Question> questionsToRemove = [];
-
-  //   _commandExecutor.executeCommand(
-  //     CustomQuestionCommand(
-  //       name: "remove: ...",
-  //       onExecute: () {
-  //         for (int i = 0; i < _selectedQuestions.length; i++) {
-  //           if (_selectedQuestions[i]) {
-  //             questionsToRemove.add(_questions[i]);
-  //           }
-  //         }
-  //         setState(() {
-  //           for (Question q in questionsToRemove) {
-  //             _removeQuestion(q.id!);
-  //           }
-  //           _resetSelectedQuestions();
-  //         });
-  //       },
-  //       onUndo: () {
-  //         setState(() {
-  //           for (Question q in questionsToRemove) {
-  //             _selectedQuestions[q.id!] = true;
-  //             _addQuestion(q.id!, q);
-  //           }
-  //           _resetSelectedQuestions();
-
-  //           for (Question q in questionsToRemove) {
-  //             _toggleQuestionSelection(q.id!);
-  //           }
-  //         });
-  //       },
-  //     ),
-  //   );
-  // }
 
   // TODO: check
   void _commandRemoveQuestions() {
@@ -270,46 +181,23 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     );
   }
 
-  // // TODO: check why it doesn't work (Non è colpa della remove (provare a fare 2 remove, poi 2 undo e poi 2 redo, la seconda redo si bugga)
-  // void _commandRemoveQuestions() {
-  //   Map<String, dynamic> stateBeforeRemoval = {};
-
-  //   // PRINT UTILITY
-  //   final List<int> selectedIndices = [];
-  //   for (int i = 0; i < _selectedQuestions.length; i++) {
-  //     if (_selectedQuestions[i]) {
-  //       selectedIndices.add(i);
-  //     }
-  //   }
-  //   String idList = selectedIndices.join(",");
-
-  //   _commandExecutor.executeCommand(
-  //     CustomQuestionCommand(
-  //       name:
-  //           "remove: [$idList] ($_selectedCount/${_selectedQuestions.length})",
-  //       onExecute: () {
-  //         setState(() {
-  //           stateBeforeRemoval = _createStateSnapshot();
-  //           _removeSelectedQuestions(_selectedQuestions);
-  //         });
-  //       },
-  //       onUndo: () {
-  //         setState(() {
-  //           _restoreState(stateBeforeRemoval);
-  //         });
-  //       },
-  //     ),
-  //   );
-  // }
-
   void _commandEditQuestion() {
-    int iSelected = 0;
+    Question? questionBefore;
     for (int i = 0; i < _selectedQuestions.length; i++) {
       if (_selectedQuestions[i]) {
-        iSelected = i;
+        questionBefore = _questions[i];
         break;
       }
     }
+
+    if (questionBefore == null) {
+      return;
+    }
+
+    // Snapshot the pre-edit state for undo. _editQuestion mutates the list
+    // element in place, so a deep copy is required: keeping a reference to
+    // questionBefore would be overwritten by the edit itself.
+    final Question original = Question.copy(questionBefore);
 
     showDialog(
       context: context,
@@ -317,10 +205,23 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
         return QuestionDialog(
           topics: widget.topics,
           questions: _questions,
+          question: questionBefore,
           onSubmit: (question) {
-            // TODO
+            _commandExecutor.executeCommand(
+              CustomCommand(
+                name: "edit()",
+                onExecute: () {
+                  _editQuestion(question.id, question);
+                },
+                onUndo: () {
+                  _editQuestion(original.id, original);
+                },
+                onRedo: () {
+                  _editQuestion(question.id, question);
+                },
+              ),
+            );
           },
-          question: _questions[iSelected],
         );
       },
     );
