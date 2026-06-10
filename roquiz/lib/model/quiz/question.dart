@@ -57,6 +57,20 @@ class Question {
         correctAnswer: correctAnswer,
       );
 
+  /// Creates a deep copy of [other] (the answers list is duplicated, so the
+  /// copy can be mutated without affecting the original).
+  factory Question.copy(Question other) {
+    final Question copy = Question(
+      id: other.id,
+      body: other.body,
+      topic: other.topic,
+      answers: List<String>.from(other.answers),
+      correctAnswer: other.correctAnswer,
+    );
+    copy.explaination = other.explaination;
+    return copy;
+  }
+
   @override
   String toString() {
     String res = "";
