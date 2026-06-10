@@ -454,14 +454,23 @@ class _QuestionDialogState extends State<QuestionDialog> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    // Remove extra empty answers
+                    // Trim body
+                    _bodyController.text = _bodyController.text.trim();
+
+                    // Trim answers and remove empty answers (leave only the last one)
                     for (int i = 0; i < _answerControllers.length; i++) {
+                      _answerControllers[i].text = _answerControllers[i].text
+                          .trim();
                       if (_answerControllers[i].text.isEmpty &&
                           i != _answerControllers.length - 1) {
                         _answerControllers.removeAt(i);
+                        // Shift correct answer after removing an empty answer
                         if (_correctAnswer != null && _correctAnswer! > i) {
                           _correctAnswer = _correctAnswer! - 1;
                         }
+                        // Re-examine the element shifted into index i, so
+                        // consecutive empty answers aren't skipped.
+                        i--;
                       }
                     }
 
