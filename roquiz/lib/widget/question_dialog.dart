@@ -66,8 +66,12 @@ class _QuestionDialogState extends State<QuestionDialog> {
       return "Il corpo della domanda dev'essere non vuoto";
     }
 
-    if (checkDuplicates && isQuestionBodyDuplicate(widget.questions, value)) {
-      return "Esiste già una domanda con questo corpo.";
+    if (checkDuplicates) {
+      int duplicateId = isQuestionBodyDuplicate(widget.questions, value);
+      if (duplicateId != -1 &&
+          (widget.question == null || duplicateId != widget.question!.id)) {
+        return "Esiste già una domanda con questo corpo.";
+      }
     }
 
     return null;
