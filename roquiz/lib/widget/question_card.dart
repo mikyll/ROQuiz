@@ -117,78 +117,74 @@ class QuestionCard extends StatelessWidget {
 
     return Stack(
       children: [
-        // TODO: conditionally only in list?
-        SelectionArea(
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              side: BorderSide(width: 2.0, color: borderColor),
-            ),
-            color: fillColor,
-            margin: const EdgeInsets.all(8),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Add question number only if not in Quiz
-                      if (mode != QuestionCardMode.quiz)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: Text(
-                            "Q${question.id + 1}. ",
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                      // Question text
-                      Expanded(
+        Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            side: BorderSide(width: 2.0, color: borderColor),
+          ),
+          color: fillColor,
+          margin: const EdgeInsets.all(8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Add question number only if not in Quiz
+                    if (mode != QuestionCardMode.quiz)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
                         child: Text(
-                          question.body,
-                          style: TextStyle(fontSize: 20.0),
+                          "Q${question.id + 1}. ",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 30),
-                      if (mode == QuestionCardMode.base) HiddenText(),
-                    ],
-                  ),
-                  // Answers list
-                  SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: Column(
-                      children: List.generate(question.answers.length, (index) {
-                        final answer = question.answers[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: _AnswerTile(
-                            mode: mode,
-                            answer: answer,
-                            isSelected:
-                                selectedAnswer != null &&
-                                index == selectedAnswer,
-                            isCorrect:
-                                !hideCorrectAnswer &&
-                                index == question.correctAnswer,
-                            isCardSelected: isSelected,
-                            hideCorrectAnswer: hideCorrectAnswer,
-                            onTap: mode == QuestionCardMode.quiz
-                                ? () => onAnswerSelected?.call(
-                                    selectedAnswer == index ? null : index,
-                                  )
-                                : null,
-                          ),
-                        );
-                      }),
+
+                    // Question text
+                    Expanded(
+                      child: Text(
+                        question.body,
+                        style: TextStyle(fontSize: 20.0),
+                      ),
                     ),
+                    const SizedBox(width: 30),
+                    if (mode == QuestionCardMode.base) HiddenText(),
+                  ],
+                ),
+                // Answers list
+                SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  child: Column(
+                    children: List.generate(question.answers.length, (index) {
+                      final answer = question.answers[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: _AnswerTile(
+                          mode: mode,
+                          answer: answer,
+                          isSelected:
+                              selectedAnswer != null && index == selectedAnswer,
+                          isCorrect:
+                              !hideCorrectAnswer &&
+                              index == question.correctAnswer,
+                          isCardSelected: isSelected,
+                          hideCorrectAnswer: hideCorrectAnswer,
+                          onTap: mode == QuestionCardMode.quiz
+                              ? () => onAnswerSelected?.call(
+                                  selectedAnswer == index ? null : index,
+                                )
+                              : null,
+                        ),
+                      );
+                    }),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -323,7 +319,7 @@ class _AnswerTile extends StatelessWidget {
           return Colors.green.shade400.withAlpha(200);
         }
         if (isCardSelected) {
-          return Theme.of(context).primaryColor.withAlpha(50);
+          return Theme.of(context).focusColor; // TODO: fix this one
         }
     }
 

@@ -305,148 +305,156 @@ class _ViewQuizState extends State<ViewQuiz> {
                     ),
                 ],
               ),
-              body: SafeArea(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 500.0),
-                    child: Stack(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10.0,
-                                left: 20.0,
-                                right: 20.0,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "D${_iQuestion + 1}/${widget.questionNum}",
-                                    maxLines: 1,
-                                    style: TextTheme.of(context).headlineSmall!
-                                        .copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  const Spacer(flex: 1),
-                                  InkWell(
-                                    onTap: _isQuizOver
-                                        ? null
-                                        : () {
-                                            setState(() {
-                                              _showTimer = !_showTimer;
-                                            });
-                                          },
-                                    child: Opacity(
-                                      opacity: _showTimer || _isQuizOver
-                                          ? 1.0
-                                          : 0.0,
-                                      child: RichText(
-                                        maxLines: 1,
-                                        text: TextSpan(
-                                          style: TextTheme.of(context)
-                                              .headlineSmall!
-                                              .copyWith(
-                                                fontWeight: FontWeight.bold,
+              body: SelectionArea(
+                child: SafeArea(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 500.0),
+                      child: Stack(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 10.0,
+                                  left: 20.0,
+                                  right: 20.0,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "D${_iQuestion + 1}/${widget.questionNum}",
+                                      maxLines: 1,
+                                      style: TextTheme.of(context)
+                                          .headlineSmall!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                    const Spacer(flex: 1),
+                                    InkWell(
+                                      onTap: _isQuizOver
+                                          ? null
+                                          : () {
+                                              setState(() {
+                                                _showTimer = !_showTimer;
+                                              });
+                                            },
+                                      child: Opacity(
+                                        opacity: _showTimer || _isQuizOver
+                                            ? 1.0
+                                            : 0.0,
+                                        child: RichText(
+                                          maxLines: 1,
+                                          text: TextSpan(
+                                            style: TextTheme.of(context)
+                                                .headlineSmall!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                            children: [
+                                              const TextSpan(text: 'Time: '),
+                                              TextSpan(
+                                                text: getTimeString(
+                                                  _timerCounter,
+                                                ),
+                                                style: TextTheme.of(context)
+                                                    .headlineSmall!
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: _getTimerColor(),
+                                                    ),
                                               ),
-                                          children: [
-                                            const TextSpan(text: 'Time: '),
-                                            TextSpan(
-                                              text: getTimeString(
-                                                _timerCounter,
-                                              ),
-                                              style: TextTheme.of(context)
-                                                  .headlineSmall!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: _getTimerColor(),
-                                                  ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                controller: _scrollController,
-                                primary: false,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    // TODO: get result card height using key
-                                    bottom: _isQuizOver ? 240.0 : 0,
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  controller: _scrollController,
+                                  primary: false,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      // TODO: get result card height using key
+                                      bottom: _isQuizOver ? 240.0 : 0,
+                                    ),
+                                    child: _isQuizOver
+                                        ? QuestionCard.quizOver(
+                                            question:
+                                                _quiz.questions[_iQuestion],
+                                            selectedAnswer: _quiz
+                                                .selectedAnswers[_iQuestion],
+                                          )
+                                        : QuestionCard.quiz(
+                                            question:
+                                                _quiz.questions[_iQuestion],
+                                            selectedAnswer: _quiz
+                                                .selectedAnswers[_iQuestion],
+                                            onAnswerSelected: (int? iAnswer) {
+                                              setState(() {
+                                                _quiz.selectedAnswers[_iQuestion] =
+                                                    iAnswer;
+                                              });
+                                            },
+                                          ),
                                   ),
-                                  child: _isQuizOver
-                                      ? QuestionCard.quizOver(
-                                          question: _quiz.questions[_iQuestion],
-                                          selectedAnswer:
-                                              _quiz.selectedAnswers[_iQuestion],
-                                        )
-                                      : QuestionCard.quiz(
-                                          question: _quiz.questions[_iQuestion],
-                                          selectedAnswer:
-                                              _quiz.selectedAnswers[_iQuestion],
-                                          onAnswerSelected: (int? iAnswer) {
-                                            setState(() {
-                                              _quiz.selectedAnswers[_iQuestion] =
-                                                  iAnswer;
-                                            });
-                                          },
-                                        ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          // Results card
+                          if (_isQuizOver && _showResultCard)
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 10,
+                              child: Center(
+                                child: ResultCard(
+                                  correctAnswers: _correctAnswers,
+                                  questionNum: widget.questionNum,
+                                  quizGrade: _quizGrade,
+                                  timerString: getTimeString(
+                                    (_timerCounter - settings.quizTime).abs(),
+                                  ),
+                                  writtenGrade: settings.writtenGrade,
+                                  totalGrade: _totalGrade,
+                                  totalGradeRange: _totalGradeRange,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        // Results card
-                        if (_isQuizOver && _showResultCard)
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 10,
-                            child: Center(
-                              child: ResultCard(
-                                correctAnswers: _correctAnswers,
-                                questionNum: widget.questionNum,
-                                quizGrade: _quizGrade,
-                                timerString: getTimeString(
-                                  (_timerCounter - settings.quizTime).abs(),
-                                ),
-                                writtenGrade: settings.writtenGrade,
-                                totalGrade: _totalGrade,
-                                totalGradeRange: _totalGradeRange,
+
+                          if (settings.animations && _isQuizOver)
+                            Positioned.fill(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: _confettiWidgets,
                               ),
                             ),
-                          ),
 
-                        if (settings.animations && _isQuizOver)
-                          Positioned.fill(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: _confettiWidgets,
+                          // TODO
+                          if (_showGrade && _totalGrade != null)
+                            Positioned.fill(
+                              child: Grade(
+                                grade: _totalGrade!,
+                                gradeBase: 30.0,
+                                animate: settings.animations,
+                                onTapAfterAnimationFinished: () {
+                                  setState(() {
+                                    _showGrade = false;
+                                  });
+                                },
+                              ),
                             ),
-                          ),
-
-                        // TODO
-                        if (_showGrade && _totalGrade != null)
-                          Positioned.fill(
-                            child: Grade(
-                              grade: _totalGrade!,
-                              gradeBase: 30.0,
-                              animate: settings.animations,
-                              onTapAfterAnimationFinished: () {
-                                setState(() {
-                                  _showGrade = false;
-                                });
-                              },
-                            ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

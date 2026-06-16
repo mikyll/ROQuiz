@@ -8,6 +8,7 @@
     - "Una combinazione convessa di due punti x e y di F"
     - "Nessuna di queste"
   correct_answer: 2
+  custom: false
 
 - body: |
     Si consideri un problema di ottimizzazione (F,d) ed un intorno N. La proprietà che se un punto f di F è localmente ottimo rispetto ad N allora f è l'ottimo assoluto implica
@@ -19,6 +20,7 @@
     - "Che N è un intorno convesso"
     - "Nessuna di queste caratterizzazioni"
   correct_answer: 0
+  custom: false
 
 - body: |
     Facendo variare lambda fra 0 e 1, la combinazione convessa di due punti x ed y descrive
@@ -30,6 +32,7 @@
     - "Il punto centrale del segmento [x,y]"
     - "Tutti i punti della semiretta che origina in y e passa per x"
   correct_answer: 2
+  custom: false
 
 - body: |
     Data una funzione f convessa su un insieme S convesso, la corda che unisce due punti della funzione:
@@ -41,9 +44,10 @@
     - "Sta al di sopra della funzione o è con essa coincidente."
     - "Sta al di sotto della funzione o è con essa coincidente."
   correct_answer: 3
+  custom: false
 
 - body: |
-    Dati una funzione convessa definita su un insieme S convesso ed una soglia t, il sottoinsieme di punti x di S in cui f(x) <= t :
+    Dati una funzione convessa definita su un insieme S convesso ed una soglia t, il sottoinsieme di punti x di S in cui f(x) <= t:
   topic: "Programmazione Matematica"
   answers:
     - "È concavo"
@@ -52,6 +56,7 @@
     - "È un intorno esatto"
     - "È il complemento di S"
   correct_answer: 2
+  custom: false
 
 - body: |
     Sia dato un problema di programmazione convessa. Si ha allora che un ottimo locale rispetto alla distanza euclidea
@@ -63,6 +68,7 @@
     - "È sempre un ottimo globale"
     - "Coincide con l'origine"
   correct_answer: 3
+  custom: false
 
 - body: |
     Si considerino una funzione f convessa definita su un insieme S convesso ed un valore di soglia q. Si ha allora che il sottoinsieme di punti x di S in cui f(x) <= q
@@ -74,6 +80,7 @@
     - "È convesso"
     - "È concavo"
   correct_answer: 3
+  custom: false
 
 - body: |
     Si consideri una famiglia di insiemi convessi. Vale che
@@ -85,6 +92,7 @@
     - "La loro intersezione è sempre un insieme concavo"
     - "La loro intersezione è sempre un insieme convesso"
   correct_answer: 4
+  custom: false
 
 - body: |
     Un insieme di colonne di una matrice intera A m x n non è linearmente indipendente se:
@@ -96,6 +104,7 @@
     - "Il determinante della matrice corrispondente è diverso da zero"
     - "Nessuna colonna può essere espressa come combinazione lineare delle altre"
   correct_answer: 1
+  custom: false
 
 - body: |
     Un insieme di m colonne di una matrice intera A m x n è linearmente indipendente se:
@@ -107,6 +116,7 @@
     - "Una loro combinazione lineare con coefficienti non tutti nulli può produrre il vettore nullo."
     - "Nessuna colonna può essere espressa come combinazione lineare delle altre."
   correct_answer: 4
+  custom: false
 
 - body: |
     Quale di queste non è un'assunzione che l'algoritmo del Simplesso deve verificare prima di poter operare?
@@ -118,6 +128,7 @@
     - "La SBA iniziale non deve essere degenere."
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Una variabile libera in segno può essere sostituita equivalentemente da:
@@ -129,6 +140,7 @@
     - "La somma di due variabili non negative."
     - "La differenza fra una variabile non negativa e una non positiva."
   correct_answer: 1
+  custom: false
 
 - body: |
     Un vincolo espresso come Ax = b in forma standard equivale, in forma canonica, a
@@ -140,6 +152,7 @@
     - "Ax >= b, Ax < b"
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Quando un problema in forma canonica viene posto in forma standard
@@ -150,6 +163,7 @@
     - "Aumenta il numero di vincoli"
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Dati un vettore di parametri a ed un vettore di incognite x, una disequazione della forma a'x <= b è equivalente a
@@ -161,6 +175,7 @@
     - "a'x + s = b, s >= 0."
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Si consideri un sistema di equazioni lineari della forma Ax = b, con A matrice m x n di rango m. Il sistema ha
@@ -172,6 +187,7 @@
     - "Una sola soluzione se m > n"
     - "Nessuna delle precedenti"
   correct_answer: 2
+  custom: false
 
 - body: |
     Cosa è una base di una matrice A?
@@ -183,6 +199,7 @@
     - "Un sottoinsieme di m colonne di A linearmente indipendenti (m rango di A)."
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Data una matrice intera A m x n, una sua base è costituita da
@@ -194,6 +211,7 @@
     - "Un insieme di m colonne linearmente dipendenti"
     - "Nessuna di queste"
   correct_answer: 1
+  custom: false
 
 - body: |
     Una soluzione base corrispondente ad una sottomatrice base B di una matrice A m x n si ottiene:
@@ -205,6 +223,7 @@
     - "Dando un valore non nullo alle variabili fuori base e risolvendo il sistema risultante"
     - "Nessuna di queste"
   correct_answer: 2
+  custom: false
 
 - body: |
     Quale tra le seguenti è la definizione di politopo?
@@ -216,6 +235,7 @@
     - "Regione ammissibile che ha come punti ottimi i vertici."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Sia P un politopo, H un generico iperpiano, HS uno dei due semispazi generati da H. Insieme dei punti f = intersezione tra P e HS è detta:
@@ -227,6 +247,7 @@
     - "Insieme di punti ottimi contenuti in H"
     - "Nessuna di queste"
   correct_answer: 2
+  custom: false
 
 - body: |
     Relativamente all'affermazione 'ogni punto di un politopo è combinazione convessa dei vertici':
@@ -238,6 +259,7 @@
     - "È errata."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     La combinazione convessa stretta di due punti distinti x ed y di un politopo convesso è:
@@ -249,6 +271,7 @@
     - "Un punto esterno al politopo."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Dato un politopo P definito dai vincoli di un LP, condizione necessaria e sufficiente perché un punto sia un vertice è che:
@@ -260,6 +283,7 @@
     - "La corrispondente soluzione x sia una soluzione base ammissibile."
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Quale tra queste affermazioni è errata?
@@ -271,6 +295,7 @@
     - "Un vertice non è combinazione convessa stretta di due punti distinti del politopo."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     Quale tra queste affermazioni è errata?
@@ -282,6 +307,7 @@
     - "Un vertice non è combinazione convessa stretta di due punti distinti del politopo."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Dato il politopo definito dai vincoli di un LP, una combinazione convessa di vertici ottimi è:
@@ -293,6 +319,7 @@
     - "Sempre ottima"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Una SBA si dice degenere se:
@@ -304,6 +331,7 @@
     - "Non c'è nessuna variabile con valore zero."
     - "Nessuna di queste"
   correct_answer: 1
+  custom: false
 
 - body: |
     Se due basi producono la stessa soluzione base ammissibile x, allora x contiene:
@@ -315,6 +343,7 @@
     - "Più di m zeri."
     - "Più di n-m zeri."
   correct_answer: 4
+  custom: false
 
 - body: |
     Quale di queste affermazioni è errata?
@@ -326,6 +355,7 @@
     - "Se due basi distinte producono la stessa SBA x, allora x è degenere."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Quale tra queste affermazioni è errata?
@@ -337,6 +367,7 @@
     - "La regione ammissibile di un LP è un politopo."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     La definizione di politopo (convesso) è:
@@ -348,6 +379,7 @@
     - "Intersezione di un numero finito di semipiani purchè limitata e non vuota"
     - "Intersezione di un numero finito si semipiani purchè non vuota"
   correct_answer: 3
+  custom: false
 
 - body: |
     Sia B una base di un sistema Ax=b. Qualunque colonna non appartentente a B può essere espressa come:
@@ -359,6 +391,7 @@
     - "Combinazione lineare delle colonne di B, con coefficienti positivi"
     - "Combinazione lineare delle colonne di B, con coefficienti di segno qualunque"
   correct_answer: 4
+  custom: false
 
 - body: |
     In un politopo (convesso)  di dimensione d, uno spigolo è
@@ -370,6 +403,7 @@
     - "Una faccia di dimensione d"
     - "Una faccia di dimensione d + 1"
   correct_answer: 2
+  custom: false
 
 - body: |
     Dato il problema min_{x in F} f(x) (trovare il minimo di una funzione f(x) per x appartenente all'insieme F),  il valore max_{x in F} f(x) è dato da
@@ -381,6 +415,7 @@
     - "-min_{x in F} f(x)"
     - "-max_{x in F} (-f(x))"
   correct_answer: 1
+  custom: false
 
 - body: |
     Se yij è minore o uguale a 0 per ogni i, in relazione a theta, cosa succede?
@@ -392,6 +427,7 @@
     - "Viene violata assunzione 3 (F limitata in direzione di decrescenza della funzione obiettivo)."
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Cosa significa se nel calcolo di theta max c'è un caso di parità?
@@ -403,6 +439,7 @@
     - "Niente di particolare, si prosegue scegliendo l'indice minimo."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     In un tableau del simplesso primale, gli elementi della colonna 0 righe da 1 a m:
@@ -414,6 +451,7 @@
     - "Contengono i costi relativi"
     - "Contengono i valori ottimi delle sole variabili base"
   correct_answer: 0
+  custom: false
 
 - body: |
     Cosa contiene il tableau a qualunque iterazione?
@@ -425,6 +463,7 @@
     - "Rappresentazione compatta dei valori delle soluzioni."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Quale colonna conviene far entrare in base in un cambiamento di base?
@@ -436,6 +475,7 @@
     - "Colonna con tutti elementi negativi."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     In un tableau del simplesso primale, gli elementi della riga 0 (colonne da 1 a n):
@@ -447,6 +487,7 @@
     - "Sono tutti positivi o nulli."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Cosa contiene un tableau nella posizione di riga 0 e colonna 0?
@@ -458,6 +499,7 @@
     - "L'opposto di z0 della soluzione base attuale."
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Cosa dice il criterio di ottimalità?
@@ -469,6 +511,7 @@
     - "Se il valore z0 è negativo, allora la soluzione attuale è ottima."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Cosa afferma la regola di Dantzig?
@@ -480,6 +523,7 @@
     - "Esce dalla base la colonna Aj con il costo Cj più negativo."
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Nell'operazione di pivoting del simplesso primale, in caso di parità nella scelta del pivot, la nuova soluzione base:
@@ -491,6 +535,7 @@
     - "Può essere non ammissibile."
     - "Nessuna di queste."
   correct_answer: 4
+  custom: false
 
 - body: |
     Nell'algoritmo del simplesso primale, utilizzare ad ogni iterazione la regola di Dantzig:
@@ -502,6 +547,7 @@
     - "Garantisce il massimo decremento locale del valore della soluzione"
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Sia v il vertice del politopo corrispondente alla base attuale B. Se B è degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice, che è:
@@ -513,6 +559,7 @@
     - "Sempre coincidente con v."
     - "Diverso da v purché il determinante di B sia positivo."
   correct_answer: 1
+  custom: false
 
 - body: |
     Sia v il vertice del politopo corrispondente alla base attuale B. Se B non è degenere, un'operazione di pivoting del simplesso primale sposta la soluzione ad un vertice che è:
@@ -524,6 +571,7 @@
     - "Diverso da v purchè il determinante di B sia positivo"
     - "Coincidente con v se il determinante di B è non negativo"
   correct_answer: 2
+  custom: false
 
 - body: |
     In cosa consiste la Fase 1 dell'algoritmo del Simplesso?
@@ -535,6 +583,7 @@
     - "Azzerare i costi relativi originali."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore negativo:
@@ -546,6 +595,7 @@
     - "Si è trovata la soluzione ottima del problema originale."
     - "Nessuna di queste."
   correct_answer: 4
+  custom: false
 
 - body: |
     Se la soluzione del problema artificiale della fase 1 del simplesso ha valore nullo:
@@ -557,6 +607,7 @@
     - "Il problema originale non ha soluzione ammissibile."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Cosa significa se la soluzione del problema artificiale ha valore positivo?
@@ -568,6 +619,7 @@
     - "Violata assunzione 3 (F limitata in direzione di decrescenza della funzione obiettivo)."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     Nel metodo delle due fasi, se al termine della fase 1 la soluzione ha valore positivo
@@ -579,6 +631,7 @@
     - "Si è ottenuta una soluzione base ammissibile per il problema originale"
     - "Significa che il problema è impossibile"
   correct_answer: 4
+  custom: false
 
 - body: |
     Se un tableau del simplesso primale corrisponde alla soluzione ottima:
@@ -590,6 +643,7 @@
     - "Gli elementi della riga 0, colonne da 1 a n, sono tutti non negativi."
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Si consideri un tableau dell'algoritmo del simplesso primale. I costi relativi si trovano:
@@ -601,6 +655,7 @@
     - "Nella colonna 0, nelle righe non corrispondenti alla base"
     - "In nessuna di queste posizioni"
   correct_answer: 1
+  custom: false
 
 - body: |
     Si consideri una sottomatrice B di ordine m di una matrice A m x n. La soluzione base corrispondente a B:
@@ -612,6 +667,7 @@
     - "È ammissibile per il corrispondente problema in forma standard solo se x >= 0"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Si consideri un tableau dell'algoritmo del simplesso primale. Gli elementi della riga 0 corrispondenti alle colonne della base
@@ -623,6 +679,7 @@
     - "Valgono tutti 1"
     - "Nessuna di queste"
   correct_answer: 1
+  custom: false
 
 - body: |
     Sia A_j una colonna corrispondente ad un costo relativo negativo nell'algoritmo del simplesso primale. Se tutti i coefficienti della colonna sono negativi o nulli, ciò implica che:
@@ -634,6 +691,7 @@
     - "La regione ammissibile è vuota"
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Si consideri un tableau dell'algoritmo del simplesso primale. Il costo relativo di una variabile fuori base fornisce:
@@ -645,6 +703,7 @@
     - "La variazione unitaria del valore della soluzione se tale variabile entra in base"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Se al termine della Fase 1 dell'algoritmo del simplesso la soluzione vale 0 ma ci sono variabili artificiali in base
@@ -656,6 +715,7 @@
     - "Significa che il sistema dei vincoli del problema originale è ridondante"
     - "Non di può dire, occorrono ulteriori iterazioni"
   correct_answer: 4
+  custom: false
 
 - body: |
     Siano dati un problema di programmazione lineare ed il corrispondente tableau ottimo. L'analisi di sensistività dimostra che, se si cambia il coefficiente di costo di una variabile, la base attuale resta ottima se
@@ -666,6 +726,7 @@
     - "I nuovi valori delle variabili base sono negativi o nulli"
     - "I nuovi valori delle variabili base sono non negativi"
   correct_answer: 0
+  custom: false
 
 - body: |
     Ad una variabile primale non negativa corrisponde
@@ -677,6 +738,7 @@
     - "Una variabile duale libera (non ristretta in segno)"
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Quale tra queste affermazioni è falsa rispetto ad una corrispondenza primale-duale?
@@ -688,6 +750,7 @@
     - "Ad un vincolo corrisponde una condizione su una variabile e viceversa."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Se un problema di programmazione lineare (primale) ha soluzione ottima finita, allora:
@@ -699,6 +762,7 @@
     - "Anche il duale ha soluzione ottima finita, ma i valori delle due soluzioni non coincidono."
     - "Nessuna di queste"
   correct_answer: 1
+  custom: false
 
 - body: |
     Quale può essere una possibile coppia di problemi primale-duale?
@@ -710,6 +774,7 @@
     - "Primale ottimo finito / Duale impossibile."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     La situazione "primale illimitato" e corrispondente "duale illimitato":
@@ -721,6 +786,7 @@
     - "Dipende dai gradienti delle due funzioni obiettivo."
     - "Si verifica sempre."
   correct_answer: 1
+  custom: false
 
 - body: |
     Quando un primale è illimitato, la situazione "corrispondente duale impossibile":
@@ -732,6 +798,7 @@
     - "Dipende dal gradiente della funzione obiettivo"
     - "Si verifica sempre"
   correct_answer: 4
+  custom: false
 
 - body: |
     Il lemma di Farkas:
@@ -743,6 +810,7 @@
     - "Identifica la relazione tra l'ammissibilità del primale e l'impossibilità del duale."
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Il teorema degli scarti complementari afferma:
@@ -754,6 +822,7 @@
     - "Per ogni j da 1 a n, i j-esimi vincoli primali e duali devono essere soddisfatti con uguaglianza."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     In un problema di programmazione lineare con m vincoli ed n variabili, le condizioni di ortogonalità (complementary slackness)
@@ -765,6 +834,7 @@
     - "Sono m*n."
     - "Sono n."
   correct_answer: 1
+  custom: false
 
 - body: |
     Le condizioni di ortogonalità (complementary slackness) di una coppia primale-duale garantiscono:
@@ -776,6 +846,7 @@
     - "L'ottimalità di una soluzione primale e del suo complemento"
     - "Nessuna di queste"
   correct_answer: 1
+  custom: false
 
 - body: |
     In un tableau del simplesso duale, gli elementi della riga 0 (colonna da 1 a n):
@@ -787,6 +858,7 @@
     - "Sono tutti nulli."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     In un tableau del simplesso duale, i costi relativi si trovano:
@@ -798,6 +870,7 @@
     - "Nella colonna 0, nelle righe corrispondenti alla base"
     - "In nessuna di queste posizioni"
   correct_answer: 1
+  custom: false
 
 - body: |
     Nell'algoritmo del simplesso duale:
@@ -809,6 +882,7 @@
     - "La scelta del pivot garantisce il minimo aumento del valore della soluzione"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     La scelta del pivot del simplesso duale viene determinata da:
@@ -820,6 +894,7 @@
     - "Un massimo tra rapporti di valore positivo"
     - "Nessuna di queste"
   correct_answer: 2
+  custom: false
 
 - body: |
     Cosa succede se, dopo aver individuato la riga con elemento in colonna 0 negativo, nell'algoritmo del simplesso duale ogni elemento di quella riga è positivo o nullo?
@@ -831,6 +906,7 @@
     - "Duale illimitato, Primale illimitato."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Nell'algoritmo del simplesso duale, sia a'i (i>0) una riga corrispondente ad un valore negativo in colonna 0. Se tutti i coefficienti di tale riga sono positivi o nulli, ciò implica che:
@@ -842,6 +918,7 @@
     - "Il problema ha soluzione illimitata."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Relativamente al prezzo ombra:
@@ -853,6 +930,7 @@
     - "Il prezzo ombra della variabile duale pi-i indica il modo per capire se una base con coefficienti diversi è ancora ottima."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     Relativamente al simplesso duale, quale tra le seguenti affermazioni è errata?
@@ -864,6 +942,7 @@
     - "Il pivoting deve portare il valore 0 in y0s ."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Nell'operazione di pivoting dell'algoritmo del simplesso duale:
@@ -875,6 +954,7 @@
     - "La riga del pivot viene divisa per il pivot"
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Nel duale di un problema di minimizzazione in forma standard
@@ -886,6 +966,7 @@
     - "Le variabili possono assumere qualunque valore"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     La situazione in cui il primale è impossibile e il corrispondente duale è impossibile
@@ -897,6 +978,7 @@
     - "Dipende dal gradiente della funzione obiettivo del duale"
     - "Dipende dai gradienti delle due funzioni obiettivo"
   correct_answer: 1
+  custom: false
 
 - body: |
     Si considerino un sistema (I), definito da {Ax = b, x >= 0}, ed un sistema (II), definito da {y′A <= 0, b′y > 0}. Si ha allora che
@@ -907,6 +989,7 @@
     - "Il sistema (I) è possible se e solo se il sistema (II) è possibile"
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Dati un problema LP e la corrispondente base ottima B, si consideri la modifica di un dato di input. L'analisi di sensitività definisce un intervallo di confidenza tale che
@@ -917,6 +1000,7 @@
     - "Se il nuovo valore del dato ricade all'interno di tale intervallo, i valori delle variabili nella soluzione ottima non cambiano"
     - "Nessuna di queste"
   correct_answer: 2
+  custom: false
 
 - body: |
     Relativamente ad un problema ILP e il suo rilassamento continuo LP
@@ -928,6 +1012,7 @@
     - "z(ILP) > z(LP)"
     - "z(ILP) = z(LP)"
   correct_answer: 0
+  custom: false
 
 - body: |
     Relativamente ad un problema ILP e il suo rilassamento continuo LP
@@ -939,6 +1024,7 @@
     - "z(LP) < z(ILP)"
     - "z(LP) = z(ILP)"
   correct_answer: 1
+  custom: false
 
 - body: |
     Una matrice m x n è totalmente unimodulare se:
@@ -950,6 +1036,7 @@
     - "Il suo determinante vale 0, +1 o -1."
     - "Ogni sottomatrice quadrata ha determinante di valore 0, +1 o -1."
   correct_answer: 4
+  custom: false
 
 - body: |
     Se A è totalmente unimodulare, relativamente a problemi ILP:
@@ -961,6 +1048,7 @@
     - "Il simplesso risolve i problemi in forma standard e generale, ma non in forma canonica."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Se la matrice m x n (con m < n) dei vincoli di un problema di programmazione lineare intera è unimodulare
@@ -971,6 +1059,7 @@
     - "L'ottimalità della soluzione può essere verificata in tempo polinomiale"
     - "La soluzione del rilassamento continuo del problema è ottima per l'ILP"
   correct_answer: 0
+  custom: false
 
 - body: |
     Sia x la soluzione ottima del rilassamento continuo di un problema ILP di massimizzazione. Se x contiene un solo valore non intero
@@ -981,6 +1070,7 @@
     - "Sostituendo a tale valore il suo arrotondamento, si ottiene la soluzione ottima dell'ILP"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Scelta una riga generatrice, un taglio di Gomory impone che
@@ -992,6 +1082,7 @@
     - "La somma delle parti frazionarie delle variabili fuori base sia non minore della parte frazionaria del termine noto"
     - "Nessuna delle precedenti"
   correct_answer: 3
+  custom: false
 
 - body: |
     Aggiungendo un taglio di Gomory al tableau finale di un LP con yi0 non intero
@@ -1003,6 +1094,7 @@
     - "Si elimina almeno una soluzione ammissibile intera"
     - "Nessuna di queste"
   correct_answer: 2
+  custom: false
 
 - body: |
     L'aggiunta al tableau del taglio di Gomory relativo ad una riga generatrice frazionaria produce una soluzione (un tableau) che:
@@ -1014,6 +1106,7 @@
     - "È ammissibile ma non soddisfa il criterio di ottimalità."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Sia P il problema ILP e L(P) il suo rilassamento continuo. Se L(P) è illimitato, allora:
@@ -1025,6 +1118,7 @@
     - "P è illimitato salvo casi molto particolari"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Sia P un problema di programmazione lineare intera e L(P) il suo rilassamento continuo. Se L(P) è impossibile, allora
@@ -1036,6 +1130,7 @@
     - "P è illimitato"
     - "Nessuna di queste"
   correct_answer: 2
+  custom: false
 
 - body: |
     In un algoritmo branch-and-bound per un problema di massimizzazione, sia U l'upper-bound del nodo corrente. Il nodo viene ucciso se:
@@ -1047,6 +1142,7 @@
     - "U è maggiore o uguale al valore della soluzione ottima finale"
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Dopo aver inserito i vincoli del procedimento Branch-and-Bound nel tableau:
@@ -1058,6 +1154,7 @@
     - "Si prosegue con la Fase 1 del simplesso primale."
     - "Nessuna di queste."
   correct_answer: 1
+  custom: false
 
 - body: |
     Nel Forward Step della strategia di esplorazione Depth-First rivisitata:
@@ -1069,6 +1166,7 @@
     - "Si generano tutti i figli del nodo attuale, si calcolano i loro lower bound, si prosegue l'esplorazione dal figlio con minimo lower bound."
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Sia L il lower bound del nodo corrente in un algoritmo branch-and-bound per un problema di minimizzazione, il nodo viene ucciso se:
@@ -1080,6 +1178,7 @@
     - "L è maggiore o uguale al valore della soluzione ottima finale"
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     Sia x la soluzione del rilassamento continuo di un problema di programmazione lineare intera di massimizzazione. Se si arrotonda ogni x_j frazionario all'intero più prossimo,
@@ -1091,6 +1190,7 @@
     - "Si ottiene una soluzione intera priva di particolari proprietà"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Sia P un problema di programmazione lineare intera e L(P) il suo rilassamento continuo. Allora:
@@ -1102,6 +1202,7 @@
     - "L'intersezione fra la regione ammissibile di P e quella di L(P) è vuota"
     - "Nessuna di queste"
   correct_answer: 2
+  custom: false
 
 - body: |
     Si consideri un problema ILP di massimizzazione. Sia z(P) il valore della sua soluzione ottima e z(L(P)) quello del suo rilassamento continuo. Si ha allora che
@@ -1113,6 +1214,7 @@
     - "z(P) = z(L(P))"
     - "z(P) >= z(L(P))"
   correct_answer: 1
+  custom: false
 
 - body: |
     Cosa è un'istanza di un problema?
@@ -1124,6 +1226,7 @@
     - "Un particolare caso numerico."
     - "Nessuna di queste."
   correct_answer: 3
+  custom: false
 
 - body: |
     Cosa è la dimensione di un problema?
@@ -1135,6 +1238,7 @@
     - "Numero di risorse utilizzate per risolverlo."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     Se un problema appartiene alla classe NP
@@ -1146,6 +1250,7 @@
     - "È sempre risolubile mediante un albero decisionale di altezza polinomiale"
     - "È sempre risolubile in tempo pseudo-polinomiale"
   correct_answer: 1
+  custom: false
 
 - body: |
     Un algoritmo polinomiale per un problema NP-completo:
@@ -1157,6 +1262,7 @@
     - "Risolverebbe ogni problema della classe NP in tempo polinomiale"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Si dice che S' domina S'' se:
@@ -1168,6 +1274,7 @@
     - "La somma dei pesi di S' è minore a quella dei pesi di S'' e la somma dei profitti di S' e di S'' coincidono."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     L'algoritmo Knapsack DP è:
@@ -1179,6 +1286,7 @@
     - "Pseudo-Polinomiale"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false
 
 - body: |
     Relativamente ad un problema fortemente NP-Completo:
@@ -1190,6 +1298,7 @@
     - "Può esistere un algoritmo pseudo-polinomiale."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Quale tra queste affermazioni è errata?
@@ -1201,6 +1310,7 @@
     - "Un problema che soddisfa la definizione di Np-Completo senza stabilire la sua appartenenza a NP viene detto NP-Difficile."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Relativamente alla classe di problemi NP, quale di queste affermazioni è errata?
@@ -1212,6 +1322,7 @@
     - "Un problema A di NP è NP-Completo se per ogni problema B di NP, B può essere trasformato polinomialmente in A."
     - "Nessuna di queste"
   correct_answer: 1
+  custom: false
 
 - body: |
     La programmazione lineare:
@@ -1223,6 +1334,7 @@
     - "È risolubile in tempo pseudo-polinomiale dall'algoritmo del simplesso."
     - "Nessuna di queste."
   correct_answer: 0
+  custom: false
 
 - body: |
     Relativamente ad un problema KP-01:
@@ -1234,6 +1346,7 @@
     - "Non esiste algoritmo pseudo-polinomiale."
     - "Nessuna di queste."
   correct_answer: 2
+  custom: false
 
 - body: |
     Un problema P è NP-completo se:
@@ -1245,6 +1358,7 @@
     - "È risolubile mediante un algoritmo di programmazione dinamica"
     - "Nessuna di queste"
   correct_answer: 0
+  custom: false
 
 - body: |
     Un problema Knapsack 0-1:
@@ -1256,3 +1370,4 @@
     - "È sempre risolubile mediante un albero decisionale di altezza polinomiale"
     - "Nessuna di queste"
   correct_answer: 3
+  custom: false

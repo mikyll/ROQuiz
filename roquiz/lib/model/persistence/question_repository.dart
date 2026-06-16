@@ -6,6 +6,16 @@ import 'package:http/http.dart' as http;
 import 'package:roquiz/cli/questions_parser.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
+// Tenere il file corrente, che può essere quello di default o uno custom
+// L'utente può:
+//   - Ripristinare il file dagli asset (default della versione app)
+//   - Scaricarlo da "cloud" (repository GitHub)
+
+// Relativamente al file delle domande, si mantengono queste informazioni:
+//   - se è custom, ovver se è stato caricato o modificato dall'utente;
+//   - l'ultima data di modifica (questo ha validità solo nel caso in cui
+//      sia un file "originale", ovvero non caricato/modificato dall'utente);
+
 class QuestionRepository {
   final String repositoryURL =
       "https://raw.githubusercontent.com/mikyll/ROQuiz/main/Domande.txt";
@@ -14,6 +24,10 @@ class QuestionRepository {
   List<String> _topics = [];
   DateTime _lastQuestionUpdate = DateTime.parse("2000-00-00T00:00:00Z");
 
+  /// Initializes the question repository, by loading the questions file from assets.
+  ///
+  /// If [checkNewQuestions] is set to true, checks if there is a newer version of
+  /// the question file, on the remote repository.
   Future<void> init({bool checkNewQuestions = false}) async {
     questions = await loadFromAsset();
 
@@ -87,7 +101,14 @@ class QuestionRepository {
     return Future.value(questions);
   }
 
-  Future<List<Question>> downloadFromRemote() {
+  /// Loads a custom file from storage
+  Future<List<Question>> loadFromFile(String path) async {
+    // TODO
+
+    return Future.value([]);
+  }
+
+  Future<List<Question>> loadFromRemote(String url) {
     // TODO
 
     // 1. Download from remote URL
@@ -99,7 +120,13 @@ class QuestionRepository {
     return Future.value([]);
   }
 
-  Future<void> saveToLocal(List<Question> questions, {bool custom = false}) {
+  Future<void> downloadFromUrl(String url) {
+    // TODO: downloads the questions file from a url
+
+    return Future.value([]);
+  }
+
+  Future<void> saveToFile(List<Question> questions, {bool custom = false}) {
     // TODO
 
     // 1. Save questions list to local file
@@ -173,6 +200,4 @@ class QuestionRepository {
 
     return groupedQuestions;
   }
-
-  void loadFromFile() {}
 }

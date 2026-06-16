@@ -34,6 +34,12 @@ class ViewQuestionsState extends State<ViewQuestions> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
 
+  // SelectionArea over a lazy ListView crashes if the set of selectables
+  // changes (items built/disposed) while a selection is active. We clear any
+  // active selection when scrolling starts to keep the indices consistent.
+  final GlobalKey<SelectionAreaState> _selectionKey =
+      GlobalKey<SelectionAreaState>();
+
   late String _title;
   late List<Question> _questions;
 
@@ -153,50 +159,61 @@ class ViewQuestionsState extends State<ViewQuestions> {
             ),
           ],
         ),
-        body: SafeArea(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 500.0),
-              child: Scrollbar(
-                interactive: true,
-                controller: _scrollController,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: _questions.length,
-                  addAutomaticKeepAlives: false,
-                  addRepaintBoundaries: true,
-                  cacheExtent: 1000,
-                  itemBuilder: (_, index) {
-                    Widget questionWidget = QuestionCard.base(
-                      question: _questions[index],
-                      hideCorrectAnswer: settings.hideCorrectAnswersInEditMode,
-                    );
-
-                    // Check if we have to display the topic divider
-                    if (_questions.first.topic != _questions.last.topic &&
-                        (index == 0 ||
-                            _questions[index].topic !=
-                                _questions[index - 1].topic)) {
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: index == 0 ? 10.0 : 0,
-                            ),
-                            child: Separator(
-                              text: _questions[index].topic!,
-                              indent: 10.0,
-                            ),
-                          ),
-                          questionWidget,
-                        ],
-                      );
-                    }
-                    // Otherwise simply return the card
-                    else {
-                      return questionWidget;
-                    }
+        body: SelectionArea(
+          key: _selectionKey,
+          child: SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 500.0),
+                child: NotificationListener<ScrollStartNotification>(
+                  onNotification: (_) {
+                    _selectionKey.currentState?.selectableRegion
+                        .clearSelection();
+                    return false;
                   },
+                  child: Scrollbar(
+                    interactive: true,
+                    controller: _scrollController,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _questions.length,
+                      addAutomaticKeepAlives: false,
+                      addRepaintBoundaries: true,
+                      cacheExtent: 1000,
+                      itemBuilder: (_, index) {
+                        Widget questionWidget = QuestionCard.base(
+                          question: _questions[index],
+                          hideCorrectAnswer:
+                              settings.hideCorrectAnswersInEditMode,
+                        );
+
+                        // Check if we have to display the topic divider
+                        if (_questions.first.topic != _questions.last.topic &&
+                            (index == 0 ||
+                                _questions[index].topic !=
+                                    _questions[index - 1].topic)) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: index == 0 ? 10.0 : 0,
+                                ),
+                                child: Separator(
+                                  text: _questions[index].topic!,
+                                  indent: 10.0,
+                                ),
+                              ),
+                              questionWidget,
+                            ],
+                          );
+                        }
+                        // Otherwise simply return the card
+                        else {
+                          return questionWidget;
+                        }
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),
