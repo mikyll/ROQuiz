@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -82,24 +83,55 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
   /// Index of the contributor whose detail card is currently shown.
   int? _activeIndex;
 
-  /// Animation time captured when a bubble became active. The active bubble is
-  /// frozen at this position (rather than snapped back to its base) so it does
-  /// not jump out from under the pointer and cause hover flicker.
-  double? _activeFreezeT;
+  /// Per-bubble time offset (in controller units). Each bubble's drift is
+  /// computed from `controller.value - offset[i]`. When a bubble is frozen and
+  /// later released we bump its offset so it resumes exactly where it was,
+  /// instead of jumping to wherever the global clock has advanced to.
+  late List<double> _timeOffsets;
+
+  /// Effective time the active bubble is frozen at (so it stays under the
+  /// pointer while hovered).
+  double _frozenT = 0;
+
+  /// Pending dismiss, deferred so the pointer can travel from a bubble to the
+  /// detail card without the card vanishing mid-move.
+  Timer? _clearTimer;
+
+  void _ensureOffsets(int count) {
+    if (_timeOffsets.length != count) {
+      _timeOffsets = List<double>.filled(count, 0.0);
+    }
+  }
 
   void _setActive(int i) {
+    _clearTimer?.cancel();
     setState(() {
+      // Hand off: bank the currently-active bubble's position before freezing
+      // the new one, so the old one doesn't teleport when it resumes.
+      if (_activeIndex != null && _activeIndex != i) {
+        _timeOffsets[_activeIndex!] = _controller.value - _frozenT;
+      }
       _activeIndex = i;
-      _activeFreezeT = _controller.value;
+      _frozenT = _controller.value - _timeOffsets[i];
     });
   }
 
   void _clearActive() {
+    _clearTimer?.cancel();
+    if (_activeIndex == null) return;
     setState(() {
+      // Resume exactly from the frozen position.
+      _timeOffsets[_activeIndex!] = _controller.value - _frozenT;
       _activeIndex = null;
-      _activeFreezeT = null;
     });
   }
+
+  void _scheduleClear() {
+    _clearTimer?.cancel();
+    _clearTimer = Timer(const Duration(milliseconds: 200), _clearActive);
+  }
+
+  void _cancelClear() => _clearTimer?.cancel();
 
   static const List<Color> _palette = [
     Color(0xFF5C6BC0),
@@ -116,6 +148,7 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
   @override
   void initState() {
     super.initState();
+    _timeOffsets = List<double>.filled(widget.contributors.length, 0.0);
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 16),
@@ -135,6 +168,7 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
 
   @override
   void dispose() {
+    _clearTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -158,6 +192,7 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
         // Lay the bubbles out on a relaxed grid so they don't overlap, with a
         // small deterministic jitter to avoid a rigid look.
         final int count = contributors.length;
+        _ensureOffsets(count);
         final int cols = math.max(1, math.sqrt(count).ceil());
         final int rows = (count / cols).ceil();
         final double cellW = w / cols;
@@ -194,13 +229,13 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
                       final double r = radii[i];
                       final bool active = _activeIndex == i;
                       // Gentle elliptical drift. The active bubble is frozen at
-                      // the position it had when activated (via _activeFreezeT)
-                      // instead of snapping back to its base, so it doesn't jump
-                      // out from under the pointer and cause hover flicker.
+                      // its current position (_frozenT); each bubble carries a
+                      // time offset so it resumes from where it was frozen
+                      // instead of jumping to the global clock position.
                       final double phase = i / count;
-                      final double effectiveT = (active && _activeFreezeT != null)
-                          ? _activeFreezeT!
-                          : t;
+                      final double effectiveT = active
+                          ? _frozenT
+                          : t - _timeOffsets[i];
                       final double angle = 2 * math.pi * (effectiveT + phase);
                       final Offset drift = widget.animate
                           ? Offset(12 * math.sin(angle), 10 * math.cos(angle))
@@ -216,10 +251,11 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
                           cursor: SystemMouseCursors.click,
                           onEnter: (_) => _setActive(i),
                           onExit: (_) {
-                            if (_activeIndex == i) _clearActive();
+                            if (_activeIndex == i) _scheduleClear();
                           },
                           child: GestureDetector(
-                            onTap: () => active ? _clearActive() : _setActive(i),
+                            onTap: () =>
+                                active ? _clearActive() : _setActive(i),
                             child: _Bubble(
                               contributor: contributors[i],
                               radius: r,
@@ -237,6 +273,8 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
                 contributor: _activeIndex == null
                     ? null
                     : contributors[_activeIndex!],
+                onHoverEnter: _cancelClear,
+                onHoverExit: _scheduleClear,
               ),
             ],
           ),
@@ -313,7 +351,16 @@ class _Bubble extends StatelessWidget {
 class _DetailCard extends StatelessWidget {
   final ContributorInfo? contributor;
 
-  const _DetailCard({required this.contributor});
+  /// Keep the selection alive while the pointer is over the card, so the card
+  /// stays clickable when the pointer travels onto it from a bubble.
+  final VoidCallback onHoverEnter;
+  final VoidCallback onHoverExit;
+
+  const _DetailCard({
+    required this.contributor,
+    required this.onHoverEnter,
+    required this.onHoverExit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -324,63 +371,72 @@ class _DetailCard extends StatelessWidget {
       left: 12,
       right: 12,
       bottom: 12,
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 180),
-        transitionBuilder: (child, animation) => FadeTransition(
-          opacity: animation,
-          child: SizeTransition(sizeFactor: animation, child: child),
-        ),
-        child: c == null
-            ? const SizedBox.shrink()
-            : Card(
-                key: ValueKey(c.name),
-                elevation: 6,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(c.name, style: theme.textTheme.titleLarge),
-                      const SizedBox(height: 8),
-                      if (c.contributions.isEmpty)
-                        Text(
-                          "Nessuna contribuzione indicata.",
-                          style: theme.textTheme.bodyMedium,
-                        )
-                      else
-                        ...c.contributions.map(
-                          (contribution) => Padding(
-                            padding: const EdgeInsets.only(bottom: 2.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text("•  "),
-                                Expanded(
-                                  child: Text(
-                                    contribution,
-                                    style: theme.textTheme.bodyMedium,
-                                  ),
+      child: MouseRegion(
+        onEnter: (_) => onHoverEnter(),
+        onExit: (_) => onHoverExit(),
+        // Absorb taps so clicking the card doesn't fall through to the
+        // background dismiss handler.
+        child: GestureDetector(
+          onTap: () {},
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 180),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SizeTransition(sizeFactor: animation, child: child),
+            ),
+            child: c == null
+                ? const SizedBox.shrink()
+                : Card(
+                    key: ValueKey(c.name),
+                    elevation: 6,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(c.name, style: theme.textTheme.titleLarge),
+                          const SizedBox(height: 8),
+                          if (c.contributions.isEmpty)
+                            Text(
+                              "Nessuna contribuzione indicata.",
+                              style: theme.textTheme.bodyMedium,
+                            )
+                          else
+                            ...c.contributions.map(
+                              (contribution) => Padding(
+                                padding: const EdgeInsets.only(bottom: 2.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text("•  "),
+                                    Expanded(
+                                      child: Text(
+                                        contribution,
+                                        style: theme.textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      if (c.url != null) ...[
-                        const SizedBox(height: 8),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton.icon(
-                            onPressed: () => openUrl(c.url!),
-                            icon: const Icon(Icons.open_in_new, size: 18),
-                            label: const Text("Apri profilo"),
-                          ),
-                        ),
-                      ],
-                    ],
+                          if (c.url != null) ...[
+                            const SizedBox(height: 8),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton.icon(
+                                onPressed: () => openUrl(c.url!),
+                                icon: const Icon(Icons.open_in_new, size: 18),
+                                label: const Text("Apri profilo"),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
+          ),
+        ),
       ),
     );
   }
