@@ -82,6 +82,25 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
   /// Index of the contributor whose detail card is currently shown.
   int? _activeIndex;
 
+  /// Animation time captured when a bubble became active. The active bubble is
+  /// frozen at this position (rather than snapped back to its base) so it does
+  /// not jump out from under the pointer and cause hover flicker.
+  double? _activeFreezeT;
+
+  void _setActive(int i) {
+    setState(() {
+      _activeIndex = i;
+      _activeFreezeT = _controller.value;
+    });
+  }
+
+  void _clearActive() {
+    setState(() {
+      _activeIndex = null;
+      _activeFreezeT = null;
+    });
+  }
+
   static const List<Color> _palette = [
     Color(0xFF5C6BC0),
     Color(0xFF26A69A),
@@ -163,7 +182,7 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
         return GestureDetector(
           // Tap on empty space dismisses the detail card.
           behavior: HitTestBehavior.opaque,
-          onTap: () => setState(() => _activeIndex = null),
+          onTap: _clearActive,
           child: Stack(
             children: [
               AnimatedBuilder(
@@ -174,11 +193,16 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
                     children: List.generate(count, (i) {
                       final double r = radii[i];
                       final bool active = _activeIndex == i;
-                      // Gentle elliptical drift; the active bubble is frozen so
-                      // it stays put under the cursor/finger.
+                      // Gentle elliptical drift. The active bubble is frozen at
+                      // the position it had when activated (via _activeFreezeT)
+                      // instead of snapping back to its base, so it doesn't jump
+                      // out from under the pointer and cause hover flicker.
                       final double phase = i / count;
-                      final double angle = 2 * math.pi * (t + phase);
-                      final Offset drift = (widget.animate && !active)
+                      final double effectiveT = (active && _activeFreezeT != null)
+                          ? _activeFreezeT!
+                          : t;
+                      final double angle = 2 * math.pi * (effectiveT + phase);
+                      final Offset drift = widget.animate
                           ? Offset(12 * math.sin(angle), 10 * math.cos(angle))
                           : Offset.zero;
                       final Offset pos = bases[i] + drift;
@@ -190,14 +214,12 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
                         height: r * 2,
                         child: MouseRegion(
                           cursor: SystemMouseCursors.click,
-                          onEnter: (_) => setState(() => _activeIndex = i),
-                          onExit: (_) => setState(() {
-                            if (_activeIndex == i) _activeIndex = null;
-                          }),
+                          onEnter: (_) => _setActive(i),
+                          onExit: (_) {
+                            if (_activeIndex == i) _clearActive();
+                          },
                           child: GestureDetector(
-                            onTap: () => setState(
-                              () => _activeIndex = active ? null : i,
-                            ),
+                            onTap: () => active ? _clearActive() : _setActive(i),
                             child: _Bubble(
                               contributor: contributors[i],
                               radius: r,
