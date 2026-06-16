@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -331,31 +329,106 @@ class ViewMenuState extends State<ViewMenu> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            // TODO: remove
-                            final random = Random();
-                            return ViewHistory(
-                              quizList: [
-                                // TODO: remove, this is a mock
-                                QuizCompleted(
-                                  questions: [],
-                                  questionNum: 0,
-                                  shuffleAnswers: true,
-                                  timestamp: DateTime.now(),
-                                  timeSpent: random.nextInt(60 * 16),
-                                  correctAnswers: random.nextInt(16),
-                                  grade: random.nextDouble() * 32,
-                                ),
-                                QuizCompleted(
-                                  questions: [],
-                                  questionNum: 0,
-                                  shuffleAnswers: true,
-                                  timestamp: DateTime.now(),
-                                  timeSpent: random.nextInt(60 * 16),
-                                  correctAnswers: random.nextInt(16),
-                                  grade: random.nextDouble() * 32,
-                                ),
-                              ],
+                            // TODO: replace with QuizRepository
+                            final sampleQuestions = [
+                              Question(
+                                id: 0,
+                                body: "Quale protocollo opera al livello di trasporto del modello OSI?",
+                                answers: ["HTTP", "TCP", "IP", "Ethernet"],
+                                correctAnswer: 1,
+                                topic: "Protocolli",
+                              ),
+                              Question(
+                                id: 1,
+                                body: "Quanti bit compongono un indirizzo IPv4?",
+                                answers: ["16", "64", "32", "128"],
+                                correctAnswer: 2,
+                                topic: "Indirizzamento",
+                              ),
+                              Question(
+                                id: 2,
+                                body: "Qual è la funzione principale del protocollo ARP?",
+                                answers: [
+                                  "Assegnare indirizzi IP dinamicamente",
+                                  "Instradare pacchetti tra reti diverse",
+                                  "Risolvere un indirizzo IP in indirizzo MAC",
+                                  "Garantire la consegna affidabile dei dati",
+                                ],
+                                correctAnswer: 2,
+                                topic: "Protocolli",
+                              ),
+                              Question(
+                                id: 3,
+                                body: "Quale algoritmo di routing è basato sull'algoritmo di Dijkstra?",
+                                answers: ["Distance Vector", "Path Vector", "Flooding", "Link State"],
+                                correctAnswer: 3,
+                                topic: "Routing",
+                              ),
+                              Question(
+                                id: 4,
+                                body: "Cosa indica la sigla NAT?",
+                                answers: [
+                                  "Network Access Token",
+                                  "Network Address Translation",
+                                  "Node Authentication Table",
+                                  "Node Address Transfer",
+                                ],
+                                correctAnswer: 1,
+                                topic: "Indirizzamento",
+                              ),
+                            ];
+
+                            final qc1 = QuizCompleted(
+                              questions: sampleQuestions,
+                              questionNum: sampleQuestions.length,
+                              shuffleAnswers: false,
+                              timestamp: DateTime.now().subtract(Duration(days: 1, hours: 2)),
+                              timeSpent: 487,
+                              correctAnswers: 4,
+                              grade: 26.0,
                             );
+                            // Q0 TCP: correct, Q1 IPv4: wrong (picked 64), Q2 ARP: correct,
+                            // Q3 Dijkstra: correct, Q4 NAT: correct
+                            qc1.selectedAnswers[0] = 1;
+                            qc1.selectedAnswers[1] = 1;
+                            qc1.selectedAnswers[2] = 2;
+                            qc1.selectedAnswers[3] = 3;
+                            qc1.selectedAnswers[4] = 1;
+
+                            final qc2 = QuizCompleted(
+                              questions: sampleQuestions,
+                              questionNum: sampleQuestions.length,
+                              shuffleAnswers: false,
+                              timestamp: DateTime.now().subtract(Duration(days: 7, hours: 5)),
+                              timeSpent: 743,
+                              correctAnswers: 2,
+                              grade: 13.0,
+                            );
+                            // Q0 TCP: wrong (HTTP), Q1 IPv4: correct, Q2 ARP: wrong,
+                            // Q3 Dijkstra: correct, Q4 NAT: wrong (null = unanswered)
+                            qc2.selectedAnswers[0] = 0;
+                            qc2.selectedAnswers[1] = 2;
+                            qc2.selectedAnswers[2] = 0;
+                            qc2.selectedAnswers[3] = 3;
+                            qc2.selectedAnswers[4] = null;
+
+                            final qc3 = QuizCompleted(
+                              questions: sampleQuestions,
+                              questionNum: sampleQuestions.length,
+                              shuffleAnswers: false,
+                              timestamp: DateTime.now().subtract(Duration(days: 14, hours: 1)),
+                              timeSpent: 901,
+                              correctAnswers: 5,
+                              grade: 32.0,
+                            );
+                            // All correct
+                            qc3.selectedAnswers[0] = 1;
+                            qc3.selectedAnswers[1] = 2;
+                            qc3.selectedAnswers[2] = 2;
+                            qc3.selectedAnswers[3] = 3;
+                            qc3.selectedAnswers[4] = 1;
+
+                            return ViewHistory(quizList: [qc1, qc2, qc3]);
                           },
                         ),
                       );
