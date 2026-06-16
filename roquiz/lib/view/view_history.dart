@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/grade.dart';
 import 'package:roquiz/model/utils/time.dart';
-import 'package:roquiz/view/view_questions_edit.dart';
+import 'package:roquiz/view/view_history_quiz.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
-import 'package:roquiz/widget/question_card.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewHistory extends StatefulWidget {
   const ViewHistory({super.key, required this.quizList});
@@ -20,21 +17,30 @@ class ViewHistory extends StatefulWidget {
 
 class ViewHistoryState extends State<ViewHistory> {
   final ScrollController _scrollController = ScrollController();
-
-  late List<QuizCompleted> _orderedQuizList;
+  late List<QuizCompleted> _quizList;
 
   @override
   void initState() {
     super.initState();
+    _quizList = List.of(widget.quizList);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _removeQuiz(int index) {
+    setState(() {
+      _quizList.removeAt(index);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      // onPopInvoked: (_) {
-      //   // todo
-      // },
       child: Scaffold(
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
@@ -47,88 +53,42 @@ class ViewHistoryState extends State<ViewHistory> {
               constraints: BoxConstraints(maxWidth: 500.0),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: widget.quizList.length,
-                  itemBuilder: (context, index) {
-                    QuizCompleted quizCompleted = widget.quizList[index];
-
-                    // TODO
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: _QuizCompletedWidget(
-                        timestamp: quizCompleted.timestamp,
-                        correctQuestions: quizCompleted.correctAnswers,
-                        totalQuestions: quizCompleted.questions.length,
-                        timeSpent: quizCompleted.timeSpent,
-                        grade: quizCompleted.grade,
-                        onTap: () {
-                          // TODO
-                        },
-                        onRemove: () {
-                          // TODO
+                child: _quizList.isEmpty
+                    ? Center(child: Text("Nessun quiz completato"))
+                    : ListView.builder(
+                        controller: _scrollController,
+                        itemCount: _quizList.length,
+                        itemBuilder: (context, index) {
+                          final QuizCompleted q = _quizList[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 5.0),
+                            child: _QuizCompletedWidget(
+                              timestamp: q.timestamp,
+                              correctQuestions: q.correctAnswers,
+                              totalQuestions: q.questions.length,
+                              timeSpent: q.timeSpent,
+                              grade: q.grade,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ViewHistoryQuiz(quizCompleted: q),
+                                  ),
+                                );
+                              },
+                              onRemove: () => _removeQuiz(index),
+                            ),
+                          );
                         },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ),
-
-          // ListView.builder(
-          //   controller: _scrollController,
-          //   itemCount: _questions.length,
-          //   itemBuilder: (_, index) {
-          //     Widget questionWidget = QuestionCard.base(
-          //       question: _questions[index],
-          //       hideCorrectAnswer: !_showAnswers,
-          //     );
-          //     // Check if we have to display the topic divider
-          //     if (index == 0 ||
-          //         _questions[index - 1].topic != _questions[index].topic) {
-          //       return Column(
-          //         children: [
-          //           Padding(
-          //             padding: EdgeInsets.only(
-          //               left: 10.0,
-          //               right: 10.0,
-          //               top: index == 0 ? 10.0 : 0,
-          //             ),
-          //             child: Row(
-          //               children: [
-          //                 Padding(
-          //                   padding: const EdgeInsets.only(right: 10.0),
-          //                   child: Text(
-          //                     _questions[index].topic!,
-          //                     style: const TextStyle(
-          //                       fontSize: 18.0,
-          //                       color: Colors.grey,
-          //                     ),
-          //                   ),
-          //                 ),
-          //                 const Expanded(child: Divider(thickness: 2)),
-          //               ],
-          //             ),
-          //           ),
-          //           questionWidget,
-          //         ],
-          //       );
-          //     }
-          //     // Otherwise simply return the card
-          //     else {
-          //       return questionWidget;
-          //     }
-          //   },
-          // ),
         ),
-
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor.withAlpha(70),
-            // border: Border(
-            //   top: BorderSide(color: Theme.of(context).disabledColor),
-            // ),
           ),
           child: Row(
             children: [
@@ -176,63 +136,31 @@ class _QuizCompletedWidget extends StatelessWidget {
   final int correctQuestions;
   final int totalQuestions;
   final int timeSpent;
-  final double? grade;
+  final double grade;
   final void Function()? onTap;
   final void Function()? onRemove;
 
   @override
   Widget build(BuildContext context) {
-    // TODO
-
-    // InkWell(
-    //   onTap: onTap,
-    //   child: Row(
-    //     children: [
-    //       Text(timestamp.toString()),
-    //       Text("$correctQuestions/$totalQuestions"),
-    //       Text(getTimeString(timeSpent)),
-    //       if (grade != null) Text(getGradeString(grade!)),
-    //     ],
-    //   ),
-    // ),
-    // Positioned(
-    //   right: 10,
-    //   child: InkWell(onTap: onRemove, child: Icon(Icons.delete)),
-    // ),
-
-    return Stack(
-      children: [
-        ListTile(
-          leading: grade != null
-              ? Text(
-                  getGradeString(grade!),
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                )
-              : null,
-          title: Row(
-            spacing: 10.0,
-            children: [
-              Text(
-                timestamp
-                    .toString()
-                    .replaceAll("T", " ")
-                    .split(".")[0]
-                    .padRight(22),
-              ),
-              Text(
-                "${correctQuestions.toString().padLeft(3)}/${totalQuestions.toString().padRight(3)}",
-              ),
-              Text(getTimeString(timeSpent)),
-            ],
-          ),
-          isThreeLine: false,
-          onTap: onTap,
-          trailing: InkWell(
-            onTap: onRemove,
-            child: Icon(Icons.delete, size: 30),
-          ),
-        ),
-      ],
+    return ListTile(
+      leading: Text(
+        getGradeString(grade),
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      title: Row(
+        spacing: 10.0,
+        children: [
+          Text(timestamp.toString().replaceAll("T", " ").split(".")[0]),
+          Text("$correctQuestions/$totalQuestions"),
+          Text(getTimeString(timeSpent)),
+        ],
+      ),
+      isThreeLine: false,
+      onTap: onTap,
+      trailing: InkWell(
+        onTap: onRemove,
+        child: Icon(Icons.delete, size: 30),
+      ),
     );
   }
 }
