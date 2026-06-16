@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/utils/navigation.dart';
+import 'package:roquiz/view/view_contributors.dart';
 import 'package:roquiz/view/view_licenses.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
@@ -161,12 +162,15 @@ class ViewInfoState extends State<ViewInfo> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 InkWell(
-                                  // onTap: () {
-                                  //   Navigator.push(
-                                  //       context,
-                                  //       MaterialPageRoute(
-                                  //           builder: (context) => ViewCredits()));
-                                  // },
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ViewContributors(),
+                                      ),
+                                    );
+                                  },
                                   child: const Text(
                                     "contributors",
                                     textAlign: TextAlign.center,
