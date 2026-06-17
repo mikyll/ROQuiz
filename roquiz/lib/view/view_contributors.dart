@@ -93,6 +93,17 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
   /// pointer while hovered).
   double _frozenT = 0;
 
+  /// Cached random base positions, recomputed only when the surface size or the
+  /// number of bubbles changes (not on every hover/animation rebuild), so the
+  /// layout stays stable while the user interacts with it.
+  List<Offset> _bases = const [];
+  Size? _basesSize;
+  int _basesCount = -1;
+
+  /// Seed for the random scatter, captured once per session so the arrangement
+  /// differs on each app launch but stays stable across rebuilds and resizes.
+  late final int _seed = DateTime.now().millisecondsSinceEpoch;
+
   /// Pending dismiss, deferred so the pointer can travel from a bubble to the
   /// detail card without the card vanishing mid-move.
   Timer? _clearTimer;
@@ -185,6 +196,69 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
     return (30.0 + 26.0 * frac).clamp(30.0, 56.0);
   }
 
+  /// Randomly scatters [radii.length] bubbles over a [w] x [h] surface.
+  ///
+  /// For each bubble it throws darts at random positions and keeps the first
+  /// one that clears every already-placed bubble (radii plus a small gap). If
+  /// no clear spot is found within a fixed budget — i.e. the surface is too
+  /// crowded — it falls back to the attempted position that overlaps the least,
+  /// so bubbles only start stacking once they genuinely have to.
+  ///
+  /// A per-session seed ([_seed]) keeps the scatter stable across rebuilds
+  /// while differing on each app launch.
+  List<Offset> _computeBases(double w, double h, List<double> radii) {
+    final math.Random rnd = math.Random(_seed);
+    // Keep bubbles inside the surface with room for their drift (~12px).
+    const double driftMargin = 14.0;
+    // Desired breathing room between two bubbles.
+    const double gap = 8.0;
+    const int maxAttempts = 250;
+
+    final List<Offset> bases = [];
+
+    for (int i = 0; i < radii.length; i++) {
+      final double r = radii[i];
+      final double minX = r + driftMargin;
+      final double maxX = math.max(minX, w - r - driftMargin);
+      final double minY = r + driftMargin;
+      final double maxY = math.max(minY, h - r - driftMargin);
+
+      Offset best = Offset(minX, minY);
+      double bestSlack = double.negativeInfinity;
+
+      for (int attempt = 0; attempt < maxAttempts; attempt++) {
+        final Offset cand = Offset(
+          minX + rnd.nextDouble() * (maxX - minX),
+          minY + rnd.nextDouble() * (maxY - minY),
+        );
+
+        // Smallest clearance against any already-placed bubble (negative means
+        // they overlap by that much). Empty -> infinite clearance.
+        double worstSlack = double.infinity;
+        for (int j = 0; j < bases.length; j++) {
+          final double needed = r + radii[j] + gap;
+          final double slack = (cand - bases[j]).distance - needed;
+          if (slack < worstSlack) worstSlack = slack;
+        }
+
+        // Non-overlapping spot found: take it immediately.
+        if (worstSlack >= 0) {
+          best = cand;
+          break;
+        }
+        // Otherwise remember the least-overlapping candidate as a fallback.
+        if (worstSlack > bestSlack) {
+          bestSlack = worstSlack;
+          best = cand;
+        }
+      }
+
+      bases.add(best);
+    }
+
+    return bases;
+  }
+
   @override
   Widget build(BuildContext context) {
     final contributors = widget.contributors;
@@ -194,35 +268,24 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
         final double w = constraints.maxWidth;
         final double h = constraints.maxHeight;
 
-        // Lay the bubbles out on a relaxed grid so they don't overlap, with a
-        // small deterministic jitter to avoid a rigid look.
         final int count = contributors.length;
         _ensureOffsets(count);
-        final int cols = math.max(1, math.sqrt(count).ceil());
-        final int rows = (count / cols).ceil();
-        final double cellW = w / cols;
-        final double cellH = h / rows;
         final int maxWeight = contributors
             .map((c) => c.weight)
             .fold(1, (a, b) => b > a ? b : a);
         final radii = contributors
             .map((c) => _radiusFor(c, maxWeight))
             .toList();
-        final rnd = math.Random(42);
 
-        final List<Offset> bases = List.generate(count, (i) {
-          final int col = i % cols;
-          final int row = i ~/ cols;
-          final double r = radii[i];
-          // Keep the bubble (plus drift slack) fully inside its cell.
-          final double slackX = math.max(0, cellW / 2 - r - 14);
-          final double slackY = math.max(0, cellH / 2 - r - 14);
-          final double cx =
-              cellW * col + cellW / 2 + (rnd.nextDouble() * 2 - 1) * slackX;
-          final double cy =
-              cellH * row + cellH / 2 + (rnd.nextDouble() * 2 - 1) * slackY;
-          return Offset(cx, cy);
-        });
+        // Scatter the bubbles randomly across the surface, avoiding overlap
+        // when there is room. Recomputed only when the size or count changes.
+        final Size size = Size(w, h);
+        if (_basesSize != size || _basesCount != count) {
+          _bases = _computeBases(w, h, radii);
+          _basesSize = size;
+          _basesCount = count;
+        }
+        final List<Offset> bases = _bases;
 
         return GestureDetector(
           // Tap on empty space dismisses the detail card.
