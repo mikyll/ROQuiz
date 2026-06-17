@@ -999,7 +999,7 @@
     - "Se il nuovo valore del dato ricade all'esterno di tale intervallo, la soluzione corrispondente a B è ancora ottima"
     - "Se il nuovo valore del dato ricade all'interno di tale intervallo, i valori delle variabili nella soluzione ottima non cambiano"
     - "Nessuna di queste"
-  correct_answer: 2
+  correct_answer: 0
   custom: false
 
 - body: |
