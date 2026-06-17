@@ -12,7 +12,7 @@ import 'package:roquiz/widget/custom_back_button.dart';
 
 /// Shows the project contributors (loaded from `assets/contributors.yaml`) as
 /// floating bubbles. Hovering a bubble (desktop/web) or tapping it (mobile)
-/// reveals the contributions that person made.
+/// reveals that person's contributions.
 class ViewContributors extends StatefulWidget {
   const ViewContributors({super.key});
 
@@ -175,9 +175,14 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
 
   Color _colorFor(int index) => _palette[index % _palette.length];
 
-  /// Bubble radius scales with the number of contributions.
-  double _radiusFor(ContributorInfo c) {
-    return (30.0 + 7.0 * c.contributions.length).clamp(30.0, 56.0);
+  /// Bubble radius scales with the contributor's weight. GitHub contribution
+  /// counts are heavily skewed (one person with hundreds, the rest with a
+  /// handful), so we scale by `sqrt` relative to the busiest contributor to
+  /// keep the smaller bubbles from all collapsing to the minimum size.
+  double _radiusFor(ContributorInfo c, int maxWeight) {
+    if (maxWeight <= 0) return 36.0;
+    final double frac = math.sqrt(c.weight) / math.sqrt(maxWeight);
+    return (30.0 + 26.0 * frac).clamp(30.0, 56.0);
   }
 
   @override
@@ -197,7 +202,12 @@ class _FloatingBubblesState extends State<_FloatingBubbles>
         final int rows = (count / cols).ceil();
         final double cellW = w / cols;
         final double cellH = h / rows;
-        final radii = contributors.map(_radiusFor).toList();
+        final int maxWeight = contributors
+            .map((c) => c.weight)
+            .fold(1, (a, b) => b > a ? b : a);
+        final radii = contributors
+            .map((c) => _radiusFor(c, maxWeight))
+            .toList();
         final rnd = math.Random(42);
 
         final List<Offset> bases = List.generate(count, (i) {
@@ -310,16 +320,27 @@ class _Bubble extends StatelessWidget {
       ),
     );
 
-    final Widget content = contributor.imagePath == null
-        ? initials
-        : Image.asset(
-            contributor.imagePath!,
-            fit: BoxFit.cover,
-            width: radius * 2,
-            height: radius * 2,
-            // Fall back to the initials if the asset is missing.
-            errorBuilder: (context, error, stackTrace) => initials,
-          );
+    // Prefer a bundled asset, then a remote avatar URL, then the initials.
+    final Widget content;
+    if (contributor.imagePath != null) {
+      content = Image.asset(
+        contributor.imagePath!,
+        fit: BoxFit.cover,
+        width: radius * 2,
+        height: radius * 2,
+        errorBuilder: (context, error, stackTrace) => initials,
+      );
+    } else if (contributor.imageUrl != null) {
+      content = Image.network(
+        contributor.imageUrl!,
+        fit: BoxFit.cover,
+        width: radius * 2,
+        height: radius * 2,
+        errorBuilder: (context, error, stackTrace) => initials,
+      );
+    } else {
+      content = initials;
+    }
 
     return AnimatedScale(
       scale: active ? 1.12 : 1.0,
@@ -362,6 +383,25 @@ class _DetailCard extends StatelessWidget {
     required this.onHoverExit,
   });
 
+  /// Human-readable summary lines: the GitHub contribution/co-author counts
+  /// followed by any hand-written contribution descriptions. Falls back to a
+  /// placeholder when there is nothing to show.
+  List<String> _buildContributionLines(ContributorInfo c) {
+    final List<String> lines = [];
+    if (c.contributionCount > 0) {
+      lines.add(
+        "${c.contributionCount} "
+        "${c.contributionCount == 1 ? 'contributo' : 'contributi'}",
+      );
+    }
+    if (c.coAuthored > 0) {
+      lines.add("Co-autore di ${c.coAuthored} commit");
+    }
+    lines.addAll(c.contributions);
+    if (lines.isEmpty) lines.add("Nessuna contribuzione indicata.");
+    return lines;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -397,29 +437,23 @@ class _DetailCard extends StatelessWidget {
                         children: [
                           Text(c.name, style: theme.textTheme.titleLarge),
                           const SizedBox(height: 8),
-                          if (c.contributions.isEmpty)
-                            Text(
-                              "Nessuna contribuzione indicata.",
-                              style: theme.textTheme.bodyMedium,
-                            )
-                          else
-                            ...c.contributions.map(
-                              (contribution) => Padding(
-                                padding: const EdgeInsets.only(bottom: 2.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("•  "),
-                                    Expanded(
-                                      child: Text(
-                                        contribution,
-                                        style: theme.textTheme.bodyMedium,
-                                      ),
+                          ..._buildContributionLines(c).map(
+                            (line) => Padding(
+                              padding: const EdgeInsets.only(bottom: 2.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("•  "),
+                                  Expanded(
+                                    child: Text(
+                                      line,
+                                      style: theme.textTheme.bodyMedium,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
+                          ),
                           if (c.url != null) ...[
                             const SizedBox(height: 8),
                             Align(

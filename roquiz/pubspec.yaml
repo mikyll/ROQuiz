@@ -47,3 +47,4 @@ flutter:
     - assets/questions.yaml
     - assets/credits.json
     - assets/contributors.yaml
+    - assets/contributors/
