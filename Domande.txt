@@ -672,7 +672,7 @@ B. Se il nuovo valore del dato ricade all'esterno di tale intervallo, la soluzio
 C. Se il nuovo valore del dato ricade all'interno di tale intervallo, i valori delle variabili nella soluzione ottima non cambiano
 D. Nessuna di queste
 E. Risposta vuota
-C
+A
 
 @Programmazione Lineare Intera =========================================================================
 Relativamente ad un problema ILP e il suo rilassamento continuo LP
