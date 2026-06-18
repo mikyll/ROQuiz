@@ -1,4 +1,5 @@
-/// A statically-defined contributor, loaded from `assets/contributors.yaml`.
+/// A statically-defined contributor, loaded from
+/// `assets/contributors/contributors.yaml`.
 ///
 /// This is intentionally separate from [Contributor] (in `contributor.dart`),
 /// which models data fetched from the GitHub API. [ContributorInfo] holds the

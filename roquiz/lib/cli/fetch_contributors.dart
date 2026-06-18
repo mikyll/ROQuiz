@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 /// CLI tool that fetches the list of contributors of a GitHub repository and
-/// writes the `assets/contributors.yaml` file consumed by ViewContributors.
+/// writes the `assets/contributors/contributors.yaml` file consumed by
+/// ViewContributors.
 ///
 /// For each contributor it stores the GitHub login, numeric id, profile URL,
 /// avatar URL (and, optionally, a downloaded local copy) and the number of
@@ -21,17 +22,17 @@ import 'package:http/http.dart' as http;
 /// Options:
 ///   -r, --repo `<owner/name>`   Repository to fetch (default: mikyll/ROQuiz)
 ///   -o, --output `<path>`       Output YAML file
-///                               (default: assets/contributors.yaml)
+///                               (default: assets/contributors/contributors.yaml)
 ///   -a, --avatars               Download avatar images into the avatars dir
 ///       --avatars-dir `<path>`  Where to save avatars
-///                               (default: assets/contributors)
+///                               (default: assets/contributors/avatars)
 ///       --include-bots          Keep bot accounts (e.g. github-actions[bot])
 ///       --token `<token>`       GitHub token, raises the API rate limit
 ///   -h, --help                  Show this help
 
 const String _defaultRepo = "mikyll/ROQuiz";
-const String _defaultOutput = "assets/contributors.yaml";
-const String _defaultAvatarsDir = "assets/contributors";
+const String _defaultOutput = "assets/contributors/contributors.yaml";
+const String _defaultAvatarsDir = "assets/contributors/avatars";
 
 /// A single contributor as returned by the GitHub `/contributors` endpoint,
 /// reduced to the fields we care about.
@@ -335,7 +336,7 @@ String _sanitize(String login) =>
     login.replaceAll(RegExp(r"[^A-Za-z0-9._-]"), "_");
 
 /// Renders the contributors as YAML matching the shape of
-/// `assets/contributors.yaml`, with the GitHub-sourced fields.
+/// `assets/contributors/contributors.yaml`, with the GitHub-sourced fields.
 String buildYaml(String repo, List<FetchedContributor> contributors) {
   final StringBuffer b = StringBuffer();
 
@@ -461,6 +462,7 @@ Options:
   -o, --output <path>       Output YAML file (default: $_defaultOutput)
   -a, --avatars             Download avatar images locally
       --avatars-dir <path>  Avatars directory (default: $_defaultAvatarsDir)
+                            (avatar: paths in the YAML point here)
       --include-bots        Keep bot accounts (e.g. github-actions[bot])
       --no-coauthors        Skip scanning commits for Co-authored-by: trailers
       --token <token>       GitHub token to raise the API rate limit

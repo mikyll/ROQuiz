@@ -10,7 +10,8 @@ import 'package:roquiz/model/utils/navigation.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 
-/// Shows the project contributors (loaded from `assets/contributors.yaml`) as
+/// Shows the project contributors (loaded from
+/// `assets/contributors/contributors.yaml`) as
 /// floating bubbles. Hovering a bubble (desktop/web) or tapping it (mobile)
 /// reveals that person's contributions.
 class ViewContributors extends StatefulWidget {
