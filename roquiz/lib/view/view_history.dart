@@ -83,10 +83,10 @@ class ViewHistoryState extends State<ViewHistory> {
     final String json = widget.quizRepository.exportToJson();
     final DateTime now = DateTime.now();
     String two(int n) => n.toString().padLeft(2, "0");
-    // Filesystem-safe timestamp (no ':'): roquiz_history_2026-06-19_14-30-05
+    // Compact timestamp: roquiz_history_20260619143005
     final String timestamp =
-        "${now.year}-${two(now.month)}-${two(now.day)}_"
-        "${two(now.hour)}-${two(now.minute)}-${two(now.second)}";
+        "${now.year}${two(now.month)}${two(now.day)}"
+        "${two(now.hour)}${two(now.minute)}${two(now.second)}";
 
     await FileSaver.instance.saveFile(
       name: "roquiz_history_$timestamp",
