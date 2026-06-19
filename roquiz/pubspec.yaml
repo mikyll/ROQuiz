@@ -45,6 +45,5 @@ flutter:
     - assets/licenses.json
     - assets/domande.txt
     - assets/questions.yaml
-    - assets/credits.json
     - assets/contributors/contributors.yaml
     - assets/contributors/avatars/
