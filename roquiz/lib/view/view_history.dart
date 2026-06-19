@@ -39,6 +39,41 @@ class ViewHistoryState extends State<ViewHistory> {
     });
   }
 
+  void _clearHistory() {
+    widget.quizRepository.clear();
+    setState(() {
+      _quizList.clear();
+    });
+  }
+
+  Future<void> _confirmClearHistory() async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Svuota storico"),
+          content: const Text(
+            "Vuoi eliminare tutti i quiz salvati? L'operazione non è reversibile.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Annulla"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Elimina"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed ?? false) {
+      _clearHistory();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -99,6 +134,7 @@ class ViewHistoryState extends State<ViewHistory> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 10.0,
                   children: [
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
@@ -108,6 +144,15 @@ class ViewHistoryState extends State<ViewHistory> {
                           // TODO
                         },
                         icon: Icon(Icons.file_download),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Svuota",
+                      child: IconButton(
+                        onPressed: _quizList.isEmpty ? null : _confirmClearHistory,
+                        icon: Icon(Icons.delete_sweep),
                         iconSize: 35,
                       ),
                     ),
