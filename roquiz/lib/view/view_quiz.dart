@@ -153,6 +153,13 @@ class _ViewQuizState extends State<ViewQuiz> {
   }
 
   void _endQuiz(int? writtenGrade) {
+    // Idempotent: the quiz can be ended only once per run. Without this guard
+    // ending it (Termina/timeout) and then leaving via the back button would
+    // run the grading and save the quiz to history twice (duplicate entries).
+    if (_isQuizOver) {
+      return;
+    }
+
     setState(() {
       _isQuizOver = true;
       _timer?.cancel();
