@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 import 'package:roquiz/model/persistence/question_repository.dart';
+import 'package:roquiz/model/persistence/quiz_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
@@ -19,8 +20,13 @@ import 'package:flutter/foundation.dart';
 
 class ViewMenu extends StatefulWidget {
   final PackageInfo packageInfo;
+  final QuizRepository quizRepository;
 
-  const ViewMenu({super.key, required this.packageInfo});
+  const ViewMenu({
+    super.key,
+    required this.packageInfo,
+    required this.quizRepository,
+  });
 
   @override
   State<StatefulWidget> createState() => ViewMenuState();
@@ -28,7 +34,6 @@ class ViewMenu extends StatefulWidget {
 
 class ViewMenuState extends State<ViewMenu> {
   final QuestionRepository _questionRepository = QuestionRepository();
-  // TODO:  QuizRepository
 
   Map<String, bool> _selectedTopics = {};
 
