@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/persistence/quiz_repository.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
@@ -74,6 +79,87 @@ class ViewHistoryState extends State<ViewHistory> {
     }
   }
 
+  Future<void> _exportHistory() async {
+    final String json = widget.quizRepository.exportToJson();
+    await FileSaver.instance.saveFile(
+      name: "roquiz_history",
+      bytes: Uint8List.fromList(utf8.encode(json)),
+      ext: "json",
+      mimeType: MimeType.json,
+    );
+
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Storico esportato")));
+  }
+
+  Future<void> _importHistory() async {
+    // Import replaces the whole history, so confirm before discarding anything.
+    if (_quizList.isNotEmpty) {
+      final bool? confirmed = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Importa storico"),
+            content: const Text(
+              "L'importazione sostituirà lo storico attuale. Continuare?",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text("Annulla"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text("Continua"),
+              ),
+            ],
+          );
+        },
+      );
+      if (!(confirmed ?? false)) {
+        return;
+      }
+    }
+
+    final FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ["json"],
+      withData: true,
+    );
+    final Uint8List? bytes = result?.files.first.bytes;
+    if (bytes == null) {
+      return;
+    }
+
+    final int count;
+    try {
+      count = await widget.quizRepository.importFromJson(utf8.decode(bytes));
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("File non valido")));
+      return;
+    }
+
+    setState(() {
+      _quizList = List.of(widget.quizRepository.quizList);
+    });
+
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Importati $count quiz")));
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -138,11 +224,18 @@ class ViewHistoryState extends State<ViewHistory> {
                   children: [
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
+                      message: "Importa",
+                      child: IconButton(
+                        onPressed: _importHistory,
+                        icon: Icon(Icons.file_upload),
+                        iconSize: 35,
+                      ),
+                    ),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
                       message: "Esporta",
                       child: IconButton(
-                        onPressed: () {
-                          // TODO
-                        },
+                        onPressed: _quizList.isEmpty ? null : _exportHistory,
                         icon: Icon(Icons.file_download),
                         iconSize: 35,
                       ),
@@ -151,7 +244,9 @@ class ViewHistoryState extends State<ViewHistory> {
                       waitDuration: Duration(milliseconds: 500),
                       message: "Svuota",
                       child: IconButton(
-                        onPressed: _quizList.isEmpty ? null : _confirmClearHistory,
+                        onPressed: _quizList.isEmpty
+                            ? null
+                            : _confirmClearHistory,
                         icon: Icon(Icons.delete_sweep),
                         iconSize: 35,
                       ),
