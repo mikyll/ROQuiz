@@ -57,6 +57,18 @@ class Question {
         correctAnswer: correctAnswer,
       );
 
+  /// Unchecked constructor used to rehydrate stored history snapshots. The data
+  /// was already validated when the quiz was taken, so re-running the (possibly
+  /// stricter, future) validation could wrongly reject otherwise valid history.
+  Question._unchecked({
+    required this.id,
+    required this.body,
+    required this.answers,
+    required this.correctAnswer,
+    this.topic,
+    this.explaination,
+  });
+
   /// Creates a deep copy of [other] (the answers list is duplicated, so the
   /// copy can be mutated without affecting the original).
   factory Question.copy(Question other) {
@@ -108,5 +120,25 @@ class Question {
     }
 
     return res;
+  }
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "body": body,
+    "topic": topic,
+    "answers": answers,
+    "correctAnswer": correctAnswer,
+    "explaination": explaination,
+  };
+
+  factory Question.fromJson(Map<String, dynamic> json) {
+    return Question._unchecked(
+      id: json["id"] as int,
+      body: json["body"] as String,
+      topic: json["topic"] as String?,
+      answers: (json["answers"] as List).cast<String>(),
+      correctAnswer: json["correctAnswer"] as int,
+      explaination: json["explaination"] as String?,
+    );
   }
 }

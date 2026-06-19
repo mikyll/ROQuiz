@@ -22,6 +22,11 @@ class Quiz {
     }
   }
 
+  /// Rehydrates a quiz from a stored snapshot. Unlike the default constructor,
+  /// it does not shuffle or truncate: questions, answer order and the user's
+  /// selections are preserved exactly as they were shown when the quiz was taken.
+  Quiz.fromSnapshot({required this.questions, required this.selectedAnswers});
+
   int countCorrectAnswers() {
     int correctAnswers = 0;
     for (int i = 0; i < questions.length; i++) {
