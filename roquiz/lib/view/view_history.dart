@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roquiz/model/persistence/quiz_repository.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/grade.dart';
 import 'package:roquiz/model/utils/time.dart';
@@ -7,9 +8,9 @@ import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 
 class ViewHistory extends StatefulWidget {
-  const ViewHistory({super.key, required this.quizList});
+  const ViewHistory({super.key, required this.quizRepository});
 
-  final List<QuizCompleted> quizList;
+  final QuizRepository quizRepository;
 
   @override
   State<StatefulWidget> createState() => ViewHistoryState();
@@ -22,7 +23,7 @@ class ViewHistoryState extends State<ViewHistory> {
   @override
   void initState() {
     super.initState();
-    _quizList = List.of(widget.quizList);
+    _quizList = List.of(widget.quizRepository.quizList);
   }
 
   @override
@@ -32,6 +33,7 @@ class ViewHistoryState extends State<ViewHistory> {
   }
 
   void _removeQuiz(int index) {
+    widget.quizRepository.remove(_quizList[index]);
     setState(() {
       _quizList.removeAt(index);
     });
