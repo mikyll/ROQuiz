@@ -15,6 +15,10 @@ class QuizRepository {
   static const String boxName = "quiz_history";
   static const String _entriesKey = "entries";
 
+  /// Identifies a file produced by [exportToJson], so imports can reject
+  /// unrelated JSON files instead of silently wiping the history.
+  static const String exportType = "roquiz_history";
+
   /// Maximum number of completed quizzes retained; older ones are dropped.
   static const int maxHistory = 100;
 
@@ -66,6 +70,51 @@ class QuizRepository {
   Future<void> clear() async {
     quizList.clear();
     await _persist();
+  }
+
+  /// Serializes the whole history into a self-describing JSON document suitable
+  /// for sharing or backup.
+  String exportToJson() {
+    return jsonEncode({
+      "type": exportType,
+      "version": QuizCompleted.schemaVersion,
+      "exportedAt": DateTime.now().toIso8601String(),
+      "quizzes": quizList.map((q) => q.toJson()).toList(),
+    });
+  }
+
+  /// Replaces the current history with the quizzes contained in [content] and
+  /// returns how many were imported. Throws [FormatException] when [content] is
+  /// not a recognizable history export. Malformed individual entries are skipped.
+  Future<int> importFromJson(String content) async {
+    final dynamic decoded = jsonDecode(content);
+    if (decoded is! Map<String, dynamic> || decoded["type"] != exportType) {
+      throw const FormatException("Not a roquiz history file");
+    }
+    final dynamic rawQuizzes = decoded["quizzes"];
+    if (rawQuizzes is! List) {
+      throw const FormatException("History file has no quizzes");
+    }
+
+    final List<QuizCompleted> imported = [];
+    for (final entry in rawQuizzes) {
+      try {
+        imported.add(QuizCompleted.fromJson(entry as Map<String, dynamic>));
+      } catch (e) {
+        debugPrint("QuizRepository: skipping malformed imported quiz ($e)");
+      }
+    }
+
+    imported.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+    quizList
+      ..clear()
+      ..addAll(imported);
+    if (quizList.length > maxHistory) {
+      quizList.removeRange(maxHistory, quizList.length);
+    }
+    await _persist();
+    return quizList.length;
   }
 
   Future<void> _persist() async {
