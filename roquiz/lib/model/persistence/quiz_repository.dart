@@ -67,19 +67,27 @@ class QuizRepository {
     await _persist();
   }
 
+  /// Removes every quiz in [quizzes] in a single persisted operation.
+  Future<void> removeAll(Iterable<QuizCompleted> quizzes) async {
+    final Set<QuizCompleted> toRemove = quizzes.toSet();
+    quizList.removeWhere(toRemove.contains);
+    await _persist();
+  }
+
   Future<void> clear() async {
     quizList.clear();
     await _persist();
   }
 
-  /// Serializes the whole history into a self-describing JSON document suitable
-  /// for sharing or backup.
-  String exportToJson() {
+  /// Serializes a history into a self-describing JSON document suitable for
+  /// sharing or backup. Exports [quizzes] when given (e.g. a user-selected
+  /// subset), otherwise the whole history.
+  String exportToJson({Iterable<QuizCompleted>? quizzes}) {
     return jsonEncode({
       "type": exportType,
       "version": QuizCompleted.schemaVersion,
       "exportedAt": DateTime.now().toIso8601String(),
-      "quizzes": quizList.map((q) => q.toJson()).toList(),
+      "quizzes": (quizzes ?? quizList).map((q) => q.toJson()).toList(),
     });
   }
 
