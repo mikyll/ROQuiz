@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/persistence/quiz_repository.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/grade.dart';
+import 'package:roquiz/model/utils/selection_controller.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/view/view_history_quiz.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
+import 'package:roquiz/widget/select_all_checkbox.dart';
 
 class ViewHistory extends StatefulWidget {
   const ViewHistory({super.key, required this.quizRepository});
@@ -24,11 +26,13 @@ class ViewHistory extends StatefulWidget {
 class ViewHistoryState extends State<ViewHistory> {
   final ScrollController _scrollController = ScrollController();
   late List<QuizCompleted> _quizList;
+  late SelectionController _selection;
 
   @override
   void initState() {
     super.initState();
     _quizList = List.of(widget.quizRepository.quizList);
+    _selection = SelectionController(_quizList.length);
   }
 
   @override
@@ -37,10 +41,9 @@ class ViewHistoryState extends State<ViewHistory> {
     super.dispose();
   }
 
-  void _removeQuiz(int index) {
-    widget.quizRepository.remove(_quizList[index]);
+  void _toggleSelection(int index) {
     setState(() {
-      _quizList.removeAt(index);
+      _selection.toggle(index);
     });
   }
 
@@ -48,6 +51,18 @@ class ViewHistoryState extends State<ViewHistory> {
     widget.quizRepository.clear();
     setState(() {
       _quizList.clear();
+      _selection.reset(0);
+    });
+  }
+
+  void _deleteSelected() {
+    final List<QuizCompleted> toRemove = [
+      for (final i in _selection.selectedIndices) _quizList[i],
+    ];
+    widget.quizRepository.removeAll(toRemove);
+    setState(() {
+      _quizList.removeWhere(toRemove.contains);
+      _selection.reset(_quizList.length);
     });
   }
 
@@ -79,8 +94,40 @@ class ViewHistoryState extends State<ViewHistory> {
     }
   }
 
-  Future<void> _exportHistory() async {
-    final String json = widget.quizRepository.exportToJson();
+  Future<void> _confirmDeleteSelected() async {
+    final int count = _selection.count;
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Elimina selezionati"),
+          content: Text(
+            "Vuoi eliminare i $count quiz selezionati? "
+            "L'operazione non è reversibile.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Annulla"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Elimina"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed ?? false) {
+      _deleteSelected();
+    }
+  }
+
+  /// Exports [quizzes] (a user-selected subset) when given, otherwise the whole
+  /// history, to a timestamped JSON file.
+  Future<void> _exportQuizzes({List<QuizCompleted>? quizzes}) async {
+    final String json = widget.quizRepository.exportToJson(quizzes: quizzes);
     final DateTime now = DateTime.now();
     String two(int n) => n.toString().padLeft(2, "0");
     // Compact timestamp: roquiz_history_20260619143005
@@ -98,9 +145,18 @@ class ViewHistoryState extends State<ViewHistory> {
     if (!mounted) {
       return;
     }
+    final String message = quizzes == null
+        ? "Storico esportato"
+        : "${quizzes.length} quiz esportati";
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text("Storico esportato")));
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _exportSelected() {
+    return _exportQuizzes(
+      quizzes: [for (final i in _selection.selectedIndices) _quizList[i]],
+    );
   }
 
   Future<void> _importHistory() async {
@@ -157,6 +213,7 @@ class ViewHistoryState extends State<ViewHistory> {
 
     setState(() {
       _quizList = List.of(widget.quizRepository.quizList);
+      _selection.reset(_quizList.length);
     });
 
     if (!mounted) {
@@ -174,8 +231,20 @@ class ViewHistoryState extends State<ViewHistory> {
       child: Scaffold(
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
-          title: Text("Storico Quiz"),
+          title: Text(
+            _selection.hasSelection
+                ? "Selezionati: ${_selection.count}/${_selection.length}"
+                : "Storico Quiz",
+          ),
           leading: CustomBackButton(),
+          actions: [
+            SelectAllCheckbox(
+              value: _selection.allSelected,
+              onChanged: _quizList.isEmpty
+                  ? null
+                  : () => setState(() => _selection.toggleAll()),
+            ),
+          ],
         ),
         body: SafeArea(
           child: Center(
@@ -198,6 +267,9 @@ class ViewHistoryState extends State<ViewHistory> {
                               totalQuestions: q.questions.length,
                               timeSpent: q.timeSpent,
                               grade: q.grade,
+                              isSelected: _selection.isSelected(index),
+                              selectionMode: _selection.hasSelection,
+                              onSelected: () => _toggleSelection(index),
                               onTap: () {
                                 Navigator.push(
                                   context,
@@ -207,7 +279,6 @@ class ViewHistoryState extends State<ViewHistory> {
                                   ),
                                 );
                               },
-                              onRemove: () => _removeQuiz(index),
                             ),
                           );
                         },
@@ -233,28 +304,46 @@ class ViewHistoryState extends State<ViewHistory> {
                       waitDuration: Duration(milliseconds: 500),
                       message: "Importa",
                       child: IconButton(
-                        onPressed: _importHistory,
+                        // Import replaces the whole history, so it is only
+                        // available when there is no active selection to act on.
+                        onPressed: _selection.hasSelection
+                            ? null
+                            : _importHistory,
                         icon: Icon(Icons.file_upload),
                         iconSize: 35,
                       ),
                     ),
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
-                      message: "Esporta",
+                      message: _selection.hasSelection
+                          ? "Esporta selezionati"
+                          : "Esporta",
                       child: IconButton(
-                        onPressed: _quizList.isEmpty ? null : _exportHistory,
+                        onPressed: _quizList.isEmpty
+                            ? null
+                            : (_selection.hasSelection
+                                  ? _exportSelected
+                                  : () => _exportQuizzes()),
                         icon: Icon(Icons.file_download),
                         iconSize: 35,
                       ),
                     ),
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
-                      message: "Svuota",
+                      message: _selection.hasSelection
+                          ? "Elimina selezionati"
+                          : "Svuota",
                       child: IconButton(
                         onPressed: _quizList.isEmpty
                             ? null
-                            : _confirmClearHistory,
-                        icon: Icon(Icons.delete_sweep),
+                            : (_selection.hasSelection
+                                  ? _confirmDeleteSelected
+                                  : _confirmClearHistory),
+                        icon: Icon(
+                          _selection.hasSelection
+                              ? Icons.delete
+                              : Icons.delete_sweep,
+                        ),
                         iconSize: 35,
                       ),
                     ),
@@ -277,8 +366,10 @@ class _QuizCompletedWidget extends StatelessWidget {
     required this.totalQuestions,
     required this.timeSpent,
     required this.grade,
+    this.isSelected = false,
+    this.selectionMode = false,
     this.onTap,
-    this.onRemove,
+    this.onSelected,
   });
 
   final DateTime timestamp;
@@ -286,12 +377,29 @@ class _QuizCompletedWidget extends StatelessWidget {
   final int totalQuestions;
   final int timeSpent;
   final double grade;
+  final bool isSelected;
+
+  /// Whether the list is currently in multi-selection mode (at least one item
+  /// selected). While in selection mode a tap toggles selection instead of
+  /// opening the quiz detail; a long press always toggles selection.
+  final bool selectionMode;
   final void Function()? onTap;
-  final void Function()? onRemove;
+  final void Function()? onSelected;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+        side: BorderSide(
+          width: 2.0,
+          color: isSelected
+              ? const Color.fromARGB(255, 64, 152, 241)
+              : Colors.transparent,
+        ),
+      ),
+      selected: isSelected,
+      selectedTileColor: const Color.fromARGB(255, 64, 152, 241).withAlpha(50),
       leading: Text(
         getGradeString(grade),
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -305,11 +413,9 @@ class _QuizCompletedWidget extends StatelessWidget {
         ],
       ),
       isThreeLine: false,
-      onTap: onTap,
-      trailing: InkWell(
-        onTap: onRemove,
-        child: Icon(Icons.delete, size: 30),
-      ),
+      onTap: selectionMode ? onSelected : onTap,
+      onLongPress: onSelected,
+      trailing: isSelected ? const Icon(Icons.check_circle, size: 30) : null,
     );
   }
 }
