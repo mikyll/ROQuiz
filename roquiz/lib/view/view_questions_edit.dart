@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/edit_question/commands/custom_command.dart';
 import 'package:roquiz/model/edit_question/command_executor.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/model/utils/selection_controller.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/question_dialog.dart';
+import 'package:roquiz/widget/select_all_checkbox.dart';
 import 'package:roquiz/widget/separator.dart';
 
 class ViewQuestionsEdit extends StatefulWidget {
@@ -31,51 +33,26 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   final ScrollController _scrollController = ScrollController();
 
   List<Question> _questions = [];
-  List<bool> _selectedQuestions = [];
-  int _selectedCount = 0;
-  bool? _selectedAll = false;
+  late SelectionController _selection;
 
   late CommandExecutor _commandExecutor;
 
-  /// Utility to update the checkbox tristate
-  void _updateSelectedAll() {
-    setState(() {
-      _selectedAll = null;
-      if (_selectedCount == _questions.length) {
-        _selectedAll = true;
-      }
-      if (_selectedCount == 0) {
-        _selectedAll = false;
-      }
-    });
-  }
-
   void _resetSelectedQuestions() {
     setState(() {
-      _selectedQuestions = List.filled(
-        _questions.length,
-        false,
-        growable: true,
-      );
-      _selectedCount = 0;
-      _updateSelectedAll();
+      _selection.reset(_questions.length);
     });
   }
 
   void _toggleQuestionSelection(int i) {
     setState(() {
-      _selectedQuestions[i] = !_selectedQuestions[i];
-      _selectedCount += (_selectedQuestions[i] ? 1 : -1);
-      _updateSelectedAll();
+      _selection.toggle(i);
     });
   }
 
   void _addQuestion(int id, Question question, {bool select = false}) {
     setState(() {
       _questions.insert(id, question);
-      _selectedQuestions.insert(id, select);
-      _selectedCount += select ? 1 : 0;
-      _updateSelectedAll();
+      _selection.insert(id, selected: select);
 
       // Update IDs
       for (int i = id + 1; i < _questions.length; i++) {
@@ -92,16 +69,16 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     });
   }
 
-  /// Removes the question with ID.
-  ///   Updates all the other questions
+  /// Removes the question with ID, updating all the other questions' IDs.
   ///
-  /// NB: select count must be decreased only if they were selected! (for example not when redoing the operation)
-  void _removeQuestion(int id, {bool deselect = false}) {
+  /// The selection count is decreased only when the removed question was
+  /// actually selected, which [SelectionController.removeAt] handles: e.g.
+  /// when redoing a removal the selection has been reset first, so nothing is
+  /// counted off.
+  void _removeQuestion(int id) {
     setState(() {
       _questions.removeAt(id);
-      _selectedQuestions.removeAt(id);
-      _selectedCount += deselect ? -1 : 0;
-      _updateSelectedAll();
+      _selection.removeAt(id);
 
       // Update IDs
       for (int i = id; i < _questions.length; i++) {
@@ -110,9 +87,9 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     });
   }
 
-  void _removeQuestions(List<Question> questions, {bool deselect = false}) {
+  void _removeQuestions(List<Question> questions) {
     for (int i = questions.length - 1; i >= 0; i--) {
-      _removeQuestion(questions[i].id, deselect: deselect);
+      _removeQuestion(questions[i].id);
     }
   }
 
@@ -155,19 +132,16 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
 
   // TODO: check
   void _commandRemoveQuestions() {
-    final List<Question> questionsToRemove = [];
-    for (int i = 0; i < _selectedQuestions.length; i++) {
-      if (_selectedQuestions[i]) {
-        questionsToRemove.add(_questions[i]);
-      }
-    }
+    final List<Question> questionsToRemove = [
+      for (final i in _selection.selectedIndices) _questions[i],
+    ];
 
     _commandExecutor.executeCommand(
       CustomCommand(
         name:
             "remove(num: ${questionsToRemove.length}, newSize: ${_questions.length + questionsToRemove.length})",
         onExecute: () {
-          _removeQuestions(questionsToRemove, deselect: true);
+          _removeQuestions(questionsToRemove);
         },
         onUndo: () {
           _resetSelectedQuestions();
@@ -175,24 +149,18 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
         },
         onRedo: () {
           _resetSelectedQuestions();
-          _removeQuestions(questionsToRemove, deselect: false);
+          _removeQuestions(questionsToRemove);
         },
       ),
     );
   }
 
   void _commandEditQuestion() {
-    Question? questionBefore;
-    for (int i = 0; i < _selectedQuestions.length; i++) {
-      if (_selectedQuestions[i]) {
-        questionBefore = _questions[i];
-        break;
-      }
-    }
-
-    if (questionBefore == null) {
+    final List<int> selected = _selection.selectedIndices;
+    if (selected.isEmpty) {
       return;
     }
+    final Question questionBefore = _questions[selected.first];
 
     // Snapshot the pre-edit state for undo. _editQuestion mutates the list
     // element in place, so a deep copy is required: keeping a reference to
@@ -246,7 +214,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       initState: "init(size: ${widget.questions.length})",
     );
     _questions = List.from(widget.questions);
-    _selectedQuestions = List.filled(_questions.length, false, growable: true);
+    _selection = SelectionController(_questions.length);
   }
 
   @override
@@ -262,61 +230,14 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       child: Scaffold(
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
-          title: Text(
-            "Selezionate: $_selectedCount/${_selectedQuestions.length}",
-          ),
+          title: Text("Selezionate: ${_selection.count}/${_selection.length}"),
           leading: CustomBackButton(),
           actions: [
-            Transform.scale(
-              scale: 1.5,
-              child: Checkbox(
-                side: WidgetStateBorderSide.resolveWith((states) {
-                  return BorderSide(
-                    color: states.contains(WidgetState.selected)
-                        ? Colors.blue
-                        : Colors.white,
-                  );
-                }),
-                fillColor: WidgetStateProperty.resolveWith((states) {
-                  return states.contains(WidgetState.selected)
-                      ? Colors.blue
-                      : Colors.transparent;
-                }),
-                checkColor: Colors.white,
-                tristate: true,
-                value: _selectedAll,
-                onChanged: _questions.isEmpty
-                    ? null
-                    : (value) {
-                        setState(() {
-                          if (_selectedAll == null || _selectedAll == false) {
-                            _selectedAll = true;
-                            for (
-                              int i = 0;
-                              i < _selectedQuestions.length;
-                              i++
-                            ) {
-                              _selectedQuestions[i] = true;
-                            }
-                            _selectedCount = _selectedQuestions.length;
-                            return;
-                          }
-
-                          if (_selectedAll == true) {
-                            _selectedAll = false;
-                            for (
-                              int i = 0;
-                              i < _selectedQuestions.length;
-                              i++
-                            ) {
-                              _selectedQuestions[i] = false;
-                            }
-                            _selectedCount = 0;
-                            return;
-                          }
-                        });
-                      },
-              ),
+            SelectAllCheckbox(
+              value: _selection.allSelected,
+              onChanged: _questions.isEmpty
+                  ? null
+                  : () => setState(() => _selection.toggleAll()),
             ),
           ],
         ),
@@ -333,13 +254,13 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                   itemBuilder: (context, index) {
                     Widget questionWidget = QuestionCard.edit(
                       question: _questions[index],
-                      isSelected: _selectedQuestions[index],
+                      isSelected: _selection.isSelected(index),
                       // TODO
                       //hideCorrectAnswer: !widget.showAnswers,
                       onSelected: () {
                         _toggleQuestionSelection(index);
                       },
-                      tapToSelect: _selectedCount > 0,
+                      tapToSelect: _selection.hasSelection,
                     );
                     // Check if we have to display the topic divider
                     if (index == 0 ||
@@ -391,7 +312,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                       waitDuration: Duration(milliseconds: 500),
                       message: "Aggiungi una nuova domanda",
                       child: IconButton(
-                        onPressed: _selectedCount == 0
+                        onPressed: !_selection.hasSelection
                             ? () {
                                 _commandAddNewQuestion();
                               }
@@ -405,7 +326,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                         waitDuration: Duration(milliseconds: 500),
                         message: "Modifica",
                         child: IconButton(
-                          onPressed: _selectedCount == 1
+                          onPressed: _selection.count == 1
                               ? () {
                                   _commandEditQuestion();
                                 }
@@ -418,7 +339,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                       waitDuration: Duration(milliseconds: 500),
                       message: "Rimuovi",
                       child: IconButton(
-                        onPressed: _selectedCount > 0
+                        onPressed: _selection.hasSelection
                             ? () {
                                 _commandRemoveQuestions();
                               }
