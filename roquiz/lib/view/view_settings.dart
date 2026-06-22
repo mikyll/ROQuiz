@@ -26,6 +26,16 @@ class ViewSettingsState extends State<ViewSettings> {
   // TODO
   final TextEditingController writtenGradeController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    // Seed the field once. Reassigning controller.text on every build — and
+    // saving a setting calls notifyListeners(), which rebuilds — would collapse
+    // the cursor and make typing unusable.
+    writtenGradeController.text =
+        context.read<Settings>().writtenGrade?.toString() ?? "";
+  }
+
   bool _isGradeValid(int? grade) {
     return grade != null && grade >= 0 && grade <= 32;
   }
@@ -33,7 +43,6 @@ class ViewSettingsState extends State<ViewSettings> {
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<Settings>(context);
-    writtenGradeController.text = settings.writtenGrade?.toString() ?? "";
 
     return PopScope(
       canPop: true,
@@ -255,7 +264,6 @@ class ViewSettingsState extends State<ViewSettings> {
                         //   SettingsManager.save(settings);
                         // },
                         onChanged: (value) {
-                          print(writtenGradeController.text);
                           settings.writtenGrade = int.tryParse(
                             writtenGradeController.text,
                           );
