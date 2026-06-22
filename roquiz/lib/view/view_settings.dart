@@ -20,6 +20,9 @@ class ViewSettings extends StatefulWidget {
 
 class ViewSettingsState extends State<ViewSettings> {
   final ScrollController scrollController = ScrollController();
+  // Stable key: recreating it on every build would tear down and rebuild the
+  // Form subtree (the ListView), resetting the scroll position to the top.
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // TODO
   final TextEditingController writtenGradeController = TextEditingController();
 
@@ -63,8 +66,7 @@ class ViewSettingsState extends State<ViewSettings> {
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 500.0),
               child: Form(
-                // TODO: key
-                key: GlobalKey<FormState>(),
+                key: _formKey,
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   controller: scrollController,
