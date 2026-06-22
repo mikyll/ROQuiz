@@ -427,13 +427,83 @@ class _QuizCompletedWidget extends StatelessWidget {
     return (background: const Color(0xFFE57373), foreground: Colors.white);
   }
 
+  /// The square grade badge. Cum laude (grade > 30, i.e. "30L") gets a gold
+  /// gradient, a soft glow and a raised superscript "L"; everything else uses
+  /// the flat pass/fail color from [_gradeBadgeColors].
+  Widget _buildGradeBadge() {
+    final bool isLode = grade > 30.0;
+    final badge = _gradeBadgeColors(grade);
+
+    final Widget label = isLode
+        ? Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(text: "30"),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.top,
+                  child: Transform.translate(
+                    offset: const Offset(1.0, -1.0),
+                    child: const Text(
+                      "L",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+        : Text(
+            getGradeString(grade),
+            style: TextStyle(
+              color: badge.foreground,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+
+    return Container(
+      width: 48.0,
+      height: 48.0,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: isLode ? null : badge.background,
+        gradient: isLode
+            ? const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFFFC107), Color(0xFFEF6C00)],
+              )
+            : null,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: isLode
+            ? [
+                BoxShadow(
+                  color: const Color(0xFFFFC107).withAlpha(140),
+                  blurRadius: 8.0,
+                  spreadRadius: 0.5,
+                ),
+              ]
+            : null,
+      ),
+      child: label,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Shared with question_card.dart so selection reads the same light blue
     // across the history list and the question editor.
     const Color selectionColor = Color.fromARGB(255, 64, 152, 241);
     final Color muted = Theme.of(context).hintColor;
-    final badge = _gradeBadgeColors(grade);
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
@@ -446,23 +516,7 @@ class _QuizCompletedWidget extends StatelessWidget {
       ),
       selected: isSelected,
       selectedTileColor: selectionColor.withAlpha(50),
-      leading: Container(
-        width: 48.0,
-        height: 48.0,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: badge.background,
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Text(
-          getGradeString(grade),
-          style: TextStyle(
-            color: badge.foreground,
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      leading: _buildGradeBadge(),
       title: Text(
         writtenGrade != null
             ? "$correctQuestions/$totalQuestions · scritto $writtenGrade"
