@@ -193,7 +193,10 @@ class ViewHistoryState extends State<ViewHistory> {
       allowedExtensions: ["json"],
       withData: true,
     );
-    final Uint8List? bytes = result?.files.first.bytes;
+    // Guard against an empty file list (web cancel/focus race) before .first.
+    final Uint8List? bytes = (result != null && result.files.isNotEmpty)
+        ? result.files.first.bytes
+        : null;
     if (bytes == null) {
       return;
     }
