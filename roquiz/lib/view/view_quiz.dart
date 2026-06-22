@@ -197,17 +197,17 @@ class _ViewQuizState extends State<ViewQuiz> {
       });
     });
 
-    _saveQuizToHistory();
+    _saveQuizToHistory(writtenGrade);
   }
 
-  void _saveQuizToHistory() {
+  void _saveQuizToHistory(int? writtenGrade) {
     final QuizCompleted completed = QuizCompleted.fromSnapshot(
       questions: _quiz.questions,
       selectedAnswers: _quiz.selectedAnswers,
       timestamp: DateTime.now(),
       timeSpent: widget.timer * 60 - _timerCounter,
       correctAnswers: _correctAnswers,
-      grade: _totalGrade ?? _quizGrade.toDouble(),
+      writtenGrade: writtenGrade,
     );
 
     widget.quizRepository.add(completed);
