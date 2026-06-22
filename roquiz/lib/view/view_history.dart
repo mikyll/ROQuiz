@@ -285,6 +285,7 @@ class ViewHistoryState extends State<ViewHistory> {
                               totalQuestions: q.questions.length,
                               timeSpent: q.timeSpent,
                               grade: q.grade,
+                              writtenGrade: q.writtenGrade,
                               isSelected: _selection.isSelected(index),
                               selectionMode: _selection.hasSelection,
                               onSelected: () => _toggleSelection(index),
@@ -384,6 +385,7 @@ class _QuizCompletedWidget extends StatelessWidget {
     required this.totalQuestions,
     required this.timeSpent,
     required this.grade,
+    this.writtenGrade,
     this.isSelected = false,
     this.selectionMode = false,
     this.onTap,
@@ -394,7 +396,14 @@ class _QuizCompletedWidget extends StatelessWidget {
   final int correctQuestions;
   final int totalQuestions;
   final int timeSpent;
+
+  /// Grade shown on the badge: the total exam grade when [writtenGrade] is set,
+  /// otherwise the quiz-only grade. Derived by [QuizCompleted.grade].
   final double grade;
+
+  /// Written grade recorded with this quiz, shown beside the score; `null` when
+  /// none was set (the badge then shows the quiz-only grade).
+  final int? writtenGrade;
   final bool isSelected;
 
   /// Whether the list is currently in multi-selection mode (at least one item
@@ -404,36 +413,88 @@ class _QuizCompletedWidget extends StatelessWidget {
   final void Function()? onTap;
   final void Function()? onSelected;
 
+  /// Badge fill/text colors for [grade], on a 30-point scale: green when
+  /// passed (>= 18), a richer green for top marks (>= 27), red when failed.
+  ({Color background, Color foreground}) _gradeBadgeColors(double grade) {
+    const double gradeBase = 30.0;
+    final double ratio = grade / gradeBase;
+    if (ratio >= 0.9) {
+      return (background: const Color(0xFF2E7D32), foreground: Colors.white);
+    }
+    if (ratio >= 0.6) {
+      return (background: const Color(0xFF66BB6A), foreground: Colors.white);
+    }
+    return (background: const Color(0xFFE57373), foreground: Colors.white);
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Shared with question_card.dart so selection reads the same light blue
+    // across the history list and the question editor.
+    const Color selectionColor = Color.fromARGB(255, 64, 152, 241);
+    final Color muted = Theme.of(context).hintColor;
+    final badge = _gradeBadgeColors(grade);
+
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
         side: BorderSide(
           width: 2.0,
-          color: isSelected
-              ? const Color.fromARGB(255, 64, 152, 241)
-              : Colors.transparent,
+          color: isSelected ? selectionColor : Colors.transparent,
         ),
       ),
       selected: isSelected,
-      selectedTileColor: const Color.fromARGB(255, 64, 152, 241).withAlpha(50),
-      leading: Text(
-        getGradeString(grade),
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      selectedTileColor: selectionColor.withAlpha(50),
+      leading: Container(
+        width: 48.0,
+        height: 48.0,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: badge.background,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Text(
+          getGradeString(grade),
+          style: TextStyle(
+            color: badge.foreground,
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-      title: Row(
-        spacing: 10.0,
-        children: [
-          Text(timestamp.toString().replaceAll("T", " ").split(".")[0]),
-          Text("$correctQuestions/$totalQuestions"),
-          Text(getTimeString(timeSpent)),
-        ],
+      title: Text(
+        writtenGrade != null
+            ? "$correctQuestions/$totalQuestions · scritto $writtenGrade"
+            : "$correctQuestions/$totalQuestions corrette",
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: 4.0),
+        child: Row(
+          children: [
+            Icon(Icons.calendar_today_outlined, size: 14.0, color: muted),
+            const SizedBox(width: 4.0),
+            Flexible(
+              child: Text(
+                getDateString(timestamp),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: muted),
+              ),
+            ),
+            const SizedBox(width: 12.0),
+            Icon(Icons.timer_outlined, size: 14.0, color: muted),
+            const SizedBox(width: 4.0),
+            Text(getTimeString(timeSpent), style: TextStyle(color: muted)),
+          ],
+        ),
       ),
       isThreeLine: false,
       onTap: selectionMode ? onSelected : onTap,
       onLongPress: onSelected,
-      trailing: isSelected ? const Icon(Icons.check_circle, size: 30) : null,
+      trailing: isSelected
+          ? const Icon(Icons.check_circle, size: 30.0, color: selectionColor)
+          : null,
     );
   }
 }
