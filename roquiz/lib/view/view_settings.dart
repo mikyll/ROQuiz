@@ -40,6 +40,22 @@ class ViewSettingsState extends State<ViewSettings> {
     return grade != null && grade >= 0 && grade <= 32;
   }
 
+  // Text style and horizontal padding shared by the stepper number fields and
+  // by [_numberFieldWidth], so the measured width matches what's rendered.
+  static const TextStyle _numberFieldStyle = TextStyle(fontSize: 16.0);
+  static const double _numberFieldPadding = 8.0;
+
+  /// Width that fits the field's max value (3 digits, e.g. "999"), so the value
+  /// is never clipped. Measured from [_numberFieldStyle] rather than hard-coded.
+  double _numberFieldWidth() {
+    final TextPainter painter = TextPainter(
+      text: const TextSpan(text: "000", style: _numberFieldStyle),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    // text + padding on both sides + room for the caret.
+    return painter.width + _numberFieldPadding * 2 + 6.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<Settings>(context);
@@ -306,8 +322,9 @@ class ViewSettingsState extends State<ViewSettings> {
                               icon: Icon(Icons.remove),
                             ),
                             SizedBox(
-                              width: 40.0,
+                              width: _numberFieldWidth(),
                               child: TextFormField(
+                                style: _numberFieldStyle,
                                 initialValue: "${settings.quizQuestions}",
                                 maxLength: 3,
                                 maxLengthEnforcement:
@@ -319,6 +336,11 @@ class ViewSettingsState extends State<ViewSettings> {
                                 ],
                                 textAlign: TextAlign.center,
                                 decoration: const InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: _numberFieldPadding,
+                                    vertical: 12.0,
+                                  ),
                                   counterStyle: TextStyle(
                                     height: double.minPositive,
                                   ),
@@ -358,8 +380,9 @@ class ViewSettingsState extends State<ViewSettings> {
                               icon: Icon(Icons.remove),
                             ),
                             SizedBox(
-                              width: 40.0,
+                              width: _numberFieldWidth(),
                               child: TextFormField(
+                                style: _numberFieldStyle,
                                 initialValue: "${settings.quizTime}",
                                 maxLength: 3,
                                 maxLengthEnforcement:
@@ -371,6 +394,11 @@ class ViewSettingsState extends State<ViewSettings> {
                                 ],
                                 textAlign: TextAlign.center,
                                 decoration: const InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: _numberFieldPadding,
+                                    vertical: 12.0,
+                                  ),
                                   counterStyle: TextStyle(
                                     height: double.minPositive,
                                   ),
