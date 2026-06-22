@@ -91,7 +91,7 @@ class QuestionCard extends StatelessWidget {
         }
       case QuestionCardMode.edit:
         if (isSelected) {
-          return Theme.of(context).primaryColor.withAlpha(50);
+          return const Color.fromARGB(255, 64, 152, 241);
         }
       default:
     }
@@ -102,7 +102,13 @@ class QuestionCard extends StatelessWidget {
     switch (mode) {
       case QuestionCardMode.edit:
         if (isSelected) {
-          return const Color.fromARGB(255, 64, 152, 241).withAlpha(50);
+          // Blend the translucent tint over the card's opaque surface so it
+          // reads the same light blue as the history list, regardless of the
+          // (darker) page background behind the card.
+          return Color.alphaBlend(
+            const Color.fromARGB(255, 64, 152, 241).withAlpha(50),
+            Theme.of(context).cardColor,
+          );
         }
       default:
         return null;
@@ -210,6 +216,21 @@ class QuestionCard extends StatelessWidget {
                         }
                       : null,
                 ),
+              ),
+            ),
+          ),
+
+        // Selection check icon (same as in the history list, where the
+        // ListTile tints its trailing icon with colorScheme.primary).
+        if (mode == QuestionCardMode.edit && isSelected)
+          Positioned(
+            top: 15,
+            right: 15,
+            child: IgnorePointer(
+              child: Icon(
+                Icons.check_circle,
+                size: 30,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
