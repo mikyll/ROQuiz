@@ -91,10 +91,12 @@ class QuizRepository {
     });
   }
 
-  /// Replaces the current history with the quizzes contained in [content] and
-  /// returns how many were imported. Throws [FormatException] when [content] is
-  /// not a recognizable history export. Malformed individual entries are skipped.
-  Future<int> importFromJson(String content) async {
+  /// Imports the quizzes contained in [content] and returns how many quizzes
+  /// the history holds afterwards. When [merge] is set, the imported quizzes are
+  /// added to the existing history (deduplicated by timestamp); otherwise the
+  /// current history is replaced. Throws [FormatException] when [content] is not
+  /// a recognizable history export. Malformed individual entries are skipped.
+  Future<int> importFromJson(String content, {bool merge = false}) async {
     final dynamic decoded = jsonDecode(content);
     if (decoded is! Map<String, dynamic> || decoded["type"] != exportType) {
       throw const FormatException("Not a roquiz history file");
@@ -113,11 +115,22 @@ class QuizRepository {
       }
     }
 
-    imported.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    // Deduplicate by timestamp: a completion is uniquely identified by when it
+    // happened, so re-importing the same quiz is a no-op when merging.
+    final List<QuizCompleted> combined = merge
+        ? [...quizList, ...imported]
+        : imported;
+    final Set<String> seen = {};
+    final List<QuizCompleted> deduped = [
+      for (final quiz in combined)
+        if (seen.add(quiz.timestamp.toIso8601String())) quiz,
+    ];
+
+    deduped.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     quizList
       ..clear()
-      ..addAll(imported);
+      ..addAll(deduped);
     if (quizList.length > maxHistory) {
       quizList.removeRange(maxHistory, quizList.length);
     }

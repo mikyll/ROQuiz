@@ -14,6 +14,9 @@ import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/select_all_checkbox.dart';
 
+/// How an imported history file is combined with the existing history.
+enum _ImportMode { merge, overwrite }
+
 class ViewHistory extends StatefulWidget {
   const ViewHistory({super.key, required this.quizRepository});
 
@@ -160,32 +163,41 @@ class ViewHistoryState extends State<ViewHistory> {
   }
 
   Future<void> _importHistory() async {
-    // Import replaces the whole history, so confirm before discarding anything.
+    // With existing history, let the user choose whether to merge the imported
+    // quizzes in or replace the current history. With an empty history the two
+    // are equivalent, so skip the prompt and merge.
+    _ImportMode mode = _ImportMode.merge;
     if (_quizList.isNotEmpty) {
-      final bool? confirmed = await showDialog<bool>(
+      final _ImportMode? choice = await showDialog<_ImportMode>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text("Importa storico"),
             content: const Text(
-              "L'importazione sostituirà lo storico attuale. Continuare?",
+              "Unire i quiz importati allo storico attuale o sostituirlo?",
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context, false),
+                onPressed: () => Navigator.pop(context),
                 child: const Text("Annulla"),
               ),
               TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text("Continua"),
+                onPressed: () =>
+                    Navigator.pop(context, _ImportMode.overwrite),
+                child: const Text("Sostituisci"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, _ImportMode.merge),
+                child: const Text("Unisci"),
               ),
             ],
           );
         },
       );
-      if (!(confirmed ?? false)) {
+      if (choice == null) {
         return;
       }
+      mode = choice;
     }
 
     final FilePickerResult? result = await FilePicker.pickFiles(
@@ -203,7 +215,10 @@ class ViewHistoryState extends State<ViewHistory> {
 
     final int count;
     try {
-      count = await widget.quizRepository.importFromJson(utf8.decode(bytes));
+      count = await widget.quizRepository.importFromJson(
+        utf8.decode(bytes),
+        merge: mode == _ImportMode.merge,
+      );
     } catch (e) {
       if (!mounted) {
         return;
