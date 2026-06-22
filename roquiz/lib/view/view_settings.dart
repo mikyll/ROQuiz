@@ -9,6 +9,29 @@ import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:roquiz/widget/setting_entry.dart';
 
+/// Rejects edits that would push the numeric value above [max] (e.g. a written
+/// grade can't exceed 32). Assumes digits-only input is enforced upstream.
+class _MaxValueInputFormatter extends TextInputFormatter {
+  const _MaxValueInputFormatter(this.max);
+
+  final int max;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+    final int? value = int.tryParse(newValue.text);
+    if (value == null || value > max) {
+      return oldValue;
+    }
+    return newValue;
+  }
+}
+
 class ViewSettings extends StatefulWidget {
   final int maxQuizPool;
 
@@ -259,6 +282,7 @@ class ViewSettingsState extends State<ViewSettings> {
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.digitsOnly,
+                          const _MaxValueInputFormatter(32),
                         ],
                         textAlign: TextAlign.center,
                         validator: (value) {
