@@ -48,19 +48,66 @@ class ViewSettingsState extends State<ViewSettings> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // TODO
   final TextEditingController writtenGradeController = TextEditingController();
+  // The stepper fields use controllers (rather than initialValue) so the +/-
+  // buttons can update what's shown: a FormField's initialValue only applies on
+  // first build, so the value would otherwise never refresh on a rebuild.
+  final TextEditingController quizQuestionsController = TextEditingController();
+  final TextEditingController quizTimeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Seed the field once. Reassigning controller.text on every build — and
+    // Seed the fields once. Reassigning controller.text on every build — and
     // saving a setting calls notifyListeners(), which rebuilds — would collapse
     // the cursor and make typing unusable.
-    writtenGradeController.text =
-        context.read<Settings>().writtenGrade?.toString() ?? "";
+    final settings = context.read<Settings>();
+    writtenGradeController.text = settings.writtenGrade?.toString() ?? "";
+    quizQuestionsController.text = settings.quizQuestions.toString();
+    quizTimeController.text = settings.quizTime.toString();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    writtenGradeController.dispose();
+    quizQuestionsController.dispose();
+    quizTimeController.dispose();
+    super.dispose();
   }
 
   bool _isGradeValid(int? grade) {
     return grade != null && grade >= 0 && grade <= 32;
+  }
+
+  // Bounds for the stepper fields. Quiz questions can't exceed the available
+  // pool (maxQuizPool); the time field is capped at its 3-digit width.
+  static const int _minQuizQuestions = 1;
+  static const int _minQuizTime = 1;
+  static const int _maxQuizTime = 999;
+
+  int get _maxQuizQuestions => widget.maxQuizPool < _minQuizQuestions
+      ? _minQuizQuestions
+      : widget.maxQuizPool;
+
+  /// Sets the quiz-question count to [value] clamped to its valid range,
+  /// syncing the field, the model and storage. Used by the +/- steppers and on
+  /// submit; the live [TextFormField.onChanged] only updates the model so it
+  /// doesn't move the caret while typing.
+  void _setQuizQuestions(int value) {
+    final settings = context.read<Settings>();
+    final int clamped = value.clamp(_minQuizQuestions, _maxQuizQuestions);
+    settings.quizQuestions = clamped;
+    quizQuestionsController.text = clamped.toString();
+    SettingsManager.save(settings);
+  }
+
+  /// Quiz-time counterpart of [_setQuizQuestions].
+  void _setQuizTime(int value) {
+    final settings = context.read<Settings>();
+    final int clamped = value.clamp(_minQuizTime, _maxQuizTime);
+    settings.quizTime = clamped;
+    quizTimeController.text = clamped.toString();
+    SettingsManager.save(settings);
   }
 
   // Text style and horizontal padding shared by the stepper number fields and
@@ -340,16 +387,15 @@ class ViewSettingsState extends State<ViewSettings> {
                           spacing: 10.0,
                           children: [
                             IconButton(
-                              onPressed: () {
-                                // TODO
-                              },
+                              onPressed: () =>
+                                  _setQuizQuestions(settings.quizQuestions - 1),
                               icon: Icon(Icons.remove),
                             ),
                             SizedBox(
                               width: _numberFieldWidth(),
                               child: TextFormField(
+                                controller: quizQuestionsController,
                                 style: _numberFieldStyle,
-                                initialValue: "${settings.quizQuestions}",
                                 maxLength: 3,
                                 maxLengthEnforcement:
                                     MaxLengthEnforcement.enforced,
@@ -370,18 +416,25 @@ class ViewSettingsState extends State<ViewSettings> {
                                   ),
                                   counterText: "",
                                 ),
-                                onFieldSubmitted: (newValue) {
-                                  // TODO: validate
-                                  settings.quizQuestions =
-                                      int.tryParse(newValue) ?? 16;
+                                onChanged: (value) {
+                                  final int? parsed = int.tryParse(value);
+                                  if (parsed == null) {
+                                    return;
+                                  }
+                                  settings.quizQuestions = parsed.clamp(
+                                    _minQuizQuestions,
+                                    _maxQuizQuestions,
+                                  );
                                   SettingsManager.save(settings);
                                 },
+                                onFieldSubmitted: (value) => _setQuizQuestions(
+                                  int.tryParse(value) ?? settings.quizQuestions,
+                                ),
                               ),
                             ),
                             IconButton(
-                              onPressed: () {
-                                // TODO
-                              },
+                              onPressed: () =>
+                                  _setQuizQuestions(settings.quizQuestions + 1),
                               icon: Icon(Icons.add),
                             ),
                           ],
@@ -398,16 +451,15 @@ class ViewSettingsState extends State<ViewSettings> {
                           spacing: 10.0,
                           children: [
                             IconButton(
-                              onPressed: () {
-                                // TODO
-                              },
+                              onPressed: () =>
+                                  _setQuizTime(settings.quizTime - 1),
                               icon: Icon(Icons.remove),
                             ),
                             SizedBox(
                               width: _numberFieldWidth(),
                               child: TextFormField(
+                                controller: quizTimeController,
                                 style: _numberFieldStyle,
-                                initialValue: "${settings.quizTime}",
                                 maxLength: 3,
                                 maxLengthEnforcement:
                                     MaxLengthEnforcement.enforced,
@@ -428,18 +480,25 @@ class ViewSettingsState extends State<ViewSettings> {
                                   ),
                                   counterText: "",
                                 ),
-                                onFieldSubmitted: (newValue) {
-                                  // TODO: validate
-                                  settings.quizTime =
-                                      int.tryParse(newValue) ?? 16;
+                                onChanged: (value) {
+                                  final int? parsed = int.tryParse(value);
+                                  if (parsed == null) {
+                                    return;
+                                  }
+                                  settings.quizTime = parsed.clamp(
+                                    _minQuizTime,
+                                    _maxQuizTime,
+                                  );
                                   SettingsManager.save(settings);
                                 },
+                                onFieldSubmitted: (value) => _setQuizTime(
+                                  int.tryParse(value) ?? settings.quizTime,
+                                ),
                               ),
                             ),
                             IconButton(
-                              onPressed: () {
-                                // TODO
-                              },
+                              onPressed: () =>
+                                  _setQuizTime(settings.quizTime + 1),
                               icon: Icon(Icons.add),
                             ),
                           ],
