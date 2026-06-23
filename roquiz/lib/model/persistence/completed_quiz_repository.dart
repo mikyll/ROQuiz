@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 
-/// Outcome of [QuizRepository.importFromJson]: how many imported quizzes were
+/// Outcome of [CompletedQuizRepository.importFromJson]: how many imported quizzes were
 /// actually added to the history, and how many were skipped because they
 /// duplicate an existing completion (same timestamp) or could not be parsed.
 class ImportResult {
@@ -26,7 +26,7 @@ class ImportResult {
 /// avoid both the rewrite cost mattering and the localStorage size ceiling.
 /// Entries are kept newest-first and parsed defensively, so a single corrupt
 /// record (e.g. left over from an older schema) never breaks the whole history.
-class QuizRepository {
+class CompletedQuizRepository {
   static const String boxName = "quiz_history";
   static const String _entriesKey = "entries";
 
@@ -54,7 +54,9 @@ class QuizRepository {
     try {
       decoded = jsonDecode(raw) as List<dynamic>;
     } catch (e) {
-      debugPrint("QuizRepository: failed to decode history, ignoring it ($e)");
+      debugPrint(
+        "CompletedQuizRepository: failed to decode history, ignoring it ($e)",
+      );
       return;
     }
 
@@ -62,7 +64,9 @@ class QuizRepository {
       try {
         quizList.add(QuizCompleted.fromJson(entry as Map<String, dynamic>));
       } catch (e) {
-        debugPrint("QuizRepository: skipping malformed quiz entry ($e)");
+        debugPrint(
+          "CompletedQuizRepository: skipping malformed quiz entry ($e)",
+        );
       }
     }
 
@@ -131,7 +135,9 @@ class QuizRepository {
       try {
         imported.add(QuizCompleted.fromJson(entry as Map<String, dynamic>));
       } catch (e) {
-        debugPrint("QuizRepository: skipping malformed imported quiz ($e)");
+        debugPrint(
+          "CompletedQuizRepository: skipping malformed imported quiz ($e)",
+        );
       }
     }
     final int skippedInvalid = rawQuizzes.length - imported.length;

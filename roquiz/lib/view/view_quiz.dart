@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roquiz/model/persistence/quiz_repository.dart';
+import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
@@ -25,7 +25,7 @@ class ViewQuiz extends StatefulWidget {
   final int questionNum;
   final int timer;
   final bool shuffleAnswers;
-  final QuizRepository quizRepository;
+  final CompletedQuizRepository completedQuizRepository;
 
   const ViewQuiz({
     super.key,
@@ -33,7 +33,7 @@ class ViewQuiz extends StatefulWidget {
     required this.questionNum,
     required this.timer,
     required this.shuffleAnswers,
-    required this.quizRepository,
+    required this.completedQuizRepository,
   });
 
   @override
@@ -210,7 +210,7 @@ class _ViewQuizState extends State<ViewQuiz> {
       writtenGrade: writtenGrade,
     );
 
-    widget.quizRepository.add(completed);
+    widget.completedQuizRepository.add(completed);
   }
 
   @override

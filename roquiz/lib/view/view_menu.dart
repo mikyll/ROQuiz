@@ -4,7 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 import 'package:roquiz/model/persistence/question_repository.dart';
-import 'package:roquiz/model/persistence/quiz_repository.dart';
+import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
@@ -19,12 +19,12 @@ import 'package:flutter/foundation.dart';
 
 class ViewMenu extends StatefulWidget {
   final PackageInfo packageInfo;
-  final QuizRepository quizRepository;
+  final CompletedQuizRepository completedQuizRepository;
 
   const ViewMenu({
     super.key,
     required this.packageInfo,
-    required this.quizRepository,
+    required this.completedQuizRepository,
   });
 
   @override
@@ -163,7 +163,8 @@ class ViewMenuState extends State<ViewMenu> {
                                   timer: settings.quizTime,
                                   // TODO
                                   shuffleAnswers: false,
-                                  quizRepository: widget.quizRepository,
+                                  completedQuizRepository:
+                                      widget.completedQuizRepository,
                                 );
                               },
                             ),
@@ -335,7 +336,8 @@ class ViewMenuState extends State<ViewMenu> {
                         MaterialPageRoute(
                           builder: (context) {
                             return ViewHistory(
-                              quizRepository: widget.quizRepository,
+                              completedQuizRepository:
+                                  widget.completedQuizRepository,
                             );
                           },
                         ),

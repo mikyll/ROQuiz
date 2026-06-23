@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
-import 'package:roquiz/model/persistence/quiz_repository.dart';
+import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/grade.dart';
 import 'package:roquiz/model/utils/selection_controller.dart';
@@ -18,9 +18,9 @@ import 'package:roquiz/widget/select_all_checkbox.dart';
 enum _ImportMode { merge, overwrite }
 
 class ViewHistory extends StatefulWidget {
-  const ViewHistory({super.key, required this.quizRepository});
+  const ViewHistory({super.key, required this.completedQuizRepository});
 
-  final QuizRepository quizRepository;
+  final CompletedQuizRepository completedQuizRepository;
 
   @override
   State<StatefulWidget> createState() => ViewHistoryState();
@@ -34,7 +34,7 @@ class ViewHistoryState extends State<ViewHistory> {
   @override
   void initState() {
     super.initState();
-    _quizList = List.of(widget.quizRepository.quizList);
+    _quizList = List.of(widget.completedQuizRepository.quizList);
     _selection = SelectionController(_quizList.length);
   }
 
@@ -51,7 +51,7 @@ class ViewHistoryState extends State<ViewHistory> {
   }
 
   void _clearHistory() {
-    widget.quizRepository.clear();
+    widget.completedQuizRepository.clear();
     setState(() {
       _quizList.clear();
       _selection.reset(0);
@@ -62,7 +62,7 @@ class ViewHistoryState extends State<ViewHistory> {
     final List<QuizCompleted> toRemove = [
       for (final i in _selection.selectedIndices) _quizList[i],
     ];
-    widget.quizRepository.removeAll(toRemove);
+    widget.completedQuizRepository.removeAll(toRemove);
     setState(() {
       _quizList.removeWhere(toRemove.contains);
       _selection.reset(_quizList.length);
@@ -130,7 +130,9 @@ class ViewHistoryState extends State<ViewHistory> {
   /// Exports [quizzes] (a user-selected subset) when given, otherwise the whole
   /// history, to a timestamped JSON file.
   Future<void> _exportQuizzes({List<QuizCompleted>? quizzes}) async {
-    final String json = widget.quizRepository.exportToJson(quizzes: quizzes);
+    final String json = widget.completedQuizRepository.exportToJson(
+      quizzes: quizzes,
+    );
     final DateTime now = DateTime.now();
     String two(int n) => n.toString().padLeft(2, "0");
     // Compact timestamp: roquiz_history_20260619143005
@@ -214,7 +216,7 @@ class ViewHistoryState extends State<ViewHistory> {
 
     final ImportResult importResult;
     try {
-      importResult = await widget.quizRepository.importFromJson(
+      importResult = await widget.completedQuizRepository.importFromJson(
         utf8.decode(bytes),
         merge: mode == _ImportMode.merge,
       );
@@ -229,7 +231,7 @@ class ViewHistoryState extends State<ViewHistory> {
     }
 
     setState(() {
-      _quizList = List.of(widget.quizRepository.quizList);
+      _quizList = List.of(widget.completedQuizRepository.quizList);
       _selection.reset(_quizList.length);
     });
 
