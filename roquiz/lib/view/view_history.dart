@@ -182,8 +182,7 @@ class ViewHistoryState extends State<ViewHistory> {
                 child: const Text("Annulla"),
               ),
               TextButton(
-                onPressed: () =>
-                    Navigator.pop(context, _ImportMode.overwrite),
+                onPressed: () => Navigator.pop(context, _ImportMode.overwrite),
                 child: const Text("Sostituisci"),
               ),
               TextButton(
@@ -213,9 +212,9 @@ class ViewHistoryState extends State<ViewHistory> {
       return;
     }
 
-    final int count;
+    final ImportResult importResult;
     try {
-      count = await widget.quizRepository.importFromJson(
+      importResult = await widget.quizRepository.importFromJson(
         utf8.decode(bytes),
         merge: mode == _ImportMode.merge,
       );
@@ -239,7 +238,29 @@ class ViewHistoryState extends State<ViewHistory> {
     }
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text("Importati $count quiz")));
+    ).showSnackBar(SnackBar(content: Text(_importResultMessage(importResult))));
+  }
+
+  /// Builds the post-import feedback, e.g. "Importati 2 quiz · 3 duplicati
+  /// ignorati · 1 non valido", surfacing the duplicates and malformed entries
+  /// that are otherwise silently skipped.
+  String _importResultMessage(ImportResult result) {
+    final List<String> parts = [
+      result.added == 0
+          ? "Nessun quiz importato"
+          : "Importati ${result.added} quiz",
+    ];
+    if (result.skippedDuplicates > 0) {
+      final s = result.skippedDuplicates == 1
+          ? "duplicato ignorato"
+          : "duplicati ignorati";
+      parts.add("${result.skippedDuplicates} $s");
+    }
+    if (result.skippedInvalid > 0) {
+      final s = result.skippedInvalid == 1 ? "non valido" : "non validi";
+      parts.add("${result.skippedInvalid} $s");
+    }
+    return parts.join(" · ");
   }
 
   @override
@@ -506,7 +527,10 @@ class _QuizCompletedWidget extends StatelessWidget {
     final Color muted = Theme.of(context).hintColor;
 
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 12.0,
+        vertical: 4.0,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
         side: BorderSide(

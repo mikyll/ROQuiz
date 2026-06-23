@@ -4,6 +4,21 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 
+/// Outcome of [QuizRepository.importFromJson]: how many imported quizzes were
+/// actually added to the history, and how many were skipped because they
+/// duplicate an existing completion (same timestamp) or could not be parsed.
+class ImportResult {
+  final int added;
+  final int skippedDuplicates;
+  final int skippedInvalid;
+
+  const ImportResult({
+    required this.added,
+    required this.skippedDuplicates,
+    required this.skippedInvalid,
+  });
+}
+
 /// Local store for completed quizzes, backed by a Hive box.
 ///
 /// The whole history is kept as a single JSON array under one key: the list is
@@ -91,12 +106,17 @@ class QuizRepository {
     });
   }
 
-  /// Imports the quizzes contained in [content] and returns how many quizzes
-  /// the history holds afterwards. When [merge] is set, the imported quizzes are
-  /// added to the existing history (deduplicated by timestamp); otherwise the
-  /// current history is replaced. Throws [FormatException] when [content] is not
-  /// a recognizable history export. Malformed individual entries are skipped.
-  Future<int> importFromJson(String content, {bool merge = false}) async {
+  /// Imports the quizzes contained in [content] and returns an [ImportResult]
+  /// breaking down how many were added versus skipped (duplicates / malformed).
+  /// When [merge] is set, the imported quizzes are added to the existing history
+  /// (deduplicated by timestamp); otherwise the current history is replaced.
+  /// Throws [FormatException] when [content] is not a recognizable history
+  /// export, or when it contains no valid quizzes. Malformed individual entries
+  /// are skipped as long as at least one is valid.
+  Future<ImportResult> importFromJson(
+    String content, {
+    bool merge = false,
+  }) async {
     final dynamic decoded = jsonDecode(content);
     if (decoded is! Map<String, dynamic> || decoded["type"] != exportType) {
       throw const FormatException("Not a roquiz history file");
@@ -114,28 +134,50 @@ class QuizRepository {
         debugPrint("QuizRepository: skipping malformed imported quiz ($e)");
       }
     }
+    final int skippedInvalid = rawQuizzes.length - imported.length;
+
+    // Bail out before mutating the history: a file whose entries are all
+    // missing or malformed yields nothing to import. Without this, overwrite
+    // mode would clear() then addAll([]) and silently wipe the history while
+    // reporting success.
+    if (imported.isEmpty) {
+      throw const FormatException("History file has no valid quizzes");
+    }
 
     // Deduplicate by timestamp: a completion is uniquely identified by when it
-    // happened, so re-importing the same quiz is a no-op when merging.
-    final List<QuizCompleted> combined = merge
-        ? [...quizList, ...imported]
-        : imported;
-    final Set<String> seen = {};
-    final List<QuizCompleted> deduped = [
-      for (final quiz in combined)
-        if (seen.add(quiz.timestamp.toIso8601String())) quiz,
-    ];
+    // happened, so re-importing the same quiz is a no-op when merging. In merge
+    // mode existing entries are seeded first so they win over imported dupes.
+    final Set<String> seen = merge
+        ? {for (final quiz in quizList) quiz.timestamp.toIso8601String()}
+        : <String>{};
+    final List<QuizCompleted> result = merge
+        ? [...quizList]
+        : <QuizCompleted>[];
+    int added = 0;
+    int skippedDuplicates = 0;
+    for (final quiz in imported) {
+      if (seen.add(quiz.timestamp.toIso8601String())) {
+        result.add(quiz);
+        added++;
+      } else {
+        skippedDuplicates++;
+      }
+    }
 
-    deduped.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    result.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     quizList
       ..clear()
-      ..addAll(deduped);
+      ..addAll(result);
     if (quizList.length > maxHistory) {
       quizList.removeRange(maxHistory, quizList.length);
     }
     await _persist();
-    return quizList.length;
+    return ImportResult(
+      added: added,
+      skippedDuplicates: skippedDuplicates,
+      skippedInvalid: skippedInvalid,
+    );
   }
 
   Future<void> _persist() async {
