@@ -220,6 +220,19 @@ class ViewHistoryState extends State<ViewHistory> {
         utf8.decode(bytes),
         merge: mode == _ImportMode.merge,
       );
+    } on UnsupportedHistoryVersionException {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "File creato con una versione più recente dell'app; "
+            "aggiornala per importarlo",
+          ),
+        ),
+      );
+      return;
     } catch (e) {
       if (!mounted) {
         return;

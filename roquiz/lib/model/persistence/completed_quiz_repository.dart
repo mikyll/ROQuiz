@@ -19,6 +19,26 @@ class ImportResult {
   });
 }
 
+/// Thrown by [CompletedQuizRepository.importFromJson] when the file declares a
+/// schema [fileVersion] newer than the [supportedVersion] this build can parse.
+/// Such a file may carry entry shapes [QuizCompleted.fromJson] doesn't
+/// understand, so importing it would silently drop data — better to refuse and
+/// tell the user to update the app.
+class UnsupportedHistoryVersionException implements Exception {
+  final int fileVersion;
+  final int supportedVersion;
+
+  const UnsupportedHistoryVersionException({
+    required this.fileVersion,
+    required this.supportedVersion,
+  });
+
+  @override
+  String toString() =>
+      "UnsupportedHistoryVersionException(file v$fileVersion > "
+      "supported v$supportedVersion)";
+}
+
 /// Local store for completed quizzes, backed by a Hive box.
 ///
 /// The whole history is kept as a single JSON array under one key: the list is
@@ -115,8 +135,9 @@ class CompletedQuizRepository {
   /// When [merge] is set, the imported quizzes are added to the existing history
   /// (deduplicated by timestamp); otherwise the current history is replaced.
   /// Throws [FormatException] when [content] is not a recognizable history
-  /// export, or when it contains no valid quizzes. Malformed individual entries
-  /// are skipped as long as at least one is valid.
+  /// export, or when it contains no valid quizzes; throws
+  /// [UnsupportedHistoryVersionException] when it was written by a newer schema.
+  /// Malformed individual entries are skipped as long as at least one is valid.
   Future<ImportResult> importFromJson(
     String content, {
     bool merge = false,
@@ -124,6 +145,16 @@ class CompletedQuizRepository {
     final dynamic decoded = jsonDecode(content);
     if (decoded is! Map<String, dynamic> || decoded["type"] != exportType) {
       throw const FormatException("Not a roquiz history file");
+    }
+    // Refuse files from a newer schema than this build understands: their
+    // entries may carry shapes fromJson can't parse, so importing would
+    // silently skip them as "invalid". Older/equal versions parse defensively.
+    final dynamic rawVersion = decoded["version"];
+    if (rawVersion is int && rawVersion > QuizCompleted.schemaVersion) {
+      throw UnsupportedHistoryVersionException(
+        fileVersion: rawVersion,
+        supportedVersion: QuizCompleted.schemaVersion,
+      );
     }
     final dynamic rawQuizzes = decoded["quizzes"];
     if (rawQuizzes is! List) {

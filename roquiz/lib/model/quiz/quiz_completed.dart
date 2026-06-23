@@ -3,10 +3,12 @@ import 'package:roquiz/model/quiz/quiz.dart';
 import 'package:roquiz/model/utils/grade.dart';
 
 class QuizCompleted extends Quiz {
-  /// Bumped whenever the persisted JSON shape changes, so [fromJson] can migrate
-  /// (or skip) older entries instead of crashing. Version 2 replaced the stored
-  /// (total) `grade` with the written grade [writtenGrade] used at completion;
-  /// the grade itself is now derived (see [grade]).
+  /// Bumped whenever the persisted JSON shape changes. It's written into each
+  /// entry and into the export envelope; [fromJson] doesn't read it (it parses
+  /// defensively and ignores keys it no longer recognizes), but imports reject
+  /// files declaring a *newer* version than this build understands. Version 2
+  /// replaced the stored (total) `grade` with the written grade [writtenGrade]
+  /// used at completion; the grade itself is now derived (see [grade]).
   static const int schemaVersion = 2;
 
   final DateTime timestamp;
