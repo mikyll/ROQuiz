@@ -262,6 +262,13 @@ class _ViewQuizState extends State<ViewQuiz> {
     _startQuiz();
   }
 
+  /// Background tone for the bottom-bar nav arrows, taken from the
+  /// ElevatedButton theme so they match the adjacent Termina/Riavvia button
+  /// (the default IconButton background is a slightly different brand shade).
+  Color? _navArrowColor(BuildContext context) => Theme.of(
+    context,
+  ).elevatedButtonTheme.style?.backgroundColor?.resolve(const <WidgetState>{});
+
   @override
   Widget build(BuildContext context) {
     final Settings settings = Provider.of<Settings>(context);
@@ -510,6 +517,9 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 spacing: 20.0,
                                 children: [
                                   IconButton(
+                                    style: IconButton.styleFrom(
+                                      backgroundColor: _navArrowColor(context),
+                                    ),
                                     onPressed: () {
                                       // TODO: long press
                                       _previousQuestion();
@@ -518,6 +528,9 @@ class _ViewQuizState extends State<ViewQuiz> {
                                     iconSize: 35,
                                   ),
                                   IconButton(
+                                    style: IconButton.styleFrom(
+                                      backgroundColor: _navArrowColor(context),
+                                    ),
                                     onLongPress: () {},
                                     onPressed: () {
                                       // TODO: long press
