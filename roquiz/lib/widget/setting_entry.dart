@@ -5,19 +5,38 @@ class SettingEntry extends StatelessWidget {
   final Widget child;
   final String? tooltip;
 
+  /// When false the label is greyed out and the control beside it is dimmed,
+  /// so the whole entry reads as disabled. The [child] should still be made
+  /// non-interactive by its caller (e.g. a [Checkbox] with `onChanged: null`).
+  final bool enabled;
+
   const SettingEntry({
     super.key,
     required this.label,
     required this.child,
     this.tooltip,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final Widget row = Row(
       children: [
-        Expanded(child: Text(label, style: TextStyle(fontSize: 18.0))),
-        SizedBox(width: 150.0, child: child),
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 18.0,
+              color: enabled ? null : Theme.of(context).disabledColor,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 150.0,
+          // Dim the control to match the greyed label: an unchecked disabled
+          // Checkbox otherwise looks the same as an enabled one.
+          child: enabled ? child : Opacity(opacity: 0.5, child: child),
+        ),
       ],
     );
 

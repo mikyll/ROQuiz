@@ -578,6 +578,7 @@ class ViewSettingsState extends State<ViewSettings> {
                     if (kDebugMode)
                       SettingEntry(
                         label: "Tema per daltonici:",
+                        enabled: false,
                         tooltip:
                             "Se selezionata, imposta il layout dell'applicazione per facilitarne l'utilizzo anche per le persone affette da daltonismo.",
                         child: Transform.scale(
