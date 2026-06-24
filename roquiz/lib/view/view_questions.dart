@@ -223,150 +223,156 @@ class ViewQuestionsState extends State<ViewQuestions> {
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor.withAlpha(70),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 15.0,
-              children: [
-                // Show/Hide correct answers
-                Tooltip(
-                  waitDuration: Duration(milliseconds: 500),
-                  message: "Mostra/nascondi le risposte corrette",
-                  child: IconButton(
-                    onPressed: () {
-                      _toggleShowAnswers(settings);
-                    },
-                    icon: Icon(
-                      settings.hideCorrectAnswersInEditMode
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
-                    iconSize: 35,
-                  ),
-                ),
-                // Check if there are new questions
-                if (widget.editable)
-                  Tooltip(
-                    waitDuration: Duration(milliseconds: 500),
-                    message: "Controlla se ci sono nuove domande",
-                    child: IconButton(
-                      onPressed: null,
-                      icon: Icon(Icons.sync_rounded),
-                      iconSize: 35,
-                    ),
-                  ),
-
-                // Edit mode
-                if (widget.editable)
-                  Tooltip(
-                    waitDuration: Duration(milliseconds: 500),
-                    message: "Modifica",
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              final List<String> topics = getTopicsList(
-                                _questions,
-                              );
-
-                              return ViewQuestionsEdit(
-                                questions: _questions,
-                                topics: topics,
-                                hideAnswers:
-                                    settings.hideCorrectAnswersInEditMode,
-                              );
-                            },
-                          ),
-                        );
-                        // TODO: change animation?
-                        // Navigator.push(
-                        //   context,
-                        //   PageRouteBuilder(
-                        //     pageBuilder: (_, __, ___) {
-                        //       return ViewQuestionsEdit(
-                        //         questions: _questions,
-                        //         hideAnswers:
-                        //             settings.hideCorrectAnswersInEditMode,
-                        //       );
-                        //     },
-                        //     transitionDuration: Duration.zero,
-                        //     // transitionDuration: Duration(milliseconds: 300),
-                        //     // transitionsBuilder: (_, animation, __, c) {
-                        //     //   const begin = Offset(1.0, 0.0);
-                        //     //   const end = Offset.zero;
-                        //     //   var tween = Tween(
-                        //     //     begin: begin,
-                        //     //     end: end,
-                        //     //   ).chain(CurveTween(curve: Curves.easeOut));
-                        //     //   return SlideTransition(
-                        //     //     position: animation.drive(tween),
-                        //     //     child: c,
-                        //     //   );
-                        //     // },
-                        //   ),
-                        // );
-                      },
-                      icon: Icon(Icons.edit),
-                      iconSize: 35,
-                    ),
-                  ),
-
-                // Edit mode (file)
-                if (widget.editable)
-                  if (kDebugMode)
+          child: SizedBox(
+            width: double.infinity,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 15.0,
+                  children: [
+                    // Show/Hide correct answers
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
-                      message: "Modifica File",
+                      message: "Mostra/nascondi le risposte corrette",
                       child: IconButton(
-                        onPressed: !widget.editable
-                            ? null
-                            : () {
-                                // Prompt for format
-
-                                // TODO: change animation
-
-                                Navigator.push(
-                                  context,
-                                  // PageRouteBuilder(
-                                  //   pageBuilder: (_, __, ___) {
-                                  //     return ViewQuestionsEditFile();
-                                  //   },
-                                  //   transitionDuration: Duration.zero,
-                                  //   transitionsBuilder: (_, animation, __, child) {
-                                  //     return child;
-                                  //   },
-                                  // ),
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) {
-                                      return ViewQuestionsEditFile(
-                                        fileContent: "",
-                                      );
-                                    },
-                                    transitionDuration: Duration.zero,
-                                    // transitionDuration: Duration(milliseconds: 300),
-                                    // transitionsBuilder: (_, animation, __, c) {
-                                    //   const begin = Offset(1.0, 0.0);
-                                    //   const end = Offset.zero;
-                                    //   var tween = Tween(
-                                    //     begin: begin,
-                                    //     end: end,
-                                    //   ).chain(CurveTween(curve: Curves.easeOut));
-                                    //   return SlideTransition(
-                                    //     position: animation.drive(tween),
-                                    //     child: c,
-                                    //   );
-                                    // },
-                                  ),
-                                );
-                              },
-                        icon: Icon(Icons.edit_document),
+                        onPressed: () {
+                          _toggleShowAnswers(settings);
+                        },
+                        icon: Icon(
+                          settings.hideCorrectAnswersInEditMode
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
                         iconSize: 35,
                       ),
                     ),
-              ],
+                    // Check if there are new questions
+                    if (widget.editable)
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Controlla se ci sono nuove domande",
+                        child: IconButton(
+                          onPressed: null,
+                          icon: Icon(Icons.sync_rounded),
+                          iconSize: 35,
+                        ),
+                      ),
+
+                    // Edit mode
+                    if (widget.editable)
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Modifica",
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  final List<String> topics = getTopicsList(
+                                    _questions,
+                                  );
+
+                                  return ViewQuestionsEdit(
+                                    questions: _questions,
+                                    topics: topics,
+                                    hideAnswers:
+                                        settings.hideCorrectAnswersInEditMode,
+                                  );
+                                },
+                              ),
+                            );
+                            // TODO: change animation?
+                            // Navigator.push(
+                            //   context,
+                            //   PageRouteBuilder(
+                            //     pageBuilder: (_, __, ___) {
+                            //       return ViewQuestionsEdit(
+                            //         questions: _questions,
+                            //         hideAnswers:
+                            //             settings.hideCorrectAnswersInEditMode,
+                            //       );
+                            //     },
+                            //     transitionDuration: Duration.zero,
+                            //     // transitionDuration: Duration(milliseconds: 300),
+                            //     // transitionsBuilder: (_, animation, __, c) {
+                            //     //   const begin = Offset(1.0, 0.0);
+                            //     //   const end = Offset.zero;
+                            //     //   var tween = Tween(
+                            //     //     begin: begin,
+                            //     //     end: end,
+                            //     //   ).chain(CurveTween(curve: Curves.easeOut));
+                            //     //   return SlideTransition(
+                            //     //     position: animation.drive(tween),
+                            //     //     child: c,
+                            //     //   );
+                            //     // },
+                            //   ),
+                            // );
+                          },
+                          icon: Icon(Icons.edit),
+                          iconSize: 35,
+                        ),
+                      ),
+
+                    // Edit mode (file)
+                    if (widget.editable)
+                      if (kDebugMode)
+                        Tooltip(
+                          waitDuration: Duration(milliseconds: 500),
+                          message: "Modifica File",
+                          child: IconButton(
+                            onPressed: !widget.editable
+                                ? null
+                                : () {
+                                    // Prompt for format
+
+                                    // TODO: change animation
+
+                                    Navigator.push(
+                                      context,
+                                      // PageRouteBuilder(
+                                      //   pageBuilder: (_, __, ___) {
+                                      //     return ViewQuestionsEditFile();
+                                      //   },
+                                      //   transitionDuration: Duration.zero,
+                                      //   transitionsBuilder: (_, animation, __, child) {
+                                      //     return child;
+                                      //   },
+                                      // ),
+                                      PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) {
+                                          return ViewQuestionsEditFile(
+                                            fileContent: "",
+                                          );
+                                        },
+                                        transitionDuration: Duration.zero,
+                                        // transitionDuration: Duration(milliseconds: 300),
+                                        // transitionsBuilder: (_, animation, __, c) {
+                                        //   const begin = Offset(1.0, 0.0);
+                                        //   const end = Offset.zero;
+                                        //   var tween = Tween(
+                                        //     begin: begin,
+                                        //     end: end,
+                                        //   ).chain(CurveTween(curve: Curves.easeOut));
+                                        //   return SlideTransition(
+                                        //     position: animation.drive(tween),
+                                        //     child: c,
+                                        //   );
+                                        // },
+                                      ),
+                                    );
+                                  },
+                            icon: Icon(Icons.edit_document),
+                            iconSize: 35,
+                          ),
+                        ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

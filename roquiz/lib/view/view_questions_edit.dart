@@ -299,10 +299,11 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
             //   top: BorderSide(color: Theme.of(context).disabledColor),
             // ),
           ),
-          child: Row(
-            children: [
-              Spacer(),
-              Padding(
+          child: SizedBox(
+            width: double.infinity,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -382,8 +383,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                   ],
                 ),
               ),
-              Spacer(),
-            ],
+            ),
           ),
         ),
       ),
