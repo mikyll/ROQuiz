@@ -111,6 +111,50 @@ class ViewSettingsState extends State<ViewSettings> {
     SettingsManager.save(settings);
   }
 
+  /// Restores every setting to its default after a confirmation. Syncs the
+  /// stepper/grade controllers so the visible fields reflect the reset (the
+  /// switches/checkboxes refresh on their own via the save's notifyListeners).
+  Future<void> _confirmRestoreDefaults() async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Ripristina impostazioni"),
+          content: const Text(
+            "Vuoi ripristinare tutte le impostazioni ai valori predefiniti?",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Annulla"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Ripristina"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!(confirmed ?? false) || !mounted) {
+      return;
+    }
+
+    final settings = context.read<Settings>();
+    settings.restoreDefaults();
+    // The default question count may exceed a small pool; clamp it like the
+    // stepper does so the value stays valid.
+    settings.quizQuestions = settings.quizQuestions.clamp(
+      _minQuizQuestions,
+      _maxQuizQuestions,
+    );
+    writtenGradeController.text = settings.writtenGrade?.toString() ?? "";
+    quizQuestionsController.text = settings.quizQuestions.toString();
+    quizTimeController.text = settings.quizTime.toString();
+    SettingsManager.save(settings);
+  }
+
   /// A compact +/- stepper button. Kept small (no default 48px tap target) so a
   /// button + field + button fits the entry's fixed 150px control column.
   /// [onUpdate] fires once on tap and repeatedly while held (with acceleration).
@@ -560,6 +604,7 @@ class ViewSettingsState extends State<ViewSettings> {
                     if (kDebugMode)
                       SettingEntry(
                         label: "Layout per mancini:",
+                        enabled: false,
                         tooltip:
                             "Se selezionata, imposta il layout dell'applicazione per facilitarne l'utilizzo ai mancini.",
                         child: Transform.scale(
@@ -606,9 +651,7 @@ class ViewSettingsState extends State<ViewSettings> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton.filled(
-                  onPressed: () {
-                    // TODO
-                  },
+                  onPressed: _confirmRestoreDefaults,
                   iconSize: 45,
                   icon: Icon(Icons.refresh, size: 40.0),
                 ),

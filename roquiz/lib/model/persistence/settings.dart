@@ -45,6 +45,29 @@ class Settings with ChangeNotifier {
     this.leftHandedLayout = false,
   });
 
+  /// Resets every setting to its constructor default, mutating this instance in
+  /// place so the shared [Provider] reference (and its listeners) keep pointing
+  /// at the same object. Call [SettingsManager.save] afterwards to persist and
+  /// notify listeners.
+  void restoreDefaults() {
+    final Settings d = Settings();
+    language = d.language;
+    autoCheckRelease = d.autoCheckRelease;
+    autoCheckQuestions = d.autoCheckQuestions;
+    animations = d.animations;
+    confirmationAlert = d.confirmationAlert;
+    hideCorrectAnswersInEditMode = d.hideCorrectAnswersInEditMode;
+    themeDark = d.themeDark;
+    githubToken = d.githubToken;
+    writtenGrade = d.writtenGrade;
+    fullTopics = d.fullTopics;
+    quizQuestions = d.quizQuestions;
+    quizTime = d.quizTime;
+    shuffleAnswers = d.shuffleAnswers;
+    exceedTimeout = d.exceedTimeout;
+    leftHandedLayout = d.leftHandedLayout;
+  }
+
   // Automatically generated methods
   factory Settings.fromJson(Map<String, dynamic> json) =>
       _$SettingsFromJson(json);
