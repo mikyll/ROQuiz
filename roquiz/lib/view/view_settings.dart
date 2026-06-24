@@ -6,6 +6,7 @@ import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
+import 'package:roquiz/widget/icon_button_acceleration.dart';
 import 'package:roquiz/widget/separator.dart';
 import 'package:roquiz/widget/setting_entry.dart';
 
@@ -386,8 +387,8 @@ class ViewSettingsState extends State<ViewSettings> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           spacing: 10.0,
                           children: [
-                            IconButton(
-                              onPressed: () =>
+                            IconButtonAcceleration(
+                              onUpdate: () =>
                                   _setQuizQuestions(settings.quizQuestions - 1),
                               icon: Icon(Icons.remove),
                             ),
@@ -432,8 +433,8 @@ class ViewSettingsState extends State<ViewSettings> {
                                 ),
                               ),
                             ),
-                            IconButton(
-                              onPressed: () =>
+                            IconButtonAcceleration(
+                              onUpdate: () =>
                                   _setQuizQuestions(settings.quizQuestions + 1),
                               icon: Icon(Icons.add),
                             ),
@@ -450,8 +451,8 @@ class ViewSettingsState extends State<ViewSettings> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           spacing: 10.0,
                           children: [
-                            IconButton(
-                              onPressed: () =>
+                            IconButtonAcceleration(
+                              onUpdate: () =>
                                   _setQuizTime(settings.quizTime - 1),
                               icon: Icon(Icons.remove),
                             ),
@@ -496,8 +497,8 @@ class ViewSettingsState extends State<ViewSettings> {
                                 ),
                               ),
                             ),
-                            IconButton(
-                              onPressed: () =>
+                            IconButtonAcceleration(
+                              onUpdate: () =>
                                   _setQuizTime(settings.quizTime + 1),
                               icon: Icon(Icons.add),
                             ),
