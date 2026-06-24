@@ -111,6 +111,19 @@ class ViewSettingsState extends State<ViewSettings> {
     SettingsManager.save(settings);
   }
 
+  /// A compact +/- stepper button. Kept small (no default 48px tap target) so a
+  /// button + field + button fits the entry's fixed 150px control column.
+  /// [onUpdate] fires once on tap and repeatedly while held (with acceleration).
+  Widget _stepperButton(IconData icon, void Function() onUpdate) {
+    return IconButtonAcceleration(
+      onUpdate: onUpdate,
+      icon: Icon(icon),
+      visualDensity: VisualDensity.compact,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 40.0, minHeight: 40.0),
+    );
+  }
+
   // Text style and horizontal padding shared by the stepper number fields and
   // by [_numberFieldWidth], so the measured width matches what's rendered.
   static const TextStyle _numberFieldStyle = TextStyle(fontSize: 16.0);
@@ -123,8 +136,10 @@ class ViewSettingsState extends State<ViewSettings> {
       text: const TextSpan(text: "000", style: _numberFieldStyle),
       textDirection: TextDirection.ltr,
     )..layout();
-    // text + padding on both sides + room for the caret.
-    return painter.width + _numberFieldPadding * 2 + 6.0;
+    // text + padding on both sides + room for the caret. The caret allowance is
+    // generous because, when the centered field is focused with 3 digits, the
+    // cursor sits past the text and would otherwise clip the last digit.
+    return painter.width + _numberFieldPadding * 2 + 16.0;
   }
 
   @override
@@ -385,12 +400,12 @@ class ViewSettingsState extends State<ViewSettings> {
                         tooltip: "Numero di domande presenti in ciascun quiz.",
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 10.0,
+                          spacing: 8.0,
                           children: [
-                            IconButtonAcceleration(
-                              onUpdate: () =>
+                            _stepperButton(
+                              Icons.remove,
+                              () =>
                                   _setQuizQuestions(settings.quizQuestions - 1),
-                              icon: Icon(Icons.remove),
                             ),
                             SizedBox(
                               width: _numberFieldWidth(),
@@ -433,10 +448,10 @@ class ViewSettingsState extends State<ViewSettings> {
                                 ),
                               ),
                             ),
-                            IconButtonAcceleration(
-                              onUpdate: () =>
+                            _stepperButton(
+                              Icons.add,
+                              () =>
                                   _setQuizQuestions(settings.quizQuestions + 1),
-                              icon: Icon(Icons.add),
                             ),
                           ],
                         ),
@@ -449,12 +464,11 @@ class ViewSettingsState extends State<ViewSettings> {
                             "Numero di minuti a disposizione per completare il quiz.",
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 10.0,
+                          spacing: 8.0,
                           children: [
-                            IconButtonAcceleration(
-                              onUpdate: () =>
-                                  _setQuizTime(settings.quizTime - 1),
-                              icon: Icon(Icons.remove),
+                            _stepperButton(
+                              Icons.remove,
+                              () => _setQuizTime(settings.quizTime - 1),
                             ),
                             SizedBox(
                               width: _numberFieldWidth(),
@@ -497,10 +511,9 @@ class ViewSettingsState extends State<ViewSettings> {
                                 ),
                               ),
                             ),
-                            IconButtonAcceleration(
-                              onUpdate: () =>
-                                  _setQuizTime(settings.quizTime + 1),
-                              icon: Icon(Icons.add),
+                            _stepperButton(
+                              Icons.add,
+                              () => _setQuizTime(settings.quizTime + 1),
                             ),
                           ],
                         ),
