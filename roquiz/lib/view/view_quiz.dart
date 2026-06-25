@@ -95,8 +95,11 @@ class _ViewQuizState extends State<ViewQuiz> {
   bool _showConfetti = false;
   bool _showGrade = false;
 
-  // TODO: test (remove this)
-  bool _maxQuizGrade = false;
+  // Debug only: whether the "fill correct answers" button was the last thing to
+  // touch the answers. Tracks the button press explicitly (NOT whether the
+  // answers happen to all be correct) so it can't double as a cheat-checker.
+  // Cleared whenever the user changes/unselects an answer, and on each (re)start.
+  bool _filledCorrectAnswers = false;
 
   // This indicates that the confetti animation was already played for this quiz run
   bool _confettiPlayed = false;
@@ -143,6 +146,7 @@ class _ViewQuizState extends State<ViewQuiz> {
     setState(() {
       _quiz.selectedAnswers[_iQuestion] =
           _quiz.selectedAnswers[_iQuestion] == index ? null : index;
+      _filledCorrectAnswers = false;
     });
   }
 
@@ -176,15 +180,15 @@ class _ViewQuizState extends State<ViewQuiz> {
     return KeyEventResult.ignored;
   }
 
-  /// Debug helper for the AppBar max-grade switch: selects the correct answer
-  /// for every question when [correct] is true, or clears all selections when
-  /// false. Re-applied in [_startQuiz] so the toggle carries across restarts.
-  void _setAllAnswersCorrect(bool correct) {
-    for (int i = 0; i < _quiz.selectedAnswers.length; i++) {
-      _quiz.selectedAnswers[i] = correct
-          ? _quiz.questions[i].correctAnswer
-          : null;
-    }
+  /// Debug helper for the AppBar button: selects the correct answer for every
+  /// question, so the max-grade / end-quiz flow can be exercised in one tap.
+  void _fillCorrectAnswers() {
+    setState(() {
+      for (int i = 0; i < _quiz.selectedAnswers.length; i++) {
+        _quiz.selectedAnswers[i] = _quiz.questions[i].correctAnswer;
+      }
+      _filledCorrectAnswers = true;
+    });
   }
 
   void _startQuiz() {
@@ -194,13 +198,9 @@ class _ViewQuizState extends State<ViewQuiz> {
         questionNum: widget.questionNum,
         shuffleAnswers: widget.shuffleAnswers,
       );
-      // Carry the debug max-grade toggle across restarts: a fresh quiz starts
-      // with empty selections, so re-select the correct answers if it's on.
-      if (_maxQuizGrade) {
-        _setAllAnswersCorrect(true);
-      }
       _iQuestion = 0;
       _isQuizOver = false;
+      _filledCorrectAnswers = false;
 
       _confettiPlayed = false;
       _showGrade = false;
@@ -413,15 +413,13 @@ class _ViewQuizState extends State<ViewQuiz> {
               // TODO: add toggle dark mode?
               actions: [
                 if (kDebugMode)
-                  Switch(
-                    value: _maxQuizGrade,
-                    onChanged: (value) {
-                      setState(() {
-                        _maxQuizGrade = value;
-                        _setAllAnswersCorrect(value);
-                      });
-                    },
-                    activeTrackColor: Colors.white,
+                  IconButton(
+                    tooltip: "Compila risposte corrette",
+                    icon: const Icon(Icons.done_all),
+                    // Green once used; reverts to the default icon color as soon
+                    // as the user changes/unselects any answer.
+                    color: _filledCorrectAnswers ? Colors.green : null,
+                    onPressed: _isQuizOver ? null : _fillCorrectAnswers,
                   ),
               ],
             ),
@@ -515,6 +513,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                             setState(() {
                                               _quiz.selectedAnswers[_iQuestion] =
                                                   iAnswer;
+                                              _filledCorrectAnswers = false;
                                             });
                                           },
                                         ),
