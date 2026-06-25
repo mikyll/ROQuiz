@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
-import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/view/view_history.dart';
 import 'package:roquiz/view/view_info.dart';
@@ -14,8 +13,6 @@ import 'package:roquiz/view/view_questions.dart';
 import 'package:roquiz/view/view_quiz.dart';
 import 'package:roquiz/view/view_settings.dart';
 import 'package:roquiz/view/view_topics.dart';
-
-import 'package:flutter/foundation.dart';
 
 class ViewMenu extends StatefulWidget {
   final PackageInfo packageInfo;
@@ -32,26 +29,13 @@ class ViewMenu extends StatefulWidget {
 }
 
 class ViewMenuState extends State<ViewMenu> {
+  static const double _maxContentWidth = 500.0;
+
   final QuestionRepository _questionRepository = QuestionRepository();
 
   Map<String, bool> _selectedTopics = {};
 
-  int _totQuestions = 0;
-  String? _error = kDebugMode ? "Error" : null;
-
-  // int _calculateNumSelected() {
-  //   int num = 0;
-
-  //   Map<String, List<Question>> topicSizes = _questionRepository
-  //       .getGroupedQuestions();
-  //   for (String topic in topicSizes.keys) {
-  //     if (_selectedTopics[topic] != null && _selectedTopics[topic]!) {
-  //       num += topicSizes[topic]!.length;
-  //     }
-  //   }
-
-  //   return num;
-  // }
+  String? _error;
 
   // Get the question list
   List<Question> _getQuizPool() {
@@ -73,7 +57,6 @@ class ViewMenuState extends State<ViewMenu> {
         .init()
         .then((_) {
           setState(() {
-            _totQuestions = _questionRepository.questions.length;
             _selectedTopics = {
               for (var value in _questionRepository.getGroupedQuestions().keys)
                 value: true,
@@ -95,6 +78,42 @@ class ViewMenuState extends State<ViewMenu> {
     _initQuestionRepository();
   }
 
+  // A secondary menu entry: label on the left, icon on the right.
+  Widget _buildMenuButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback? onPressed,
+  }) {
+    return SizedBox(
+      width: 220.0,
+      height: 48.0,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButtonTheme.of(context).style?.copyWith(
+          padding: WidgetStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 15.0),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+            Icon(icon),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<Settings>(context, listen: true);
@@ -102,294 +121,218 @@ class ViewMenuState extends State<ViewMenu> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 500.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Spacer(flex: 2),
-                  // Settings.SHOW_APP_LOGO
-                  //     ? Column(
-                  //         children: [
-                  //           SvgPicture.asset(
-                  //             'assets/icons/logo.svg',
-                  //             alignment: Alignment.center,
-                  //             fit: BoxFit.fitWidth,
-                  //             width: 200,
-                  //             colorFilter: ColorFilter.mode(
-                  //               Colors.indigo[300]!,
-                  //               BlendMode.srcIn,
-                  //             ),
-                  //           ),
-                  //           const Text(
-                  //             Settings.APP_TITLE,
-                  //             style: TextStyle(
-                  //               fontSize: 40,
-                  //               fontWeight: FontWeight.bold,
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       )
-                  //     :
-                  Text(
-                    "ROQuiz",
-                    maxLines: 1,
-                    style: TextTheme.of(context).displayLarge,
-                  ),
-                  Text(
-                    "v${widget.packageInfo.version}",
-                    maxLines: 1,
-                    style: TextTheme.of(context).headlineSmall,
-                  ),
-                  const Spacer(flex: 1),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+            // Center the content when there's room, but scroll instead of
+            // overflowing on short screens (landscape, split-screen, etc.).
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Spacer(flex: 2),
+                            Text(
+                              "ROQuiz",
+                              maxLines: 1,
+                              style: TextTheme.of(context).displayLarge,
+                            ),
+                            Text(
+                              "v${widget.packageInfo.version}",
+                              maxLines: 1,
+                              style: TextTheme.of(context).headlineSmall,
+                            ),
+                            const Spacer(flex: 1),
 
-                  // BUTTONS
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return ViewQuiz(
-                                  quizPool: _getQuizPool(),
-                                  questionNum: settings.quizQuestions,
-                                  timer: settings.quizTime,
-                                  // TODO
-                                  shuffleAnswers: false,
-                                  completedQuizRepository:
-                                      widget.completedQuizRepository,
+                            // Start quiz (primary call to action)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40.0,
+                              ),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ViewQuiz(
+                                            quizPool: _getQuizPool(),
+                                            questionNum: settings.quizQuestions,
+                                            timer: settings.quizTime,
+                                            // TODO
+                                            shuffleAnswers: false,
+                                            completedQuizRepository:
+                                                widget.completedQuizRepository,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                    ),
+                                    child: Text(
+                                      "Avvia Quiz",
+                                      maxLines: 1,
+                                      style: TextStyle(fontSize: 32),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+
+                            // Quiz summary (questions / time)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Flexible(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.format_list_numbered_rounded,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Flexible(
+                                        child: Text(
+                                          "Domande: ${settings.quizQuestions} "
+                                          "su ${_getQuizPool().length}",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Flexible(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.timer_rounded),
+                                      const SizedBox(width: 4),
+                                      Flexible(
+                                        child: Text(
+                                          "Tempo: ${settings.quizTime} min",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            if (_error != null)
+                              Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.red),
+                                  ),
+                                  child: Text(
+                                    _error!,
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ),
+
+                            const SizedBox(height: 20),
+
+                            // Secondary navigation
+                            _buildMenuButton(
+                              icon: Icons.format_list_numbered,
+                              label: "Domande",
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ViewQuestions(
+                                        questions: _questionRepository.questions,
+                                      );
+                                    },
+                                  ),
                                 );
                               },
                             ),
-                          );
-
-                          // TODO
-
-                          // widget.value.isDarkMode;
-                          //     widget.value.toggleTheme(widget.value.themeMode == ThemeMode.light);
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            "Avvia Quiz",
-                            maxLines: 1,
-                            style: TextStyle(fontSize: 32),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      const Spacer(flex: 1),
-                      const Icon(Icons.format_list_numbered_rounded),
-                      Text(
-                        "Domande: ${settings.quizQuestions.toString().padLeft(3)} "
-                        "su ${_getQuizPool().length.toString().padLeft(3)}",
-                      ),
-                      const Spacer(flex: 2),
-                      const Icon(Icons.timer_rounded),
-                      Text(
-                        "Tempo: ${settings.quizTime.toString().padLeft(3)} min",
-                      ),
-                      const Spacer(flex: 1),
-                    ],
-                  ),
-                  Visibility(
-                    // TODO
-                    visible: _error != null,
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: InkWell(
-                        onTap: () {
-                          // Expand Stacktrace (modal, which obscures the rest)
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: BoxBorder.all(color: Colors.red),
-                          ),
-                          child: Text(
-                            "Error",
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.format_list_numbered),
-                    iconAlignment: IconAlignment.end,
-                    label: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Domande",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                    style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      fixedSize: WidgetStateProperty.all(Size(170.0, 30.0)),
-                      padding: WidgetStateProperty.all(
-                        EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ViewQuestions(
-                              questions: _questionRepository.questions,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.checklist),
-                    iconAlignment: IconAlignment.end,
-                    label: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Argomenti",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                    style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      fixedSize: WidgetStateProperty.all(Size(170.0, 30.0)),
-                      padding: WidgetStateProperty.all(
-                        EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ViewTopics(
-                              questionsNum: settings.quizQuestions,
-                              questionsPerTopic: _questionRepository
-                                  .getGroupedQuestions(),
-                              selectedTopics: _selectedTopics,
-                              toggleTopic: (Map<String, bool> v) {
-                                setState(() {
-                                  _selectedTopics = v;
-                                });
+                            const SizedBox(height: 10),
+                            _buildMenuButton(
+                              icon: Icons.checklist,
+                              label: "Argomenti",
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ViewTopics(
+                                        questionsNum: settings.quizQuestions,
+                                        questionsPerTopic: _questionRepository
+                                            .getGroupedQuestions(),
+                                        selectedTopics: _selectedTopics,
+                                        toggleTopic: (Map<String, bool> v) {
+                                          setState(() {
+                                            _selectedTopics = v;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
+                                );
                               },
-                            );
-                          },
+                            ),
+                            const SizedBox(height: 10),
+                            _buildMenuButton(
+                              icon: Icons.history,
+                              label: "Storico",
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ViewHistory(
+                                        completedQuizRepository:
+                                            widget.completedQuizRepository,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            _buildMenuButton(
+                              icon: Icons.bar_chart,
+                              label: "Statistiche",
+                              onPressed: null,
+                            ),
+                            const Spacer(flex: 2),
+                          ],
                         ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.history),
-                    iconAlignment: IconAlignment.end,
-                    label: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Storico",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                    style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      fixedSize: WidgetStateProperty.all(Size(170.0, 30.0)),
-                      padding: WidgetStateProperty.all(
-                        EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ViewHistory(
-                              completedQuizRepository:
-                                  widget.completedQuizRepository,
-                            );
-                          },
-                        ),
-                      );
-                    },
                   ),
-                  const SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.bar_chart),
-                    iconAlignment: IconAlignment.end,
-                    label: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Statistiche",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                    style: ElevatedButtonTheme.of(context).style?.copyWith(
-                      fixedSize: WidgetStateProperty.all(Size(170.0, 30.0)),
-                      padding: WidgetStateProperty.all(
-                        EdgeInsetsGeometry.only(left: 15.0, right: 15.0),
-                      ),
-                    ),
-                    onPressed: null,
-                    // () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) {
-                    //         // TODO
-                    //         return Text("");
-                    //       },
-                    //     ),
-                    //   );
-                    // },
-                  ),
-                  const Spacer(flex: 2),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 500.0),
+        constraints: const BoxConstraints(maxWidth: _maxContentWidth),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Row(
@@ -416,7 +359,7 @@ class ViewMenuState extends State<ViewMenu> {
                         );
                       },
                       iconSize: 45,
-                      icon: Icon(Icons.settings),
+                      icon: const Icon(Icons.settings),
                     ),
                   ),
                   const SizedBox(height: 10.0),
@@ -435,31 +378,9 @@ class ViewMenuState extends State<ViewMenu> {
                         );
                       },
                       iconSize: 45,
-                      icon: Icon(
-                        Icons.info,
-                        // TODO
-                        // color:
-                        //     themeProvider.isDarkMode ? Color(0xff515b92) : Colors.white,
-                      ),
+                      icon: const Icon(Icons.info),
                     ),
                   ),
-                  // IconButtonWidget(
-                  //   onTap: () {
-                  //     Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  //       // return ViewInfo(settings: _settings);
-
-                  //       // TODO
-                  //       return ViewMenu();
-                  //     }));
-                  //   },
-                  //   width: 60.0,
-                  //   height: 60.0,
-                  //   lightPalette: MyThemes.lightIconButtonPalette,
-                  //   darkPalette: MyThemes.darkIconButtonPalette,
-                  //   icon: Icons.info,
-                  //   iconSize: 40,
-                  //   shadow: true,
-                  // ),
                 ],
               ),
             ],
