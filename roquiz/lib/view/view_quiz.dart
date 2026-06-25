@@ -109,6 +109,17 @@ class _ViewQuizState extends State<ViewQuiz> {
     });
   }
 
+  /// Debug helper for the AppBar max-grade switch: selects the correct answer
+  /// for every question when [correct] is true, or clears all selections when
+  /// false. Re-applied in [_startQuiz] so the toggle carries across restarts.
+  void _setAllAnswersCorrect(bool correct) {
+    for (int i = 0; i < _quiz.selectedAnswers.length; i++) {
+      _quiz.selectedAnswers[i] = correct
+          ? _quiz.questions[i].correctAnswer
+          : null;
+    }
+  }
+
   void _startQuiz() {
     setState(() {
       _quiz = Quiz(
@@ -116,6 +127,11 @@ class _ViewQuizState extends State<ViewQuiz> {
         questionNum: widget.questionNum,
         shuffleAnswers: widget.shuffleAnswers,
       );
+      // Carry the debug max-grade toggle across restarts: a fresh quiz starts
+      // with empty selections, so re-select the correct answers if it's on.
+      if (_maxQuizGrade) {
+        _setAllAnswersCorrect(true);
+      }
       _iQuestion = 0;
       _isQuizOver = false;
 
@@ -165,9 +181,6 @@ class _ViewQuizState extends State<ViewQuiz> {
       _timer?.cancel();
 
       _correctAnswers = _quiz.countCorrectAnswers();
-      if (_maxQuizGrade) {
-        _correctAnswers = widget.questionNum;
-      }
       _quizGrade = calculateQuizGrade(widget.questionNum, _correctAnswers);
 
       // Calculate if user had already entered the written grade
@@ -332,6 +345,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                       onChanged: (value) {
                         setState(() {
                           _maxQuizGrade = value;
+                          _setAllAnswersCorrect(value);
                         });
                       },
                       activeTrackColor: Colors.white,
