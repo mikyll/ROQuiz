@@ -288,7 +288,9 @@ class _AnswerTile extends StatelessWidget {
     switch (mode) {
       case QuestionCardMode.quiz:
         if (isSelected) {
-          return Theme.of(context).primaryColor.withAlpha(50);
+          // colorScheme.primary (not primaryColor): in dark mode primaryColor
+          // resolves to the surface color, so the tint would vanish.
+          return Theme.of(context).colorScheme.primary.withAlpha(50);
         }
         break;
 
@@ -318,7 +320,9 @@ class _AnswerTile extends StatelessWidget {
     switch (mode) {
       case QuestionCardMode.quiz:
         if (isSelected) {
-          return Theme.of(context).primaryColor.withAlpha(50);
+          // Solid (not the translucent fill color) and colorScheme.primary so
+          // the border stays visible against the card — in dark mode especially.
+          return Theme.of(context).colorScheme.primary;
         }
         break;
 
@@ -352,7 +356,7 @@ class _AnswerTile extends StatelessWidget {
       return Colors.grey.withAlpha(150);
     }
     if (isSelected) {
-      return Theme.of(context).primaryColor;
+      return Theme.of(context).colorScheme.primary;
     }
     return Colors.grey;
   }
