@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
-import 'package:roquiz/model/utils/grade.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
+import 'package:roquiz/widget/grade_badge.dart';
 import 'package:roquiz/widget/question_card.dart';
 
 class ViewHistoryQuiz extends StatefulWidget {
@@ -204,16 +204,7 @@ class _ViewHistoryQuizState extends State<ViewHistoryQuiz> {
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      getGradeString(quiz.grade),
-                                      style: TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
+                                  GradeBadge(grade: quiz.grade, size: 56.0),
                                 ],
                               ),
                             ),

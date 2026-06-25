@@ -6,12 +6,12 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
-import 'package:roquiz/model/utils/grade.dart';
 import 'package:roquiz/model/utils/selection_controller.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/view/view_history_quiz.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
+import 'package:roquiz/widget/grade_badge.dart';
 import 'package:roquiz/widget/select_all_checkbox.dart';
 
 /// How an imported history file is combined with the existing history.
@@ -449,91 +449,6 @@ class _QuizCompletedWidget extends StatelessWidget {
   final void Function()? onTap;
   final void Function()? onSelected;
 
-  /// Badge fill/text colors for [grade], on a 30-point scale: green when
-  /// passed (>= 18), a richer green for top marks (>= 27), red when failed.
-  ({Color background, Color foreground}) _gradeBadgeColors(double grade) {
-    const double gradeBase = 30.0;
-    final double ratio = grade / gradeBase;
-    if (ratio >= 0.9) {
-      return (background: const Color(0xFF2E7D32), foreground: Colors.white);
-    }
-    if (ratio >= 0.6) {
-      return (background: const Color(0xFF66BB6A), foreground: Colors.white);
-    }
-    return (background: const Color(0xFFE57373), foreground: Colors.white);
-  }
-
-  /// The square grade badge. Cum laude (grade > 30, i.e. "30L") gets a gold
-  /// gradient, a soft glow and a raised superscript "L"; everything else uses
-  /// the flat pass/fail color from [_gradeBadgeColors].
-  Widget _buildGradeBadge() {
-    final bool isLode = grade > 30.0;
-    final badge = _gradeBadgeColors(grade);
-
-    final Widget label = isLode
-        ? Text.rich(
-            TextSpan(
-              children: [
-                const TextSpan(text: "30"),
-                WidgetSpan(
-                  alignment: PlaceholderAlignment.top,
-                  child: Transform.translate(
-                    offset: const Offset(1.0, -1.0),
-                    child: const Text(
-                      "L",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        : Text(
-            getGradeString(grade),
-            style: TextStyle(
-              color: badge.foreground,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          );
-
-    return Container(
-      width: 48.0,
-      height: 48.0,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: isLode ? null : badge.background,
-        gradient: isLode
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFFC107), Color(0xFFEF6C00)],
-              )
-            : null,
-        borderRadius: BorderRadius.circular(12.0),
-        boxShadow: isLode
-            ? [
-                BoxShadow(
-                  color: const Color(0xFFFFC107).withAlpha(140),
-                  blurRadius: 8.0,
-                  spreadRadius: 0.5,
-                ),
-              ]
-            : null,
-      ),
-      child: label,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // Shared with question_card.dart so selection reads the same light blue
@@ -555,7 +470,7 @@ class _QuizCompletedWidget extends StatelessWidget {
       ),
       selected: isSelected,
       selectedTileColor: selectionColor.withAlpha(50),
-      leading: _buildGradeBadge(),
+      leading: GradeBadge(grade: grade),
       title: Text(
         writtenGrade != null
             ? "$correctQuestions/$totalQuestions · scritto $writtenGrade"
