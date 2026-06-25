@@ -10,7 +10,6 @@ import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/quiz/quiz.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
-import 'package:roquiz/model/utils/device.dart';
 import 'package:roquiz/model/utils/grade.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
@@ -357,7 +356,6 @@ class _ViewQuizState extends State<ViewQuiz> {
   @override
   Widget build(BuildContext context) {
     final Settings settings = Provider.of<Settings>(context);
-    final Size windowSize = getLogicalSize();
 
     return PopScope(
       canPop: true, //!widget.settings.confirmAlerts,
@@ -588,24 +586,34 @@ class _ViewQuizState extends State<ViewQuiz> {
               decoration: BoxDecoration(
                 color: Theme.of(context).highlightColor.withAlpha(70),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 500.0,
-                      maxHeight: 70.0,
-                    ),
+              // The bar keeps the nav arrows pinned left and the action button
+              // pinned right. As the screen narrows, the gap between them
+              // shrinks first (spaceBetween over a width that tracks the
+              // screen). Only once the gap is gone — when the content can no
+              // longer fit — does FittedBox scale everything down. MainAxisSize.min
+              // lets the row report its own minimum width, so no breakpoint is
+              // hardcoded.
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final double targetWidth = (constraints.maxWidth - 16.0)
+                      .clamp(0.0, 500.0 - 16.0)
+                      .toDouble();
+                  return FittedBox(
+                    fit: BoxFit.scaleDown,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          Positioned(
-                            left: 0,
-                            bottom: 0,
-                            child: Row(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minWidth: targetWidth),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          // Minimum gap kept between the arrows and the action
+                          // button: spaceBetween grows it on wider screens, but
+                          // it never drops below this even when fully collapsed.
+                          spacing: 16.0,
+                          children: [
+                            Row(
                               spacing: 20.0,
                               children: [
                                 IconButton(
@@ -637,44 +645,33 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 ),
                               ],
                             ),
-                          ),
-                          Positioned(
-                            right: windowSize.width < 500
-                                ? 500 - windowSize.width
-                                : 0,
-                            bottom: 0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    if (_isQuizOver) {
-                                      _startQuiz();
-                                    } else {
-                                      _endQuiz(settings.writtenGrade);
-                                    }
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 50.0,
-                                    width: 100.0,
-                                    child: Text(
-                                      !_isQuizOver ? "Termina" : "Riavvia",
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                            ElevatedButton(
+                              onPressed: () {
+                                if (_isQuizOver) {
+                                  _startQuiz();
+                                } else {
+                                  _endQuiz(settings.writtenGrade);
+                                }
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 50.0,
+                                width: 100.0,
+                                child: Text(
+                                  !_isQuizOver ? "Termina" : "Riavvia",
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           ),

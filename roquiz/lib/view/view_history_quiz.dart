@@ -151,24 +151,36 @@ class _ViewHistoryQuizState extends State<ViewHistoryQuiz> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).highlightColor.withAlpha(70),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: 500.0,
-                            maxHeight: 70.0,
-                          ),
+                    // The bar keeps the nav arrows pinned left and the grade
+                    // pinned right. As the screen narrows, the gap between them
+                    // shrinks first (spaceBetween over a width that tracks the
+                    // screen). Only once the gap is gone — when the content can
+                    // no longer fit — does FittedBox scale everything down.
+                    // MainAxisSize.min lets the row report its own minimum
+                    // width, so no breakpoint is hardcoded.
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final double targetWidth = (constraints.maxWidth - 16.0)
+                            .clamp(0.0, 500.0 - 16.0)
+                            .toDouble();
+                        return FittedBox(
+                          fit: BoxFit.scaleDown,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  bottom: 0,
-                                  child: Row(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(minWidth: targetWidth),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                // Minimum gap kept between the arrows and the
+                                // grade: spaceBetween grows it on wider screens,
+                                // but it never drops below this even when fully
+                                // collapsed.
+                                spacing: 16.0,
+                                children: [
+                                  Row(
                                     spacing: 20.0,
                                     children: [
                                       IconButton(
@@ -192,11 +204,7 @@ class _ViewHistoryQuizState extends State<ViewHistoryQuiz> {
                                       ),
                                     ],
                                   ),
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Padding(
+                                  Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
                                       getGradeString(quiz.grade),
@@ -206,12 +214,12 @@ class _ViewHistoryQuizState extends State<ViewHistoryQuiz> {
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
           ),
