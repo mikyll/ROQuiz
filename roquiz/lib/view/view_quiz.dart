@@ -416,10 +416,22 @@ class _ViewQuizState extends State<ViewQuiz> {
                   IconButton(
                     tooltip: "Compila risposte corrette",
                     icon: const Icon(Icons.done_all),
-                    // Green once used; reverts to the default icon color as soon
-                    // as the user changes/unselects any answer.
-                    color: _filledCorrectAnswers ? Colors.green : null,
                     onPressed: _isQuizOver ? null : _fillCorrectAnswers,
+                    // Transparent background in both themes (the default icon-
+                    // button theme paints a filled pill that only blends into the
+                    // app bar in light mode). Green once used; reverts to the
+                    // app-bar's white as soon as any answer is changed/unselected.
+                    // Disabled colors are pinned too, otherwise the quiz-over
+                    // (disabled) state falls back to the theme's disabled palette
+                    // (a light-blue pill + navy icon in dark mode).
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      disabledBackgroundColor: Colors.transparent,
+                      foregroundColor: _filledCorrectAnswers
+                          ? Colors.green
+                          : Colors.white,
+                      disabledForegroundColor: Colors.white38,
+                    ),
                   ),
               ],
             ),
