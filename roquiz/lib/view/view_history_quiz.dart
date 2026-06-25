@@ -146,12 +146,17 @@ class _ViewHistoryQuizState extends State<ViewHistoryQuiz> {
                                   spacing: 20.0,
                                   children: [
                                     IconButton(
-                                      onPressed: _previousQuestion,
+                                      onPressed: _iQuestion <= 0
+                                          ? null
+                                          : _previousQuestion,
                                       icon: Icon(Icons.arrow_back_ios_rounded),
                                       iconSize: 35,
                                     ),
                                     IconButton(
-                                      onPressed: _nextQuestion,
+                                      onPressed:
+                                          _iQuestion >= totalQuestions - 1
+                                          ? null
+                                          : _nextQuestion,
                                       icon: Icon(
                                         Icons.arrow_forward_ios_rounded,
                                       ),

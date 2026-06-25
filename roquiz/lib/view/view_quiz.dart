@@ -275,12 +275,17 @@ class _ViewQuizState extends State<ViewQuiz> {
     _startQuiz();
   }
 
-  /// Background tone for the bottom-bar nav arrows, taken from the
-  /// ElevatedButton theme so they match the adjacent Termina/Riavvia button
-  /// (the default IconButton background is a slightly different brand shade).
-  Color? _navArrowColor(BuildContext context) => Theme.of(
-    context,
-  ).elevatedButtonTheme.style?.backgroundColor?.resolve(const <WidgetState>{});
+  /// Style for the bottom-bar nav arrows. Borrows the ElevatedButton theme's
+  /// background and foreground so the arrows match the adjacent Termina/Riavvia
+  /// button — including its greyed *disabled* look, so a boundary arrow (first
+  /// or last question, with `onPressed: null`) reads as disabled.
+  ButtonStyle _navArrowStyle(BuildContext context) {
+    final ButtonStyle? elevated = Theme.of(context).elevatedButtonTheme.style;
+    return ButtonStyle(
+      backgroundColor: elevated?.backgroundColor,
+      iconColor: elevated?.foregroundColor,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -531,26 +536,29 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 spacing: 20.0,
                                 children: [
                                   IconButton(
-                                    style: IconButton.styleFrom(
-                                      backgroundColor: _navArrowColor(context),
-                                    ),
-                                    onPressed: () {
-                                      // TODO: long press
-                                      _previousQuestion();
-                                    },
+                                    style: _navArrowStyle(context),
+                                    onPressed: _iQuestion <= 0
+                                        ? null
+                                        : () {
+                                            // TODO: long press
+                                            _previousQuestion();
+                                          },
                                     icon: Icon(Icons.arrow_back_ios_rounded),
                                     iconSize: 35,
                                   ),
                                   IconButton(
-                                    style: IconButton.styleFrom(
-                                      backgroundColor: _navArrowColor(context),
-                                    ),
-                                    onLongPress: () {},
-                                    onPressed: () {
-                                      // TODO: long press
-
-                                      _nextQuestion();
-                                    },
+                                    style: _navArrowStyle(context),
+                                    onLongPress:
+                                        _iQuestion >= widget.questionNum - 1
+                                        ? null
+                                        : () {},
+                                    onPressed:
+                                        _iQuestion >= widget.questionNum - 1
+                                        ? null
+                                        : () {
+                                            // TODO: long press
+                                            _nextQuestion();
+                                          },
                                     icon: Icon(Icons.arrow_forward_ios_rounded),
                                     iconSize: 35,
                                   ),
