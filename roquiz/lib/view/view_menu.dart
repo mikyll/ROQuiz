@@ -12,6 +12,7 @@ import 'package:roquiz/view/view_info.dart';
 import 'package:roquiz/view/view_questions.dart';
 import 'package:roquiz/view/view_quiz.dart';
 import 'package:roquiz/view/view_settings.dart';
+import 'package:roquiz/view/view_statistics.dart';
 import 'package:roquiz/view/view_topics.dart';
 
 class ViewMenu extends StatefulWidget {
@@ -316,7 +317,19 @@ class ViewMenuState extends State<ViewMenu> {
                             _buildMenuButton(
                               icon: Icons.bar_chart,
                               label: "Statistiche",
-                              onPressed: null,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ViewStatistics(
+                                        completedQuizRepository:
+                                            widget.completedQuizRepository,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
                             ),
                             const Spacer(flex: 2),
                           ],
