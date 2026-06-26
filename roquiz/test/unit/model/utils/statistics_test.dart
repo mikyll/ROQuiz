@@ -12,6 +12,7 @@ QuizCompleted _makeQuiz({
   required List<int?> selected,
   required DateTime timestamp,
   int timeSpent = 60,
+  int? writtenGrade,
 }) {
   final questions = [
     for (int i = 0; i < topics.length; i++)
@@ -33,6 +34,7 @@ QuizCompleted _makeQuiz({
     timestamp: timestamp,
     timeSpent: timeSpent,
     correctAnswers: correct,
+    writtenGrade: writtenGrade,
   );
 }
 
@@ -43,13 +45,15 @@ void main() {
 
       expect(stats.isEmpty, isTrue);
       expect(stats.quizCount, 0);
+      expect(stats.gradedQuizCount, 0);
+      expect(stats.averageFinalGrade, 0);
       expect(stats.gradeTrend, isEmpty);
       expect(stats.gradeDistribution, isEmpty);
       expect(stats.topicAccuracies, isEmpty);
     });
 
-    test('aggregates grades, score, time and lode across quizzes', () {
-      // Older quiz: all 3 correct -> grade 32 (lode). Newer quiz: 1/3 -> grade 11.
+    test('aggregates quiz grade, score, time and perfect count', () {
+      // Older quiz: all 3 correct -> quiz grade 32. Newer quiz: 1/3 -> grade 11.
       final older = _makeQuiz(
         topics: const ["A", "A", "B"],
         correctIndices: const [0, 0, 0],
@@ -69,13 +73,43 @@ void main() {
       final stats = QuizStatistics.from([newer, older]);
 
       expect(stats.quizCount, 2);
-      expect(stats.averageGrade, closeTo((32 + 11) / 2, 0.001));
-      expect(stats.bestGrade, 32);
+      expect(stats.averageQuizGrade, closeTo((32 + 11) / 2, 0.001));
+      expect(stats.bestQuizGrade, 32);
       expect(stats.averageScore, closeTo((1.0 + 1 / 3) / 2, 0.001));
       expect(stats.passRate, 0.5); // only the grade-32 quiz passes
-      expect(stats.lodeCount, 1);
+      expect(stats.perfectCount, 1); // only the all-correct quiz
       expect(stats.totalTimeSpent, 180);
       expect(stats.averageTimeSpent, 90);
+      // No written grade recorded -> no final-grade stats.
+      expect(stats.gradedQuizCount, 0);
+      expect(stats.averageFinalGrade, 0);
+    });
+
+    test('final grade is summarised only over quizzes with a written grade', () {
+      // Graded: all correct -> quiz grade 32; written 27 -> total = 27*2/3 + 32/3.
+      final graded = _makeQuiz(
+        topics: const ["A"],
+        correctIndices: const [0],
+        selected: const [0],
+        timestamp: DateTime(2026, 1, 2),
+        writtenGrade: 27,
+      );
+      final ungraded = _makeQuiz(
+        topics: const ["A"],
+        correctIndices: const [0],
+        selected: const [1],
+        timestamp: DateTime(2026, 1, 1),
+      );
+
+      final stats = QuizStatistics.from([graded, ungraded]);
+
+      final double expectedFinal = 27 * 2 / 3 + 32 / 3;
+      expect(stats.quizCount, 2);
+      expect(stats.gradedQuizCount, 1);
+      expect(stats.averageFinalGrade, closeTo(expectedFinal, 0.001));
+      expect(stats.bestFinalGrade, closeTo(expectedFinal, 0.001));
+      // Quiz-grade stats still span both quizzes.
+      expect(stats.averageQuizGrade, closeTo((32 + 0) / 2, 0.001));
     });
 
     test('trend is chronological (oldest first)', () {
@@ -101,10 +135,10 @@ void main() {
     });
 
     test('distribution buckets are ordered and counted', () {
-      final lode = _makeQuiz(
+      final perfect = _makeQuiz(
         topics: const ["A"],
         correctIndices: const [0],
-        selected: const [0], // grade 32 -> 30L
+        selected: const [0], // quiz grade 32 -> 31-32
         timestamp: DateTime(2026, 1, 1),
       );
       final fail = _makeQuiz(
@@ -114,7 +148,7 @@ void main() {
         timestamp: DateTime(2026, 1, 2),
       );
 
-      final stats = QuizStatistics.from([fail, lode]);
+      final stats = QuizStatistics.from([fail, perfect]);
 
       expect(
         stats.gradeDistribution.map((b) => b.label).toList(),
@@ -124,7 +158,7 @@ void main() {
         for (final b in stats.gradeDistribution) b.label: b.count,
       };
       expect(counts["<18"], 1);
-      expect(counts["30L"], 1);
+      expect(counts["31-32"], 1);
       expect(counts["24-27"], 0);
     });
 

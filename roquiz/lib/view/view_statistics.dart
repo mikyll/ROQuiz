@@ -38,8 +38,10 @@ class ViewStatistics extends StatelessWidget {
                     children: [
                       _buildSummary(context, stats),
                       const SizedBox(height: 16.0),
+                      _buildFinalGrade(context, stats),
+                      const SizedBox(height: 16.0),
                       _SectionCard(
-                        title: "Andamento voti",
+                        title: "Andamento voti quiz",
                         subtitle: stats.gradeTrend.length > 1
                             ? "dal ${_formatDate(stats.gradeTrend.first.timestamp)} "
                                   "al ${_formatDate(stats.gradeTrend.last.timestamp)}"
@@ -48,7 +50,7 @@ class ViewStatistics extends StatelessWidget {
                       ),
                       const SizedBox(height: 16.0),
                       _SectionCard(
-                        title: "Distribuzione voti",
+                        title: "Distribuzione voti quiz",
                         child: _DistributionChart(
                           buckets: stats.gradeDistribution,
                         ),
@@ -109,15 +111,19 @@ class ViewStatistics extends StatelessWidget {
           ),
         ),
         _StatTile(
-          label: "Voto medio",
+          label: "Voto quiz medio",
           value: Text(
-            stats.averageGrade.toStringAsFixed(1),
+            stats.averageQuizGrade.toStringAsFixed(1),
             style: _valueStyle(context),
           ),
         ),
         _StatTile(
-          label: "Voto migliore",
-          value: GradeBadge(grade: stats.bestGrade, size: 40.0),
+          label: "Voto quiz migliore",
+          value: GradeBadge(
+            grade: stats.bestQuizGrade.toDouble(),
+            gradeBase: 32.0,
+            size: 40.0,
+          ),
         ),
         _StatTile(
           label: "Risposte corrette",
@@ -134,9 +140,9 @@ class ViewStatistics extends StatelessWidget {
           ),
         ),
         _StatTile(
-          label: "Lodi",
+          label: "Quiz perfetti",
           value: Text(
-            "${stats.lodeCount}",
+            "${stats.perfectCount}",
             style: _valueStyle(context),
           ),
         ),
@@ -155,6 +161,65 @@ class ViewStatistics extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  /// The estimated final exam grade, summarised over the quizzes that recorded
+  /// a written grade. When none did, shows a hint pointing to the setting.
+  Widget _buildFinalGrade(BuildContext context, QuizStatistics stats) {
+    if (stats.gradedQuizCount == 0) {
+      return _SectionCard(
+        title: "Voto finale",
+        child: Row(
+          children: [
+            Icon(
+              Icons.info_outline,
+              color: Theme.of(context).hintColor,
+              size: 20.0,
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Text(
+                "Imposta il voto dello scritto nelle impostazioni per "
+                "stimare il voto finale.",
+                style: TextStyle(color: Theme.of(context).hintColor),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return _SectionCard(
+      title: "Voto finale",
+      subtitle:
+          "su ${stats.gradedQuizCount} "
+          "quiz con voto scritto",
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            children: [
+              Text(
+                stats.averageFinalGrade.toStringAsFixed(1),
+                style: _valueStyle(context),
+              ),
+              const SizedBox(height: 6.0),
+              Text("Medio", style: TextStyle(color: Theme.of(context).hintColor)),
+            ],
+          ),
+          Column(
+            children: [
+              GradeBadge(grade: stats.bestFinalGrade, size: 40.0),
+              const SizedBox(height: 6.0),
+              Text(
+                "Migliore",
+                style: TextStyle(color: Theme.of(context).hintColor),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -379,8 +444,14 @@ class _DistributionChart extends StatelessWidget {
 
   Widget _bar(BuildContext context, GradeBucket bucket, int maxCount) {
     final double factor = maxCount > 0 ? bucket.count / maxCount : 0.0;
-    final bool isLode = bucket.label == "30L";
-    final bool isFail = bucket.label == "<18";
+    final Color color;
+    if (bucket.label == "<18") {
+      color = const Color(0xFFE57373); // fail
+    } else if (bucket.label == "31-32") {
+      color = const Color(0xFF2E7D32); // top score
+    } else {
+      color = Theme.of(context).colorScheme.primary;
+    }
 
     return Column(
       children: [
@@ -396,18 +467,7 @@ class _DistributionChart extends StatelessWidget {
               heightFactor: factor == 0 ? 0.0 : factor,
               child: Container(
                 decoration: BoxDecoration(
-                  color: isLode
-                      ? null
-                      : (isFail
-                            ? const Color(0xFFE57373)
-                            : Theme.of(context).colorScheme.primary),
-                  gradient: isLode
-                      ? const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Color(0xFFFFC107), Color(0xFFEF6C00)],
-                        )
-                      : null,
+                  color: color,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(4.0),
                   ),

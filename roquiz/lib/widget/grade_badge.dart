@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/utils/grade.dart';
 
-/// A square badge showing a [grade] on a 30-point scale: green when passed
-/// (>= 18), a richer green for top marks (>= 27), red when failed. Cum laude
-/// (grade > 30, i.e. "30L") gets a gold gradient, a soft glow and a raised
-/// superscript "L".
+/// A square badge showing a [grade] on a [gradeBase]-point scale: green when
+/// passed (>= 60%), a richer green for top marks (>= 90%), red when failed.
+/// Grades above [gradeBase] are cum laude (e.g. "30L" on the default 30-point
+/// scale) and get a gold gradient, a soft glow and a raised superscript "L".
 ///
-/// Shared by the history list ([ViewHistory]) and the quiz detail
-/// ([ViewHistoryQuiz]) so the grade reads the same in both places.
+/// [gradeBase] defaults to 30 (the final-exam scale, where above-30 is lode);
+/// pass 32 for a quiz-only grade so a perfect 32 reads as "32", not "30L".
+///
+/// Shared by the history list ([ViewHistory]), the quiz detail
+/// ([ViewHistoryQuiz]) and the statistics view so the grade reads the same.
 class GradeBadge extends StatelessWidget {
   final double grade;
+
+  /// Top of the grading scale. Grades above it are treated as cum laude.
+  final double gradeBase;
 
   /// Side length of the square badge. The grade label scales with it so the
   /// badge stays legible at different sizes.
   final double size;
 
-  const GradeBadge({super.key, required this.grade, this.size = 48.0});
+  const GradeBadge({
+    super.key,
+    required this.grade,
+    this.gradeBase = 30.0,
+    this.size = 48.0,
+  });
 
-  /// Badge fill/text colors for [grade], on a 30-point scale.
+  /// Badge fill/text colors for [grade], relative to [gradeBase].
   ({Color background, Color foreground}) _gradeBadgeColors(double grade) {
-    const double gradeBase = 30.0;
     final double ratio = grade / gradeBase;
     if (ratio >= 0.9) {
       return (background: const Color(0xFF2E7D32), foreground: Colors.white);
@@ -32,7 +42,7 @@ class GradeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLode = grade > 30.0;
+    final bool isLode = grade > gradeBase;
     final badge = _gradeBadgeColors(grade);
 
     final double fontSize = size * (20.0 / 48.0);
@@ -41,7 +51,7 @@ class GradeBadge extends StatelessWidget {
         ? Text.rich(
             TextSpan(
               children: [
-                const TextSpan(text: "30"),
+                TextSpan(text: gradeBase.toStringAsFixed(0)),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.top,
                   child: Transform.translate(
@@ -65,7 +75,7 @@ class GradeBadge extends StatelessWidget {
             ),
           )
         : Text(
-            getGradeString(grade),
+            getGradeString(grade, gradeBase: gradeBase),
             style: TextStyle(
               color: badge.foreground,
               fontSize: fontSize,
