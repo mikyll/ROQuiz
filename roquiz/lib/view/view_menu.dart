@@ -174,6 +174,9 @@ class ViewMenuState extends State<ViewMenu> {
                                             shuffleAnswers: false,
                                             completedQuizRepository:
                                                 widget.completedQuizRepository,
+                                            maxQuizPool: _questionRepository
+                                                .questions
+                                                .length,
                                           );
                                         },
                                       ),
@@ -307,6 +310,8 @@ class ViewMenuState extends State<ViewMenu> {
                                       return ViewHistory(
                                         completedQuizRepository:
                                             widget.completedQuizRepository,
+                                        maxQuizPool:
+                                            _questionRepository.questions.length,
                                       );
                                     },
                                   ),
@@ -325,6 +330,8 @@ class ViewMenuState extends State<ViewMenu> {
                                       return ViewStatistics(
                                         completedQuizRepository:
                                             widget.completedQuizRepository,
+                                        maxQuizPool:
+                                            _questionRepository.questions.length,
                                       );
                                     },
                                   ),

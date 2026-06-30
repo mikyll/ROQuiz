@@ -4,11 +4,14 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
+import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/selection_controller.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/view/view_history_quiz.dart';
+import 'package:roquiz/view/view_settings.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/grade_badge.dart';
@@ -18,9 +21,17 @@ import 'package:roquiz/widget/select_all_checkbox.dart';
 enum _ImportMode { merge, overwrite }
 
 class ViewHistory extends StatefulWidget {
-  const ViewHistory({super.key, required this.completedQuizRepository});
+  const ViewHistory({
+    super.key,
+    required this.completedQuizRepository,
+    required this.maxQuizPool,
+  });
 
   final CompletedQuizRepository completedQuizRepository;
+
+  /// Size of the question pool, forwarded to [ViewSettings] when the user
+  /// follows the "set your written grade" banner shortcut.
+  final int maxQuizPool;
 
   @override
   State<StatefulWidget> createState() => ViewHistoryState();
@@ -278,8 +289,55 @@ class ViewHistoryState extends State<ViewHistory> {
     return parts.join(" · ");
   }
 
+  /// Banner shown above the list when no written grade is set: the grades below
+  /// are quiz-only (shown muted), so this points the user to Settings to get an
+  /// estimated final grade. Tapping it opens Settings.
+  Widget _buildWrittenGradeBanner(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Material(
+        color: scheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(12.0),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12.0),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ViewSettings(maxQuizPool: widget.maxQuizPool),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12.0,
+              vertical: 10.0,
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, color: scheme.onSecondaryContainer),
+                const SizedBox(width: 10.0),
+                Expanded(
+                  child: Text(
+                    "Imposta il voto dello scritto per stimare il voto finale.",
+                    style: TextStyle(color: scheme.onSecondaryContainer),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Watch settings so the badges/banner react live to the written grade.
+    final int? writtenGrade = context.watch<Settings>().writtenGrade;
+
     return PopScope(
       canPop: true,
       child: Scaffold(
@@ -308,35 +366,51 @@ class ViewHistoryState extends State<ViewHistory> {
                 padding: const EdgeInsets.all(8.0),
                 child: _quizList.isEmpty
                     ? Center(child: Text("Nessun quiz completato"))
-                    : ListView.builder(
-                        controller: _scrollController,
-                        itemCount: _quizList.length,
-                        itemBuilder: (context, index) {
-                          final QuizCompleted q = _quizList[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: _QuizCompletedWidget(
-                              timestamp: q.timestamp,
-                              correctQuestions: q.correctAnswers,
-                              totalQuestions: q.questions.length,
-                              timeSpent: q.timeSpent,
-                              grade: q.grade,
-                              writtenGrade: q.writtenGrade,
-                              isSelected: _selection.isSelected(index),
-                              selectionMode: _selection.hasSelection,
-                              onSelected: () => _toggleSelection(index),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ViewHistoryQuiz(quizCompleted: q),
+                    : Column(
+                        children: [
+                          if (writtenGrade == null)
+                            _buildWrittenGradeBanner(context),
+                          Expanded(
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              itemCount: _quizList.length,
+                              itemBuilder: (context, index) {
+                                final QuizCompleted q = _quizList[index];
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 5.0),
+                                  child: _QuizCompletedWidget(
+                                    timestamp: q.timestamp,
+                                    correctQuestions: q.correctAnswers,
+                                    totalQuestions: q.questions.length,
+                                    timeSpent: q.timeSpent,
+                                    grade: q.gradeWith(writtenGrade),
+                                    // Quiz-only grade tops out at 32 (no lode);
+                                    // a final grade uses the 30-point exam scale.
+                                    gradeBase: writtenGrade != null
+                                        ? 30.0
+                                        : 32.0,
+                                    // Mute the badge while it's quiz-only, so it
+                                    // doesn't read as a final pass/fail result.
+                                    desaturated: writtenGrade == null,
+                                    writtenGrade: writtenGrade,
+                                    isSelected: _selection.isSelected(index),
+                                    selectionMode: _selection.hasSelection,
+                                    onSelected: () => _toggleSelection(index),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ViewHistoryQuiz(quizCompleted: q),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 );
                               },
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
               ),
             ),
@@ -421,6 +495,8 @@ class _QuizCompletedWidget extends StatelessWidget {
     required this.totalQuestions,
     required this.timeSpent,
     required this.grade,
+    this.gradeBase = 30.0,
+    this.desaturated = false,
     this.writtenGrade,
     this.isSelected = false,
     this.selectionMode = false,
@@ -433,12 +509,18 @@ class _QuizCompletedWidget extends StatelessWidget {
   final int totalQuestions;
   final int timeSpent;
 
-  /// Grade shown on the badge: the total exam grade when [writtenGrade] is set,
-  /// otherwise the quiz-only grade. Derived by [QuizCompleted.grade].
+  /// Grade shown on the badge: the estimated total exam grade when a written
+  /// grade is set, otherwise the quiz-only grade.
   final double grade;
 
-  /// Written grade recorded with this quiz, shown beside the score; `null` when
-  /// none was set (the badge then shows the quiz-only grade).
+  /// Scale the badge grade is on (30 for a final grade, 32 for quiz-only).
+  final double gradeBase;
+
+  /// Whether to mute the badge (quiz-only grade, no written grade set).
+  final bool desaturated;
+
+  /// The current written grade, shown beside the score; `null` when none is set
+  /// (the badge then shows the muted quiz-only grade).
   final int? writtenGrade;
   final bool isSelected;
 
@@ -470,7 +552,11 @@ class _QuizCompletedWidget extends StatelessWidget {
       ),
       selected: isSelected,
       selectedTileColor: selectionColor.withAlpha(50),
-      leading: GradeBadge(grade: grade),
+      leading: GradeBadge(
+        grade: grade,
+        gradeBase: gradeBase,
+        desaturated: desaturated,
+      ),
       title: Text(
         writtenGrade != null
             ? "$correctQuestions/$totalQuestions · scritto $writtenGrade"

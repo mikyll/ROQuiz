@@ -12,7 +12,6 @@ QuizCompleted _makeQuiz({
   required List<int?> selected,
   required DateTime timestamp,
   int timeSpent = 60,
-  int? writtenGrade,
 }) {
   final questions = [
     for (int i = 0; i < topics.length; i++)
@@ -34,7 +33,6 @@ QuizCompleted _makeQuiz({
     timestamp: timestamp,
     timeSpent: timeSpent,
     correctAnswers: correct,
-    writtenGrade: writtenGrade,
   );
 }
 
@@ -85,31 +83,33 @@ void main() {
       expect(stats.averageFinalGrade, 0);
     });
 
-    test('final grade is summarised only over quizzes with a written grade', () {
-      // Graded: all correct -> quiz grade 32; written 27 -> total = 27*2/3 + 32/3.
-      final graded = _makeQuiz(
+    test('final grade is estimated for every quiz from the live written grade', () {
+      final high = _makeQuiz(
         topics: const ["A"],
         correctIndices: const [0],
-        selected: const [0],
+        selected: const [0], // all correct -> quiz grade 32
         timestamp: DateTime(2026, 1, 2),
-        writtenGrade: 27,
       );
-      final ungraded = _makeQuiz(
+      final low = _makeQuiz(
         topics: const ["A"],
         correctIndices: const [0],
-        selected: const [1],
+        selected: const [1], // wrong -> quiz grade 0
         timestamp: DateTime(2026, 1, 1),
       );
 
-      final stats = QuizStatistics.from([graded, ungraded]);
+      // No written grade set -> no final-grade stats, even with quizzes present.
+      final none = QuizStatistics.from([high, low]);
+      expect(none.gradedQuizCount, 0);
+      expect(none.averageFinalGrade, 0);
 
-      final double expectedFinal = 27 * 2 / 3 + 32 / 3;
+      // With a global written grade, every quiz gets an estimated final grade.
+      final stats = QuizStatistics.from([high, low], writtenGrade: 27);
+      final double finalHigh = 27 * 2 / 3 + 32 / 3;
+      final double finalLow = 27 * 2 / 3 + 0 / 3;
       expect(stats.quizCount, 2);
-      expect(stats.gradedQuizCount, 1);
-      expect(stats.averageFinalGrade, closeTo(expectedFinal, 0.001));
-      expect(stats.bestFinalGrade, closeTo(expectedFinal, 0.001));
-      // Quiz-grade stats still span both quizzes.
-      expect(stats.averageQuizGrade, closeTo((32 + 0) / 2, 0.001));
+      expect(stats.gradedQuizCount, 2);
+      expect(stats.averageFinalGrade, closeTo((finalHigh + finalLow) / 2, 0.001));
+      expect(stats.bestFinalGrade, closeTo(finalHigh, 0.001));
     });
 
     test('trend is chronological (oldest first)', () {

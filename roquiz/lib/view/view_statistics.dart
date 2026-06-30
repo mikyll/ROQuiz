@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
+import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/utils/statistics.dart';
 import 'package:roquiz/model/utils/time.dart';
+import 'package:roquiz/view/view_settings.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/grade_badge.dart';
@@ -9,7 +12,15 @@ import 'package:roquiz/widget/grade_badge.dart';
 class ViewStatistics extends StatelessWidget {
   final CompletedQuizRepository completedQuizRepository;
 
-  const ViewStatistics({super.key, required this.completedQuizRepository});
+  /// Size of the question pool, forwarded to [ViewSettings] when the user taps
+  /// the "set your written grade" hint in the final-grade section.
+  final int maxQuizPool;
+
+  const ViewStatistics({
+    super.key,
+    required this.completedQuizRepository,
+    required this.maxQuizPool,
+  });
 
   String _formatDate(DateTime d) =>
       "${d.day.toString().padLeft(2, '0')}/"
@@ -17,8 +28,12 @@ class ViewStatistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Watch settings so the final-grade section updates live as soon as the
+    // written grade is entered/changed.
+    final Settings settings = context.watch<Settings>();
     final QuizStatistics stats = QuizStatistics.from(
       completedQuizRepository.quizList,
+      writtenGrade: settings.writtenGrade,
     );
 
     return Scaffold(
@@ -170,22 +185,38 @@ class ViewStatistics extends StatelessWidget {
     if (stats.gradedQuizCount == 0) {
       return _SectionCard(
         title: "Voto finale",
-        child: Row(
-          children: [
-            Icon(
-              Icons.info_outline,
-              color: Theme.of(context).hintColor,
-              size: 20.0,
+        // Tap the hint to jump straight to Settings to enter the written grade.
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(8.0),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ViewSettings(maxQuizPool: maxQuizPool),
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  color: Theme.of(context).hintColor,
+                  size: 20.0,
+                ),
+                const SizedBox(width: 8.0),
+                Expanded(
+                  child: Text(
+                    "Imposta il voto dello scritto nelle impostazioni per "
+                    "stimare il voto finale.",
+                    style: TextStyle(color: Theme.of(context).hintColor),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8.0),
-            Expanded(
-              child: Text(
-                "Imposta il voto dello scritto nelle impostazioni per "
-                "stimare il voto finale.",
-                style: TextStyle(color: Theme.of(context).hintColor),
-              ),
-            ),
-          ],
+          ),
         ),
       );
     }

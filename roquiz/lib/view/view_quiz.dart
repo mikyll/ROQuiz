@@ -12,6 +12,7 @@ import 'package:roquiz/model/quiz/quiz.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/grade.dart';
 import 'package:roquiz/model/utils/time.dart';
+import 'package:roquiz/view/view_settings.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/grade.dart';
@@ -27,6 +28,10 @@ class ViewQuiz extends StatefulWidget {
   final bool shuffleAnswers;
   final CompletedQuizRepository completedQuizRepository;
 
+  /// Size of the full question pool, forwarded to [ViewSettings] when the user
+  /// taps the "set your written grade" hint on the result card.
+  final int maxQuizPool;
+
   const ViewQuiz({
     super.key,
     required this.quizPool,
@@ -34,6 +39,7 @@ class ViewQuiz extends StatefulWidget {
     required this.timer,
     required this.shuffleAnswers,
     required this.completedQuizRepository,
+    required this.maxQuizPool,
   });
 
   @override
@@ -86,8 +92,11 @@ class _ViewQuizState extends State<ViewQuiz> {
 
   int _correctAnswers = 0;
   int _quizGrade = 0;
+  // End-of-quiz total grade snapshot, used only to drive the confetti/grade
+  // celebration. The result card itself derives the grade/range live from the
+  // current written grade (see build), so it updates if the grade is entered
+  // after the quiz ends.
   double? _totalGrade;
-  (double, double)? _totalGradeRange;
 
   // TODO
   bool _showResultCard = false;
@@ -206,7 +215,6 @@ class _ViewQuizState extends State<ViewQuiz> {
       _showResultCard = false;
 
       _totalGrade = null;
-      _totalGradeRange = null;
 
       for (ConfettiController c in _confettiControllers) {
         c.stop();
@@ -268,8 +276,6 @@ class _ViewQuizState extends State<ViewQuiz> {
         setState(() {
           _showGrade = true;
         });
-      } else {
-        _totalGradeRange = calculateTotalGradeRange(_quizGrade);
       }
       setState(() {
         _showResultCard = true;
@@ -547,8 +553,28 @@ class _ViewQuizState extends State<ViewQuiz> {
                                   (_timerCounter - settings.quizTime).abs(),
                                 ),
                                 writtenGrade: settings.writtenGrade,
-                                totalGrade: _totalGrade,
-                                totalGradeRange: _totalGradeRange,
+                                // Derived live from the current written grade so
+                                // the card updates if it's set via the hint below
+                                // after the quiz has ended.
+                                totalGrade: settings.writtenGrade != null
+                                    ? calculateTotalGrade(
+                                        settings.writtenGrade!,
+                                        _quizGrade,
+                                      )
+                                    : null,
+                                totalGradeRange: settings.writtenGrade == null
+                                    ? calculateTotalGradeRange(_quizGrade)
+                                    : null,
+                                onSetWrittenGrade: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewSettings(
+                                        maxQuizPool: widget.maxQuizPool,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),

@@ -12,6 +12,10 @@ class ResultCard extends StatefulWidget {
   final (double, double)? totalGradeRange;
   final String timerString;
 
+  /// Called when the user taps the "set your written grade" hint shown while no
+  /// written grade is set. When null the hint isn't shown.
+  final VoidCallback? onSetWrittenGrade;
+
   const ResultCard({
     super.key,
     required this.correctAnswers,
@@ -21,6 +25,7 @@ class ResultCard extends StatefulWidget {
     this.totalGrade,
     this.totalGradeRange,
     required this.timerString,
+    this.onSetWrittenGrade,
   }) : assert(
          !(totalGrade == null && totalGradeRange == null),
          "At least one of totalGrade and totalGradeRange must be set.",
@@ -146,6 +151,45 @@ class _ResultCardState extends State<ResultCard> with TickerProviderStateMixin {
                                   ),
                                 ),
                               // TODO: style (bold, etc.)
+                              if (widget.writtenGrade == null &&
+                                  widget.onSetWrittenGrade != null) ...[
+                                const SizedBox(height: 12.0),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    onTap: widget.onSetWrittenGrade,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.info_outline,
+                                            size: 18.0,
+                                            color: Theme.of(context).hintColor,
+                                          ),
+                                          const SizedBox(width: 6.0),
+                                          Flexible(
+                                            child: Text(
+                                              "Imposta il voto dello scritto "
+                                              "per stimare il voto finale.",
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Theme.of(
+                                                  context,
+                                                ).hintColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),

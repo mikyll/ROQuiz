@@ -16,8 +16,9 @@ class QuizCompleted extends Quiz {
   final int correctAnswers;
 
   /// The written-exam grade configured at the moment this quiz ended, or `null`
-  /// if none was set. Snapshotted (not derived) because it's an external input;
-  /// it feeds [grade] so historical entries don't shift when the setting changes.
+  /// if none was set. Kept for persistence/back-compat; display now uses the
+  /// *current* global written grade via [gradeWith] (so entering it later
+  /// updates past quizzes too), not this snapshot.
   final int? writtenGrade;
 
   QuizCompleted({
@@ -44,10 +45,12 @@ class QuizCompleted extends Quiz {
   /// Quiz-only grade (0–32), derived from the score.
   int get quizGrade => calculateQuizGrade(questions.length, correctAnswers);
 
-  /// Grade for this attempt: the total exam grade when a [writtenGrade] was
-  /// recorded at completion, otherwise the quiz-only grade.
-  double get grade => writtenGrade != null
-      ? calculateTotalGrade(writtenGrade!, quizGrade)
+  /// Grade for this attempt against a *live* [writtenGrade] (the current global
+  /// setting): the estimated final grade when one is set, else the quiz-only
+  /// grade. Used by the stats/history views so they reflect the written grade as
+  /// soon as it's entered, instead of only on quizzes finished after it was set.
+  double gradeWith(int? writtenGrade) => writtenGrade != null
+      ? calculateTotalGrade(writtenGrade, quizGrade)
       : quizGrade.toDouble();
 
   Map<String, dynamic> toJson() => {

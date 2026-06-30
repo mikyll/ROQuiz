@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
@@ -66,6 +68,9 @@ class _ViewHistoryQuizState extends State<ViewHistoryQuiz> {
   Widget build(BuildContext context) {
     final QuizCompleted quiz = widget.quizCompleted;
     final int totalQuestions = quiz.questions.length;
+    // Live written grade: drives the badge's value/scale/muting, matching the
+    // history list.
+    final int? writtenGrade = context.watch<Settings>().writtenGrade;
 
     return PopScope(
       canPop: true,
@@ -204,7 +209,14 @@ class _ViewHistoryQuizState extends State<ViewHistoryQuiz> {
                                       ),
                                     ],
                                   ),
-                                  GradeBadge(grade: quiz.grade, size: 56.0),
+                                  GradeBadge(
+                                    grade: quiz.gradeWith(writtenGrade),
+                                    gradeBase: writtenGrade != null
+                                        ? 30.0
+                                        : 32.0,
+                                    size: 56.0,
+                                    desaturated: writtenGrade == null,
+                                  ),
                                 ],
                               ),
                             ),

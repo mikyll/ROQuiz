@@ -21,12 +21,27 @@ class GradeBadge extends StatelessWidget {
   /// badge stays legible at different sizes.
   final double size;
 
+  /// When true the badge is rendered muted (partially desaturated), signalling
+  /// a *provisional* grade — e.g. a quiz-only grade shown while no written
+  /// grade is set, so it doesn't read as a final pass/fail result.
+  final bool desaturated;
+
   const GradeBadge({
     super.key,
     required this.grade,
     this.gradeBase = 30.0,
     this.size = 48.0,
+    this.desaturated = false,
   });
+
+  /// A saturation [ColorFilter] (1 = unchanged, 0 = greyscale) using the
+  /// standard luminance weights, applied to the whole badge when [desaturated].
+  static const ColorFilter _mutedFilter = ColorFilter.matrix(<double>[
+    0.578, 0.464, 0.047, 0, 0, // 0.35 saturation
+    0.138, 0.904, 0.047, 0, 0,
+    0.138, 0.464, 0.487, 0, 0,
+    0, 0, 0, 1, 0,
+  ]);
 
   /// Badge fill/text colors for [grade], relative to [gradeBase].
   ({Color background, Color foreground}) _gradeBadgeColors(double grade) {
@@ -83,7 +98,7 @@ class GradeBadge extends StatelessWidget {
             ),
           );
 
-    return Container(
+    final Widget badgeWidget = Container(
       width: size,
       height: size,
       alignment: Alignment.center,
@@ -109,5 +124,9 @@ class GradeBadge extends StatelessWidget {
       ),
       child: label,
     );
+
+    return desaturated
+        ? ColorFiltered(colorFilter: _mutedFilter, child: badgeWidget)
+        : badgeWidget;
   }
 }

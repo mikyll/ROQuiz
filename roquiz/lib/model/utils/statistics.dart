@@ -108,7 +108,13 @@ class QuizStatistics {
 
   bool get isEmpty => quizCount == 0;
 
-  factory QuizStatistics.from(List<QuizCompleted> quizzes) {
+  /// Builds stats from [quizzes]. [writtenGrade] is the *current* global
+  /// written-exam grade (or null if unset): when set, the final-grade metrics
+  /// are estimated live for every quiz; when null there is no final grade.
+  factory QuizStatistics.from(
+    List<QuizCompleted> quizzes, {
+    int? writtenGrade,
+  }) {
     if (quizzes.isEmpty) {
       return const QuizStatistics(
         quizCount: 0,
@@ -162,11 +168,12 @@ class QuizStatistics {
       bucketCounts[_bucketFor(quizGrade)] =
           bucketCounts[_bucketFor(quizGrade)]! + 1;
 
-      // Final grade only makes sense when a written grade was recorded; then
-      // [QuizCompleted.grade] is the estimated total.
-      if (quiz.writtenGrade != null) {
+      // Final grade only makes sense when a written grade is set; then it's the
+      // estimated total, computed live from the current global written grade and
+      // applied to every quiz.
+      if (writtenGrade != null) {
         gradedCount++;
-        final double finalGrade = quiz.grade;
+        final double finalGrade = quiz.gradeWith(writtenGrade);
         finalGradeSum += finalGrade;
         if (finalGrade > bestFinalGrade) bestFinalGrade = finalGrade;
       }
