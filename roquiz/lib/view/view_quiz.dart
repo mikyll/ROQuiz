@@ -16,6 +16,7 @@ import 'package:roquiz/view/view_settings.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/grade.dart';
+import 'package:roquiz/widget/icon_button_acceleration.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/result_card.dart';
 
@@ -359,6 +360,23 @@ class _ViewQuizState extends State<ViewQuiz> {
     );
   }
 
+  /// A bottom-bar nav arrow. A tap moves one question; pressing and holding
+  /// repeats (accelerating), matching the keyboard arrow auto-repeat. When
+  /// disabled (first/last question) [onUpdate] is null, so it renders as a
+  /// greyed, non-repeating button.
+  Widget _buildNavArrow({
+    required IconData icon,
+    required bool enabled,
+    required VoidCallback onUpdate,
+  }) {
+    return IconButtonAcceleration(
+      style: _navArrowStyle(context),
+      onUpdate: enabled ? onUpdate : null,
+      icon: Icon(icon),
+      iconSize: 35,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Settings settings = Provider.of<Settings>(context);
@@ -642,32 +660,15 @@ class _ViewQuizState extends State<ViewQuiz> {
                             Row(
                               spacing: 20.0,
                               children: [
-                                IconButton(
-                                  style: _navArrowStyle(context),
-                                  onPressed: _iQuestion <= 0
-                                      ? null
-                                      : () {
-                                          // TODO: long press
-                                          _previousQuestion();
-                                        },
-                                  icon: Icon(Icons.arrow_back_ios_rounded),
-                                  iconSize: 35,
+                                _buildNavArrow(
+                                  icon: Icons.arrow_back_ios_rounded,
+                                  enabled: _iQuestion > 0,
+                                  onUpdate: _previousQuestion,
                                 ),
-                                IconButton(
-                                  style: _navArrowStyle(context),
-                                  onLongPress:
-                                      _iQuestion >= widget.questionNum - 1
-                                      ? null
-                                      : () {},
-                                  onPressed:
-                                      _iQuestion >= widget.questionNum - 1
-                                      ? null
-                                      : () {
-                                          // TODO: long press
-                                          _nextQuestion();
-                                        },
-                                  icon: Icon(Icons.arrow_forward_ios_rounded),
-                                  iconSize: 35,
+                                _buildNavArrow(
+                                  icon: Icons.arrow_forward_ios_rounded,
+                                  enabled: _iQuestion < widget.questionNum - 1,
+                                  onUpdate: _nextQuestion,
                                 ),
                               ],
                             ),
