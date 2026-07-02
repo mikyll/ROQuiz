@@ -109,11 +109,51 @@ class _ResultCardState extends State<ResultCard> with TickerProviderStateMixin {
                                   ),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  Expanded(child: Text("Voto scritto: ")),
-                                  Text(widget.writtenGrade.toString()),
-                                ],
+                              Builder(
+                                builder: (context) {
+                                  final bool showWarning =
+                                      widget.writtenGrade == null &&
+                                      widget.onSetWrittenGrade != null;
+                                  final Widget row = Row(
+                                    children: [
+                                      Expanded(child: Text("Voto scritto: ")),
+                                      Text(widget.writtenGrade.toString()),
+                                      if (showWarning) ...[
+                                        const SizedBox(width: 6.0),
+                                        Tooltip(
+                                          textAlign: TextAlign.center,
+                                          margin: const EdgeInsets.all(5.0),
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 300.0,
+                                          ),
+                                          message:
+                                              "Imposta il voto dello scritto "
+                                              "nelle impostazioni per stimare "
+                                              "il voto finale.",
+                                          child: Icon(
+                                            Icons.warning_amber_rounded,
+                                            size: 20.0,
+                                            color: Colors.amber.shade700,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  );
+                                  if (!showWarning) return row;
+                                  return Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      onTap: widget.onSetWrittenGrade,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0,
+                                        ),
+                                        child: row,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                               Row(
                                 children: [
@@ -151,45 +191,6 @@ class _ResultCardState extends State<ResultCard> with TickerProviderStateMixin {
                                   ),
                                 ),
                               // TODO: style (bold, etc.)
-                              if (widget.writtenGrade == null &&
-                                  widget.onSetWrittenGrade != null) ...[
-                                const SizedBox(height: 12.0),
-                                Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    onTap: widget.onSetWrittenGrade,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.info_outline,
-                                            size: 18.0,
-                                            color: Theme.of(context).hintColor,
-                                          ),
-                                          const SizedBox(width: 6.0),
-                                          Flexible(
-                                            child: Text(
-                                              "Imposta il voto dello scritto "
-                                              "per stimare il voto finale.",
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: Theme.of(
-                                                  context,
-                                                ).hintColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ],
                           ),
                         ),
