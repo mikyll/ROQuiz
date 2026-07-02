@@ -64,12 +64,37 @@ class ViewMenuState extends State<ViewMenu> {
             };
             _error = null;
           });
+          // Fast path is done (local/asset questions are shown); now check the
+          // remote for a newer file in the background and refresh the topic
+          // list if one was downloaded. Failures are non-fatal.
+          _checkForNewerQuestions();
         })
         .onError((error, stackTrace) {
           setState(() {
             _error = error.toString();
           });
         });
+  }
+
+  void _checkForNewerQuestions() async {
+    bool updated;
+    try {
+      updated = await _questionRepository.updateFromRemoteIfNewer();
+    } catch (_) {
+      // Offline / API error: keep the questions we already have.
+      return;
+    }
+    if (!updated || !mounted) {
+      return;
+    }
+    setState(() {
+      // Re-derive the topic selection over the new question set, dropping
+      // topics that no longer exist and defaulting new ones to selected.
+      final grouped = _questionRepository.getGroupedQuestions();
+      _selectedTopics = {
+        for (var topic in grouped.keys) topic: _selectedTopics[topic] ?? true,
+      };
+    });
   }
 
   @override
