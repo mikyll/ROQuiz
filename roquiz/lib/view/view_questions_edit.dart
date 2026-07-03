@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/edit_question/commands/custom_command.dart';
 import 'package:roquiz/model/edit_question/command_executor.dart';
+import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/utils/selection_controller.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
@@ -18,11 +19,17 @@ class ViewQuestionsEdit extends StatefulWidget {
   final List<String> topics;
   final bool hideAnswers;
 
+  /// When set, edits are auto-saved to it (as a custom copy) on exit. Without
+  /// it the screen is read-only-ish: changes stay in-session and aren't
+  /// persisted.
+  final QuestionRepository? repository;
+
   const ViewQuestionsEdit({
     super.key,
     required this.questions,
     required this.topics,
     this.hideAnswers = true,
+    this.repository,
   });
 
   @override
@@ -41,6 +48,34 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   late SelectionController _selection;
 
   late CommandExecutor _commandExecutor;
+
+  // Guards against re-entering the save-and-pop path (e.g. back button pressed
+  // again while the save is in flight).
+  bool _exiting = false;
+
+  /// Auto-saves the working question set (when anything changed and a
+  /// repository is available) before leaving, then pops. Undo/redo is the
+  /// in-session "discard". Returns `true` to the caller when edits were saved,
+  /// so it can refresh its own view.
+  Future<void> _handleExit() async {
+    if (_exiting) {
+      return;
+    }
+    _exiting = true;
+
+    final bool changed = _commandExecutor.canUndo();
+    try {
+      if (changed && widget.repository != null) {
+        await widget.repository!.saveQuestions(_questions);
+      }
+    } finally {
+      _exiting = false;
+    }
+
+    if (mounted) {
+      Navigator.pop(context, changed);
+    }
+  }
 
   void _resetSelectedQuestions() {
     setState(() {
@@ -271,18 +306,20 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: true,
+      // canPop:false so every exit (system/predictive back too) routes through
+      // _handleExit, which persists edits before popping.
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }
-        Navigator.pop(context);
+        _handleExit();
       },
       child: Scaffold(
         appBar: ConstrainedAppBar(
           maxWidth: 500.0,
           title: Text("Selezionate: ${_selection.count}/${_selection.length}"),
-          leading: CustomBackButton(),
+          leading: CustomBackButton(onPressed: _handleExit),
           actions: [
             SelectAllCheckbox(
               value: _selection.allSelected,

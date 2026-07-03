@@ -19,11 +19,16 @@ class ViewQuestions extends StatefulWidget {
   final String title;
   final bool editable;
 
+  /// Backing store for the questions. Required for edits made in the edit
+  /// screen to be persisted; when null the edit screen can't save.
+  final QuestionRepository? repository;
+
   const ViewQuestions({
     super.key,
     required this.questions,
     this.title = "Lista Domande",
     this.editable = true,
+    this.repository,
   });
 
   @override
@@ -41,13 +46,18 @@ class ViewQuestionsState extends State<ViewQuestions> {
       GlobalKey<SelectionAreaState>();
 
   late String _title;
+  // Authoritative full question set for this screen. Seeded from
+  // widget.questions and refreshed from the repository after an editing
+  // session; search/reset derive from it (not the stale widget.questions).
+  late List<Question> _allQuestions;
+  // The currently displayed list: either all questions or the search results.
   late List<Question> _questions;
 
   bool _searchBarOpen = false;
 
   void _resetQuestions() {
     setState(() {
-      _questions = List.from(widget.questions);
+      _questions = List.from(_allQuestions);
     });
   }
 
@@ -61,27 +71,27 @@ class ViewQuestionsState extends State<ViewQuestions> {
       _questions.clear();
 
       // Loop over the question list
-      for (int i = 0; i < widget.questions.length; i++) {
-        String questionBody = widget.questions[i].body;
+      for (int i = 0; i < _allQuestions.length; i++) {
+        String questionBody = _allQuestions[i].body;
         if (ignoreCase) {
           questionBody = questionBody.toLowerCase();
         }
 
         // Add the question if the search string is contained in question body
         if (questionBody.contains(value)) {
-          _questions.add(widget.questions[i]);
+          _questions.add(_allQuestions[i]);
           continue;
         }
 
         // Add the question if the search string is contained in a question answer
-        for (int j = 0; j < widget.questions[i].answers.length; j++) {
-          String answer = widget.questions[i].answers[j];
+        for (int j = 0; j < _allQuestions[i].answers.length; j++) {
+          String answer = _allQuestions[i].answers[j];
           if (ignoreCase) {
             answer = answer.toLowerCase();
           }
 
           if (answer.contains(value)) {
-            _questions.add(widget.questions[i]);
+            _questions.add(_allQuestions[i]);
             break;
           }
         }
@@ -107,8 +117,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
   void initState() {
     super.initState();
 
+    _allQuestions = List.from(widget.questions);
     _resetQuestions();
-    _title = "${widget.title} (${_questions.length})";
+    _title = "${widget.title} (${_allQuestions.length})";
   }
 
   @override
@@ -149,12 +160,12 @@ class ViewQuestionsState extends State<ViewQuestions> {
                 _searchQuestions(searchString);
                 setState(() {
                   _title =
-                      "Trovate: ${_questions.length}/${widget.questions.length}";
+                      "Trovate: ${_questions.length}/${_allQuestions.length}";
                 });
               },
               onClear: () {
                 _resetQuestions();
-                _title = "${widget.title} (${widget.questions.length})";
+                _title = "${widget.title} (${_allQuestions.length})";
               },
             ),
           ],
@@ -267,24 +278,44 @@ class ViewQuestionsState extends State<ViewQuestions> {
                         waitDuration: Duration(milliseconds: 500),
                         message: "Modifica",
                         child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
+                          onPressed: () async {
+                            final bool? changed = await Navigator.push<bool>(
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
+                                  // Always edit the full set, not the current
+                                  // search results — otherwise saving would
+                                  // persist only the filtered subset.
                                   final List<String> topics = getTopicsList(
-                                    _questions,
+                                    _allQuestions,
                                   );
 
                                   return ViewQuestionsEdit(
-                                    questions: _questions,
+                                    questions: _allQuestions,
                                     topics: topics,
                                     hideAnswers:
                                         settings.hideCorrectAnswersInEditMode,
+                                    repository: widget.repository,
                                   );
                                 },
                               ),
                             );
+                            // Edits were auto-saved to the repository; refresh
+                            // the list (and drop any active search) to show them.
+                            if (changed == true &&
+                                widget.repository != null &&
+                                mounted) {
+                              setState(() {
+                                _searchBarOpen = false;
+                                _textController.clear();
+                                _allQuestions = List.from(
+                                  widget.repository!.questions,
+                                );
+                                _questions = List.from(_allQuestions);
+                                _title =
+                                    "${widget.title} (${_allQuestions.length})";
+                              });
+                            }
                             // TODO: change animation?
                             // Navigator.push(
                             //   context,

@@ -157,6 +157,13 @@ class QuestionRepository {
     );
   }
 
+  /// Replaces the working [questions] with [edited] and persists them as a
+  /// custom copy. Use this to save the result of an in-app editing session.
+  Future<void> saveQuestions(List<Question> edited) async {
+    questions = edited;
+    await save();
+  }
+
   /// Serializes the current [questions] to YAML and persists them as a custom
   /// copy. Use this after in-app edits to save the working question set.
   Future<void> save() async {

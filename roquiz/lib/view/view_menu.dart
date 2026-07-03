@@ -357,18 +357,24 @@ class ViewMenuState extends State<ViewMenu> {
                             _buildMenuButton(
                               icon: Icons.format_list_numbered,
                               label: "Domande",
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
                                       return ViewQuestions(
                                         questions:
                                             _questionRepository.questions,
+                                        repository: _questionRepository,
                                       );
                                     },
                                   ),
                                 );
+                                // Edits may have replaced the question set;
+                                // refresh the menu's derived figures.
+                                if (mounted) {
+                                  setState(() {});
+                                }
                               },
                             ),
                             const SizedBox(height: 10),
