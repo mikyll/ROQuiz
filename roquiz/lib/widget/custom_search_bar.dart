@@ -141,6 +141,52 @@ class CustomSearchBarState extends State<CustomSearchBar>
     }
   }
 
+  void _openBar({bool forceFocus = false}) {
+    setState(() {
+      isOpen = true;
+
+      if (widget.onOpen != null) {
+        widget.onOpen!();
+      }
+
+      ///if the autoFocus is true, the keyboard will pop open, automatically
+      if (widget.autoFocus || forceFocus) {
+        FocusScope.of(context).requestFocus(focusNode);
+      }
+
+      // expand
+      _con.forward();
+    });
+  }
+
+  /// Opens the search bar programmatically (e.g. from a Ctrl+F shortcut) and
+  /// focuses the text field. If it is already open, it just re-focuses it.
+  void openSearch() {
+    if (isOpen) {
+      focusNode.requestFocus();
+      return;
+    }
+    _openBar(forceFocus: true);
+  }
+
+  /// Closes (collapses) the search bar programmatically, e.g. from an Esc
+  /// shortcut. Keeps the current text/results (same as tapping outside).
+  /// No-op if already closed; returns whether it did anything.
+  bool closeSearch() {
+    if (!isOpen) {
+      return false;
+    }
+    if (widget.onClose != null) {
+      widget.onClose!();
+    }
+    unfocusKeyboard();
+    setState(() {
+      isOpen = false;
+    });
+    _con.reverse();
+    return true;
+  }
+
   @override
   void dispose() {
     _con.dispose();
@@ -370,26 +416,14 @@ class CustomSearchBarState extends State<CustomSearchBar>
                   ),
 
                   onPressed: () {
-                    setState(() {
-                      if (!isOpen) {
-                        isOpen = true;
+                    if (!isOpen) {
+                      _openBar();
+                    } else {
+                      if (widget.textController.text.isEmpty) {
+                        return;
+                      }
 
-                        if (widget.onOpen != null) {
-                          widget.onOpen!();
-                        }
-
-                        ///if the autoFocus is true, the keyboard will pop open, automatically
-                        if (widget.autoFocus) {
-                          FocusScope.of(context).requestFocus(focusNode);
-                        }
-
-                        // expand
-                        _con.forward();
-                      } else {
-                        if (widget.textController.text.isEmpty) {
-                          return;
-                        }
-
+                      setState(() {
                         isOpen = false;
 
                         widget.onSearch(widget.textController.text);
@@ -402,8 +436,8 @@ class CustomSearchBarState extends State<CustomSearchBar>
 
                         // shrink
                         _con.reverse();
-                      }
-                    });
+                      });
+                    }
                   },
                 ),
               ),

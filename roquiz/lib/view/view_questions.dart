@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
@@ -44,6 +45,10 @@ class ViewQuestionsState extends State<ViewQuestions> {
   // active selection when scrolling starts to keep the indices consistent.
   final GlobalKey<SelectionAreaState> _selectionKey =
       GlobalKey<SelectionAreaState>();
+
+  // Lets Ctrl+F open the search bar programmatically.
+  final GlobalKey<CustomSearchBarState> _searchBarKey =
+      GlobalKey<CustomSearchBarState>();
 
   late String _title;
   // Authoritative full question set for this screen. Seeded from
@@ -113,6 +118,31 @@ class ViewQuestionsState extends State<ViewQuestions> {
 
   void _exportToFile() {}
 
+  // Back/Esc first collapses an open search bar; only when it's already closed
+  // does it leave the screen. Wired into CustomBackButton (whose Esc handler
+  // calls onPressed), so both the button and Esc share this behavior.
+  void _handleBack() {
+    if (_searchBarOpen && (_searchBarKey.currentState?.closeSearch() ?? false)) {
+      return;
+    }
+    Navigator.pop(context);
+  }
+
+  // Ctrl+F opens the search bar, but only for the topmost route — otherwise
+  // every ViewQuestions still mounted in the navigation stack would react.
+  bool _onKey(KeyEvent event) {
+    if (event is! KeyDownEvent ||
+        event.logicalKey != LogicalKeyboardKey.keyF ||
+        !HardwareKeyboard.instance.isControlPressed) {
+      return false;
+    }
+    if (!mounted || !(ModalRoute.of(context)?.isCurrent ?? false)) {
+      return false;
+    }
+    _searchBarKey.currentState?.openSearch();
+    return true;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -120,6 +150,16 @@ class ViewQuestionsState extends State<ViewQuestions> {
     _allQuestions = List.from(widget.questions);
     _resetQuestions();
     _title = "${widget.title} (${_allQuestions.length})";
+
+    HardwareKeyboard.instance.addHandler(_onKey);
+  }
+
+  @override
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_onKey);
+    _scrollController.dispose();
+    _textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -140,9 +180,10 @@ class ViewQuestionsState extends State<ViewQuestions> {
             duration: const Duration(milliseconds: 250),
             child: Text(_title),
           ),
-          leading: CustomBackButton(),
+          leading: CustomBackButton(onPressed: _handleBack),
           actions: [
             CustomSearchBar(
+              key: _searchBarKey,
               textController: _textController,
               autoFocus: _textController.text.isEmpty,
               helpText: "Cerca...",
