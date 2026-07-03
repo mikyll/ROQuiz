@@ -270,9 +270,17 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
               ),
               child: ElevatedButton(
                 onPressed: _canConfirm ? _confirm : null,
-                child: const Text(
-                  "Conferma",
-                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 22),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Conferma",
+                      style:
+                          TextStyle(fontWeight: FontWeight.normal, fontSize: 22),
+                    ),
+                    SizedBox(width: 8.0),
+                    Icon(Icons.open_in_new),
+                  ],
                 ),
               ),
             ),
