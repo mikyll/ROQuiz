@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
@@ -262,6 +263,13 @@ class ViewSettingsState extends State<ViewSettings> {
                   controller: scrollController,
                   shrinkWrap: true,
                   primary: false,
+                  // Build the whole (short, bounded) settings list up front rather
+                  // than lazily: [_scrollToAnchor] uses Scrollable.ensureVisible on
+                  // an entry's GlobalKey, which needs that entry already laid out.
+                  // Without this the target is unbuilt below the fold (its context
+                  // is null) and the scroll silently no-ops — most visibly in debug,
+                  // where the extra kDebugMode entries push it further down.
+                  scrollCacheExtent: ScrollCacheExtent.pixels(3000),
                   children: [
                     SizedBox(height: 10),
                     Separator(text: "Generale"),
