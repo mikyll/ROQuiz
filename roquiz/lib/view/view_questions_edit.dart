@@ -45,6 +45,10 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   int? _scrollTargetIndex;
 
   List<Question> _questions = [];
+  // Pristine, deep-copied snapshot of the questions as received, used by the
+  // "restore all" command to discard every modification. Deep-copied because
+  // edits mutate Question objects in place (and _questions shares their refs).
+  late final List<Question> _originalQuestions;
   late SelectionController _selection;
 
   late CommandExecutor _commandExecutor;
@@ -284,6 +288,57 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     // add new command
   }
 
+  /// Whether the working set differs from the pristine [_originalQuestions]
+  /// snapshot. Drives the restore button: [CommandExecutor.canUndo] is true
+  /// whenever any command ran, but the net effect can be a no-op (e.g. right
+  /// after a restore, or after undoing every edit), leaving nothing to discard.
+  bool _hasChanges() {
+    if (_questions.length != _originalQuestions.length) {
+      return true;
+    }
+    for (int i = 0; i < _questions.length; i++) {
+      if (!_questionsEqual(_questions[i], _originalQuestions[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool _questionsEqual(Question a, Question b) {
+    return a.id == b.id &&
+        a.body == b.body &&
+        a.topic == b.topic &&
+        a.correctAnswer == b.correctAnswer &&
+        (a.isCustom ?? false) == (b.isCustom ?? false) &&
+        listEquals(a.answers, b.answers);
+  }
+
+  /// Replaces the working set with deep copies of [target] and resets the
+  /// selection to match. Deep copies keep the snapshot immune to later in-place
+  /// edits.
+  void _restoreQuestions(List<Question> target) {
+    setState(() {
+      _questions = target.map(Question.copy).toList();
+      _selection.reset(_questions.length);
+    });
+  }
+
+  /// Discards every modification, restoring the pristine question set. This is
+  /// a regular undoable command: undo brings back the whole modified working
+  /// set captured here, redo discards again.
+  void _commandRestore() {
+    final List<Question> before = _questions.map(Question.copy).toList();
+
+    _commandExecutor.executeCommand(
+      CustomCommand(
+        name: "restore(size: ${_originalQuestions.length})",
+        onExecute: () => _restoreQuestions(_originalQuestions),
+        onUndo: () => _restoreQuestions(before),
+        onRedo: () => _restoreQuestions(_originalQuestions),
+      ),
+    );
+  }
+
   void _undoOperation() {
     // TODO
   }
@@ -300,6 +355,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
       initState: "init(size: ${widget.questions.length})",
     );
     _questions = List.from(widget.questions);
+    _originalQuestions = widget.questions.map(Question.copy).toList();
     _selection = SelectionController(_questions.length);
   }
 
@@ -445,6 +501,21 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                       ),
                     ),
                     SizedBox(width: 10.0),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
+                      message: "Annulla tutte le modifiche",
+                      child: IconButton(
+                        onPressed: _hasChanges()
+                            ? () {
+                                setState(() {
+                                  _commandRestore();
+                                });
+                              }
+                            : null,
+                        icon: Icon(Icons.restore),
+                        iconSize: 35,
+                      ),
+                    ),
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
                       message: "Annulla l'ultima azione",
