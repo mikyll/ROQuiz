@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -51,6 +52,41 @@ class ViewMenuState extends State<ViewMenu> {
     }
 
     return questions;
+  }
+
+  void _openSettings({SettingsAnchor? scrollTo}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return ViewSettings(
+            maxQuizPool: _questionRepository.questions.length,
+            scrollTo: scrollTo,
+          );
+        },
+      ),
+    );
+  }
+
+  void _openTopics() {
+    final settings = Provider.of<Settings>(context, listen: false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return ViewTopics(
+            questionsNum: settings.quizQuestions,
+            questionsPerTopic: _questionRepository.getGroupedQuestions(),
+            selectedTopics: _selectedTopics,
+            toggleTopic: (Map<String, bool> v) {
+              setState(() {
+                _selectedTopics = v;
+              });
+            },
+          );
+        },
+      ),
+    );
   }
 
   void _initQuestionRepository() async {
@@ -235,9 +271,29 @@ class ViewMenuState extends State<ViewMenu> {
                                       ),
                                       const SizedBox(width: 4),
                                       Flexible(
-                                        child: Text(
-                                          "Domande: ${settings.quizQuestions} "
-                                          "su ${_getQuizPool().length}",
+                                        child: Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              const TextSpan(text: "Domande: "),
+                                              TextSpan(
+                                                text:
+                                                    "${settings.quizQuestions}",
+                                                recognizer: TapGestureRecognizer()
+                                                  ..onTap = () => _openSettings(
+                                                    scrollTo: SettingsAnchor
+                                                        .quizQuestions,
+                                                  ),
+                                              ),
+                                              const TextSpan(text: " su "),
+                                              TextSpan(
+                                                text:
+                                                    "${_getQuizPool().length}",
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = _openTopics,
+                                              ),
+                                            ],
+                                          ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -252,8 +308,24 @@ class ViewMenuState extends State<ViewMenu> {
                                       const Icon(Icons.timer_rounded),
                                       const SizedBox(width: 4),
                                       Flexible(
-                                        child: Text(
-                                          "Tempo: ${settings.quizTime} min",
+                                        child: Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              const TextSpan(text: "Tempo: "),
+                                              TextSpan(
+                                                text:
+                                                    "${settings.quizTime} min",
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () =>
+                                                          _openSettings(
+                                                            scrollTo:
+                                                                SettingsAnchor
+                                                                    .quizTime,
+                                                          ),
+                                              ),
+                                            ],
+                                          ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -291,7 +363,8 @@ class ViewMenuState extends State<ViewMenu> {
                                   MaterialPageRoute(
                                     builder: (context) {
                                       return ViewQuestions(
-                                        questions: _questionRepository.questions,
+                                        questions:
+                                            _questionRepository.questions,
                                       );
                                     },
                                   ),
@@ -302,26 +375,7 @@ class ViewMenuState extends State<ViewMenu> {
                             _buildMenuButton(
                               icon: Icons.checklist,
                               label: "Argomenti",
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return ViewTopics(
-                                        questionsNum: settings.quizQuestions,
-                                        questionsPerTopic: _questionRepository
-                                            .getGroupedQuestions(),
-                                        selectedTopics: _selectedTopics,
-                                        toggleTopic: (Map<String, bool> v) {
-                                          setState(() {
-                                            _selectedTopics = v;
-                                          });
-                                        },
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
+                              onPressed: _openTopics,
                             ),
                             const SizedBox(height: 10),
                             _buildMenuButton(
@@ -335,8 +389,9 @@ class ViewMenuState extends State<ViewMenu> {
                                       return ViewHistory(
                                         completedQuizRepository:
                                             widget.completedQuizRepository,
-                                        maxQuizPool:
-                                            _questionRepository.questions.length,
+                                        maxQuizPool: _questionRepository
+                                            .questions
+                                            .length,
                                       );
                                     },
                                   ),
@@ -355,8 +410,9 @@ class ViewMenuState extends State<ViewMenu> {
                                       return ViewStatistics(
                                         completedQuizRepository:
                                             widget.completedQuizRepository,
-                                        maxQuizPool:
-                                            _questionRepository.questions.length,
+                                        maxQuizPool: _questionRepository
+                                            .questions
+                                            .length,
                                       );
                                     },
                                   ),
@@ -390,19 +446,7 @@ class ViewMenuState extends State<ViewMenu> {
                     height: 60,
                     width: 60,
                     child: IconButton.filled(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ViewSettings(
-                                maxQuizPool:
-                                    _questionRepository.questions.length,
-                              );
-                            },
-                          ),
-                        );
-                      },
+                      onPressed: () => _openSettings(),
                       iconSize: 45,
                       icon: const Icon(Icons.settings),
                     ),
