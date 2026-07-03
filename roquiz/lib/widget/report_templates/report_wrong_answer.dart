@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/widget/report_templates/report_template.dart';
 
-/// Report an error in one or more answers: the reporter flags the wrong
-/// answers (checkbox) and can edit each flagged answer to propose a correction.
+/// Report an error in one or more answers: the reporter edits any answer text
+/// to propose a correction. The circles only mark the (non-selectable) correct
+/// answer for context; edited answers are highlighted.
 class ReportWrongAnswer extends StatefulWidget {
   final Question question;
 
   /// Called whenever the "has edits" state changes (true once at least one
-  /// answer is flagged), so the host can enable/disable its confirm button.
+  /// answer text differs from the original), so the host can enable/disable its
+  /// confirm button.
   final ValueChanged<bool> onEditsChanged;
 
   const ReportWrongAnswer({
@@ -23,7 +25,6 @@ class ReportWrongAnswer extends StatefulWidget {
 
 class _ReportWrongAnswerState extends State<ReportWrongAnswer>
     with ReportTemplateController {
-  final Set<int> _flagged = {};
   late final List<TextEditingController> _controllers = List.generate(
     widget.question.answers.length,
     (i) => TextEditingController(text: widget.question.answers[i]),
@@ -38,20 +39,21 @@ class _ReportWrongAnswerState extends State<ReportWrongAnswer>
     super.dispose();
   }
 
-  void _toggle(int i) {
-    setState(() {
-      _errorText = "";
-      if (!_flagged.remove(i)) {
-        _flagged.add(i);
-      }
-    });
-    widget.onEditsChanged(_flagged.isNotEmpty);
+  bool _isEdited(int i) => _controllers[i].text != widget.question.answers[i];
+
+  bool get _hasEdits => List.generate(
+    _controllers.length,
+    _isEdited,
+  ).any((edited) => edited);
+
+  void _onChanged() {
+    setState(() => _errorText = "");
+    widget.onEditsChanged(_hasEdits);
   }
 
   @override
   String validate() {
-    final String err =
-        _flagged.isEmpty ? "Selezionare almeno una risposta errata" : "";
+    final String err = _hasEdits ? "" : "Modificare almeno una risposta errata";
     setState(() => _errorText = err);
     return err;
   }
@@ -59,15 +61,13 @@ class _ReportWrongAnswerState extends State<ReportWrongAnswer>
   @override
   ReportData collect() {
     final Question q = widget.question;
-    final List<int> sorted = _flagged.toList()..sort();
-    final String wrong = sorted.map((i) {
-      final String letter = String.fromCharCode(65 + i);
-      final String original = q.answers[i];
-      final String corrected = _controllers[i].text;
-      return corrected != original
-          ? "$letter. $original -> $corrected"
-          : "$letter. $original";
-    }).join(" | ");
+    final String wrong = List.generate(q.answers.length, (i) => i)
+        .where(_isEdited)
+        .map((i) {
+          final String letter = String.fromCharCode(65 + i);
+          return "$letter. ${q.answers[i]} -> ${_controllers[i].text}";
+        })
+        .join(" | ");
 
     return ReportData(
       templateFile: "report_wrong_answer.it.yaml",
@@ -105,33 +105,32 @@ class _ReportWrongAnswerState extends State<ReportWrongAnswer>
               mainAxisSize: MainAxisSize.min,
               spacing: 10.0,
               children: List.generate(q.answers.length, (index) {
-                final bool flagged = _flagged.contains(index);
+                final bool isCorrect = q.correctAnswer == index;
+                final bool edited = _isEdited(index);
                 return Row(
                   children: [
-                    InkWell(
-                      onTap: () => _toggle(index),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Icon(
-                          flagged
-                              ? Icons.check_box
-                              : Icons.check_box_outline_blank,
-                          color: flagged ? Colors.red : null,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        isCorrect
+                            ? Icons.radio_button_on
+                            : Icons.radio_button_off,
+                        color: Colors.grey.withAlpha(100),
                       ),
                     ),
                     Flexible(
                       child: TextFormField(
                         controller: _controllers[index],
+                        onChanged: (_) => _onChanged(),
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
-                          focusedBorder: flagged
+                          focusedBorder: edited
                               ? const OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: Colors.red, width: 2.0),
                                 )
                               : null,
-                          enabledBorder: flagged
+                          enabledBorder: edited
                               ? const OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: Colors.red, width: 2.0),
@@ -139,16 +138,12 @@ class _ReportWrongAnswerState extends State<ReportWrongAnswer>
                               : null,
                           label: Text(
                             "Risposta ${index + 1}",
-                            style: TextStyle(color: flagged ? Colors.red : null),
+                            style: TextStyle(color: edited ? Colors.red : null),
                           ),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                         minLines: 1,
                         maxLines: 3,
-                        readOnly: !flagged,
-                        showCursor: flagged,
-                        onTapAlwaysCalled: true,
-                        onTap: flagged ? null : () => _toggle(index),
                       ),
                     ),
                   ],
