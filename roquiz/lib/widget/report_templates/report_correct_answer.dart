@@ -87,6 +87,10 @@ class _ReportCorrectAnswerState extends State<ReportCorrectAnswer>
               children: List.generate(q.answers.length, (index) {
                 final bool isCurrent = q.correctAnswer == index;
                 final bool isSelected = _newCorrectAnswer == index;
+                // The original correct answer stays selected only while no new
+                // answer has been picked, so at most one circle is ever "on".
+                final bool showCurrentSelected =
+                    isCurrent && _newCorrectAnswer == null;
                 return Row(
                   children: [
                     InkWell(
@@ -94,7 +98,7 @@ class _ReportCorrectAnswerState extends State<ReportCorrectAnswer>
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Icon(
-                          isCurrent || isSelected
+                          isSelected || showCurrentSelected
                               ? Icons.radio_button_on
                               : Icons.radio_button_off,
                           color: isCurrent
