@@ -161,6 +161,23 @@ class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 spacing: 15.0,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: TextFormField(
+                      key: GlobalKey(),
+                      initialValue: widget.question.body,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text("Domanda"),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      minLines: 1,
+                      maxLines: 5,
+                      readOnly: true,
+                      enabled: false,
+                      showCursor: false,
+                    ),
+                  ),
                   FormField(
                     key: _correctAnswerKey,
                     validator: (_) {
