@@ -25,7 +25,7 @@ class ReportQuestionDialog extends StatefulWidget {
 class _ReportQuestionDialogState extends State<ReportQuestionDialog> {
   static const Map<String, String> _issueTemplates = {
     "correct-answer": "Errore nella risposta corretta",
-    "question-body": "Corpo domanda",
+    "question-body": "Corpo domanda errato",
     "answers": "Risposte errate",
   };
 
