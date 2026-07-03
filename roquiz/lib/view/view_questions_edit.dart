@@ -32,6 +32,11 @@ class ViewQuestionsEdit extends StatefulWidget {
 class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
   final ScrollController _scrollController = ScrollController();
 
+  // Set to the just-added question's index so the itemBuilder tags that card
+  // with [_scrollTargetKey]; [_scrollToQuestion] then brings it into view.
+  final GlobalKey _scrollTargetKey = GlobalKey();
+  int? _scrollTargetIndex;
+
   List<Question> _questions = [];
   late SelectionController _selection;
 
@@ -93,6 +98,51 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
     }
   }
 
+  /// Scrolls the question at [index] into view, tagging it via
+  /// [_scrollTargetKey] so [Scrollable.ensureVisible] has a laid-out target.
+  ///
+  /// In the lazy [ListView.builder] an off-screen target isn't built yet (its
+  /// key has no context), so we first jump to its estimated offset to force a
+  /// build, then retry on the next frame.
+  void _scrollToQuestion(int index) {
+    setState(() => _scrollTargetIndex = index);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _ensureTargetVisible());
+  }
+
+  void _ensureTargetVisible({int attempt = 0}) {
+    if (!mounted || _scrollTargetIndex == null) {
+      return;
+    }
+
+    final BuildContext? anchor = _scrollTargetKey.currentContext;
+    if (anchor != null) {
+      Scrollable.ensureVisible(
+        anchor,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+        alignment: 0.3,
+      ).whenComplete(() => _scrollTargetIndex = null);
+      return;
+    }
+
+    // Target not laid out yet: nudge the viewport toward its estimated position
+    // so the builder renders it, then retry. Bail out after a few attempts to
+    // avoid looping if it never settles.
+    if (attempt >= 3 || !_scrollController.hasClients || _questions.isEmpty) {
+      _scrollTargetIndex = null;
+      return;
+    }
+    final ScrollPosition position = _scrollController.position;
+    final double estimated =
+        position.maxScrollExtent * (_scrollTargetIndex! / _questions.length);
+    _scrollController.jumpTo(
+      estimated.clamp(position.minScrollExtent, position.maxScrollExtent),
+    );
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _ensureTargetVisible(attempt: attempt + 1),
+    );
+  }
+
   void _editQuestion(int id, Question q) {
     setState(() {
       _questions[id].topic = q.topic;
@@ -117,6 +167,7 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                     "add(topic: '${question.topic}', id: ${question.id}, newSize: ${_questions.length + 1})",
                 onExecute: () {
                   _addQuestion(question.id, question);
+                  _scrollToQuestion(question.id);
                 },
                 onUndo: () {
                   _resetSelectedQuestions();
@@ -262,11 +313,12 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                       },
                       tapToSelect: _selection.hasSelection,
                     );
+                    Widget item;
                     // Check if we have to display the topic divider
                     if (index == 0 ||
                         _questions[index - 1].topic !=
                             _questions[index].topic) {
-                      return Column(
+                      item = Column(
                         children: [
                           Padding(
                             padding: EdgeInsets.only(
@@ -281,10 +333,16 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                         ],
                       );
                     }
-                    // Otherwise simply return the card
+                    // Otherwise simply use the card
                     else {
-                      return questionWidget;
+                      item = questionWidget;
                     }
+                    // Tag the just-added question so _scrollToQuestion can bring
+                    // it into view.
+                    return KeyedSubtree(
+                      key: index == _scrollTargetIndex ? _scrollTargetKey : null,
+                      child: item,
+                    );
                   },
                 ),
               ),
