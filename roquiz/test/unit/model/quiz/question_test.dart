@@ -36,13 +36,12 @@ B
       expect(
         question.toYaml().trim(),
         '''
-- body: |
-    What is 2+2?
-  topic: Addition
+- body: "What is 2+2?"
+  topic: "Addition"
   answers:
-    - 3
-    - 4
-    - 5
+    - "3"
+    - "4"
+    - "5"
   correct_answer: 1
 '''
             .trim(),
@@ -80,12 +79,11 @@ B
       expect(
         question.toYaml().trim(),
         '''
-- body: |
-    What is 2+2?
+- body: "What is 2+2?"
   answers:
-    - 3
-    - 4
-    - 5
+    - "3"
+    - "4"
+    - "5"
   correct_answer: 1
 '''
             .trim(),

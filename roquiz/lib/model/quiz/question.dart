@@ -102,15 +102,20 @@ class Question {
   }
 
   String toYaml({letters = false}) {
-    String res = "- body: |\n    $body";
+    // Emit every string as a double-quoted YAML scalar so the file round-trips
+    // losslessly through parseQuestionsFromYaml. Plain/unquoted scalars would
+    // misparse real question text: a "key: value"-looking answer becomes a map,
+    // a numeric answer becomes an int, and a block-scalar body gains a trailing
+    // newline.
+    String res = "- body: ${_yamlQuote(body)}";
 
     if (topic != null) {
-      res += "\n  topic: $topic";
+      res += "\n  topic: ${_yamlQuote(topic!)}";
     }
 
     res += "\n  answers:";
     for (String a in answers) {
-      res += "\n    - $a";
+      res += "\n    - ${_yamlQuote(a)}";
     }
 
     if (letters) {
@@ -120,6 +125,18 @@ class Question {
     }
 
     return res;
+  }
+
+  /// Wraps [value] as a double-quoted YAML scalar, escaping the characters that
+  /// would otherwise break parsing or alter the string.
+  static String _yamlQuote(String value) {
+    final escaped = value
+        .replaceAll("\\", "\\\\")
+        .replaceAll("\"", "\\\"")
+        .replaceAll("\n", "\\n")
+        .replaceAll("\r", "\\r")
+        .replaceAll("\t", "\\t");
+    return "\"$escaped\"";
   }
 
   Map<String, dynamic> toJson() => {
