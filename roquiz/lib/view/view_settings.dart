@@ -33,10 +33,17 @@ class _MaxValueInputFormatter extends TextInputFormatter {
   }
 }
 
+/// A settings entry the screen can scroll to when opened, so a caller (e.g. the
+/// menu's quiz-summary links) can jump straight to the relevant control.
+enum SettingsAnchor { quizQuestions, quizTime }
+
 class ViewSettings extends StatefulWidget {
   final int maxQuizPool;
 
-  const ViewSettings({super.key, required this.maxQuizPool});
+  /// When set, the screen scrolls this entry into view after its first layout.
+  final SettingsAnchor? scrollTo;
+
+  const ViewSettings({super.key, required this.maxQuizPool, this.scrollTo});
 
   @override
   State<StatefulWidget> createState() => ViewSettingsState();
@@ -44,6 +51,10 @@ class ViewSettings extends StatefulWidget {
 
 class ViewSettingsState extends State<ViewSettings> {
   final ScrollController scrollController = ScrollController();
+  // Anchors for [SettingsAnchor], so the screen can scroll a specific entry
+  // into view when opened with widget.scrollTo set.
+  final GlobalKey _quizQuestionsKey = GlobalKey();
+  final GlobalKey _quizTimeKey = GlobalKey();
   // Stable key: recreating it on every build would tear down and rebuild the
   // Form subtree (the ListView), resetting the scroll position to the top.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -65,6 +76,30 @@ class ViewSettingsState extends State<ViewSettings> {
     writtenGradeController.text = settings.writtenGrade?.toString() ?? "";
     quizQuestionsController.text = settings.quizQuestions.toString();
     quizTimeController.text = settings.quizTime.toString();
+
+    if (widget.scrollTo != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToAnchor());
+    }
+  }
+
+  /// Scrolls the entry named by [ViewSettings.scrollTo] into view. No-op if the
+  /// target entry isn't currently rendered (its key has no context).
+  void _scrollToAnchor() {
+    final GlobalKey? key = switch (widget.scrollTo) {
+      SettingsAnchor.quizQuestions => _quizQuestionsKey,
+      SettingsAnchor.quizTime => _quizTimeKey,
+      null => null,
+    };
+    final BuildContext? anchor = key?.currentContext;
+    if (anchor == null) {
+      return;
+    }
+    Scrollable.ensureVisible(
+      anchor,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      alignment: 0.1,
+    );
   }
 
   @override
@@ -438,130 +473,128 @@ class ViewSettingsState extends State<ViewSettings> {
                         ),
                       ),
 
-                    if (kDebugMode)
-                      SettingEntry(
-                        label: "Domande quiz:",
-                        tooltip: "Numero di domande presenti in ciascun quiz.",
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 8.0,
-                          children: [
-                            _stepperButton(
-                              Icons.remove,
-                              () =>
-                                  _setQuizQuestions(settings.quizQuestions - 1),
-                            ),
-                            SizedBox(
-                              width: _numberFieldWidth(),
-                              child: TextFormField(
-                                controller: quizQuestionsController,
-                                style: _numberFieldStyle,
-                                maxLength: 3,
-                                maxLengthEnforcement:
-                                    MaxLengthEnforcement.enforced,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(),
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                textAlign: TextAlign.center,
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: _numberFieldPadding,
-                                    vertical: 12.0,
-                                  ),
-                                  counterStyle: TextStyle(
-                                    height: double.minPositive,
-                                  ),
-                                  counterText: "",
+                    SettingEntry(
+                      key: _quizQuestionsKey,
+                      label: "Domande quiz:",
+                      tooltip: "Numero di domande presenti in ciascun quiz.",
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 8.0,
+                        children: [
+                          _stepperButton(
+                            Icons.remove,
+                            () => _setQuizQuestions(settings.quizQuestions - 1),
+                          ),
+                          SizedBox(
+                            width: _numberFieldWidth(),
+                            child: TextFormField(
+                              controller: quizQuestionsController,
+                              style: _numberFieldStyle,
+                              maxLength: 3,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(),
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: _numberFieldPadding,
+                                  vertical: 12.0,
                                 ),
-                                onChanged: (value) {
-                                  final int? parsed = int.tryParse(value);
-                                  if (parsed == null) {
-                                    return;
-                                  }
-                                  settings.quizQuestions = parsed.clamp(
-                                    _minQuizQuestions,
-                                    _maxQuizQuestions,
-                                  );
-                                  SettingsManager.save(settings);
-                                },
-                                onFieldSubmitted: (value) => _setQuizQuestions(
-                                  int.tryParse(value) ?? settings.quizQuestions,
+                                counterStyle: TextStyle(
+                                  height: double.minPositive,
                                 ),
+                                counterText: "",
+                              ),
+                              onChanged: (value) {
+                                final int? parsed = int.tryParse(value);
+                                if (parsed == null) {
+                                  return;
+                                }
+                                settings.quizQuestions = parsed.clamp(
+                                  _minQuizQuestions,
+                                  _maxQuizQuestions,
+                                );
+                                SettingsManager.save(settings);
+                              },
+                              onFieldSubmitted: (value) => _setQuizQuestions(
+                                int.tryParse(value) ?? settings.quizQuestions,
                               ),
                             ),
-                            _stepperButton(
-                              Icons.add,
-                              () =>
-                                  _setQuizQuestions(settings.quizQuestions + 1),
-                            ),
-                          ],
-                        ),
+                          ),
+                          _stepperButton(
+                            Icons.add,
+                            () => _setQuizQuestions(settings.quizQuestions + 1),
+                          ),
+                        ],
                       ),
+                    ),
 
-                    if (kDebugMode)
-                      SettingEntry(
-                        label: "Timer (minuti):",
-                        tooltip:
-                            "Numero di minuti a disposizione per completare il quiz.",
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 8.0,
-                          children: [
-                            _stepperButton(
-                              Icons.remove,
-                              () => _setQuizTime(settings.quizTime - 1),
-                            ),
-                            SizedBox(
-                              width: _numberFieldWidth(),
-                              child: TextFormField(
-                                controller: quizTimeController,
-                                style: _numberFieldStyle,
-                                maxLength: 3,
-                                maxLengthEnforcement:
-                                    MaxLengthEnforcement.enforced,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(),
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                textAlign: TextAlign.center,
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: _numberFieldPadding,
-                                    vertical: 12.0,
-                                  ),
-                                  counterStyle: TextStyle(
-                                    height: double.minPositive,
-                                  ),
-                                  counterText: "",
+                    SettingEntry(
+                      key: _quizTimeKey,
+                      label: "Timer (minuti):",
+                      tooltip:
+                          "Numero di minuti a disposizione per completare il quiz.",
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 8.0,
+                        children: [
+                          _stepperButton(
+                            Icons.remove,
+                            () => _setQuizTime(settings.quizTime - 1),
+                          ),
+                          SizedBox(
+                            width: _numberFieldWidth(),
+                            child: TextFormField(
+                              controller: quizTimeController,
+                              style: _numberFieldStyle,
+                              maxLength: 3,
+                              maxLengthEnforcement:
+                                  MaxLengthEnforcement.enforced,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(),
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: _numberFieldPadding,
+                                  vertical: 12.0,
                                 ),
-                                onChanged: (value) {
-                                  final int? parsed = int.tryParse(value);
-                                  if (parsed == null) {
-                                    return;
-                                  }
-                                  settings.quizTime = parsed.clamp(
-                                    _minQuizTime,
-                                    _maxQuizTime,
-                                  );
-                                  SettingsManager.save(settings);
-                                },
-                                onFieldSubmitted: (value) => _setQuizTime(
-                                  int.tryParse(value) ?? settings.quizTime,
+                                counterStyle: TextStyle(
+                                  height: double.minPositive,
                                 ),
+                                counterText: "",
+                              ),
+                              onChanged: (value) {
+                                final int? parsed = int.tryParse(value);
+                                if (parsed == null) {
+                                  return;
+                                }
+                                settings.quizTime = parsed.clamp(
+                                  _minQuizTime,
+                                  _maxQuizTime,
+                                );
+                                SettingsManager.save(settings);
+                              },
+                              onFieldSubmitted: (value) => _setQuizTime(
+                                int.tryParse(value) ?? settings.quizTime,
                               ),
                             ),
-                            _stepperButton(
-                              Icons.add,
-                              () => _setQuizTime(settings.quizTime + 1),
-                            ),
-                          ],
-                        ),
+                          ),
+                          _stepperButton(
+                            Icons.add,
+                            () => _setQuizTime(settings.quizTime + 1),
+                          ),
+                        ],
                       ),
+                    ),
                     SettingEntry(
                       label: "Mescola risposte:",
                       tooltip:
