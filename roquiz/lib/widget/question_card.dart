@@ -235,9 +235,9 @@ class QuestionCard extends StatelessWidget {
             ),
           ),
 
-        // NB: needs to be on top of the stack
-        // TODO: only if not custom question file? Or not custom single question
-        if (mode == QuestionCardMode.base)
+        // NB: needs to be on top of the stack. Custom questions are
+        // user-specific, so they can't be reported upstream.
+        if (mode == QuestionCardMode.base && question.isCustom != true)
           Positioned(
             top: 15,
             right: 15,
@@ -258,6 +258,26 @@ class QuestionCard extends StatelessWidget {
                   },
                 );
               },
+            ),
+          ),
+
+        // Custom questions can't be reported; in their place, mark them as
+        // user-added with a greyed pencil where the report button would be.
+        if (mode == QuestionCardMode.base && question.isCustom == true)
+          Positioned(
+            top: 15,
+            right: 15,
+            child: Tooltip(
+              message: "Domanda personalizzata",
+              waitDuration: const Duration(milliseconds: 500),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Icon(
+                  Icons.edit,
+                  size: 30,
+                  color: Colors.grey.withAlpha(150),
+                ),
+              ),
             ),
           ),
       ],

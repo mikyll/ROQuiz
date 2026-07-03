@@ -6,12 +6,19 @@ class Question {
   int correctAnswer;
   String? explaination;
 
+  /// Whether this question was added/edited by the user rather than shipped in
+  /// the default (bundled or remote) question set. Nullable: null/false mean a
+  /// default question. Custom questions are user-specific, so they can't be
+  /// reported upstream.
+  bool? isCustom;
+
   Question({
     required this.id,
     required this.body,
     required this.answers,
     required this.correctAnswer,
     this.topic,
+    this.isCustom,
   }) {
     if (id < 0) {
       throw FormatException("Invalid question ID: $id");
@@ -67,6 +74,7 @@ class Question {
     required this.correctAnswer,
     this.topic,
     this.explaination,
+    this.isCustom,
   });
 
   /// Creates a deep copy of [other] (the answers list is duplicated, so the
@@ -78,6 +86,7 @@ class Question {
       topic: other.topic,
       answers: List<String>.from(other.answers),
       correctAnswer: other.correctAnswer,
+      isCustom: other.isCustom,
     );
     copy.explaination = other.explaination;
     return copy;
@@ -119,10 +128,18 @@ class Question {
     }
 
     if (letters) {
-      res += "\n  correct_answer: ${String.fromCharCode(correctAnswer + 65)}\n";
+      res += "\n  correct_answer: ${String.fromCharCode(correctAnswer + 65)}";
     } else {
-      res += "\n  correct_answer: $correctAnswer\n";
+      res += "\n  correct_answer: $correctAnswer";
     }
+
+    // Only persist the flag for custom questions, so default question sets
+    // serialize exactly as before.
+    if (isCustom == true) {
+      res += "\n  custom: true";
+    }
+
+    res += "\n";
 
     return res;
   }
@@ -146,6 +163,7 @@ class Question {
     "answers": answers,
     "correctAnswer": correctAnswer,
     "explaination": explaination,
+    "isCustom": isCustom,
   };
 
   factory Question.fromJson(Map<String, dynamic> json) {
@@ -156,6 +174,7 @@ class Question {
       answers: (json["answers"] as List).cast<String>(),
       correctAnswer: json["correctAnswer"] as int,
       explaination: json["explaination"] as String?,
+      isCustom: json["isCustom"] as bool?,
     );
   }
 }

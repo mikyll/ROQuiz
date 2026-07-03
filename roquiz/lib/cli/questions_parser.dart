@@ -171,6 +171,7 @@ List<Question> parseQuestionsFromYaml(String content) {
         final topic = question["topic"] as String?;
         final answers = question["answers"] as List;
         final correctAnswer = question["correct_answer"];
+        final custom = question["custom"] as bool?;
 
         Question q = Question(
           id: iQ,
@@ -178,6 +179,7 @@ List<Question> parseQuestionsFromYaml(String content) {
           topic: topic,
           answers: List<String>.from(answers),
           correctAnswer: correctAnswer,
+          isCustom: custom,
         );
 
         questions.add(q);

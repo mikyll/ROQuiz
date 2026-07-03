@@ -58,6 +58,10 @@ class _QuestionDialogState extends State<QuestionDialog> {
       topic: _topic,
       answers: answers,
       correctAnswer: _correctAnswer!,
+      // A newly added question is user-specific (custom); editing a question
+      // keeps whatever it already was (a default question edited in place is
+      // still a default question).
+      isCustom: widget.question != null ? widget.question!.isCustom : true,
     );
   }
 

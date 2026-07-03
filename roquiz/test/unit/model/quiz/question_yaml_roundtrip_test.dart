@@ -23,6 +23,12 @@ void main() {
         original[i].correctAnswer,
         reason: "correctAnswer #$i",
       );
+      // null/false both mean "default"; only the custom flag must survive.
+      expect(
+        reparsed[i].isCustom == true,
+        original[i].isCustom == true,
+        reason: "isCustom #$i",
+      );
     }
   }
 
@@ -34,6 +40,26 @@ void main() {
           topic: "Math",
           body: "What is 2+2?",
           answers: ["3", "4", "5"],
+          correctAnswer: 1,
+        ),
+      ]);
+    });
+
+    test('custom flag survives', () {
+      expectRoundTrips([
+        Question(
+          id: 0,
+          topic: "Math",
+          body: "A user-added question",
+          answers: ["yes", "no"],
+          correctAnswer: 0,
+          isCustom: true,
+        ),
+        Question(
+          id: 1,
+          topic: "Math",
+          body: "A default question",
+          answers: ["yes", "no"],
           correctAnswer: 1,
         ),
       ]);
