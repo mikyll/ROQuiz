@@ -247,6 +247,7 @@ class QuestionCard extends StatelessWidget {
               style: IconButton.styleFrom(backgroundColor: Colors.transparent),
               icon: Icon(Icons.report, size: 30, color: Colors.red),
               hoverColor: Color(0x50BBBBBB),
+              tooltip: "Segnala un problema con questa domanda",
               onPressed: () {
                 showDialog(
                   context: context,
