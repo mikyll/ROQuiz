@@ -93,19 +93,25 @@ class ViewMenuState extends State<ViewMenu> {
     _questionRepository
         .init()
         .then((_) {
+          if (!mounted) {
+            return;
+          }
           setState(() {
-            _selectedTopics = {
-              for (var value in _questionRepository.getGroupedQuestions().keys)
-                value: true,
-            };
-            _error = null;
+            _refreshTopics();
+            // Surfaces a recoverable error (e.g. a corrupt saved copy the
+            // repository fell back to the bundled asset for); null when fine.
+            _error = _questionRepository.lastLoadError;
           });
           // Fast path is done (local/asset questions are shown); now check the
-          // remote for a newer file in the background and refresh the topic
-          // list if one was downloaded. Failures are non-fatal.
+          // remote for a newer file in the background. A non-custom file is
+          // updated in place; a custom file only prompts the user. Failures are
+          // non-fatal.
           _checkForNewerQuestions();
         })
         .onError((error, stackTrace) {
+          if (!mounted) {
+            return;
+          }
           setState(() {
             _error = error.toString();
           });
@@ -115,22 +121,74 @@ class ViewMenuState extends State<ViewMenu> {
   void _checkForNewerQuestions() async {
     bool updated;
     try {
-      updated = await _questionRepository.updateFromRemoteIfNewer();
+      updated = await _questionRepository.checkForRemoteUpdate();
     } catch (_) {
       // Offline / API error: keep the questions we already have.
       return;
     }
-    if (!updated || !mounted) {
+    if (!mounted) {
       return;
     }
-    setState(() {
-      // Re-derive the topic selection over the new question set, dropping
-      // topics that no longer exist and defaulting new ones to selected.
-      final grouped = _questionRepository.getGroupedQuestions();
-      _selectedTopics = {
-        for (var topic in grouped.keys) topic: _selectedTopics[topic] ?? true,
-      };
-    });
+    if (updated) {
+      // A non-custom file was replaced with a newer remote copy.
+      setState(_refreshTopics);
+      return;
+    }
+    // A custom file is never overwritten; if a newer official set exists, ask
+    // the user whether to switch to it (discarding their custom set).
+    if (_questionRepository.isUpdateAvailable) {
+      _promptCustomUpdate();
+    }
+  }
+
+  /// Prompts the user to replace their custom question set with a newer official
+  /// one. "Aggiorna" downloads it; "Ignora" keeps the custom set and stops
+  /// notifying about this remote commit; dismissing the dialog asks again later.
+  Future<void> _promptCustomUpdate() async {
+    final apply = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Aggiornamento disponibile"),
+        content: const Text(
+          "È disponibile una versione più recente del set di domande ufficiale. "
+          "Scaricarla sostituirà le tue domande personalizzate.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Ignora"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Aggiorna"),
+          ),
+        ],
+      ),
+    );
+
+    if (apply == true) {
+      try {
+        await _questionRepository.applyRemoteUpdate();
+      } catch (_) {
+        // Download failed: keep the custom set, leave the flag for next launch.
+        return;
+      }
+      if (mounted) {
+        setState(_refreshTopics);
+      }
+    } else if (apply == false) {
+      await _questionRepository.dismissRemoteUpdate();
+    }
+  }
+
+  /// Re-derives the topic selection over the current question set, keeping the
+  /// existing on/off choice for topics that survive and defaulting new ones to
+  /// selected. Call inside a [setState].
+  void _refreshTopics() {
+    final grouped = _questionRepository.getGroupedQuestions();
+    _selectedTopics = {
+      for (var topic in grouped.keys) topic: _selectedTopics[topic] ?? true,
+    };
   }
 
   @override

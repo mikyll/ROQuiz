@@ -8,17 +8,29 @@ import 'package:http/http.dart' as http;
 import 'package:roquiz/cli/questions_parser.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
-// The current question file can be one of:
-//   - the bundled asset (the default shipped with this app version);
-//   - a copy downloaded from the "cloud" (the ROQuiz GitHub repository);
-//   - a custom file loaded/edited by the user.
-//
-// About the current file we persist:
-//   - its raw content and format, so it round-trips exactly;
-//   - whether it is custom (user-provided) — a custom file is never replaced by
-//     the remote update check;
-//   - the last-update datetime — for a non-custom file this is the remote
-//     commit datetime, used to decide whether a newer version is available.
+/// Where the currently loaded questions file came from.
+///
+///   - [asset]: the bundled file shipped with this app version (the default and
+///     the always-available fallback);
+///   - [remote]: a copy downloaded from the "cloud" (the ROQuiz GitHub repo);
+///   - [custom]: a file loaded or edited by the user.
+///
+/// The source drives the remote-update policy: an [asset]/[remote] file is kept
+/// in sync automatically, while a [custom] file is never overwritten — the user
+/// is only notified when a newer official file exists (see [checkForRemoteUpdate]).
+enum QuestionSource { asset, remote, custom }
+
+/// Outcome of loading the saved copy from the box — distinguishes a fresh
+/// install (nothing saved, a normal asset fallback) from a corrupt saved copy
+/// (an asset fallback that must surface an error to the user).
+enum _BoxLoad { ok, absent, corrupt }
+
+// About the current file we persist: its raw content and format (so it
+// round-trips exactly), its [QuestionSource], the datetime of the loaded file
+// ([_currentFileDate] — the remote commit datetime for a downloaded file), and
+// the newest remote commit datetime we have ever observed ([_lastKnownRemoteDate],
+// tracked independently of the current source so the custom-file update check is
+// well-posed: a custom file has no remote-comparable date of its own).
 //
 // The saved copy is kept in a Hive box (a single blob under one key), mirroring
 // [CompletedQuizRepository]: it works on every platform including web (Hive is
@@ -29,8 +41,17 @@ class QuestionRepository {
   static const String boxName = "question_repository";
   static const String _contentKey = "content";
   static const String _formatKey = "format";
-  static const String _lastUpdateKey = "lastUpdate";
-  static const String _customKey = "custom";
+  static const String _sourceKey = "source";
+
+  /// Datetime of the loaded file (reuses the legacy `lastUpdate` key so existing
+  /// boxes migrate without touching this value — it already held the remote
+  /// commit datetime for downloaded files).
+  static const String _currentFileDateKey = "lastUpdate";
+  static const String _lastKnownRemoteDateKey = "lastKnownRemoteDate";
+
+  /// Legacy key: the old boolean "is this a custom file". Read only to migrate
+  /// pre-[QuestionSource] boxes.
+  static const String _legacyCustomKey = "custom";
 
   /// Bundled questions file, always available as a fallback.
   static const String assetPath = "assets/questions.yaml";
@@ -48,18 +69,44 @@ class QuestionRepository {
   );
 
   List<Question> questions = [];
-  DateTime _lastQuestionUpdate = _epoch;
-  bool _custom = false;
+  QuestionSource _source = QuestionSource.asset;
+  DateTime _currentFileDate = _epoch;
+  DateTime _lastKnownRemoteDate = _epoch;
+
+  bool _updateAvailable = false;
+  DateTime? _availableRemoteDate;
+  String? _lastLoadError;
 
   Box? _box;
 
+  /// HTTP client for the remote calls. Injectable so tests can drive the
+  /// update logic without real network access.
+  final http.Client _client;
+
+  QuestionRepository({http.Client? client})
+    : _client = client ?? http.Client();
+
+  /// Provenance of the currently loaded questions file.
+  QuestionSource get source => _source;
+
   /// Datetime of the currently loaded questions file (remote commit datetime for
   /// a downloaded file; [_epoch] for the untouched bundled asset).
-  DateTime get lastQuestionUpdate => _lastQuestionUpdate;
+  DateTime get lastQuestionUpdate => _currentFileDate;
 
   /// Whether the current file was provided/edited by the user (and so must not
   /// be overwritten by the remote update check).
-  bool get isCustom => _custom;
+  bool get isCustom => _source == QuestionSource.custom;
+
+  /// True when the remote holds an official file newer than the custom set the
+  /// user currently has. Only ever set for a [QuestionSource.custom] file, since
+  /// non-custom files are updated automatically. Resolve with [applyRemoteUpdate]
+  /// (download it, discarding the custom set) or [dismissRemoteUpdate] (keep the
+  /// custom set and stop notifying about this remote commit).
+  bool get isUpdateAvailable => _updateAvailable;
+
+  /// A user-facing error from the last [init], or null. Set when the saved copy
+  /// was present but unreadable and the bundled asset was loaded instead.
+  String? get lastLoadError => _lastLoadError;
 
   /// Raw-content URL of the remote questions file.
   String get remoteRawUrl =>
@@ -67,60 +114,123 @@ class QuestionRepository {
 
   /// Opens the store and loads the questions: the saved copy when present,
   /// otherwise the bundled asset (which must always load, so the app is usable
-  /// even offline / on first run / when the saved copy is unreadable).
+  /// even offline / on first run / when the saved copy is unreadable). When the
+  /// saved copy is present but unreadable, the asset is loaded and [lastLoadError]
+  /// is set so the caller can surface a recoverable error.
   ///
-  /// When [checkForUpdates] is set, after loading it checks the remote for a
-  /// newer file and, if found, downloads it and updates the saved copy. Update
-  /// failures (offline, API errors) are swallowed so startup can't be blocked.
+  /// When [checkForUpdates] is set, after loading it runs the remote check
+  /// ([checkForRemoteUpdate]): a non-custom file is auto-updated, a custom file
+  /// only flips [isUpdateAvailable]. Check failures (offline, API errors) are
+  /// swallowed so startup can't be blocked.
   Future<void> init({bool checkForUpdates = false}) async {
     _box = await Hive.openBox(boxName);
+    _lastLoadError = null;
 
-    if (!await _loadFromBox()) {
-      questions = await loadFromAsset();
-      _lastQuestionUpdate = _epoch;
-      _custom = false;
+    switch (await _loadFromBox()) {
+      case _BoxLoad.ok:
+        break;
+      case _BoxLoad.absent:
+        // Fresh install (or the box was cleared): load the asset silently.
+        await _loadAssetInMemory();
+        break;
+      case _BoxLoad.corrupt:
+        // A saved copy exists but can't be parsed. Fall back to the asset but
+        // leave the corrupt blob untouched (it may be a recoverable custom set)
+        // and surface an error — the next successful save/update replaces it.
+        await _loadAssetInMemory();
+        _lastLoadError =
+            "Le domande salvate non sono leggibili: è stato ripristinato "
+            "il set di domande integrato.";
+        break;
     }
 
     if (checkForUpdates) {
       try {
-        await updateFromRemoteIfNewer();
+        await checkForRemoteUpdate();
       } catch (e) {
         debugPrint("QuestionRepository: update check failed ($e)");
       }
     }
   }
 
-  /// Loads the saved questions from the Hive box. Returns false (leaving the
-  /// current state untouched) when there is no saved copy or it can't be parsed,
-  /// so the caller can fall back to the asset.
-  Future<bool> _loadFromBox() async {
+  /// Loads the saved questions from the Hive box. Returns [_BoxLoad.absent] when
+  /// there is no saved copy (a normal fresh install) and [_BoxLoad.corrupt] when
+  /// a saved copy is present but can't be parsed — the caller distinguishes the
+  /// two to decide whether to surface an error. In either non-ok case the
+  /// in-memory state is left untouched for the caller to replace with the asset.
+  Future<_BoxLoad> _loadFromBox() async {
     final box = _box;
     if (box == null) {
-      return false;
+      return _BoxLoad.absent;
     }
 
     final content = box.get(_contentKey);
     if (content is! String) {
-      return false;
+      return _BoxLoad.absent;
     }
 
+    final List<Question> parsed;
     try {
-      final format = _formatFromName(box.get(_formatKey) as String?);
-      questions = _parse(content, format);
-
-      final rawDate = box.get(_lastUpdateKey);
-      _lastQuestionUpdate = rawDate is String
-          ? DateTime.parse(rawDate)
-          : _epoch;
-      _custom = box.get(_customKey) == true;
-      return true;
+      parsed = _parse(content, _formatFromName(box.get(_formatKey) as String?));
     } catch (e) {
       debugPrint(
-        "QuestionRepository: failed to load saved questions, "
+        "QuestionRepository: saved questions are corrupt, "
         "falling back to asset ($e)",
       );
-      return false;
+      return _BoxLoad.corrupt;
     }
+
+    // Content parsed: commit it, then read the metadata with safe fallbacks (a
+    // malformed date/source must not discard otherwise-valid questions).
+    questions = parsed;
+    _source = _readSource(box);
+    _currentFileDate = _readDate(box.get(_currentFileDateKey)) ?? _epoch;
+    _lastKnownRemoteDate =
+        _readDate(box.get(_lastKnownRemoteDateKey)) ??
+        // No stored value (e.g. a migrated box): a downloaded file's own commit
+        // datetime is the newest remote we can prove we have seen.
+        (_source == QuestionSource.remote ? _currentFileDate : _epoch);
+    return _BoxLoad.ok;
+  }
+
+  /// Reads the persisted [QuestionSource], migrating pre-enum boxes from the old
+  /// boolean `custom` flag (a stored non-epoch date implies a downloaded remote).
+  QuestionSource _readSource(Box box) {
+    final name = box.get(_sourceKey);
+    if (name is String) {
+      try {
+        return QuestionSource.values.byName(name);
+      } catch (_) {
+        // Unknown value: fall through to the legacy migration.
+      }
+    }
+    if (box.get(_legacyCustomKey) == true) {
+      return QuestionSource.custom;
+    }
+    final legacyDate = _readDate(box.get(_currentFileDateKey));
+    if (legacyDate != null && legacyDate.isAfter(_epoch)) {
+      return QuestionSource.remote;
+    }
+    return QuestionSource.asset;
+  }
+
+  DateTime? _readDate(Object? raw) {
+    if (raw is! String) {
+      return null;
+    }
+    try {
+      return DateTime.parse(raw);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Loads the bundled asset into the working state (in memory only — does not
+  /// persist, so a corrupt saved copy is not destroyed). Used as the fallback.
+  Future<void> _loadAssetInMemory({String path = assetPath}) async {
+    questions = await loadFromAsset(path: path);
+    _source = QuestionSource.asset;
+    _currentFileDate = _epoch;
   }
 
   /// Parses the bundled asset. Always available; used as the fallback source.
@@ -129,31 +239,41 @@ class QuestionRepository {
     return _parse(content, _formatFromPath(path));
   }
 
-  /// Replaces the current questions with the bundled asset and persists it as a
-  /// non-custom copy, resetting the update datetime so a later update check can
-  /// re-download a newer remote file. (User feature: "restore from assets".)
+  /// Replaces the current questions with the bundled asset and persists it as an
+  /// [QuestionSource.asset] copy, resetting the file datetime to [_epoch] so a
+  /// later update check re-downloads any newer remote file. (User feature:
+  /// "restore from assets".)
   Future<void> restoreFromAsset({String path = assetPath}) async {
     final content = await rootBundle.loadString(path);
     final format = _formatFromPath(path);
     questions = _parse(content, format);
-    await _saveContent(content, format, custom: false, lastUpdate: _epoch);
+    _updateAvailable = false;
+    _availableRemoteDate = null;
+    await _saveContent(
+      content,
+      format,
+      source: QuestionSource.asset,
+      currentFileDate: _epoch,
+    );
   }
 
   /// Loads questions from raw [content] (e.g. a user-picked file) and persists
-  /// it as a custom copy — so the remote update check leaves it alone. The
-  /// [format] is inferred when not given; throws [FormatException] when the
-  /// content can't be recognized or parsed.
+  /// it as a [QuestionSource.custom] copy — so the remote update check leaves it
+  /// alone. The [format] is inferred when not given; throws [FormatException]
+  /// when the content can't be recognized or parsed.
   Future<void> loadFromContent(String content, {QuestionFormat? format}) async {
     final resolved = format ?? inferQuestionFormat(content);
     if (resolved == null) {
       throw const FormatException("Unrecognized questions file format");
     }
     questions = _parse(content, resolved);
+    _updateAvailable = false;
+    _availableRemoteDate = null;
     await _saveContent(
       content,
       resolved,
-      custom: true,
-      lastUpdate: DateTime.now().toUtc(),
+      source: QuestionSource.custom,
+      currentFileDate: DateTime.now().toUtc(),
     );
   }
 
@@ -164,60 +284,93 @@ class QuestionRepository {
     await save();
   }
 
-  /// Serializes the current [questions] to YAML and persists them as a custom
-  /// copy. Use this after in-app edits to save the working question set.
+  /// Serializes the current [questions] to YAML and persists them as a
+  /// [QuestionSource.custom] copy. Use this after in-app edits to save the
+  /// working question set.
   Future<void> save() async {
     final content = questions.map((q) => q.toYaml()).join("\n");
+    _updateAvailable = false;
+    _availableRemoteDate = null;
     await _saveContent(
       content,
       QuestionFormat.yaml,
-      custom: true,
-      lastUpdate: DateTime.now().toUtc(),
+      source: QuestionSource.custom,
+      currentFileDate: DateTime.now().toUtc(),
     );
   }
 
-  /// Checks the remote for a newer questions file and, when found, downloads and
-  /// saves it. Returns true when an update was applied. A custom file is never
-  /// replaced. Network/parse errors propagate to the caller.
-  Future<bool> updateFromRemoteIfNewer() async {
-    if (_custom) {
-      return false;
-    }
-
+  /// Runs the remote-update check under the Option-B policy:
+  ///
+  ///   - a non-custom file (asset/remote) is kept in sync automatically: when
+  ///     the remote commit is strictly newer than the loaded file it is
+  ///     downloaded and applied, and true is returned;
+  ///   - a custom file is never overwritten: when the remote commit is newer
+  ///     than the last one the user was told about, [isUpdateAvailable] is set
+  ///     (resolve with [applyRemoteUpdate] / [dismissRemoteUpdate]) and false is
+  ///     returned.
+  ///
+  /// Network/parse errors propagate to the caller.
+  Future<bool> checkForRemoteUpdate() async {
     final remoteDate = await getLatestQuestionsFileDatetime();
 
-    // Only replace the saved copy when the remote commit is strictly newer.
-    if (!remoteDate.isAfter(_lastQuestionUpdate)) {
+    if (_source == QuestionSource.custom) {
+      // Never auto-apply over a custom set. Compare against the last remote
+      // commit the user has seen — NOT the custom file's own (local, unrelated)
+      // datetime — and just flag it, once per commit.
+      if (remoteDate.isAfter(_lastKnownRemoteDate)) {
+        _updateAvailable = true;
+        _availableRemoteDate = remoteDate;
+      }
       return false;
     }
 
+    // asset / remote: only replace the saved copy when strictly newer.
+    if (!remoteDate.isAfter(_currentFileDate)) {
+      return false;
+    }
     await downloadFromRemote(commitDate: remoteDate);
     return true;
   }
 
-  /// Returns whether the remote holds a questions file newer than the current
-  /// one, without downloading it. A custom file is never considered outdated.
-  Future<bool> checkUpdates() async {
-    if (_custom) {
-      return false;
+  /// Accepts the [isUpdateAvailable] official update for a custom file: downloads
+  /// the remote file and switches back to a [QuestionSource.remote] copy,
+  /// discarding the custom set. Network/parse errors propagate to the caller.
+  Future<void> applyRemoteUpdate() async {
+    await downloadFromRemote(commitDate: _availableRemoteDate);
+    _updateAvailable = false;
+    _availableRemoteDate = null;
+  }
+
+  /// Dismisses the [isUpdateAvailable] update: keeps the custom set and records
+  /// the offered remote commit as "seen" so it is not flagged again (a still
+  /// newer commit later will flag anew).
+  Future<void> dismissRemoteUpdate() async {
+    final seen = _availableRemoteDate;
+    _updateAvailable = false;
+    _availableRemoteDate = null;
+    if (seen == null) {
+      return;
     }
-    final remoteDate = await getLatestQuestionsFileDatetime();
-    return remoteDate.isAfter(_lastQuestionUpdate);
+    _lastKnownRemoteDate = seen;
+    await _box?.put(_lastKnownRemoteDateKey, seen.toIso8601String());
   }
 
   /// Downloads the questions file from the remote, replaces the current
-  /// questions and persists it as a non-custom copy. [commitDate] should be the
-  /// remote commit datetime (fetched separately to avoid a second API call);
-  /// when omitted it is looked up.
+  /// questions and persists it as a [QuestionSource.remote] copy. [commitDate]
+  /// should be the remote commit datetime (fetched separately to avoid a second
+  /// API call); when omitted it is looked up.
   Future<void> downloadFromRemote({DateTime? commitDate}) async {
     final content = await _downloadRaw(remoteRawUrl);
     final format = inferQuestionFormat(content) ?? QuestionFormat.txt;
+    final date = commitDate ?? await getLatestQuestionsFileDatetime();
     questions = _parse(content, format);
     await _saveContent(
       content,
       format,
-      custom: false,
-      lastUpdate: commitDate ?? await getLatestQuestionsFileDatetime(),
+      source: QuestionSource.remote,
+      currentFileDate: date,
+      // We now hold this remote commit, so it is the newest one we've seen.
+      lastKnownRemoteDate: date,
     );
   }
 
@@ -228,7 +381,7 @@ class QuestionRepository {
     String path = remotePath,
     String branch = remoteBranch,
   }) async {
-    final response = await http.get(
+    final response = await _client.get(
       Uri.parse(
         "https://api.github.com/repos/$repository/commits"
         "?path=$path&sha=$branch&page=1&per_page=1",
@@ -256,7 +409,7 @@ class QuestionRepository {
   /// Downloads raw text from [url], decoding as UTF-8 so accented characters in
   /// the questions survive regardless of the response's declared charset.
   Future<String> _downloadRaw(String url) async {
-    final response = await http.get(Uri.parse(url));
+    final response = await _client.get(Uri.parse(url));
     if (response.statusCode != 200) {
       throw HttpException(
         "Failed to download questions file (${response.statusCode})",
@@ -267,15 +420,18 @@ class QuestionRepository {
 
   /// Persists [content] and its metadata to the box, updating in-memory state
   /// too. A no-op on the box side when [init] hasn't opened it yet (in-memory
-  /// state is still updated).
+  /// state is still updated). [lastKnownRemoteDate] defaults to the current
+  /// value — only a downloaded remote file advances it.
   Future<void> _saveContent(
     String content,
     QuestionFormat format, {
-    required bool custom,
-    DateTime? lastUpdate,
+    required QuestionSource source,
+    required DateTime currentFileDate,
+    DateTime? lastKnownRemoteDate,
   }) async {
-    _custom = custom;
-    _lastQuestionUpdate = lastUpdate ?? _lastQuestionUpdate;
+    _source = source;
+    _currentFileDate = currentFileDate;
+    _lastKnownRemoteDate = lastKnownRemoteDate ?? _lastKnownRemoteDate;
 
     final box = _box;
     if (box == null) {
@@ -283,8 +439,14 @@ class QuestionRepository {
     }
     await box.put(_contentKey, content);
     await box.put(_formatKey, format.name);
-    await box.put(_lastUpdateKey, _lastQuestionUpdate.toIso8601String());
-    await box.put(_customKey, custom);
+    await box.put(_sourceKey, source.name);
+    await box.put(_currentFileDateKey, _currentFileDate.toIso8601String());
+    await box.put(
+      _lastKnownRemoteDateKey,
+      _lastKnownRemoteDate.toIso8601String(),
+    );
+    // Drop the legacy boolean flag so it can't shadow the new source key.
+    await box.delete(_legacyCustomKey);
   }
 
   List<Question> _parse(String content, QuestionFormat format) {
