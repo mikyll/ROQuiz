@@ -74,6 +74,10 @@ class IconButtonAcceleration extends StatefulWidget {
 
 class IconButtonAccelerationState extends State<IconButtonAcceleration> {
   bool _holding = false;
+  // Identifies the current press. Bumped on every release so a leftover loop
+  // whose `await` is still pending exits instead of resuming into the next
+  // press — otherwise rapid taps stack concurrent loops and skip steps.
+  int _holdSession = 0;
 
   void _startHolding() async {
     // Make sure this isn't called more than once for
@@ -82,6 +86,7 @@ class IconButtonAccelerationState extends State<IconButtonAcceleration> {
       return;
     }
 
+    final session = ++_holdSession;
     setState(() {
       _holding = true;
     });
@@ -91,7 +96,10 @@ class IconButtonAccelerationState extends State<IconButtonAcceleration> {
         (widget.initialDelay - widget.minDelay).toDouble() / widget.delaySteps;
     var delay = widget.initialDelay.toDouble();
 
-    while (_holding && mounted && widget.onUpdate != null) {
+    while (_holding &&
+        session == _holdSession &&
+        mounted &&
+        widget.onUpdate != null) {
       widget.onUpdate!();
       await Future.delayed(Duration(milliseconds: delay.round()));
       if (delay > widget.minDelay) {
@@ -104,6 +112,7 @@ class IconButtonAccelerationState extends State<IconButtonAcceleration> {
     if (!_holding) {
       return;
     }
+    _holdSession++;
     setState(() {
       _holding = false;
     });
@@ -112,6 +121,7 @@ class IconButtonAccelerationState extends State<IconButtonAcceleration> {
   @override
   void dispose() {
     _holding = false;
+    _holdSession++;
     super.dispose();
   }
 
