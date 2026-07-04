@@ -8,10 +8,13 @@ import 'package:http/testing.dart';
 import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
-/// Drives the Option-B remote-update policy without real network access:
-///   - a non-custom file (asset/remote) is auto-updated when the remote is newer;
-///   - a custom file is never overwritten — it only flags [isUpdateAvailable],
-///     which the user resolves with [applyRemoteUpdate] / [dismissRemoteUpdate].
+/// Drives the remote-update primitives without real network access:
+///   - [QuestionRepository.peekRemoteUpdate] detects a newer remote file without
+///     mutating state (newer than the loaded file for a non-custom set, newer
+///     than the last-seen official commit for a custom one);
+///   - [QuestionRepository.downloadFromRemote] applies it (→ a remote copy);
+///   - [QuestionRepository.markRemoteSeen] records a declined commit so a custom
+///     set isn't re-flagged for it.
 /// Also covers migration of pre-[QuestionSource] boxes (the legacy `custom` bool).
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -110,27 +113,30 @@ void main() {
     });
   });
 
-  group("non-custom file auto-updates", () {
-    test("a newer remote is downloaded and applied", () async {
+  group("non-custom file remote check", () {
+    test("a newer remote is reported and can be downloaded", () async {
       await seedBox(source: "remote", currentFileDate: DateTime.utc(2020));
       final repo = QuestionRepository(client: mockRemote(DateTime.utc(2026)));
       await repo.init();
 
-      final applied = await repo.checkForRemoteUpdate();
-      expect(applied, isTrue);
+      final info = await repo.peekRemoteUpdate();
+      expect(info.isNewer, isTrue);
+      expect(info.remoteDate, DateTime.utc(2026));
+
+      await repo.downloadFromRemote(commitDate: info.remoteDate);
       expect(repo.source, QuestionSource.remote);
       expect(repo.questions.length, 1);
       expect(repo.questions.single.body, "Remote Q?");
       expect(repo.lastQuestionUpdate, DateTime.utc(2026));
     });
 
-    test("an up-to-date file is left untouched", () async {
+    test("an up-to-date file is reported as not newer", () async {
       await seedBox(source: "remote", currentFileDate: DateTime.utc(2026));
       final repo = QuestionRepository(client: mockRemote(DateTime.utc(2020)));
       await repo.init();
 
-      final applied = await repo.checkForRemoteUpdate();
-      expect(applied, isFalse);
+      final info = await repo.peekRemoteUpdate();
+      expect(info.isNewer, isFalse);
       expect(repo.questions.single.body, "Local Q");
     });
   });
@@ -166,55 +172,48 @@ void main() {
   });
 
   group("custom file is never overwritten", () {
-    test("checkForRemoteUpdate only flags, keeping the custom set", () async {
+    test("peekRemoteUpdate flags a newer commit, keeping the custom set", () async {
       await seedBox(source: "custom");
       final repo = QuestionRepository(client: mockRemote(DateTime.utc(2026)));
       await repo.init();
 
-      final applied = await repo.checkForRemoteUpdate();
-      expect(applied, isFalse, reason: "must never auto-apply over custom");
-      expect(repo.isUpdateAvailable, isTrue);
-      expect(repo.isCustom, isTrue);
+      final info = await repo.peekRemoteUpdate();
+      expect(info.isNewer, isTrue);
+      expect(repo.isCustom, isTrue, reason: "peek must not touch the source");
       expect(repo.questions.single.body, "Local Q");
     });
 
-    test("applyRemoteUpdate switches to the remote copy", () async {
+    test("downloadFromRemote switches a custom set to the remote copy", () async {
       await seedBox(source: "custom");
       final repo = QuestionRepository(client: mockRemote(DateTime.utc(2026)));
       await repo.init();
-      await repo.checkForRemoteUpdate();
 
-      await repo.applyRemoteUpdate();
-      expect(repo.isUpdateAvailable, isFalse);
+      await repo.downloadFromRemote();
       expect(repo.source, QuestionSource.remote);
       expect(repo.isCustom, isFalse);
       expect(repo.questions.single.body, "Remote Q?");
     });
 
-    test("dismissRemoteUpdate keeps the custom set and stops re-flagging", () async {
+    test("markRemoteSeen keeps the custom set and stops re-flagging", () async {
       await seedBox(source: "custom");
       final repo = QuestionRepository(client: mockRemote(DateTime.utc(2026)));
       await repo.init();
-      await repo.checkForRemoteUpdate();
-      expect(repo.isUpdateAvailable, isTrue);
+      final info = await repo.peekRemoteUpdate();
+      expect(info.isNewer, isTrue);
 
-      await repo.dismissRemoteUpdate();
-      expect(repo.isUpdateAvailable, isFalse);
+      await repo.markRemoteSeen(info.remoteDate);
       expect(repo.isCustom, isTrue);
       expect(repo.questions.single.body, "Local Q");
 
       // A fresh repository over the same box must not re-flag the same commit.
       final reloaded = QuestionRepository(client: mockRemote(DateTime.utc(2026)));
       await reloaded.init();
-      final applied = await reloaded.checkForRemoteUpdate();
-      expect(applied, isFalse);
-      expect(reloaded.isUpdateAvailable, isFalse);
+      expect((await reloaded.peekRemoteUpdate()).isNewer, isFalse);
 
-      // But a still-newer commit flags anew.
+      // But a still-newer commit is flagged anew.
       final newer = QuestionRepository(client: mockRemote(DateTime.utc(2027)));
       await newer.init();
-      await newer.checkForRemoteUpdate();
-      expect(newer.isUpdateAvailable, isTrue);
+      expect((await newer.peekRemoteUpdate()).isNewer, isTrue);
     });
   });
 }

@@ -15,10 +15,24 @@ import 'package:roquiz/model/quiz/question.dart';
 ///   - [remote]: a copy downloaded from the "cloud" (the ROQuiz GitHub repo);
 ///   - [custom]: a file loaded or edited by the user.
 ///
-/// The source drives the remote-update policy: an [asset]/[remote] file is kept
-/// in sync automatically, while a [custom] file is never overwritten — the user
-/// is only notified when a newer official file exists (see [checkForRemoteUpdate]).
+/// The source drives the remote-update policy: an [asset]/[remote] file may be
+/// replaced with a newer official one, while a [custom] file is never overwritten
+/// without the user's confirmation (see [peekRemoteUpdate]).
 enum QuestionSource { asset, remote, custom }
+
+/// The outcome of a side-effect-free remote-update check ([peekRemoteUpdate]):
+/// the latest remote commit datetime and whether it is newer than what the
+/// repository currently reflects.
+class RemoteQuestionsInfo {
+  /// Datetime of the latest remote commit that touched the questions file.
+  final DateTime remoteDate;
+
+  /// True when [remoteDate] is strictly newer than the currently loaded file
+  /// (for a custom set, newer than the last official commit the user has seen).
+  final bool isNewer;
+
+  const RemoteQuestionsInfo({required this.remoteDate, required this.isNewer});
+}
 
 /// Outcome of loading the saved copy from the box — distinguishes a fresh
 /// install (nothing saved, a normal asset fallback) from a corrupt saved copy
@@ -73,8 +87,6 @@ class QuestionRepository {
   DateTime _currentFileDate = _epoch;
   DateTime _lastKnownRemoteDate = _epoch;
 
-  bool _updateAvailable = false;
-  DateTime? _availableRemoteDate;
   String? _lastLoadError;
 
   Box? _box;
@@ -94,15 +106,8 @@ class QuestionRepository {
   DateTime get lastQuestionUpdate => _currentFileDate;
 
   /// Whether the current file was provided/edited by the user (and so must not
-  /// be overwritten by the remote update check).
+  /// be overwritten without asking — see [peekRemoteUpdate]).
   bool get isCustom => _source == QuestionSource.custom;
-
-  /// True when the remote holds an official file newer than the custom set the
-  /// user currently has. Only ever set for a [QuestionSource.custom] file, since
-  /// non-custom files are updated automatically. Resolve with [applyRemoteUpdate]
-  /// (download it, discarding the custom set) or [dismissRemoteUpdate] (keep the
-  /// custom set and stop notifying about this remote commit).
-  bool get isUpdateAvailable => _updateAvailable;
 
   /// A user-facing error from the last [init], or null. Set when the saved copy
   /// was present but unreadable and the bundled asset was loaded instead.
@@ -118,11 +123,9 @@ class QuestionRepository {
   /// saved copy is present but unreadable, the asset is loaded and [lastLoadError]
   /// is set so the caller can surface a recoverable error.
   ///
-  /// When [checkForUpdates] is set, after loading it runs the remote check
-  /// ([checkForRemoteUpdate]): a non-custom file is auto-updated, a custom file
-  /// only flips [isUpdateAvailable]. Check failures (offline, API errors) are
-  /// swallowed so startup can't be blocked.
-  Future<void> init({bool checkForUpdates = false}) async {
+  /// This never touches the network: the remote-update check is a separate,
+  /// caller-driven step (see [peekRemoteUpdate]) so startup can't be blocked.
+  Future<void> init() async {
     _box = await Hive.openBox(boxName);
     _lastLoadError = null;
 
@@ -142,14 +145,6 @@ class QuestionRepository {
             "Le domande salvate non sono leggibili: è stato ripristinato "
             "il set di domande integrato.";
         break;
-    }
-
-    if (checkForUpdates) {
-      try {
-        await checkForRemoteUpdate();
-      } catch (e) {
-        debugPrint("QuestionRepository: update check failed ($e)");
-      }
     }
   }
 
@@ -247,8 +242,6 @@ class QuestionRepository {
     final content = await rootBundle.loadString(path);
     final format = _formatFromPath(path);
     questions = _parse(content, format);
-    _updateAvailable = false;
-    _availableRemoteDate = null;
     await _saveContent(
       content,
       format,
@@ -267,8 +260,6 @@ class QuestionRepository {
       throw const FormatException("Unrecognized questions file format");
     }
     questions = _parse(content, resolved);
-    _updateAvailable = false;
-    _availableRemoteDate = null;
     await _saveContent(
       content,
       resolved,
@@ -289,8 +280,6 @@ class QuestionRepository {
   /// working question set.
   Future<void> save() async {
     final content = questions.map((q) => q.toYaml()).join("\n");
-    _updateAvailable = false;
-    _availableRemoteDate = null;
     await _saveContent(
       content,
       QuestionFormat.yaml,
@@ -299,60 +288,36 @@ class QuestionRepository {
     );
   }
 
-  /// Runs the remote-update check under the Option-B policy:
+  /// Checks the remote for a newer questions file WITHOUT downloading or mutating
+  /// any state — the caller decides what to do with the result (the interactive
+  /// flow confirms with the user before replacing anything). "Newer" is measured
+  /// against the last official commit the user has seen for a custom set (whose
+  /// own file datetime is unrelated to the remote) and against the loaded file's
+  /// datetime otherwise. Network/parse errors propagate to the caller.
   ///
-  ///   - a non-custom file (asset/remote) is kept in sync automatically: when
-  ///     the remote commit is strictly newer than the loaded file it is
-  ///     downloaded and applied, and true is returned;
-  ///   - a custom file is never overwritten: when the remote commit is newer
-  ///     than the last one the user was told about, [isUpdateAvailable] is set
-  ///     (resolve with [applyRemoteUpdate] / [dismissRemoteUpdate]) and false is
-  ///     returned.
-  ///
-  /// Network/parse errors propagate to the caller.
-  Future<bool> checkForRemoteUpdate() async {
+  /// Apply the update with [downloadFromRemote] (which switches to a
+  /// [QuestionSource.remote] copy, discarding any custom set); for a custom set,
+  /// decline it with [markRemoteSeen] so the same commit isn't offered again.
+  Future<RemoteQuestionsInfo> peekRemoteUpdate() async {
     final remoteDate = await getLatestQuestionsFileDatetime();
-
-    if (_source == QuestionSource.custom) {
-      // Never auto-apply over a custom set. Compare against the last remote
-      // commit the user has seen — NOT the custom file's own (local, unrelated)
-      // datetime — and just flag it, once per commit.
-      if (remoteDate.isAfter(_lastKnownRemoteDate)) {
-        _updateAvailable = true;
-        _availableRemoteDate = remoteDate;
-      }
-      return false;
-    }
-
-    // asset / remote: only replace the saved copy when strictly newer.
-    if (!remoteDate.isAfter(_currentFileDate)) {
-      return false;
-    }
-    await downloadFromRemote(commitDate: remoteDate);
-    return true;
+    final reference = _source == QuestionSource.custom
+        ? _lastKnownRemoteDate
+        : _currentFileDate;
+    return RemoteQuestionsInfo(
+      remoteDate: remoteDate,
+      isNewer: remoteDate.isAfter(reference),
+    );
   }
 
-  /// Accepts the [isUpdateAvailable] official update for a custom file: downloads
-  /// the remote file and switches back to a [QuestionSource.remote] copy,
-  /// discarding the custom set. Network/parse errors propagate to the caller.
-  Future<void> applyRemoteUpdate() async {
-    await downloadFromRemote(commitDate: _availableRemoteDate);
-    _updateAvailable = false;
-    _availableRemoteDate = null;
-  }
-
-  /// Dismisses the [isUpdateAvailable] update: keeps the custom set and records
-  /// the offered remote commit as "seen" so it is not flagged again (a still
-  /// newer commit later will flag anew).
-  Future<void> dismissRemoteUpdate() async {
-    final seen = _availableRemoteDate;
-    _updateAvailable = false;
-    _availableRemoteDate = null;
-    if (seen == null) {
+  /// Records [date] as the newest official commit the user has been shown, so the
+  /// custom-set update check won't flag it again (a still-newer commit later will
+  /// flag anew). No-op when [date] isn't newer than the last one already seen.
+  Future<void> markRemoteSeen(DateTime date) async {
+    if (!date.isAfter(_lastKnownRemoteDate)) {
       return;
     }
-    _lastKnownRemoteDate = seen;
-    await _box?.put(_lastKnownRemoteDateKey, seen.toIso8601String());
+    _lastKnownRemoteDate = date;
+    await _box?.put(_lastKnownRemoteDateKey, date.toIso8601String());
   }
 
   /// Downloads the questions file from the remote, replaces the current

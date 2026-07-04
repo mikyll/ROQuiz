@@ -7,6 +7,7 @@ import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/utils/question.dart';
+import 'package:roquiz/view/question_update_flow.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/view/view_questions_edit_file.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
@@ -60,6 +61,10 @@ class ViewQuestionsState extends State<ViewQuestions> {
 
   bool _searchBarOpen = false;
 
+  // True while a manual remote-update check is in flight; disables the button
+  // and swaps its icon for a spinner so the check can't be triggered twice.
+  bool _checkingUpdates = false;
+
   void _resetQuestions() {
     setState(() {
       _questions = List.from(_allQuestions);
@@ -112,7 +117,53 @@ class ViewQuestionsState extends State<ViewQuestions> {
 
   void _enterEditMode() {}
 
-  void _checkUpdates() {}
+  // Manual counterpart of view_menu's startup check: runs the same shared update
+  // flow (detect → confirm with a version comparison → download), but flagged
+  // [manual] so it also confirms "already up to date", surfaces errors, and lets
+  // a custom set be restored to the official one even when nothing is newer. The
+  // spinner covers the whole flow (detection is behind it; the dialog sits on top
+  // of the modal barrier).
+  Future<void> _checkUpdates() async {
+    final repository = widget.repository;
+    if (repository == null || _checkingUpdates) {
+      return;
+    }
+
+    setState(() {
+      _checkingUpdates = true;
+    });
+    try {
+      await runQuestionsUpdateFlow(
+        context,
+        repository,
+        onApplied: _refreshFromRepository,
+        manual: true,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _checkingUpdates = false;
+        });
+      }
+    }
+  }
+
+  // Re-seeds the screen from the repository after its question set was replaced
+  // (an editing session or a remote update). Drops any active search so the new
+  // set is shown in full. No-op without a repository.
+  void _refreshFromRepository() {
+    final repository = widget.repository;
+    if (repository == null) {
+      return;
+    }
+    setState(() {
+      _searchBarOpen = false;
+      _textController.clear();
+      _allQuestions = List.from(repository.questions);
+      _questions = List.from(_allQuestions);
+      _title = "${widget.title} (${_allQuestions.length})";
+    });
+  }
 
   void _importFromFile() {}
 
@@ -307,8 +358,21 @@ class ViewQuestionsState extends State<ViewQuestions> {
                         waitDuration: Duration(milliseconds: 500),
                         message: "Controlla se ci sono nuove domande",
                         child: IconButton(
-                          onPressed: null,
-                          icon: Icon(Icons.sync_rounded),
+                          onPressed: widget.repository == null || _checkingUpdates
+                              ? null
+                              : _checkUpdates,
+                          icon: _checkingUpdates
+                              ? const SizedBox(
+                                  width: 35,
+                                  height: 35,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 3,
+                                    ),
+                                  ),
+                                )
+                              : const Icon(Icons.sync_rounded),
                           iconSize: 35,
                         ),
                       ),
@@ -343,19 +407,8 @@ class ViewQuestionsState extends State<ViewQuestions> {
                             );
                             // Edits were auto-saved to the repository; refresh
                             // the list (and drop any active search) to show them.
-                            if (changed == true &&
-                                widget.repository != null &&
-                                mounted) {
-                              setState(() {
-                                _searchBarOpen = false;
-                                _textController.clear();
-                                _allQuestions = List.from(
-                                  widget.repository!.questions,
-                                );
-                                _questions = List.from(_allQuestions);
-                                _title =
-                                    "${widget.title} (${_allQuestions.length})";
-                              });
+                            if (changed == true && mounted) {
+                              _refreshFromRepository();
                             }
                             // TODO: change animation?
                             // Navigator.push(
