@@ -328,23 +328,22 @@ class ViewSettingsState extends State<ViewSettings> {
                         ),
                       ),
 
-                    if (kDebugMode)
-                      SettingEntry(
-                        label: "Controllo nuove domande:",
-                        tooltip:
-                            "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: Checkbox(
-                            value: settings.autoCheckQuestions,
-                            onChanged: (value) {
-                              settings.autoCheckQuestions = value!;
-                              SettingsManager.save(settings);
-                            },
-                            splashRadius: 15,
-                          ),
+                    SettingEntry(
+                      label: "Controllo nuove domande:",
+                      tooltip:
+                          "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                          value: settings.autoCheckQuestions,
+                          onChanged: (value) {
+                            settings.autoCheckQuestions = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
                         ),
                       ),
+                    ),
                     SettingEntry(
                       label: "Animazioni:",
                       tooltip:
