@@ -9,7 +9,6 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/utils/question.dart';
 import 'package:roquiz/view/question_update_flow.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
-import 'package:roquiz/view/view_questions_edit_file.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/question_card.dart';
@@ -443,54 +442,17 @@ class ViewQuestionsState extends State<ViewQuestions> {
                         ),
                       ),
 
-                    // Edit mode (file)
+                    // Edit mode (file) — debug-only and not implemented yet, so
+                    // it's hidden in release (kDebugMode) and shown disabled in
+                    // debug. Re-enable (wire `onPressed` to push
+                    // `ViewQuestionsEditFile`) once the file editor is ready.
                     if (widget.editable)
                       if (kDebugMode)
                         Tooltip(
                           waitDuration: Duration(milliseconds: 500),
-                          message: "Modifica File",
+                          message: "Modifica File (non ancora disponibile)",
                           child: IconButton(
-                            onPressed: !widget.editable
-                                ? null
-                                : () {
-                                    // Prompt for format
-
-                                    // TODO: change animation
-
-                                    Navigator.push(
-                                      context,
-                                      // PageRouteBuilder(
-                                      //   pageBuilder: (_, __, ___) {
-                                      //     return ViewQuestionsEditFile();
-                                      //   },
-                                      //   transitionDuration: Duration.zero,
-                                      //   transitionsBuilder: (_, animation, __, child) {
-                                      //     return child;
-                                      //   },
-                                      // ),
-                                      PageRouteBuilder(
-                                        pageBuilder: (_, __, ___) {
-                                          return ViewQuestionsEditFile(
-                                            fileContent: "",
-                                          );
-                                        },
-                                        transitionDuration: Duration.zero,
-                                        // transitionDuration: Duration(milliseconds: 300),
-                                        // transitionsBuilder: (_, animation, __, c) {
-                                        //   const begin = Offset(1.0, 0.0);
-                                        //   const end = Offset.zero;
-                                        //   var tween = Tween(
-                                        //     begin: begin,
-                                        //     end: end,
-                                        //   ).chain(CurveTween(curve: Curves.easeOut));
-                                        //   return SlideTransition(
-                                        //     position: animation.drive(tween),
-                                        //     child: c,
-                                        //   );
-                                        // },
-                                      ),
-                                    );
-                                  },
+                            onPressed: null,
                             icon: Icon(Icons.edit_document),
                             iconSize: 35,
                           ),
