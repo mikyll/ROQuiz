@@ -635,7 +635,7 @@ class ViewSettingsState extends State<ViewSettings> {
                       SettingEntry(
                         label: "Termina quiz allo scadere del tempo:",
                         tooltip:
-                            "Se selezionata, termina il quiz allo scadere del tempo.",
+                            "Se selezionata, termina il quiz allo scadere del tempo. Altrimenti, continua in negativo",
                         child: Transform.scale(
                           scale: 1.5,
                           child: Checkbox(
