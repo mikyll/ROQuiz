@@ -12,23 +12,41 @@ class SettingEntry extends StatelessWidget {
   /// it paints in its disabled state.
   final bool enabled;
 
+  /// Optional hidden action bound to the label: tapping the label text runs it.
+  /// Deliberately gives no visual affordance (no underline/cursor change) — it's
+  /// a discreet shortcut, not an advertised button. Ignored when [enabled] is
+  /// false.
+  final VoidCallback? onLabelTap;
+
   const SettingEntry({
     super.key,
     required this.label,
     required this.child,
     this.tooltip,
     this.enabled = true,
+    this.onLabelTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Widget labelText = Text(
+    Widget labelText = Text(
       label,
       style: TextStyle(
         fontSize: 18.0,
         color: enabled ? null : Theme.of(context).disabledColor,
       ),
     );
+
+    // The hidden label action: a transparent, opaque-hit tap target over just
+    // the label glyphs (the Align below shrinks it to the text's width). No
+    // visual change, so the shortcut stays discreet.
+    if (enabled && onLabelTap != null) {
+      labelText = GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onLabelTap,
+        child: labelText,
+      );
+    }
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),

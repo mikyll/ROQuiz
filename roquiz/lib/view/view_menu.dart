@@ -65,18 +65,27 @@ class ViewMenuState extends State<ViewMenu> {
     return settings.fullTopics ? pool.length : settings.quizQuestions;
   }
 
-  void _openSettings({SettingsAnchor? scrollTo}) {
-    Navigator.push(
+  void _openSettings({SettingsAnchor? scrollTo}) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
           return ViewSettings(
             maxQuizPool: _questionRepository.questions.length,
             scrollTo: scrollTo,
+            // Forwarded for the hidden manual-check shortcuts on the two
+            // "Controllo…" settings labels (see ViewSettings).
+            questionRepository: _questionRepository,
+            packageInfo: widget.packageInfo,
           );
         },
       ),
     );
+    // The questions shortcut may have downloaded a new set into the shared
+    // repository while in settings; re-derive the topics so the menu reflects it.
+    if (mounted) {
+      setState(_refreshTopics);
+    }
   }
 
   void _openTopics() {

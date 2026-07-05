@@ -2,9 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:roquiz/model/notification/app_version.dart';
+import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
+import 'package:roquiz/view/app_update_flow.dart';
+import 'package:roquiz/view/question_update_flow.dart';
 import 'package:roquiz/widget/confirmation_dialog.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
@@ -45,7 +50,23 @@ class ViewSettings extends StatefulWidget {
   /// When set, the screen scrolls this entry into view after its first layout.
   final SettingsAnchor? scrollTo;
 
-  const ViewSettings({super.key, required this.maxQuizPool, this.scrollTo});
+  /// Live questions store, forwarded so the hidden "check for new questions"
+  /// shortcut on that setting's label can run against the same instance the menu
+  /// uses (a download must propagate). Null from call sites that don't hold it —
+  /// the shortcut is then inert.
+  final QuestionRepository? questionRepository;
+
+  /// Running app info, forwarded so the hidden "check for app updates" shortcut
+  /// on that setting's label knows the current version. Null-inert as above.
+  final PackageInfo? packageInfo;
+
+  const ViewSettings({
+    super.key,
+    required this.maxQuizPool,
+    this.scrollTo,
+    this.questionRepository,
+    this.packageInfo,
+  });
 
   @override
   State<StatefulWidget> createState() => ViewSettingsState();
@@ -67,6 +88,40 @@ class ViewSettingsState extends State<ViewSettings> {
   // first build, so the value would otherwise never refresh on a rebuild.
   final TextEditingController quizQuestionsController = TextEditingController();
   final TextEditingController quizTimeController = TextEditingController();
+
+  /// Hidden shortcut on the "Controllo aggiornamenti app" label: runs the app
+  /// update check on demand (as [manual], so it also reports "already up to
+  /// date" and errors). Inert without the running app info.
+  Future<void> _manualReleaseCheck() async {
+    final PackageInfo? packageInfo = widget.packageInfo;
+    if (packageInfo == null) {
+      return;
+    }
+    await runAppUpdateFlow(
+      context,
+      AppReleaseChecker(),
+      packageInfo.version,
+      manual: true,
+    );
+  }
+
+  /// Hidden shortcut on the "Controllo nuove domande" label: runs the questions
+  /// update check on demand against the live repository (a download persists and
+  /// the menu re-reads it on return). Inert without a repository.
+  Future<void> _manualQuestionsCheck() async {
+    final QuestionRepository? repository = widget.questionRepository;
+    if (repository == null) {
+      return;
+    }
+    await runQuestionsUpdateFlow(
+      context,
+      repository,
+      // Nothing to refresh here (settings doesn't list questions); the menu
+      // refreshes its topics when this screen is popped.
+      onApplied: () {},
+      manual: true,
+    );
+  }
 
   @override
   void initState() {
@@ -303,6 +358,7 @@ class ViewSettingsState extends State<ViewSettings> {
                       label: "Controllo aggiornamenti app:",
                       tooltip:
                           "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
+                      onLabelTap: _manualReleaseCheck,
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -320,6 +376,7 @@ class ViewSettingsState extends State<ViewSettings> {
                       label: "Controllo nuove domande:",
                       tooltip:
                           "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
+                      onLabelTap: _manualQuestionsCheck,
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
