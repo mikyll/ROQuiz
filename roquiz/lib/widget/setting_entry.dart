@@ -5,9 +5,11 @@ class SettingEntry extends StatelessWidget {
   final Widget child;
   final String? tooltip;
 
-  /// When false the label is greyed out and the control beside it is dimmed,
-  /// so the whole entry reads as disabled. The [child] should still be made
-  /// non-interactive by its caller (e.g. a [Checkbox] with `onChanged: null`).
+  /// When false the label is greyed out and the control beside it is dimmed and
+  /// made non-interactive (wrapped in an [IgnorePointer]), so the whole entry
+  /// reads as disabled and won't react to hover/taps. The [child] should still
+  /// disable its own behaviour too (e.g. a [Checkbox] with `onChanged: null`) so
+  /// it paints in its disabled state.
   final bool enabled;
 
   const SettingEntry({
@@ -53,8 +55,12 @@ class SettingEntry extends StatelessWidget {
           SizedBox(
             width: 150.0,
             // Dim the control to match the greyed label: an unchecked disabled
-            // Checkbox otherwise looks the same as an enabled one.
-            child: enabled ? child : Opacity(opacity: 0.5, child: child),
+            // Checkbox otherwise looks the same as an enabled one. IgnorePointer
+            // stops it from reacting to hover/taps (e.g. a disabled dropdown's
+            // InputDecorator would otherwise still paint a hover highlight).
+            child: enabled
+                ? child
+                : IgnorePointer(child: Opacity(opacity: 0.5, child: child)),
           ),
         ],
       ),
