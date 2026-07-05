@@ -649,8 +649,14 @@ class ViewSettingsState extends State<ViewSettings> {
                         ),
                       ),
 
-                    SizedBox(height: 20.0),
-                    Separator(text: "Accessibilità"),
+                    // The only Accessibilità entries are debug-only for now, so
+                    // hide the whole section (header + spacing) in release rather
+                    // than showing an empty heading. Drop this gate once a
+                    // release-ready option lands here.
+                    if (kDebugMode) ...[
+                      SizedBox(height: 20.0),
+                      Separator(text: "Accessibilità"),
+                    ],
 
                     if (kDebugMode)
                       SettingEntry(
