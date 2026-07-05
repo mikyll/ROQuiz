@@ -299,23 +299,22 @@ class ViewSettingsState extends State<ViewSettings> {
                       ),
                     ),
 
-                    if (kDebugMode)
-                      SettingEntry(
-                        label: "Controllo release app:",
-                        tooltip:
-                            "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: Checkbox(
-                            value: settings.autoCheckRelease,
-                            onChanged: (value) {
-                              settings.autoCheckRelease = value!;
-                              SettingsManager.save(settings);
-                            },
-                            splashRadius: 15,
-                          ),
+                    SettingEntry(
+                      label: "Controllo aggiornamenti app:",
+                      tooltip:
+                          "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                          value: settings.autoCheckRelease,
+                          onChanged: (value) {
+                            settings.autoCheckRelease = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
                         ),
                       ),
+                    ),
 
                     SettingEntry(
                       label: "Controllo nuove domande:",

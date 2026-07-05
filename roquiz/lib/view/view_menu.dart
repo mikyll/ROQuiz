@@ -4,10 +4,12 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:roquiz/model/notification/app_version.dart';
 import 'package:roquiz/model/persistence/question_repository.dart';
 import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/view/app_update_flow.dart';
 import 'package:roquiz/view/question_update_flow.dart';
 import 'package:roquiz/view/view_history.dart';
 import 'package:roquiz/view/view_info.dart';
@@ -35,6 +37,7 @@ class ViewMenuState extends State<ViewMenu> {
   static const double _maxContentWidth = 500.0;
 
   final QuestionRepository _questionRepository = QuestionRepository();
+  final AppReleaseChecker _releaseChecker = AppReleaseChecker();
 
   Map<String, bool> _selectedTopics = {};
 
@@ -110,10 +113,10 @@ class ViewMenuState extends State<ViewMenu> {
             // repository fell back to the bundled asset for); null when fine.
             _error = _questionRepository.lastLoadError;
           });
-          // Fast path is done (local/asset questions are shown); now check the
-          // remote for a newer file (only if the user enabled the check). When
-          // one exists the user is asked to update; failures are non-fatal.
-          _checkForNewerQuestions();
+          // Fast path is done (local/asset questions are shown); now run the
+          // startup update checks (each only if the user enabled it). When an
+          // update exists the user is asked; failures are non-fatal.
+          _runStartupUpdateChecks();
         })
         .onError((error, stackTrace) {
           if (!mounted) {
@@ -125,7 +128,33 @@ class ViewMenuState extends State<ViewMenu> {
         });
   }
 
-  void _checkForNewerQuestions() async {
+  /// Runs the startup update checks one after another so their dialogs can't
+  /// stack: the app release first, then the questions file. Each is a no-op when
+  /// its setting is off, and both swallow errors (non-[manual]) so startup is
+  /// never disturbed.
+  Future<void> _runStartupUpdateChecks() async {
+    await _checkForNewerRelease();
+    await _checkForNewerQuestions();
+  }
+
+  Future<void> _checkForNewerRelease() async {
+    if (!mounted) {
+      return;
+    }
+    // Only check when the user has enabled "controllo aggiornamenti app".
+    final settings = Provider.of<Settings>(context, listen: false);
+    if (!settings.autoCheckRelease) {
+      return;
+    }
+    // Silent check: stays quiet unless a newer release exists, swallows errors.
+    await runAppUpdateFlow(
+      context,
+      _releaseChecker,
+      widget.packageInfo.version,
+    );
+  }
+
+  Future<void> _checkForNewerQuestions() async {
     if (!mounted) {
       return;
     }
