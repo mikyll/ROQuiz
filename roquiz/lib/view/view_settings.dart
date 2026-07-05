@@ -266,6 +266,7 @@ class ViewSettingsState extends State<ViewSettings> {
                     if (kDebugMode)
                       SettingEntry(
                         label: "Lingua:",
+                        enabled: false,
                         tooltip:
                             "Permette di impostare la lingua dell'applicazione.",
                         child: DropdownButtonFormField(
@@ -282,7 +283,7 @@ class ViewSettingsState extends State<ViewSettings> {
                               },
                             );
                           }).toList(),
-                          onChanged: (_) {},
+                          onChanged: null,
                         ),
                       ),
                     SettingEntry(
@@ -404,10 +405,12 @@ class ViewSettingsState extends State<ViewSettings> {
                     if (kDebugMode)
                       SettingEntry(
                         label: "GitHub token:",
+                        enabled: false,
                         tooltip:
                             "GitHub API token per poter fare richieste alla repository con rate limit incrementato."
                             " Le chiamate alla repository vengono effettuate ad esempio per controllare se ci sono aggiornamenti dell'app o delle domande.",
                         child: TextFormField(
+                          enabled: false,
                           decoration: InputDecoration(
                             hint: Text("token", textAlign: TextAlign.center),
                           ),
