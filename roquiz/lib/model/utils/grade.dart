@@ -24,7 +24,7 @@ double calculateTotalGrade(int writtenGrade, int quizGrade) {
 }
 
 String getGradeString(double grade, {gradeBase = 30.0}) {
-  String gradeString = min(grade.round(), gradeBase).toString();
+  String gradeString = min(grade.round(), gradeBase.round()).toString();
   if (grade > gradeBase) {
     gradeString += "L";
   }
