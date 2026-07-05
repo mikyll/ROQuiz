@@ -409,6 +409,29 @@ class ViewHistoryState extends State<ViewHistory> {
                   children: [
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
+                      message: _selection.hasSelection
+                          ? "Elimina selezionati"
+                          : "Svuota",
+                      child: IconButton(
+                        onPressed: _quizList.isEmpty
+                            ? null
+                            : (_selection.hasSelection
+                                  ? _confirmDeleteSelected
+                                  : _confirmClearHistory),
+                        icon: Icon(
+                          _selection.hasSelection
+                              ? Icons.delete
+                              : Icons.delete_sweep,
+                        ),
+                        iconSize: 35,
+                      ),
+                    ),
+                    // File I/O cluster, set off from the destructive action above
+                    // by an extra gap (adds to the row's own spacing). Kept on the
+                    // right to match view_questions.
+                    const SizedBox(width: 8),
+                    Tooltip(
+                      waitDuration: Duration(milliseconds: 500),
                       message: "Importa",
                       child: IconButton(
                         // Import replaces the whole history, so it is only
@@ -432,25 +455,6 @@ class ViewHistoryState extends State<ViewHistory> {
                                   ? _exportSelected
                                   : () => _exportQuizzes()),
                         icon: Icon(Icons.file_download),
-                        iconSize: 35,
-                      ),
-                    ),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: _selection.hasSelection
-                          ? "Elimina selezionati"
-                          : "Svuota",
-                      child: IconButton(
-                        onPressed: _quizList.isEmpty
-                            ? null
-                            : (_selection.hasSelection
-                                  ? _confirmDeleteSelected
-                                  : _confirmClearHistory),
-                        icon: Icon(
-                          _selection.hasSelection
-                              ? Icons.delete
-                              : Icons.delete_sweep,
-                        ),
                         iconSize: 35,
                       ),
                     ),

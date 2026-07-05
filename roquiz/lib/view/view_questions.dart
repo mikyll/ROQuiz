@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +13,7 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/utils/question.dart';
 import 'package:roquiz/view/question_update_flow.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
+import 'package:roquiz/widget/confirmation_dialog.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/question_card.dart';
@@ -164,9 +169,93 @@ class ViewQuestionsState extends State<ViewQuestions> {
     });
   }
 
-  void _importFromFile() {}
+  /// Imports a questions file picked by the user (TXT or YAML), replacing the
+  /// whole current set. Importing discards the current questions (incl. any
+  /// custom edits), so at the [ConfirmationLevel.soft] tier we confirm first.
+  Future<void> _importFromFile(Settings settings) async {
+    final repository = widget.repository;
+    if (repository == null) {
+      return;
+    }
 
-  void _exportToFile() {}
+    final bool confirmed = await maybeConfirm(
+      context,
+      userLevel: settings.confirmationLevel,
+      minLevel: ConfirmationLevel.soft,
+      title: "Importa domande",
+      message:
+          "Le domande attuali verranno sostituite con quelle del file. Continuare?",
+      confirmLabel: "Importa",
+    );
+    if (!confirmed || !mounted) {
+      return;
+    }
+
+    final FilePickerResult? result = await FilePicker.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ["txt", "yaml", "yml"],
+      withData: true,
+    );
+    // Guard against an empty file list (web cancel/focus race) before .first.
+    final Uint8List? bytes = (result != null && result.files.isNotEmpty)
+        ? result.files.first.bytes
+        : null;
+    if (bytes == null) {
+      return;
+    }
+
+    try {
+      await repository.loadFromContent(utf8.decode(bytes));
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("File non valido")));
+      return;
+    }
+
+    if (!mounted) {
+      return;
+    }
+    _refreshFromRepository();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Importate ${repository.questions.length} domande"),
+      ),
+    );
+  }
+
+  /// Exports the current questions to a timestamped YAML file.
+  Future<void> _exportToFile() async {
+    final repository = widget.repository;
+    if (repository == null) {
+      return;
+    }
+
+    final String yaml = repository.exportToYaml();
+    final DateTime now = DateTime.now();
+    String two(int n) => n.toString().padLeft(2, "0");
+    // Compact timestamp: roquiz_questions_20260619143005
+    final String timestamp =
+        "${now.year}${two(now.month)}${two(now.day)}"
+        "${two(now.hour)}${two(now.minute)}${two(now.second)}";
+
+    await FileSaver.instance.saveFile(
+      name: "roquiz_questions_$timestamp",
+      bytes: Uint8List.fromList(utf8.encode(yaml)),
+      ext: "yaml",
+      mimeType: MimeType.text,
+    );
+
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Domande esportate")));
+  }
 
   // Back/Esc first collapses an open search bar; only when it's already closed
   // does it leave the screen. Wired into CustomBackButton (whose Esc handler
@@ -457,6 +546,38 @@ class ViewQuestionsState extends State<ViewQuestions> {
                             iconSize: 35,
                           ),
                         ),
+
+                    // File I/O cluster, set off from the content actions above by
+                    // an extra gap (adds to the row's own spacing). Mirrors the
+                    // right-hand import/export group in view_history.
+                    if (widget.editable) const SizedBox(width: 8),
+                    // Import questions from file
+                    if (widget.editable)
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Importa",
+                        child: IconButton(
+                          onPressed: widget.repository == null
+                              ? null
+                              : () => _importFromFile(settings),
+                          icon: Icon(Icons.file_upload),
+                          iconSize: 35,
+                        ),
+                      ),
+                    // Export questions to file
+                    if (widget.editable)
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Esporta",
+                        child: IconButton(
+                          onPressed:
+                              widget.repository == null || _allQuestions.isEmpty
+                              ? null
+                              : _exportToFile,
+                          icon: Icon(Icons.file_download),
+                          iconSize: 35,
+                        ),
+                      ),
                   ],
                 ),
               ),

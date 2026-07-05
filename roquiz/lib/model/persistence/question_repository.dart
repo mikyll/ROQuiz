@@ -275,6 +275,11 @@ class QuestionRepository {
     await save();
   }
 
+  /// Serializes the current [questions] to YAML for export to a file. Mirrors
+  /// the on-disk format used by [save] but returns the content instead of
+  /// persisting it. Re-importable via [loadFromContent].
+  String exportToYaml() => questions.map((q) => q.toYaml()).join("\n");
+
   /// Serializes the current [questions] to YAML and persists them as a
   /// [QuestionSource.custom] copy. Use this after in-app edits to save the
   /// working question set.
