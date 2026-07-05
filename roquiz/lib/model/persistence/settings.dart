@@ -3,6 +3,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'settings.g.dart'; // This will be generated
 
+/// How aggressively the app asks the user to confirm actions. Ordered by
+/// increasing number of prompts, so `.index` can be compared against the
+/// minimum level a given confirmation site requires (see `maybeConfirm`).
+///  - [none]: never prompt.
+///  - [soft]: prompt only before irreversible data loss (delete/clear/reset).
+///  - [full]: additionally prompt before losing in-progress work (leaving a
+///    quiz, terminating with unanswered questions).
+enum ConfirmationLevel { none, soft, full }
+
 @JsonSerializable()
 class Settings with ChangeNotifier {
   // NB: after editing this class, run `dart run build_runner build`
@@ -12,7 +21,7 @@ class Settings with ChangeNotifier {
   bool autoCheckRelease;
   bool autoCheckQuestions;
   bool animations;
-  bool? confirmationAlert;
+  ConfirmationLevel confirmationLevel;
   bool hideCorrectAnswersInEditMode;
   bool themeDark;
   String githubToken;
@@ -33,7 +42,7 @@ class Settings with ChangeNotifier {
     this.autoCheckRelease = true,
     this.autoCheckQuestions = true,
     this.animations = true,
-    this.confirmationAlert = true,
+    this.confirmationLevel = ConfirmationLevel.soft,
     this.hideCorrectAnswersInEditMode = false,
     this.themeDark = false,
     this.githubToken = "",
@@ -55,7 +64,7 @@ class Settings with ChangeNotifier {
     autoCheckRelease = d.autoCheckRelease;
     autoCheckQuestions = d.autoCheckQuestions;
     animations = d.animations;
-    confirmationAlert = d.confirmationAlert;
+    confirmationLevel = d.confirmationLevel;
     hideCorrectAnswersInEditMode = d.hideCorrectAnswersInEditMode;
     themeDark = d.themeDark;
     githubToken = d.githubToken;

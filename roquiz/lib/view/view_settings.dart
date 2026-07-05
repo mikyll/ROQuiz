@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
+import 'package:roquiz/widget/confirmation_dialog.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/icon_button_acceleration.dart';
@@ -151,29 +152,17 @@ class ViewSettingsState extends State<ViewSettings> {
   /// stepper/grade controllers so the visible fields reflect the reset (the
   /// switches/checkboxes refresh on their own via the save's notifyListeners).
   Future<void> _confirmRestoreDefaults() async {
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Ripristina impostazioni"),
-          content: const Text(
-            "Vuoi ripristinare tutte le impostazioni ai valori predefiniti?",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text("Annulla"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text("Ripristina"),
-            ),
-          ],
-        );
-      },
+    final bool confirmed = await maybeConfirm(
+      context,
+      userLevel: context.read<Settings>().confirmationLevel,
+      minLevel: ConfirmationLevel.soft,
+      title: "Ripristina impostazioni",
+      message:
+          "Vuoi ripristinare tutte le impostazioni ai valori predefiniti?",
+      confirmLabel: "Ripristina",
     );
 
-    if (!(confirmed ?? false) || !mounted) {
+    if (!confirmed || !mounted) {
       return;
     }
 
@@ -361,24 +350,36 @@ class ViewSettingsState extends State<ViewSettings> {
                       ),
                     ),
 
-                    if (kDebugMode)
-                      SettingEntry(
-                        label: "Alert conferma:",
-                        tooltip:
-                            "Se selezionata, mostra degli alert di conferma.",
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: Checkbox(
-                            tristate: true,
-                            value: settings.confirmationAlert,
-                            onChanged: (value) {
-                              settings.confirmationAlert = value;
+                    SettingEntry(
+                      label: "Alert di conferma:",
+                      tooltip:
+                          "Quanto spesso l'app chiede conferma:\n"
+                          "• Nessuno: nessuna conferma;\n"
+                          "• Essenziali: solo prima di azioni irreversibili "
+                          "(svuotare lo storico, ripristinare le impostazioni);\n"
+                          "• Completi: anche prima di perdere il quiz in corso "
+                          "(uscire, terminare con domande senza risposta).",
+                      child: DropdownButtonFormField(
+                        value: settings.confirmationLevel,
+                        items: const {
+                          ConfirmationLevel.none: "Nessuno",
+                          ConfirmationLevel.soft: "Essenziali",
+                          ConfirmationLevel.full: "Completi",
+                        }.entries.map<DropdownMenuItem<ConfirmationLevel>>((
+                          entry,
+                        ) {
+                          return DropdownMenuItem<ConfirmationLevel>(
+                            value: entry.key,
+                            child: Text(entry.value),
+                            onTap: () {
+                              settings.confirmationLevel = entry.key;
                               SettingsManager.save(settings);
                             },
-                            splashRadius: 15,
-                          ),
-                        ),
+                          );
+                        }).toList(),
+                        onChanged: (_) {},
                       ),
+                    ),
 
                     SettingEntry(
                       label: "Nascondi risposte corrette:",

@@ -11,7 +11,12 @@ Settings _$SettingsFromJson(Map<String, dynamic> json) => Settings(
   autoCheckRelease: json['autoCheckRelease'] as bool? ?? true,
   autoCheckQuestions: json['autoCheckQuestions'] as bool? ?? true,
   animations: json['animations'] as bool? ?? true,
-  confirmationAlert: json['confirmationAlert'] as bool? ?? true,
+  confirmationLevel:
+      $enumDecodeNullable(
+        _$ConfirmationLevelEnumMap,
+        json['confirmationLevel'],
+      ) ??
+      ConfirmationLevel.soft,
   hideCorrectAnswersInEditMode:
       json['hideCorrectAnswersInEditMode'] as bool? ?? false,
   themeDark: json['themeDark'] as bool? ?? false,
@@ -29,7 +34,7 @@ Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
   'autoCheckRelease': instance.autoCheckRelease,
   'autoCheckQuestions': instance.autoCheckQuestions,
   'animations': instance.animations,
-  'confirmationAlert': instance.confirmationAlert,
+  'confirmationLevel': _$ConfirmationLevelEnumMap[instance.confirmationLevel]!,
   'hideCorrectAnswersInEditMode': instance.hideCorrectAnswersInEditMode,
   'themeDark': instance.themeDark,
   'githubToken': instance.githubToken,
@@ -40,4 +45,10 @@ Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
   'shuffleAnswers': instance.shuffleAnswers,
   'exceedTimeout': instance.exceedTimeout,
   'leftHandedLayout': instance.leftHandedLayout,
+};
+
+const _$ConfirmationLevelEnumMap = {
+  ConfirmationLevel.none: 'none',
+  ConfirmationLevel.soft: 'soft',
+  ConfirmationLevel.full: 'full',
 };

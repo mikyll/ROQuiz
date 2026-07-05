@@ -13,6 +13,7 @@ import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/grade.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/view/view_settings.dart';
+import 'package:roquiz/widget/confirmation_dialog.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/grade.dart';
@@ -299,6 +300,49 @@ class _ViewQuizState extends State<ViewQuiz> {
     widget.completedQuizRepository.add(completed);
   }
 
+  /// Whether the user has agreed to leave. Leaving mid-quiz terminates and saves
+  /// it, so at the [ConfirmationLevel.full] tier we confirm first; once the quiz
+  /// is over there's nothing left to lose. Does not pop — the caller ([PopScope]'s
+  /// `onPopInvokedWithResult`) owns navigation so every exit path (in-app back
+  /// button, Esc, Android system back, swipe) shares this one flow.
+  Future<bool> _confirmLeaveQuiz(Settings settings) async {
+    if (_isQuizOver) {
+      return true;
+    }
+    return maybeConfirm(
+      context,
+      userLevel: settings.confirmationLevel,
+      minLevel: ConfirmationLevel.full,
+      title: "Esci dal quiz",
+      message:
+          "Uscendo, il quiz verrà terminato e salvato nello storico. Continuare?",
+      confirmLabel: "Esci",
+    );
+  }
+
+  /// Terminating with unanswered questions is easy to do by accident, so at the
+  /// [ConfirmationLevel.full] tier we confirm when any answer is still blank.
+  Future<void> _handleTerminate(Settings settings) async {
+    final int blank = _quiz.countBlankAnswers();
+    if (blank > 0) {
+      final bool confirmed = await maybeConfirm(
+        context,
+        userLevel: settings.confirmationLevel,
+        minLevel: ConfirmationLevel.full,
+        title: "Termina quiz",
+        message: blank == 1
+            ? "Hai 1 domanda senza risposta. Terminare comunque?"
+            : "Hai $blank domande senza risposta. Terminare comunque?",
+        confirmLabel: "Termina",
+      );
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    _endQuiz(settings.writtenGrade);
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -382,13 +426,20 @@ class _ViewQuizState extends State<ViewQuiz> {
     final Settings settings = Provider.of<Settings>(context);
 
     return PopScope(
-      canPop: true, //!widget.settings.confirmAlerts,
-      onPopInvokedWithResult: (didPop, Object? result) {
+      // Every exit path (in-app back button, Esc, Android system back, swipe)
+      // is a blocked pop that funnels through here so the leave-quiz confirm
+      // (full tier) and the terminate-and-save can't be skipped.
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) {
           return;
         }
-
-        // TODO: confirmation alert
+        final NavigatorState navigator = Navigator.of(context);
+        if (!await _confirmLeaveQuiz(settings) || !mounted) {
+          return;
+        }
+        _endQuiz(settings.writtenGrade);
+        navigator.pop();
       },
       child: Focus(
         autofocus: true,
@@ -414,23 +465,7 @@ class _ViewQuizState extends State<ViewQuiz> {
               maxWidth: 500.0,
               title: const Text("Quiz"),
               leading: CustomBackButton(
-                onPressed: () {
-                  // if (widget.settings.confirmAlerts) {
-                  //   ConfirmationAlert.showConfirmationDialog(
-                  //     context,
-                  //     "Conferma",
-                  //     "Sei sicuro di voler uscire dal quiz?",
-                  //     onConfirm: () {
-                  //       _endQuiz(); // end quiz and stop timer
-                  //       Navigator.pop(context);
-                  //     },
-                  //     onCancel: () {},
-                  //   );
-                  // } else {
-                  _endQuiz(settings.writtenGrade);
-                  Navigator.pop(context);
-                  // }
-                },
+                onPressed: () => Navigator.maybePop(context),
               ),
               // TODO: add toggle dark mode?
               actions: [
@@ -677,7 +712,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                 if (_isQuizOver) {
                                   _startQuiz();
                                 } else {
-                                  _endQuiz(settings.writtenGrade);
+                                  _handleTerminate(settings);
                                 }
                               },
                               child: Container(

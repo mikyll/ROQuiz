@@ -27,6 +27,11 @@ class Quiz {
   /// selections are preserved exactly as they were shown when the quiz was taken.
   Quiz.fromSnapshot({required this.questions, required this.selectedAnswers});
 
+  /// Number of questions the user left blank (no answer selected).
+  int countBlankAnswers() {
+    return selectedAnswers.where((answer) => answer == null).length;
+  }
+
   int countCorrectAnswers() {
     int correctAnswers = 0;
     for (int i = 0; i < questions.length; i++) {

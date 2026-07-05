@@ -12,6 +12,7 @@ import 'package:roquiz/model/utils/selection_controller.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/view/view_history_quiz.dart';
 import 'package:roquiz/view/view_settings.dart';
+import 'package:roquiz/widget/confirmation_dialog.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 import 'package:roquiz/widget/grade_badge.dart';
@@ -81,59 +82,35 @@ class ViewHistoryState extends State<ViewHistory> {
   }
 
   Future<void> _confirmClearHistory() async {
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Svuota storico"),
-          content: const Text(
-            "Vuoi eliminare tutti i quiz salvati? L'operazione non è reversibile.",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text("Annulla"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text("Elimina"),
-            ),
-          ],
-        );
-      },
+    final bool confirmed = await maybeConfirm(
+      context,
+      userLevel: context.read<Settings>().confirmationLevel,
+      minLevel: ConfirmationLevel.soft,
+      title: "Svuota storico",
+      message:
+          "Vuoi eliminare tutti i quiz salvati? L'operazione non è reversibile.",
+      confirmLabel: "Elimina",
     );
 
-    if (confirmed ?? false) {
+    if (confirmed) {
       _clearHistory();
     }
   }
 
   Future<void> _confirmDeleteSelected() async {
     final int count = _selection.count;
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Elimina selezionati"),
-          content: Text(
-            "Vuoi eliminare i $count quiz selezionati? "
-            "L'operazione non è reversibile.",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text("Annulla"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text("Elimina"),
-            ),
-          ],
-        );
-      },
+    final bool confirmed = await maybeConfirm(
+      context,
+      userLevel: context.read<Settings>().confirmationLevel,
+      minLevel: ConfirmationLevel.soft,
+      title: "Elimina selezionati",
+      message:
+          "Vuoi eliminare i $count quiz selezionati? "
+          "L'operazione non è reversibile.",
+      confirmLabel: "Elimina",
     );
 
-    if (confirmed ?? false) {
+    if (confirmed) {
       _deleteSelected();
     }
   }
