@@ -300,11 +300,12 @@ class _ViewQuizState extends State<ViewQuiz> {
     widget.completedQuizRepository.add(completed);
   }
 
-  /// Whether the user has agreed to leave. Leaving mid-quiz terminates and saves
-  /// it, so at the [ConfirmationLevel.full] tier we confirm first; once the quiz
-  /// is over there's nothing left to lose. Does not pop — the caller ([PopScope]'s
-  /// `onPopInvokedWithResult`) owns navigation so every exit path (in-app back
-  /// button, Esc, Android system back, swipe) shares this one flow.
+  /// Whether the user has agreed to leave. Leaving mid-quiz discards it without
+  /// grading or saving to history, so at the [ConfirmationLevel.full] tier we
+  /// confirm first; once the quiz is over there's nothing left to lose. Does not
+  /// pop — the caller ([PopScope]'s `onPopInvokedWithResult`) owns navigation so
+  /// every exit path (in-app back button, Esc, Android system back, swipe)
+  /// shares this one flow.
   Future<bool> _confirmLeaveQuiz(Settings settings) async {
     if (_isQuizOver) {
       return true;
@@ -315,7 +316,7 @@ class _ViewQuizState extends State<ViewQuiz> {
       minLevel: ConfirmationLevel.full,
       title: "Esci dal quiz",
       message:
-          "Uscendo, il quiz verrà terminato e salvato nello storico. Continuare?",
+          "Uscendo, il quiz verrà annullato e non verrà salvato nello storico. Continuare?",
       confirmLabel: "Esci",
     );
   }
@@ -428,7 +429,8 @@ class _ViewQuizState extends State<ViewQuiz> {
     return PopScope(
       // Every exit path (in-app back button, Esc, Android system back, swipe)
       // is a blocked pop that funnels through here so the leave-quiz confirm
-      // (full tier) and the terminate-and-save can't be skipped.
+      // (full tier) can't be skipped. Leaving mid-quiz simply discards it — no
+      // grading, no save to history; only a finished quiz reaches history.
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) {
@@ -438,7 +440,6 @@ class _ViewQuizState extends State<ViewQuiz> {
         if (!await _confirmLeaveQuiz(settings) || !mounted) {
           return;
         }
-        _endQuiz(settings.writtenGrade);
         navigator.pop();
       },
       child: Focus(
