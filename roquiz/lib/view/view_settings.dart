@@ -465,29 +465,36 @@ class ViewSettingsState extends State<ViewSettings> {
                       ),
                     ),
 
-                    if (kDebugMode)
-                      SettingEntry(
-                        label: "Argomenti interi:",
-                        tooltip:
-                            "Se selezionata, come pool del quiz utilizza tutte le domande di ciascun argomento selezionato."
-                            " È particolarmente utile quando si vogliono ripassare solamente certi argomenti.",
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: Checkbox(
-                            value: settings.fullTopics,
-                            onChanged: (value) {
-                              settings.fullTopics = value!;
-                              SettingsManager.save(settings);
-                            },
-                            splashRadius: 15,
-                          ),
+                    SettingEntry(
+                      label: "Argomenti interi:",
+                      tooltip:
+                          "Se selezionata, il quiz include tutte le domande degli argomenti selezionati,"
+                          " invece di estrarne un numero fisso. Il numero di domande viene quindi"
+                          " determinato dagli argomenti selezionati e l'impostazione \"Domande quiz\""
+                          " viene ignorata. Utile per ripassare interamente uno o più argomenti.",
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: Checkbox(
+                          value: settings.fullTopics,
+                          onChanged: (value) {
+                            settings.fullTopics = value!;
+                            SettingsManager.save(settings);
+                          },
+                          splashRadius: 15,
                         ),
                       ),
+                    ),
 
                     SettingEntry(
                       key: _quizQuestionsKey,
+                      // Ignored while "Argomenti interi" is on (the quiz then uses
+                      // the whole selected-topics pool), so grey it out to match.
+                      enabled: !settings.fullTopics,
                       label: "Domande quiz:",
-                      tooltip: "Numero di domande presenti in ciascun quiz.",
+                      tooltip: settings.fullTopics
+                          ? "Non disponibile con \"Argomenti interi\": il quiz usa"
+                                " tutte le domande degli argomenti selezionati."
+                          : "Numero di domande presenti in ciascun quiz.",
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 8.0,

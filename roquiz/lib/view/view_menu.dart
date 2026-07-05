@@ -55,6 +55,13 @@ class ViewMenuState extends State<ViewMenu> {
     return questions;
   }
 
+  /// Number of questions the next quiz will contain. Normally the configured
+  /// [Settings.quizQuestions] sample, but with [Settings.fullTopics] the quiz
+  /// uses every question of the selected topics, so the count is the whole pool.
+  int _quizQuestionNum(Settings settings, List<Question> pool) {
+    return settings.fullTopics ? pool.length : settings.quizQuestions;
+  }
+
   void _openSettings({SettingsAnchor? scrollTo}) {
     Navigator.push(
       context,
@@ -237,13 +244,17 @@ class ViewMenuState extends State<ViewMenu> {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: () {
+                                    final List<Question> pool = _getQuizPool();
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return ViewQuiz(
-                                            quizPool: _getQuizPool(),
-                                            questionNum: settings.quizQuestions,
+                                            quizPool: pool,
+                                            questionNum: _quizQuestionNum(
+                                              settings,
+                                              pool,
+                                            ),
                                             timer: settings.quizTime,
                                             // TODO
                                             shuffleAnswers: false,
@@ -291,7 +302,7 @@ class ViewMenuState extends State<ViewMenu> {
                                               const TextSpan(text: "Domande: "),
                                               TextSpan(
                                                 text:
-                                                    "${settings.quizQuestions}",
+                                                    "${_quizQuestionNum(settings, _getQuizPool())}",
                                                 recognizer: TapGestureRecognizer()
                                                   ..onTap = () => _openSettings(
                                                     scrollTo: SettingsAnchor
