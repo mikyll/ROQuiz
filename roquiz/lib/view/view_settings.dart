@@ -157,8 +157,7 @@ class ViewSettingsState extends State<ViewSettings> {
       userLevel: context.read<Settings>().confirmationLevel,
       minLevel: ConfirmationLevel.soft,
       title: "Ripristina impostazioni",
-      message:
-          "Vuoi ripristinare tutte le impostazioni ai valori predefiniti?",
+      message: "Vuoi ripristinare tutte le impostazioni ai valori predefiniti?",
       confirmLabel: "Ripristina",
     );
 
@@ -362,22 +361,23 @@ class ViewSettingsState extends State<ViewSettings> {
                           "(uscire, terminare con domande senza risposta).",
                       child: DropdownButtonFormField(
                         value: settings.confirmationLevel,
-                        items: const {
-                          ConfirmationLevel.none: "Nessuno",
-                          ConfirmationLevel.soft: "Essenziali",
-                          ConfirmationLevel.full: "Completi",
-                        }.entries.map<DropdownMenuItem<ConfirmationLevel>>((
-                          entry,
-                        ) {
-                          return DropdownMenuItem<ConfirmationLevel>(
-                            value: entry.key,
-                            child: Text(entry.value),
-                            onTap: () {
-                              settings.confirmationLevel = entry.key;
-                              SettingsManager.save(settings);
-                            },
-                          );
-                        }).toList(),
+                        items:
+                            const {
+                              ConfirmationLevel.none: "Nessuno",
+                              ConfirmationLevel.soft: "Essenziali",
+                              ConfirmationLevel.full: "Completi",
+                            }.entries.map<DropdownMenuItem<ConfirmationLevel>>((
+                              entry,
+                            ) {
+                              return DropdownMenuItem<ConfirmationLevel>(
+                                value: entry.key,
+                                child: Text(entry.value),
+                                onTap: () {
+                                  settings.confirmationLevel = entry.key;
+                                  SettingsManager.save(settings);
+                                },
+                              );
+                            }).toList(),
                         onChanged: (_) {},
                       ),
                     ),
@@ -424,11 +424,11 @@ class ViewSettingsState extends State<ViewSettings> {
                     SettingEntry(
                       label: "Voto prova scritta:",
                       tooltip:
-                          "Permette di impostare il voto della prova scritta. Se impostato, il calcolo del voto dei quiz sarà più accurato.",
+                          "Permette di impostare il voto della prova scritta (min 0, max 32). Se impostato, il calcolo del voto dei quiz sarà più accurato.",
                       child: TextFormField(
                         controller: writtenGradeController,
                         decoration: InputDecoration(
-                          hint: Text("[0, 32]", textAlign: TextAlign.center),
+                          hint: Text("es. 30", textAlign: TextAlign.center),
                         ),
                         maxLength: 2,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
