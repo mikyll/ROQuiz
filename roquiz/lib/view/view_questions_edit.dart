@@ -9,6 +9,7 @@ import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/utils/selection_controller.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
+import 'package:roquiz/widget/icon_button_acceleration.dart';
 import 'package:roquiz/widget/question_card.dart';
 import 'package:roquiz/widget/question_dialog.dart';
 import 'package:roquiz/widget/select_all_checkbox.dart';
@@ -519,8 +520,8 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
                       message: "Annulla l'ultima azione",
-                      child: IconButton(
-                        onPressed: _commandExecutor.canUndo()
+                      child: IconButtonAcceleration(
+                        onUpdate: _commandExecutor.canUndo()
                             ? () {
                                 setState(() {
                                   _commandExecutor.undoCommand();
@@ -534,8 +535,8 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                     Tooltip(
                       waitDuration: Duration(milliseconds: 500),
                       message: "Ripeti l'ultima azione",
-                      child: IconButton(
-                        onPressed: _commandExecutor.canRedo()
+                      child: IconButtonAcceleration(
+                        onUpdate: _commandExecutor.canRedo()
                             ? () {
                                 setState(() {
                                   _commandExecutor.redoCommand();
