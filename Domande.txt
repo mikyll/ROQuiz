@@ -63,6 +63,14 @@ D. La loro intersezione è sempre un insieme concavo
 E. La loro intersezione è sempre un insieme convesso
 E
 
+In un problema di programmazione convessa, un ottimo locale rispetto alla distanza euclidea
+A. Può essere un ottimo globale se soddisfa determinate condizioni
+B. Coincide con l'origine
+C. È spesso un ottimo globale
+D. Nessuna di queste
+E. Non gode di particolari proprietà
+D
+
 @Programmazione Lineare ================================================================================
 Un insieme di colonne di una matrice intera A m x n non è linearmente indipendente se:
 A. la loro combinazione lineare che produce il vettore nullo ha tutti i coefficienti nulli
@@ -143,6 +151,14 @@ C. un insieme di m colonne la cui matrice quadrata corrispondente è singolare
 D. un insieme di m colonne linearmente dipendenti
 E. nessuna di queste
 B
+
+Si consideri una matrice intera di m righe ed n colonne. Una base di tale matrice è data da
+A. Un insieme di m colonne la cui matrice quadrata corrispondente non è singolare
+B. Un insieme di m colonne linearmente dipendenti
+C. Nessuna di queste
+D. Un insieme di m colonne
+E. Un insieme di m colonne la cui matrice quadrata corrispondente è singolare
+A
 
 Una soluzione base corrispondente ad una sottomatrice base B di una matrice A m x n si ottiene:
 A. azzerando tutte le variabili e risolvendo il sistema risultante
@@ -353,6 +369,14 @@ D. Esce dalla base la colonna Aj con il costo Cj più negativo.
 E. Nessuna di queste
 A
 
+Utilizzare, ad ogni iterazione dell'algoritmo del simplesso primale, la regola di Bland
+A. Garantisce la convergenza dell'algoritmo nel numero minimo di iterazioni
+B. Non garantisce nulla
+C. Garantisce il massimo decremento locale del valore della soluzione
+D. Garantisce la convergenza dell'algoritmo
+E. Nessuna di queste
+D
+
 Nell'operazione di pivoting del simplesso primale, in caso di parità nella scelta del pivot, la nuova soluzione base:
 A. può essere peggiore della soluzione base attuale.
 B. coincide sempre con la soluzione base attuale.
@@ -455,6 +479,14 @@ B. Possono avere segno qualunque
 C. Sono tutti nulli
 D. Contengono i costi relativi
 E. Valgono tutti 1
+C
+
+Si consideri un tableau dell'algoritmo del simplesso primale. L'elemento della riga 0, colonna 0 contiene
+A. Il valore della soluzione ottima
+B. Nessuna di queste informazioni
+C. L'opposto del valore della soluzione ottima
+D. Il valore 0
+E. Il reciproco del valore della soluzione ottima
 C
 
 Sia A_j una colonna corrispondente ad un costo relativo negativo nell'algoritmo del simplesso primale. Se tutti i coefficienti della colonna sono negativi o nulli, ciò implica che:
