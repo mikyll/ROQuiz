@@ -1,55 +1,55 @@
-name: Deploy to GitHub Pages
+# name: Deploy to GitHub Pages
 
-on:
-  workflow_dispatch:
+# on:
+#   workflow_dispatch:
 
-jobs:
-  # todo
-  # test:
+# jobs:
+#   # todo
+#   # test:
 
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app-mobile/flutter_application
-    # needs: test
+#   build:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./app-mobile/flutter_application
+#     # needs: test
 
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v6
+#     steps:
+#       - name: Checkout Repo
+#         uses: actions/checkout@v6
 
-      - name: Set Up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
+#       - name: Set Up Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           channel: stable
       
-      - name: Download Dependencies
-        run: flutter pub get
+#       - name: Download Dependencies
+#         run: flutter pub get
 
-      - name: Build for Web Platform
-        run: flutter build web --release --base-href /ROQuiz/
+#       - name: Build for Web Platform
+#         run: flutter build web --release --base-href /ROQuiz/
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./app-mobile/flutter_application/build/web
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v3
+#         with:
+#           path: ./app-mobile/flutter_application/build/web
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    defaults:
-      run:
-        working-directory: ./app-mobile/flutter_application
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: build
+#     defaults:
+#       run:
+#         working-directory: ./app-mobile/flutter_application
     
-    permissions:
-      pages: write
-      id-token: write
+#     permissions:
+#       pages: write
+#       id-token: write
 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+#     environment:
+#       name: github-pages
+#       url: ${{ steps.deployment.outputs.page_url }}
 
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+#     steps:
+#       - name: Deploy to GitHub Pages
+#         id: deployment
+#         uses: actions/deploy-pages@v4

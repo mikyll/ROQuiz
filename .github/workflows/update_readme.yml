@@ -1,79 +1,79 @@
-name: Update Readme
-on:
-  push:
-    branches:
-      - main
+# name: Update Readme
+# on:
+#   push:
+#     branches:
+#       - main
       
-defaults:
-  run:
-    shell: bash
+# defaults:
+#   run:
+#     shell: bash
 
-env:
-  FILE_QUESTIONS: "Domande.txt"
-  FILE_README: "README.md"
+# env:
+#   FILE_QUESTIONS: "Domande.txt"
+#   FILE_README: "README.md"
 
-jobs:
-  Update-Contributors:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Aggiornamento contributors
-        uses: akhilmhdh/contributors-readme-action@v2.3.10
-        with:
-          use_username: true
-          committer_username: "mikyll"
-          commit_message: "update README.md"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  Update-Readme:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+# jobs:
+#   Update-Contributors:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Aggiornamento contributors
+#         uses: akhilmhdh/contributors-readme-action@v2.3.10
+#         with:
+#           use_username: true
+#           committer_username: "mikyll"
+#           commit_message: "update README.md"
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   Update-Readme:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Check out repository code
+#         uses: actions/checkout@v6
+#         with:
+#           token: ${{ secrets.GITHUB_TOKEN }}
           
-      - run: cd ${{ github.workspace }}
+#       - run: cd ${{ github.workspace }}
       
-      - name: Aggiornamento numero domande
-        run: |
-          # Count questions
-          questions=0
-          while IFS='' read -r LINE || [ -n "${LINE}" ]
-          do
-            # Question
-            if [[ -n "$LINE" && ! "$LINE" == @* && ! "$LINE" =~ ^[A-E]\. && ! "$LINE" == [A-E] ]]
-            then
-              questions=$(expr $questions + 1)
-            fi
-          done < "$FILE_QUESTIONS"
+#       - name: Aggiornamento numero domande
+#         run: |
+#           # Count questions
+#           questions=0
+#           while IFS='' read -r LINE || [ -n "${LINE}" ]
+#           do
+#             # Question
+#             if [[ -n "$LINE" && ! "$LINE" == @* && ! "$LINE" =~ ^[A-E]\. && ! "$LINE" == [A-E] ]]
+#             then
+#               questions=$(expr $questions + 1)
+#             fi
+#           done < "$FILE_QUESTIONS"
 
-          echo "Numero domande: $questions"
+#           echo "Numero domande: $questions"
           
-          # Update README: question shield
-          sed -i "s/message=[0-9]*/message=$questions/" "$FILE_README"
+#           # Update README: question shield
+#           sed -i "s/message=[0-9]*/message=$questions/" "$FILE_README"
           
-          # Update README: question number
-          sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$FILE_README"
+#           # Update README: question number
+#           sed -i "s|<span id=\"domande\">[0-9]*<\/span>|<span id=\"domande\">$questions<\/span>|" "$FILE_README"
       
-      - name: Aggiornamento data ultimo aggiornamento
-        run: |
-          # Update date
-          date=$(curl -s "https://api.github.com/repos/mikyll/ROQuiz/commits?path=${FILE_QUESTIONS}&page=1&per_page=1" | grep -m 1 \"date\" | xargs | cut -f2 -d' ' | cut -f1 -d'T')
-          echo "$FILE_QUESTIONS ultima modifica: $date"
-          sed -i "s|<span id=\"ultima_modifica\">.*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$FILE_README"
+#       - name: Aggiornamento data ultimo aggiornamento
+#         run: |
+#           # Update date
+#           date=$(curl -s "https://api.github.com/repos/mikyll/ROQuiz/commits?path=${FILE_QUESTIONS}&page=1&per_page=1" | grep -m 1 \"date\" | xargs | cut -f2 -d' ' | cut -f1 -d'T')
+#           echo "$FILE_QUESTIONS ultima modifica: $date"
+#           sed -i "s|<span id=\"ultima_modifica\">.*<\/span>|<span id=\"ultima_modifica\">$date<\/span>|" "$FILE_README"
       
-      - name: Commit e Push modifiche
-        run: |
-          # Check if there are changes
-          if [[ -n $(git status -s) ]]
-          then
-            # Commit & Push changes
-            git add "$FILE_README"
-            git config --global user.email "righi.michele98@gmail.com"
-            git config --global user.name "mikyll"
-            git commit -m "docs: update README.md"
-            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-            echo "✔️ Readme aggiornato!"
-          else
-            echo "Nessuna modifica necessaria."
-          fi
+#       - name: Commit e Push modifiche
+#         run: |
+#           # Check if there are changes
+#           if [[ -n $(git status -s) ]]
+#           then
+#             # Commit & Push changes
+#             git add "$FILE_README"
+#             git config --global user.email "righi.michele98@gmail.com"
+#             git config --global user.name "mikyll"
+#             git commit -m "docs: update README.md"
+#             git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+#             echo "✔️ Readme aggiornato!"
+#           else
+#             echo "Nessuna modifica necessaria."
+#           fi
