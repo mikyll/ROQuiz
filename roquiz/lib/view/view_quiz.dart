@@ -625,6 +625,7 @@ class _ViewQuizState extends State<ViewQuiz> {
                                     MaterialPageRoute(
                                       builder: (context) => ViewSettings(
                                         maxQuizPool: widget.maxQuizPool,
+                                        lockQuizConfig: true,
                                       ),
                                     ),
                                   );
