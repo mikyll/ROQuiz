@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -62,7 +64,9 @@ class ViewMenuState extends State<ViewMenu> {
   /// [Settings.quizQuestions] sample, but with [Settings.fullTopics] the quiz
   /// uses every question of the selected topics, so the count is the whole pool.
   int _quizQuestionNum(Settings settings, List<Question> pool) {
-    return settings.fullTopics ? pool.length : settings.quizQuestions;
+    return settings.fullTopics
+        ? pool.length
+        : min(settings.quizQuestions, pool.length);
   }
 
   void _openSettings({SettingsAnchor? scrollTo}) async {
