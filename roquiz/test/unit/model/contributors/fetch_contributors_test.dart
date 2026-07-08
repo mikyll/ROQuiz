@@ -1,4 +1,4 @@
-import 'package:roquiz/cli/fetch_contributors.dart';
+import 'package:roquiz/model/contributors/fetch_contributors.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
@@ -122,15 +122,14 @@ void main() {
       required String login,
       int id = 0,
       int contributions = 0,
-    }) =>
-        FetchedContributor(
-          login: login,
-          id: id,
-          htmlUrl: '',
-          avatarUrl: '',
-          contributions: contributions,
-          type: 'User',
-        );
+    }) => FetchedContributor(
+      login: login,
+      id: id,
+      htmlUrl: '',
+      avatarUrl: '',
+      contributions: contributions,
+      type: 'User',
+    );
 
     test('bumps coAuthored on a match by id', () {
       final contributors = [contributor(login: 'a', id: 1, contributions: 5)];
