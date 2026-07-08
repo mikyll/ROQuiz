@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/notification/app_version.dart';
 import 'package:roquiz/model/utils/navigation.dart';
+import 'package:roquiz/model/utils/snackbar.dart';
 
 /// Drives the app release-update UX (sibling of [runQuestionsUpdateFlow]): it
 /// checks GitHub for a newer release and, on confirm, opens the release page so
@@ -62,7 +63,5 @@ Future<void> runAppUpdateFlow(
 }
 
 void _snack(BuildContext context, String message) {
-  ScaffoldMessenger.of(
-    context,
-  ).showSnackBar(SnackBar(content: Text(message)));
+  showAppSnackBar(context, message: message);
 }

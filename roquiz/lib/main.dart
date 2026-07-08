@@ -6,6 +6,7 @@ import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/style/themes.dart';
+import 'package:roquiz/model/utils/snackbar.dart';
 import 'package:roquiz/view/view_menu.dart';
 
 void main() async {
@@ -38,6 +39,10 @@ class ROQuizApp extends StatelessWidget {
   final Settings settings;
   final CompletedQuizRepository completedQuizRepository;
 
+  // Stable instance so Consumer rebuilds don't churn the navigatorObservers list.
+  static final SnackBarClearingObserver _snackBarObserver =
+      SnackBarClearingObserver();
+
   const ROQuizApp({
     super.key,
     required this.packageInfo,
@@ -51,6 +56,8 @@ class ROQuizApp extends StatelessWidget {
       builder: (context, value, child) {
         return MaterialApp(
           title: packageInfo.appName,
+          scaffoldMessengerKey: scaffoldMessengerKey,
+          navigatorObservers: [_snackBarObserver],
           themeMode: settings.themeDark ? ThemeMode.dark : ThemeMode.light,
           theme: Themes.themeLight,
           darkTheme: Themes.themeDark,

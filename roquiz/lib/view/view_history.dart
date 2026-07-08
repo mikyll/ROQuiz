@@ -9,6 +9,7 @@ import 'package:roquiz/model/persistence/completed_quiz_repository.dart';
 import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/quiz/quiz_completed.dart';
 import 'package:roquiz/model/utils/selection_controller.dart';
+import 'package:roquiz/model/utils/snackbar.dart';
 import 'package:roquiz/model/utils/time.dart';
 import 'package:roquiz/view/view_history_quiz.dart';
 import 'package:roquiz/view/view_settings.dart';
@@ -141,9 +142,7 @@ class ViewHistoryState extends State<ViewHistory> {
     final String message = quizzes == null
         ? "Storico esportato"
         : "${quizzes.length} quiz esportati";
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    showAppSnackBar(context, message: message);
   }
 
   Future<void> _exportSelected() {
@@ -212,22 +211,18 @@ class ViewHistoryState extends State<ViewHistory> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
+      showAppSnackBar(
+        context,
+        message:
             "File creato con una versione più recente dell'app; "
             "aggiornala per importarlo",
-          ),
-        ),
       );
       return;
     } catch (e) {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("File non valido")));
+      showAppSnackBar(context, message: "File non valido");
       return;
     }
 
@@ -239,9 +234,7 @@ class ViewHistoryState extends State<ViewHistory> {
     if (!mounted) {
       return;
     }
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(_importResultMessage(importResult))));
+    showAppSnackBar(context, message: _importResultMessage(importResult));
   }
 
   /// Builds the post-import feedback, e.g. "Importati 2 quiz · 3 duplicati

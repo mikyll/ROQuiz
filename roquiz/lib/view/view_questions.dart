@@ -11,6 +11,7 @@ import 'package:roquiz/model/persistence/settings.dart';
 import 'package:roquiz/model/persistence/settings_manager.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:roquiz/model/utils/question.dart';
+import 'package:roquiz/model/utils/snackbar.dart';
 import 'package:roquiz/view/question_update_flow.dart';
 import 'package:roquiz/view/view_questions_edit.dart';
 import 'package:roquiz/widget/confirmation_dialog.dart';
@@ -210,9 +211,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("File non valido")));
+      showAppSnackBar(context, message: "File non valido");
       return;
     }
 
@@ -220,10 +219,9 @@ class ViewQuestionsState extends State<ViewQuestions> {
       return;
     }
     _refreshFromRepository();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Importate ${repository.questions.length} domande"),
-      ),
+    showAppSnackBar(
+      context,
+      message: "Importate ${repository.questions.length} domande",
     );
   }
 
@@ -252,9 +250,7 @@ class ViewQuestionsState extends State<ViewQuestions> {
     if (!mounted) {
       return;
     }
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Domande esportate")));
+    showAppSnackBar(context, message: "Domande esportate");
   }
 
   // Back/Esc first collapses an open search bar; only when it's already closed

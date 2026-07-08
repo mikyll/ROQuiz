@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roquiz/model/persistence/question_repository.dart';
+import 'package:roquiz/model/utils/snackbar.dart';
 import 'package:roquiz/model/utils/time.dart';
 
 /// Drives the remote questions-update UX shared by the startup check
@@ -184,7 +185,5 @@ Future<void> _download(
 }
 
 void _snack(BuildContext context, String message) {
-  ScaffoldMessenger.of(
-    context,
-  ).showSnackBar(SnackBar(content: Text(message)));
+  showAppSnackBar(context, message: message);
 }
