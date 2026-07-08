@@ -60,12 +60,20 @@ class ViewSettings extends StatefulWidget {
   /// on that setting's label knows the current version. Null-inert as above.
   final PackageInfo? packageInfo;
 
+  /// When true (Settings opened from within an active quiz via [ViewQuiz]),
+  /// every entry is locked except "Voto prova scritta": the running quiz is
+  /// already built, so changing anything here can't affect it. The written
+  /// grade stays editable because setting it is the whole reason Settings is
+  /// reached from the result card.
+  final bool lockQuizConfig;
+
   const ViewSettings({
     super.key,
     required this.maxQuizPool,
     this.scrollTo,
     this.questionRepository,
     this.packageInfo,
+    this.lockQuizConfig = false,
   });
 
   @override
@@ -171,6 +179,16 @@ class ViewSettingsState extends State<ViewSettings> {
   bool _isGradeValid(int? grade) {
     return grade != null && grade >= 0 && grade <= 32;
   }
+
+  /// Whether normal entries accept input. False when Settings was opened from a
+  /// quiz ([ViewSettings.lockQuizConfig]); then only the written-grade entry
+  /// stays editable, so the user can just set that and return.
+  bool get _entriesEnabled => !widget.lockQuizConfig;
+
+  /// Tooltip for a lockable entry: the mid-quiz lock note when locked, else
+  /// [base]. Keeps the reason for the greyed state discoverable everywhere.
+  String _entryTooltip(String base) =>
+      widget.lockQuizConfig ? "Non modificabile durante un quiz." : base;
 
   // Bounds for the stepper fields. Quiz questions can't exceed the available
   // pool (maxQuizPool); the time field is capped at its 3-digit width.
@@ -341,9 +359,11 @@ class ViewSettingsState extends State<ViewSettings> {
                         ),
                       ),
                     SettingEntry(
+                      enabled: _entriesEnabled,
                       label: "Tema scuro:",
-                      tooltip:
-                          "Permette di impostare il tema dell'applicazione: chiaro o scuro.",
+                      tooltip: _entryTooltip(
+                        "Permette di impostare il tema dell'applicazione: chiaro o scuro.",
+                      ),
                       child: Switch(
                         value: settings.themeDark,
                         onChanged: (value) {
@@ -355,9 +375,11 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
 
                     SettingEntry(
+                      enabled: _entriesEnabled,
                       label: "Controllo aggiornamenti app:",
-                      tooltip:
-                          "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
+                      tooltip: _entryTooltip(
+                        "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
+                      ),
                       onLabelTap: _manualReleaseCheck,
                       child: Transform.scale(
                         scale: 1.5,
@@ -373,9 +395,11 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
 
                     SettingEntry(
+                      enabled: _entriesEnabled,
                       label: "Controllo nuove domande:",
-                      tooltip:
-                          "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
+                      tooltip: _entryTooltip(
+                        "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
+                      ),
                       onLabelTap: _manualQuestionsCheck,
                       child: Transform.scale(
                         scale: 1.5,
@@ -390,9 +414,11 @@ class ViewSettingsState extends State<ViewSettings> {
                       ),
                     ),
                     SettingEntry(
+                      enabled: _entriesEnabled,
                       label: "Animazioni:",
-                      tooltip:
-                          "Se selezionato, abilita le animazioni (voto del quiz, stella, ...).",
+                      tooltip: _entryTooltip(
+                        "Se selezionato, abilita le animazioni (voto del quiz, stella, ...).",
+                      ),
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -407,14 +433,16 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
 
                     SettingEntry(
+                      enabled: _entriesEnabled,
                       label: "Alert di conferma:",
-                      tooltip:
-                          "Quanto spesso l'app chiede conferma:\n"
-                          "• Nessuno: nessuna conferma;\n"
-                          "• Essenziali: solo prima di azioni irreversibili "
-                          "(svuotare lo storico, ripristinare le impostazioni);\n"
-                          "• Completi: anche prima di perdere il quiz in corso "
-                          "(uscire, terminare con domande senza risposta).",
+                      tooltip: _entryTooltip(
+                        "Quanto spesso l'app chiede conferma:\n"
+                        "• Nessuno: nessuna conferma;\n"
+                        "• Essenziali: solo prima di azioni irreversibili "
+                        "(svuotare lo storico, ripristinare le impostazioni);\n"
+                        "• Completi: anche prima di perdere il quiz in corso "
+                        "(uscire, terminare con domande senza risposta).",
+                      ),
                       child: DropdownButtonFormField(
                         value: settings.confirmationLevel,
                         items:
@@ -439,9 +467,11 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
 
                     SettingEntry(
+                      enabled: _entriesEnabled,
                       label: "Nascondi risposte corrette:",
-                      tooltip:
-                          "Se selezionata, nasconde le risposte corrette nella lista delle domande.",
+                      tooltip: _entryTooltip(
+                        "Se selezionata, nasconde le risposte corrette nella lista delle domande.",
+                      ),
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -522,12 +552,14 @@ class ViewSettingsState extends State<ViewSettings> {
                     ),
 
                     SettingEntry(
+                      enabled: _entriesEnabled,
                       label: "Argomenti interi:",
-                      tooltip:
-                          "Se selezionata, il quiz include tutte le domande degli argomenti selezionati,"
-                          " invece di estrarne un numero fisso. Il numero di domande viene quindi"
-                          " determinato dagli argomenti selezionati e l'impostazione \"Domande quiz\""
-                          " viene ignorata. Utile per ripassare interamente uno o più argomenti.",
+                      tooltip: _entryTooltip(
+                        "Se selezionata, il quiz include tutte le domande degli argomenti selezionati,"
+                        " invece di estrarne un numero fisso. Il numero di domande viene quindi"
+                        " determinato dagli argomenti selezionati e l'impostazione \"Domande quiz\""
+                        " viene ignorata. Utile per ripassare interamente uno o più argomenti.",
+                      ),
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -545,12 +577,15 @@ class ViewSettingsState extends State<ViewSettings> {
                       key: _quizQuestionsKey,
                       // Ignored while "Argomenti interi" is on (the quiz then uses
                       // the whole selected-topics pool), so grey it out to match.
-                      enabled: !settings.fullTopics,
+                      // Also locked mid-quiz: the running quiz is already built.
+                      enabled: _entriesEnabled && !settings.fullTopics,
                       label: "Domande quiz:",
-                      tooltip: settings.fullTopics
-                          ? "Non disponibile con \"Argomenti interi\": il quiz usa"
-                                " tutte le domande degli argomenti selezionati."
-                          : "Numero di domande presenti in ciascun quiz.",
+                      tooltip: _entryTooltip(
+                        settings.fullTopics
+                            ? "Non disponibile con \"Argomenti interi\": il quiz usa"
+                                  " tutte le domande degli argomenti selezionati."
+                            : "Numero di domande presenti in ciascun quiz.",
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 8.0,
@@ -610,9 +645,11 @@ class ViewSettingsState extends State<ViewSettings> {
 
                     SettingEntry(
                       key: _quizTimeKey,
+                      enabled: _entriesEnabled,
                       label: "Timer (minuti):",
-                      tooltip:
-                          "Numero di minuti a disposizione per completare il quiz.",
+                      tooltip: _entryTooltip(
+                        "Numero di minuti a disposizione per completare il quiz.",
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 8.0,
@@ -670,10 +707,12 @@ class ViewSettingsState extends State<ViewSettings> {
                       ),
                     ),
                     SettingEntry(
+                      enabled: _entriesEnabled,
                       label: "Mescola risposte:",
-                      tooltip:
-                          "Se selezionata, mescola l'ordine delle risposte dei quiz."
-                          " Questa opzione è utile per evitare di imparere l'ordine delle risposte nelle domande.",
+                      tooltip: _entryTooltip(
+                        "Se selezionata, mescola l'ordine delle risposte dei quiz."
+                        " Questa opzione è utile per evitare di imparere l'ordine delle risposte nelle domande.",
+                      ),
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -689,9 +728,11 @@ class ViewSettingsState extends State<ViewSettings> {
 
                     if (kDebugMode)
                       SettingEntry(
+                        enabled: _entriesEnabled,
                         label: "Termina quiz allo scadere del tempo:",
-                        tooltip:
-                            "Se selezionata, termina il quiz allo scadere del tempo. Altrimenti, continua in negativo",
+                        tooltip: _entryTooltip(
+                          "Se selezionata, termina il quiz allo scadere del tempo. Altrimenti, continua in negativo",
+                        ),
                         child: Transform.scale(
                           scale: 1.5,
                           child: Checkbox(
@@ -764,7 +805,9 @@ class ViewSettingsState extends State<ViewSettings> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton.filled(
-                  onPressed: _confirmRestoreDefaults,
+                  // Locked mid-quiz along with the entries: restoring defaults
+                  // would rewrite quiz settings the running quiz can't adopt.
+                  onPressed: _entriesEnabled ? _confirmRestoreDefaults : null,
                   iconSize: 45,
                   icon: Icon(Icons.refresh, size: 40.0),
                 ),
