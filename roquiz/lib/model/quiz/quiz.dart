@@ -13,7 +13,11 @@ class Quiz {
     questions.shuffle();
     questions = questions.take(questionNum).toList();
 
-    for (int i = 0; i < questionNum; i++) {
+    // Drive the loop by the actual (possibly truncated) length, not the
+    // requested questionNum: when the pool is smaller than questionNum,
+    // take() returns fewer items and indexing up to questionNum would throw
+    // (and would leave selectedAnswers longer than questions).
+    for (int i = 0; i < questions.length; i++) {
       if (shuffleAnswers) {
         questions[i].answers.shuffle();
       }
