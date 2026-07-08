@@ -1,0 +1,64 @@
+name: Validazione File Domande
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  Validazione-File-Domande:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Cheap check first, so an encoding problem fails fast before we bother
+      # installing the Flutter toolchain.
+      - name: Controllo codifica file (UTF-8)
+        run: |
+          file_domande="Domande.txt"
+          charset=$(file -i "$file_domande" | cut -f 2 -d ";" | cut -f 2 -d "=")
+          if [[ "${charset^^}" != "UTF-8" ]]; then
+            echo "❌ ERRORE: Codifica file \"$file_domande\" errata ($charset)"
+            exit 1
+          fi
+          echo "✔️ Codifica OK ($charset)"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        working-directory: roquiz
+        run: flutter pub get
+
+      # Semantic validation: the parser exits non-zero on any malformed question
+      # (bad answer letters, missing correct answer, duplicate topics/answers).
+      # `-t txt` forces the format so failures report the offending line instead
+      # of a generic "couldn't infer" error. `dart run` does not build the
+      # Flutter asset bundle, so this stays fast.
+      - name: Validazione semantica file domande
+        working-directory: roquiz
+        run: dart run bin/questions_parser.dart -q -t txt ../Domande.txt
+
+      # Keep the app's bundled copy in sync with the canonical repo-root file.
+      - name: Sincronizzazione asset
+        run: |
+          cp Domande.txt roquiz/assets/domande.txt
+          if [[ -n $(git status -s) ]]; then
+            git config --global user.email "righi.michele98@gmail.com"
+            git config --global user.name "mikyll"
+            git add -f roquiz/assets/domande.txt
+            git commit -m "fix: update questions file"
+            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            echo "✔️ File domande sincronizzato negli asset!"
+          else
+            echo "Nessuna modifica necessaria."
+          fi
