@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:roquiz/cli/questions_parser.dart';
+import 'package:roquiz/model/quiz/question_parser.dart';
 import 'package:roquiz/model/quiz/question.dart';
 
 /// Where the currently loaded questions file came from.

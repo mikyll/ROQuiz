@@ -1,29 +1,33 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:yaml/yaml.dart';
 
+/// Supported on-disk formats for a questions file.
 enum QuestionFormat { txt, yaml }
 
+/// Detects which [QuestionFormat] [content] is, or `null` if it is neither.
+///
+/// Tries the txt parser first and returns [QuestionFormat.txt] as soon as it
+/// yields a non-empty list; otherwise falls back to the yaml parser. For real
+/// question files at most one parser can succeed (a txt file is not a YAML list,
+/// and a yaml file fails the txt answer-format validation), so this
+/// short-circuit is equivalent to trying both — it just avoids the redundant
+/// second parse.
 QuestionFormat? inferQuestionFormat(String content) {
-  List<Question> questions;
-  QuestionFormat? questionFormat;
-
   try {
-    questions = parseQuestionsFromTxt(content);
-    if (questions.isNotEmpty) {
-      questionFormat = QuestionFormat.txt;
-    }
-  } catch (_) {}
-  try {
-    questions = parseQuestionsFromYaml(content);
-    if (questions.isNotEmpty) {
-      questionFormat = QuestionFormat.yaml;
+    if (parseQuestionsFromTxt(content).isNotEmpty) {
+      return QuestionFormat.txt;
     }
   } catch (_) {}
 
-  return questionFormat;
+  try {
+    if (parseQuestionsFromYaml(content).isNotEmpty) {
+      return QuestionFormat.yaml;
+    }
+  } catch (_) {}
+
+  return null;
 }
 
 List<Question> parseQuestionsFromTxt(String content) {
@@ -40,11 +44,6 @@ List<Question> parseQuestionsFromTxt(String content) {
 
   LineSplitter ls = const LineSplitter();
   List<String> lines = ls.convert(content);
-
-  // Trim leading and trailing whitespaces
-  for (String s in lines) {
-    s = s.trim();
-  }
 
   // Loop over lines
   for (int iLine = 0; iLine < lines.length; iLine++) {
@@ -165,31 +164,27 @@ List<Question> parseQuestionsFromYaml(String content) {
 
   int iQ = 0;
   for (final question in parsedData) {
-    if (question is Map) {
-      try {
-        final body = question["body"] as String;
-        final topic = question["topic"] as String?;
-        final answers = question["answers"] as List;
-        final correctAnswer = question["correct_answer"];
-        final custom = question["custom"] as bool?;
-
-        Question q = Question(
-          id: iQ,
-          body: body,
-          topic: topic,
-          answers: List<String>.from(answers),
-          correctAnswer: correctAnswer,
-          isCustom: custom,
-        );
-
-        questions.add(q);
-        iQ++;
-      } catch (e) {
-        rethrow;
-      }
-    } else {
+    if (question is! Map) {
       throw FormatException("Invalid question: $question");
     }
+
+    final body = question["body"] as String;
+    final topic = question["topic"] as String?;
+    final answers = question["answers"] as List;
+    final correctAnswer = question["correct_answer"];
+    final custom = question["custom"] as bool?;
+
+    Question q = Question(
+      id: iQ,
+      body: body,
+      topic: topic,
+      answers: List<String>.from(answers),
+      correctAnswer: correctAnswer,
+      isCustom: custom,
+    );
+
+    questions.add(q);
+    iQ++;
   }
 
   return questions;
@@ -214,71 +209,4 @@ Map<String, int> getTopicSizes(List<Question> questions) {
   }
 
   return topicSizes;
-}
-
-void _printTopics(List<Question> questions) {
-  String res = "Topics:\n";
-  int curr = 0;
-  Map<String, int> topicSizes = getTopicSizes(questions);
-
-  for (String topic in topicSizes.keys) {
-    int num = topicSizes[topic] ?? 0;
-
-    res += "- $topic: $num (+$curr)\n";
-    curr += num;
-  }
-  print(res);
-}
-
-void main(List<String> args) async {
-  QuestionFormat? fileType;
-  String filePath = "";
-
-  for (int i = 0; i < args.length; i++) {
-    if (args[i] == "-t" || args[i] == "--type") {
-      i++;
-
-      if (i >= args.length) {
-        throw Exception("Missing file type after -t/--type");
-      }
-
-      fileType = QuestionFormat.values.byName(args[i].toLowerCase());
-    }
-  }
-
-  filePath = args.last;
-
-  if (filePath.isEmpty) {
-    throw Exception("File path must not be empty");
-  }
-
-  File file = File(filePath);
-  if (!file.existsSync()) {
-    throw Exception("File $filePath doesn't exist");
-  }
-
-  file.readAsString().then((content) {
-    // If fileType not provided, try inferring it
-    fileType ??= inferQuestionFormat(content);
-
-    List<Question> questions;
-
-    switch (fileType) {
-      case QuestionFormat.txt:
-        questions = parseQuestionsFromTxt(content);
-        break;
-
-      case QuestionFormat.yaml:
-        questions = parseQuestionsFromYaml(content);
-        break;
-
-      default:
-        throw Exception("Couldn't infer file type");
-    }
-
-    _printTopics(questions);
-    print("Tot: ${questions.length}");
-
-    return;
-  });
 }

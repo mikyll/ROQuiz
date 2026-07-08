@@ -1,4 +1,4 @@
-import 'package:roquiz/cli/questions_parser.dart';
+import 'package:roquiz/model/quiz/question_parser.dart';
 import 'package:roquiz/model/quiz/question.dart';
 import 'package:test/test.dart';
 
