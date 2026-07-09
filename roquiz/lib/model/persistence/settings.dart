@@ -42,7 +42,7 @@ class Settings with ChangeNotifier {
     this.autoCheckRelease = true,
     this.autoCheckQuestions = true,
     this.animations = true,
-    this.confirmationLevel = ConfirmationLevel.soft,
+    this.confirmationLevel = ConfirmationLevel.full,
     this.hideCorrectAnswersInEditMode = false,
     this.themeDark = false,
     this.githubToken = "",
