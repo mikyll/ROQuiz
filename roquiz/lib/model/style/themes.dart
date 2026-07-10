@@ -92,8 +92,10 @@ class Themes {
       side: BorderSide(width: 1.3, color: Colors.grey[700]!),
     ),
     switchTheme: SwitchThemeData(
+      // Matches the button colour (0xff515b92) so the switch thumb reads the
+      // same indigo as the icon/elevated buttons rather than a brighter one.
       thumbColor: WidgetStatePropertyAll(
-        const Color.fromARGB(255, 77, 86, 175),
+        const Color.fromARGB(255, 81, 91, 146),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
