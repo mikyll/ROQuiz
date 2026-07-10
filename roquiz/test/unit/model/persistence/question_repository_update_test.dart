@@ -171,6 +171,50 @@ void main() {
     });
   });
 
+  group("bundled asset remote check", () {
+    test("a remote older than the bundled asset is not flagged (no startup "
+        "false-positive)", () async {
+      // No saved copy → the bundled asset loads, dated [assetQuestionsDate].
+      final older = QuestionRepository.assetQuestionsDate.subtract(
+        const Duration(days: 30),
+      );
+      final repo = QuestionRepository(client: mockRemote(older));
+      await repo.init();
+      expect(repo.source, QuestionSource.asset);
+
+      expect((await repo.peekRemoteUpdate()).isNewer, isFalse);
+    });
+
+    test("a remote newer than the bundled asset is flagged, then remembered "
+        "across a restart once seen", () async {
+      final newer = QuestionRepository.assetQuestionsDate.add(
+        const Duration(days: 30),
+      );
+      final repo = QuestionRepository(client: mockRemote(newer));
+      await repo.init();
+      final info = await repo.peekRemoteUpdate();
+      expect(info.isNewer, isTrue);
+
+      // Declining records the commit as seen (persisted independently of the
+      // unpersisted asset content).
+      await repo.markRemoteSeen(info.remoteDate);
+
+      // A fresh repository still falls back to the asset, but must not re-flag
+      // the seen commit on the next launch.
+      final reloaded = QuestionRepository(client: mockRemote(newer));
+      await reloaded.init();
+      expect(reloaded.source, QuestionSource.asset);
+      expect((await reloaded.peekRemoteUpdate()).isNewer, isFalse);
+
+      // A still-newer commit is flagged anew.
+      final evenNewer = QuestionRepository(
+        client: mockRemote(newer.add(const Duration(days: 1))),
+      );
+      await evenNewer.init();
+      expect((await evenNewer.peekRemoteUpdate()).isNewer, isTrue);
+    });
+  });
+
   group("custom file is never overwritten", () {
     test("peekRemoteUpdate flags a newer commit, keeping the custom set", () async {
       await seedBox(source: "custom");

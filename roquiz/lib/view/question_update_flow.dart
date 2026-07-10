@@ -118,6 +118,11 @@ Future<void> _confirmUpdateNonCustom(
 
   if (apply == true && context.mounted) {
     await _download(context, repository, remoteDate, onApplied: onApplied);
+  } else if (apply == false) {
+    // Explicit "no thanks": record this commit as seen so the silent startup
+    // check doesn't offer it again on every launch (a still-newer commit later
+    // will flag anew). A barrier-dismiss (apply == null) leaves it to re-offer.
+    await repository.markRemoteSeen(remoteDate);
   }
 }
 

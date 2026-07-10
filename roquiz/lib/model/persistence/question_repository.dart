@@ -75,11 +75,21 @@ class QuestionRepository {
   static const String remoteBranch = "main";
   static const String remotePath = "Domande.txt";
 
-  /// Sentinel "never updated" datetime: older than any real remote commit, so a
-  /// fresh install (asset only) is always considered updatable.
+  /// Sentinel "never seen a remote commit" datetime: older than any real remote
+  /// commit. Used as the baseline for [_lastKnownRemoteDate] before any check.
   static final DateTime _epoch = DateTime.fromMillisecondsSinceEpoch(
     0,
     isUtc: true,
+  );
+
+  /// Datetime the bundled asset ([assetPath]) was last synced from the canonical
+  /// questions file. Used as the "current version" reference for
+  /// [QuestionSource.asset] so the startup check only offers an update when the
+  /// remote is genuinely newer than the bundled copy — rather than always, as a
+  /// dateless ([_epoch]) asset would force. Bump this whenever the bundled asset
+  /// is regenerated (kept in the loaded asset's git-commit datetime, UTC).
+  static final DateTime assetQuestionsDate = DateTime.parse(
+    "2026-06-17T20:10:50Z",
   );
 
   List<Question> questions = [];
@@ -102,7 +112,7 @@ class QuestionRepository {
   QuestionSource get source => _source;
 
   /// Datetime of the currently loaded questions file (remote commit datetime for
-  /// a downloaded file; [_epoch] for the untouched bundled asset).
+  /// a downloaded file; [assetQuestionsDate] for the bundled asset).
   DateTime get lastQuestionUpdate => _currentFileDate;
 
   /// Whether the current file was provided/edited by the user (and so must not
@@ -225,7 +235,11 @@ class QuestionRepository {
   Future<void> _loadAssetInMemory({String path = assetPath}) async {
     questions = await loadFromAsset(path: path);
     _source = QuestionSource.asset;
-    _currentFileDate = _epoch;
+    _currentFileDate = assetQuestionsDate;
+    // The asset content isn't persisted, so [_loadFromBox] won't restore the
+    // "last seen remote commit" on the next launch — read it directly here so a
+    // previously-dismissed update isn't offered again after a restart.
+    _lastKnownRemoteDate = _readDate(_box?.get(_lastKnownRemoteDateKey)) ?? _epoch;
   }
 
   /// Parses the bundled asset. Always available; used as the fallback source.
@@ -235,9 +249,9 @@ class QuestionRepository {
   }
 
   /// Replaces the current questions with the bundled asset and persists it as an
-  /// [QuestionSource.asset] copy, resetting the file datetime to [_epoch] so a
-  /// later update check re-downloads any newer remote file. (User feature:
-  /// "restore from assets".)
+  /// [QuestionSource.asset] copy, dating it [assetQuestionsDate] so a later
+  /// update check offers a remote file only when it is genuinely newer than the
+  /// bundled copy. (User feature: "restore from assets".)
   Future<void> restoreFromAsset({String path = assetPath}) async {
     final content = await rootBundle.loadString(path);
     final format = _formatFromPath(path);
@@ -246,7 +260,7 @@ class QuestionRepository {
       content,
       format,
       source: QuestionSource.asset,
-      currentFileDate: _epoch,
+      currentFileDate: assetQuestionsDate,
     );
   }
 
@@ -297,17 +311,21 @@ class QuestionRepository {
   /// any state — the caller decides what to do with the result (the interactive
   /// flow confirms with the user before replacing anything). "Newer" is measured
   /// against the last official commit the user has seen for a custom set (whose
-  /// own file datetime is unrelated to the remote) and against the loaded file's
-  /// datetime otherwise. Network/parse errors propagate to the caller.
+  /// own file datetime is unrelated to the remote), and against the later of the
+  /// loaded file's datetime and that last-seen commit otherwise — so declining an
+  /// update (recorded via [markRemoteSeen]) stops it being offered on every
+  /// launch. Network/parse errors propagate to the caller.
   ///
   /// Apply the update with [downloadFromRemote] (which switches to a
-  /// [QuestionSource.remote] copy, discarding any custom set); for a custom set,
-  /// decline it with [markRemoteSeen] so the same commit isn't offered again.
+  /// [QuestionSource.remote] copy, discarding any custom set); decline it with
+  /// [markRemoteSeen] so the same commit isn't offered again.
   Future<RemoteQuestionsInfo> peekRemoteUpdate() async {
     final remoteDate = await getLatestQuestionsFileDatetime();
     final reference = _source == QuestionSource.custom
         ? _lastKnownRemoteDate
-        : _currentFileDate;
+        : (_currentFileDate.isAfter(_lastKnownRemoteDate)
+              ? _currentFileDate
+              : _lastKnownRemoteDate);
     return RemoteQuestionsInfo(
       remoteDate: remoteDate,
       isNewer: remoteDate.isAfter(reference),
