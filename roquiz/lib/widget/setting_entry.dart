@@ -18,6 +18,11 @@ class SettingEntry extends StatelessWidget {
   /// false.
   final VoidCallback? onLabelTap;
 
+  /// Optional visible control shown just before [child] (e.g. a refresh
+  /// [IconButton] to run a check on demand). Dimmed and made non-interactive
+  /// along with [child] when [enabled] is false.
+  final Widget? action;
+
   const SettingEntry({
     super.key,
     required this.label,
@@ -25,6 +30,7 @@ class SettingEntry extends StatelessWidget {
     this.tooltip,
     this.enabled = true,
     this.onLabelTap,
+    this.action,
   });
 
   @override
@@ -47,6 +53,32 @@ class SettingEntry extends StatelessWidget {
         child: labelText,
       );
     }
+
+    // Put an optional action button right beside the control, while keeping the
+    // control itself centered in the column (aligned with the checkboxes in the
+    // rows that have no action): an invisible mirror of the action on the far
+    // side balances the row, so [child] stays dead-centre and the real action
+    // sits immediately to its left.
+    final Widget trailing = action == null
+        ? child
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              action!,
+              // A little breathing room between the button and the control (and
+              // the same on the far side, so [child] stays centred).
+              const SizedBox(width: 12.0),
+              child,
+              const SizedBox(width: 12.0),
+              Visibility(
+                visible: false,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: action!,
+              ),
+            ],
+          );
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
@@ -77,8 +109,8 @@ class SettingEntry extends StatelessWidget {
             // stops it from reacting to hover/taps (e.g. a disabled dropdown's
             // InputDecorator would otherwise still paint a hover highlight).
             child: enabled
-                ? child
-                : IgnorePointer(child: Opacity(opacity: 0.5, child: child)),
+                ? trailing
+                : IgnorePointer(child: Opacity(opacity: 0.5, child: trailing)),
           ),
         ],
       ),

@@ -97,9 +97,9 @@ class ViewSettingsState extends State<ViewSettings> {
   final TextEditingController quizQuestionsController = TextEditingController();
   final TextEditingController quizTimeController = TextEditingController();
 
-  /// Hidden shortcut on the "Controllo aggiornamenti app" label: runs the app
-  /// update check on demand (as [manual], so it also reports "already up to
-  /// date" and errors). Inert without the running app info.
+  /// The "Controlla ora" refresh button beside "Controllo aggiornamenti app":
+  /// runs the app update check on demand (as [manual], so it also reports
+  /// "already up to date" and errors). Inert without the running app info.
   Future<void> _manualReleaseCheck() async {
     final PackageInfo? packageInfo = widget.packageInfo;
     if (packageInfo == null) {
@@ -113,9 +113,9 @@ class ViewSettingsState extends State<ViewSettings> {
     );
   }
 
-  /// Hidden shortcut on the "Controllo nuove domande" label: runs the questions
-  /// update check on demand against the live repository (a download persists and
-  /// the menu re-reads it on return). Inert without a repository.
+  /// The "Controlla ora" refresh button beside "Controllo nuove domande": runs
+  /// the questions update check on demand against the live repository (a download
+  /// persists and the menu re-reads it on return). Inert without a repository.
   Future<void> _manualQuestionsCheck() async {
     final QuestionRepository? repository = widget.questionRepository;
     if (repository == null) {
@@ -380,7 +380,11 @@ class ViewSettingsState extends State<ViewSettings> {
                       tooltip: _entryTooltip(
                         "Se selezionata, all'avvio dell'app controlla se è presente una versione più recente dell'applicazione.",
                       ),
-                      onLabelTap: _manualReleaseCheck,
+                      action: IconButton(
+                        icon: const Icon(Icons.sync),
+                        tooltip: "Controlla ora",
+                        onPressed: _manualReleaseCheck,
+                      ),
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
@@ -400,7 +404,11 @@ class ViewSettingsState extends State<ViewSettings> {
                       tooltip: _entryTooltip(
                         "Se selezionata, all'avvio dell'app controlla se sono presenti nuove domande sulla repository remota.",
                       ),
-                      onLabelTap: _manualQuestionsCheck,
+                      action: IconButton(
+                        icon: const Icon(Icons.sync),
+                        tooltip: "Controlla ora",
+                        onPressed: _manualQuestionsCheck,
+                      ),
                       child: Transform.scale(
                         scale: 1.5,
                         child: Checkbox(
