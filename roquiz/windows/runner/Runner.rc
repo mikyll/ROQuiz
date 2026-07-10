@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "io.github.mikyll" "\0"
-            VALUE "FileDescription", "roquiz" "\0"
+            VALUE "CompanyName", "com.mikyll" "\0"
+            VALUE "FileDescription", "ROQuiz" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "roquiz" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 io.github.mikyll. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 io.mikyll. All rights reserved." "\0"
             VALUE "OriginalFilename", "roquiz.exe" "\0"
-            VALUE "ProductName", "roquiz" "\0"
+            VALUE "ProductName", "ROQuiz" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

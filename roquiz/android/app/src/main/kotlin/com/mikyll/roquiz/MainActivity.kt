@@ -1,4 +1,4 @@
-package io.github.mikyll.roquiz
+package com.mikyll.roquiz
 
 import io.flutter.embedding.android.FlutterActivity
 

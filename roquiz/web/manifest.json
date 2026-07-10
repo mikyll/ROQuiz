@@ -1,6 +1,6 @@
 {
-    "name": "roquiz",
-    "short_name": "roquiz",
+    "name": "ROQuiz",
+    "short_name": "ROQuiz",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
