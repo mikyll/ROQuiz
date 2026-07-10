@@ -237,7 +237,11 @@ const Color BUTTON_COLOR_LIGHT = Color.fromARGB(255, 7, 12, 39);
 const Color BUTTON_HOVER_COLOR_LIGHT = Color(0xff515b92);
 
 // Light
-const Color BACKGROUND_COLOR_LIGHT = Color(0xff4d57af);
+// Icon-button background: matches the ElevatedButton background (0xff515b92,
+// also the StarButton colour) so icon buttons and elevated buttons — e.g. the
+// quiz nav arrows in ViewQuiz — read as the same colour rather than two slightly
+// different indigos.
+const Color BACKGROUND_COLOR_LIGHT = Color(0xff515b92);
 const Color FOREGROUND_COLOR_LIGHT = Color(0xffffffff);
 const Color OVERLAY_COLOR_LIGHT = Color(0xff5b63b5);
 
