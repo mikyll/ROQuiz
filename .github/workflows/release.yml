@@ -16,6 +16,10 @@ on:
           - "auto"
           - "true"
           - "false"
+      ref:
+        description: "Commit SHA, branch or tag to build and tag (empty = current HEAD)"
+        required: false
+        type: string
 
 env:
   FLUTTER_VERSION: "3.44.5"
@@ -27,6 +31,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v7
         with:
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
 
       - name: Set up Flutter
@@ -105,6 +110,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
 
       - name: Install Linux build dependencies
@@ -154,6 +160,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
 
       - name: Set up Flutter
@@ -223,6 +230,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ inputs.version }}
+          target_commitish: ${{ inputs.ref || github.sha }}
           name: v${{ inputs.version }}
           generate_release_notes: true
           prerelease: ${{ steps.prerelease.outputs.value }}
