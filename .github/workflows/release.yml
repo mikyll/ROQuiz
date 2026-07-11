@@ -79,11 +79,24 @@ jobs:
           --build-name=${{ inputs.version }}
           --build-number=${{ github.run_number }}
 
+      - name: Rename APKs to roquiz_v<version>_<abi>.apk
+        working-directory: ./roquiz/build/app/outputs/flutter-apk
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          for abi in armeabi-v7a arm64-v8a x86_64; do
+            src="app-${abi}-release.apk"
+            [ -f "$src" ] || { echo "::error::missing $src"; exit 1; }
+            mv "$src" "roquiz_v${VERSION}_${abi}.apk"
+          done
+          ls -1 roquiz_v*.apk
+
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v7
         with:
           name: android-apks
-          path: roquiz/build/app/outputs/flutter-apk/*.apk
+          path: roquiz/build/app/outputs/flutter-apk/roquiz_v*.apk
           if-no-files-found: error
 
   build-linux:
@@ -124,13 +137,15 @@ jobs:
           --build-number=${{ github.run_number }}
 
       - name: Package tarball
-        run: tar -czf roquiz-linux-x64.tar.gz -C roquiz/build/linux/x64/release/bundle .
+        run: >-
+          tar -czf roquiz_v${{ inputs.version }}_linux-x64.tar.gz
+          -C roquiz/build/linux/x64/release/bundle .
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v7
         with:
           name: linux-x64
-          path: roquiz-linux-x64.tar.gz
+          path: roquiz_v${{ inputs.version }}_linux-x64.tar.gz
           if-no-files-found: error
 
   build-web:
