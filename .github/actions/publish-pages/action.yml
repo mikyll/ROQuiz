@@ -1,0 +1,89 @@
+name: Publish to Pages storage branch
+description: >-
+  Assemble one or more built web outputs into the pages-content storage branch
+  (each into its own subpath, keeping the rest), then upload the whole tree as a
+  GitHub Pages artifact so the caller can run actions/deploy-pages.
+
+inputs:
+  mappings:
+    description: >-
+      Newline-separated `subpath=dir` pairs, where `dir` is a built Flutter web
+      output. An empty subpath (`=dir`) publishes to the site root, replacing the
+      root app while preserving the versioned subpaths (`v*`, `next`, `next-beta`).
+    required: true
+  token:
+    description: "Token with contents:write, used to push the storage branch."
+    required: true
+  branch:
+    description: "Storage branch that holds the full published site tree."
+    default: pages-content
+
+runs:
+  using: composite
+  steps:
+    - name: Assemble and push storage branch
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        MAPPINGS: ${{ inputs.mappings }}
+        BRANCH: ${{ inputs.branch }}
+      run: |
+        set -euo pipefail
+        repo_url="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+        rm -rf site
+        if git ls-remote --exit-code --heads "$repo_url" "$BRANCH" >/dev/null 2>&1; then
+          git clone --depth 1 --branch "$BRANCH" "$repo_url" site
+        else
+          # First deploy: start an empty orphan branch.
+          mkdir site
+          git -C site init -q
+          git -C site checkout -q -b "$BRANCH"
+          git -C site remote add origin "$repo_url"
+        fi
+        git -C site config user.name "github-actions[bot]"
+        git -C site config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        while IFS= read -r line; do
+          line="$(echo "$line" | xargs)"   # trim whitespace
+          [ -z "$line" ] && continue
+          subpath="${line%%=*}"
+          src="${line#*=}"
+          if [ -z "$src" ] || [ ! -d "$src" ]; then
+            echo "::error::invalid mapping '$line' (source directory missing)"
+            exit 1
+          fi
+          if [ -z "$subpath" ]; then
+            # Root app: replace root-level files, preserve versioned subpaths.
+            find site -maxdepth 1 -mindepth 1 ! -name '.git' ! -name 'next' \
+              ! -name 'next-beta' ! -regex '.*/v[0-9].*' -exec rm -rf {} +
+            cp -r "$src"/. site/
+            echo "Published root <- $src"
+          else
+            rm -rf "site/$subpath"
+            mkdir -p "site/$subpath"
+            cp -r "$src"/. "site/$subpath"/
+            echo "Published $subpath/ <- $src"
+          fi
+        done <<< "$MAPPINGS"
+
+        # Actions-based Pages serves the artifact as-is, but keep this so the
+        # tree also works if ever served from the branch directly.
+        touch site/.nojekyll
+
+        git -C site add -A
+        if git -C site diff --cached --quiet; then
+          echo "No changes to $BRANCH."
+        else
+          git -C site commit -q -m "Publish pages: ${MAPPINGS//$'\n'/, }"
+          git -C site push -q origin "$BRANCH"
+        fi
+
+        # Drop the git metadata before uploading: site/.git/config holds the
+        # token-bearing remote URL and must never be published to Pages.
+        rm -rf site/.git
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: site

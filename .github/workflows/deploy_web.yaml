@@ -1,55 +1,124 @@
 name: Deploy to GitHub Pages
 
+# Publishes the current (unreleased) state to preview subpaths on GitHub Pages,
+# without cutting a release:
+#   ROQuiz/next/       -> --release build
+#   ROQuiz/next-beta/  -> --debug build
+# Released versions (ROQuiz/ and ROQuiz/<tag>/) are handled by release.yml.
+
 on:
   workflow_dispatch:
+    inputs:
+      targets:
+        description: "Which preview(s) to deploy"
+        required: true
+        type: choice
+        default: "both"
+        options:
+          - "both"
+          - "next"
+          - "next-beta"
+      ref:
+        description: "Commit SHA, branch or tag to build (empty = current HEAD)"
+        required: false
+        type: string
+
+env:
+  FLUTTER_VERSION: "3.44.5"
 
 jobs:
-  # todo
-  # test:
-
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./roquiz
-    # needs: test
-
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v6
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
 
-      - name: Set Up Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
-      
-      - name: Download Dependencies
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
         run: flutter pub get
 
-      - name: Build for Web Platform
-        run: flutter build web --release --base-href /ROQuiz/
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Build web (next, --release)
+        if: ${{ inputs.targets == 'both' || inputs.targets == 'next' }}
+        working-directory: ./roquiz
+        run: >-
+          flutter build web --release --base-href /ROQuiz/next/
+          --output=build/pages-src/next
+
+      - name: Build web (next-beta, --debug)
+        if: ${{ inputs.targets == 'both' || inputs.targets == 'next-beta' }}
+        working-directory: ./roquiz
+        run: >-
+          flutter build web --debug --base-href /ROQuiz/next-beta/
+          --output=build/pages-src/next-beta
+
+      - name: Upload web builds
+        uses: actions/upload-artifact@v7
         with:
-          path: ./roquiz/build/web
+          name: pages-src
+          path: roquiz/build/pages-src
+          if-no-files-found: error
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    defaults:
-      run:
-        working-directory: ./roquiz
-    
     permissions:
+      contents: write   # push the pages-content storage branch
       pages: write
       id-token: write
-
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Download web builds
+        uses: actions/download-artifact@v8
+        with:
+          name: pages-src
+          path: pages-src
+
+      - name: Compute deploy mappings
+        id: map
+        run: |
+          set -euo pipefail
+          m=""
+          for target in next next-beta; do
+            if [ -d "pages-src/$target" ]; then
+              m+="$target=pages-src/$target"$'\n'
+            fi
+          done
+          {
+            echo "mappings<<EOF"
+            printf '%s' "$m"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Publish preview(s) to storage branch
+        uses: ./.github/actions/publish-pages
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          mappings: ${{ steps.map.outputs.mappings }}
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
