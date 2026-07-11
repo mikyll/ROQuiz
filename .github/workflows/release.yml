@@ -25,7 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -37,6 +39,12 @@ jobs:
       - name: Install dependencies
         working-directory: ./roquiz
         run: flutter pub get
+
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
 
       # --- Enable real release signing later (currently debug-signed) --------
       # 1. Create the upload keystore once, locally:
@@ -72,7 +80,7 @@ jobs:
           --build-number=${{ github.run_number }}
 
       - name: Upload APK artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: android-apks
           path: roquiz/build/app/outputs/flutter-apk/*.apk
@@ -83,6 +91,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install Linux build dependencies
         run: |
@@ -100,6 +110,12 @@ jobs:
         working-directory: ./roquiz
         run: flutter pub get
 
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
       - name: Build Linux (x64)
         working-directory: ./roquiz
         run: >-
@@ -111,7 +127,7 @@ jobs:
         run: tar -czf roquiz-linux-x64.tar.gz -C roquiz/build/linux/x64/release/bundle .
 
       - name: Upload Linux artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: linux-x64
           path: roquiz-linux-x64.tar.gz
@@ -122,6 +138,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -133,6 +151,12 @@ jobs:
       - name: Install dependencies
         working-directory: ./roquiz
         run: flutter pub get
+
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
 
       - name: Build web
         working-directory: ./roquiz
@@ -153,7 +177,7 @@ jobs:
       contents: write
     steps:
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
 
