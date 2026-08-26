@@ -1,23 +1,12 @@
 name: Deploy to GitHub Pages
 
-# Publishes the current (unreleased) state to preview subpaths on GitHub Pages,
-# without cutting a release:
-#   ROQuiz/next/       -> --release build
-#   ROQuiz/next-beta/  -> --debug build
-# Released versions (ROQuiz/ and ROQuiz/<tag>/) are handled by release.yml.
+# Manually publishes the current (unreleased) state of the app to GitHub Pages.
+# The site hosts a single version, so this REPLACES whatever release.yml last
+# deployed; re-run the release workflow to put the released build back.
 
 on:
   workflow_dispatch:
     inputs:
-      targets:
-        description: "Which preview(s) to deploy"
-        required: true
-        type: choice
-        default: "both"
-        options:
-          - "both"
-          - "next"
-          - "next-beta"
       ref:
         description: "Commit SHA, branch or tag to build (empty = current HEAD)"
         required: false
@@ -53,34 +42,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dart run bin/fetch_contributors.dart --avatars
 
-      - name: Build web (next, --release)
-        if: ${{ inputs.targets == 'both' || inputs.targets == 'next' }}
+      - name: Build web
         working-directory: ./roquiz
         run: >-
-          flutter build web --release --base-href /${{ github.event.repository.name }}/next/
-          --output=build/pages-src/next
+          flutter build web --release
+          --base-href /${{ github.event.repository.name }}/
 
-      - name: Build web (next-beta, --debug)
-        if: ${{ inputs.targets == 'both' || inputs.targets == 'next-beta' }}
-        working-directory: ./roquiz
-        run: >-
-          flutter build web --debug --base-href /${{ github.event.repository.name }}/next-beta/
-          --output=build/pages-src/next-beta
-
-      - name: Upload web builds
-        uses: actions/upload-artifact@v7
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
         with:
-          name: pages-src
-          path: roquiz/build/pages-src
-          if-no-files-found: error
+          path: roquiz/build/web
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      contents: write   # push the pages-content storage branch
       pages: write
       id-token: write
+    # Shared with release.yml: both publish to the same Pages site, so they must
+    # never deploy at once.
     concurrency:
       group: pages-deploy
       cancel-in-progress: false
@@ -88,37 +68,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Download web builds
-        uses: actions/download-artifact@v8
-        with:
-          name: pages-src
-          path: pages-src
-
-      - name: Compute deploy mappings
-        id: map
-        run: |
-          set -euo pipefail
-          m=""
-          for target in next next-beta; do
-            if [ -d "pages-src/$target" ]; then
-              m+="$target=pages-src/$target"$'\n'
-            fi
-          done
-          {
-            echo "mappings<<EOF"
-            printf '%s' "$m"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Publish preview(s) to storage branch
-        uses: ./.github/actions/publish-pages
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          mappings: ${{ steps.map.outputs.mappings }}
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

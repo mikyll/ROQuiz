@@ -180,32 +180,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dart run bin/fetch_contributors.dart --avatars
 
-      # Root endpoint (ROQuiz/) and the versioned copy (ROQuiz/v<version>/) need
-      # different base-hrefs baked in, so build once for each.
-      - name: Build web (root)
+      - name: Build web
         working-directory: ./roquiz
         run: >-
           flutter build web --release --base-href /${{ github.event.repository.name }}/
           --build-name=${{ inputs.version }}
           --build-number=${{ github.run_number }}
-          --output=build/web-root
 
-      - name: Build web (versioned)
-        working-directory: ./roquiz
-        run: >-
-          flutter build web --release --base-href /${{ github.event.repository.name }}/v${{ inputs.version }}/
-          --build-name=${{ inputs.version }}
-          --build-number=${{ github.run_number }}
-          --output=build/web-version
-
-      - name: Upload web builds
-        uses: actions/upload-artifact@v7
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
         with:
-          name: web-builds
-          path: |
-            roquiz/build/web-root
-            roquiz/build/web-version
-          if-no-files-found: error
+          path: roquiz/build/web
 
   release:
     runs-on: ubuntu-latest
@@ -255,9 +240,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-web
     permissions:
-      contents: write   # push the pages-content storage branch
       pages: write
       id-token: write
+    # Shared with deploy_web.yaml: both publish to the same Pages site, so they
+    # must never deploy at once.
     concurrency:
       group: pages-deploy
       cancel-in-progress: false
@@ -265,23 +251,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Download web builds
-        uses: actions/download-artifact@v8
-        with:
-          name: web-builds
-          path: web-builds
-
-      - name: Publish root + versioned app to storage branch
-        uses: ./.github/actions/publish-pages
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          mappings: |
-            =web-builds/web-root
-            v${{ inputs.version }}=web-builds/web-version
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
