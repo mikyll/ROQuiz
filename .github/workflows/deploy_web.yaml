@@ -57,14 +57,14 @@ jobs:
         if: ${{ inputs.targets == 'both' || inputs.targets == 'next' }}
         working-directory: ./roquiz
         run: >-
-          flutter build web --release --base-href /ROQuiz/next/
+          flutter build web --release --base-href /${{ github.event.repository.name }}/next/
           --output=build/pages-src/next
 
       - name: Build web (next-beta, --debug)
         if: ${{ inputs.targets == 'both' || inputs.targets == 'next-beta' }}
         working-directory: ./roquiz
         run: >-
-          flutter build web --debug --base-href /ROQuiz/next-beta/
+          flutter build web --debug --base-href /${{ github.event.repository.name }}/next-beta/
           --output=build/pages-src/next-beta
 
       - name: Upload web builds

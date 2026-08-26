@@ -185,7 +185,7 @@ jobs:
       - name: Build web (root)
         working-directory: ./roquiz
         run: >-
-          flutter build web --release --base-href /ROQuiz/
+          flutter build web --release --base-href /${{ github.event.repository.name }}/
           --build-name=${{ inputs.version }}
           --build-number=${{ github.run_number }}
           --output=build/web-root
@@ -193,7 +193,7 @@ jobs:
       - name: Build web (versioned)
         working-directory: ./roquiz
         run: >-
-          flutter build web --release --base-href /ROQuiz/v${{ inputs.version }}/
+          flutter build web --release --base-href /${{ github.event.repository.name }}/v${{ inputs.version }}/
           --build-name=${{ inputs.version }}
           --build-number=${{ github.run_number }}
           --output=build/web-version
