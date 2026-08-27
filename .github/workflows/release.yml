@@ -32,6 +32,12 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
       - name: Validate the version input
         env:
           VERSION: ${{ inputs.version }}
@@ -65,6 +71,11 @@ jobs:
             exit 1
           fi
           echo "$TAG is free."
+
+      # Render the notes now and throw them away: a missing CHANGELOG.md section
+      # must fail here, not after ~15 minutes of builds.
+      - name: Check the release notes can be rendered
+        run: .github/scripts/render-release-notes.sh "${{ inputs.version }}" > /dev/null
 
   test:
     runs-on: ubuntu-latest
@@ -326,6 +337,12 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
       - name: Download build artifacts
         uses: actions/download-artifact@v8
         with:
@@ -354,13 +371,19 @@ jobs:
               ;;
           esac
 
+      - name: Render release notes
+        run: .github/scripts/render-release-notes.sh "${{ inputs.version }}" > release-notes.md
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ inputs.version }}
           target_commitish: ${{ inputs.ref || github.sha }}
           name: v${{ inputs.version }}
-          generate_release_notes: true
+          # The body comes from CHANGELOG.md via RELEASE_TEMPLATE.md; leaving
+          # generate_release_notes on would append GitHub's PR list underneath.
+          body_path: release-notes.md
+          generate_release_notes: false
           prerelease: ${{ steps.prerelease.outputs.value }}
           files: release-files/*
 
