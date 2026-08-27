@@ -3,8 +3,8 @@ import 'package:roquiz/model/persistence/settings.dart';
 
 void main() {
   group('confirmationLevel', () {
-    test('defaults to soft', () {
-      expect(Settings().confirmationLevel, ConfirmationLevel.soft);
+    test('defaults to full', () {
+      expect(Settings().confirmationLevel, ConfirmationLevel.full);
     });
 
     test('round-trips through JSON for every level', () {
@@ -23,11 +23,11 @@ void main() {
       expect(migrated.confirmationLevel, ConfirmationLevel.soft);
     });
 
-    test('restoreDefaults resets the level to soft', () {
+    test('restoreDefaults resets the level to full', () {
       final Settings settings = Settings()
         ..confirmationLevel = ConfirmationLevel.none;
       settings.restoreDefaults();
-      expect(settings.confirmationLevel, ConfirmationLevel.soft);
+      expect(settings.confirmationLevel, ConfirmationLevel.full);
     });
   });
 }
