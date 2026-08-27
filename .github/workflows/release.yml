@@ -79,6 +79,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    needs: check-version
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
