@@ -25,8 +25,82 @@ env:
   FLUTTER_VERSION: "3.44.5"
 
 jobs:
+  # Releases are immutable: refuse to run if v<version> is already taken, before
+  # spending ~15 minutes on the builds.
+  check-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Validate the version input
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          # X.Y.Z with an optional prerelease suffix, no leading v and no build
+          # metadata: the value goes into the tag, the asset names and --build-name.
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::invalid version '$VERSION' (expected e.g. 2.0.1 or 2.0.0-beta, without a leading v)"
+            exit 1
+          fi
+          echo "Version $VERSION looks well-formed."
+
+      - name: Fail if the tag or release already exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          taken=0
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::release $TAG already exists"
+            taken=1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1; then
+            echo "::error::tag $TAG already exists"
+            taken=1
+          fi
+          if [ "$taken" -ne 0 ]; then
+            echo "::error::bump the version, or delete the existing tag/release first"
+            exit 1
+          fi
+          echo "$TAG is free."
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
+        run: flutter pub get
+
+      # pubspec.yaml declares assets/contributors/, which is gitignored and
+      # generated: without this step the asset bundle fails to build.
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
+      - name: Run tests
+        working-directory: ./roquiz
+        run: flutter test
+
   build-android:
     runs-on: ubuntu-latest
+    needs: [check-version, test]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
@@ -106,9 +180,10 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-latest
+    needs: [check-version, test]
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
@@ -154,11 +229,64 @@ jobs:
           path: roquiz_v${{ inputs.version }}_linux-x64.tar.gz
           if-no-files-found: error
 
-  build-web:
-    runs-on: ubuntu-latest
+  build-windows:
+    runs-on: windows-latest
+    needs: [check-version, test]
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
+        run: flutter pub get
+
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
+      - name: Build Windows (x64)
+        working-directory: ./roquiz
+        run: >-
+          flutter build windows --release
+          --build-name=${{ inputs.version }}
+          --build-number=${{ github.run_number }}
+
+      # Windows users get a .zip, as in every previous release; the Linux build
+      # stays a tarball.
+      - name: Package zip
+        shell: pwsh
+        env:
+          VERSION: ${{ inputs.version }}
+        run: >-
+          Compress-Archive
+          -Path roquiz/build/windows/x64/runner/Release/*
+          -DestinationPath "roquiz_v${env:VERSION}_windows-x64.zip"
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-x64
+          path: roquiz_v${{ inputs.version }}_windows-x64.zip
+          if-no-files-found: error
+
+  build-web:
+    runs-on: ubuntu-latest
+    needs: [check-version, test]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
@@ -194,7 +322,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    needs: [build-android, build-linux]
+    needs: [build-android, build-linux, build-windows]
     permissions:
       contents: write
     steps:
@@ -206,7 +334,7 @@ jobs:
       - name: Collect release files and checksums
         run: |
           mkdir -p release-files
-          find artifacts -type f \( -name '*.apk' -o -name '*.tar.gz' \) -exec cp {} release-files/ \;
+          find artifacts -type f \( -name '*.apk' -o -name '*.tar.gz' -o -name '*.zip' \) -exec cp {} release-files/ \;
           cd release-files
           sha256sum * > SHA256SUMS.txt
           cat SHA256SUMS.txt
