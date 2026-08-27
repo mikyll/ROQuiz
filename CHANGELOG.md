@@ -43,10 +43,12 @@ pagina Releases del repository.
 
 ## [Unreleased]
 
-### Aggiunto
+## [2.0.2] - 2026-08-27
 
 ### Modificato
 
-### Corretto
+- Nessuna modifica all'applicazione: questa release serve a validare la nuova
+  pipeline di rilascio (build Windows, note generate da questo file).
 
-[Unreleased]: https://github.com/mikyll/ROQuiz/compare/v1.11.5...HEAD
+[Unreleased]: https://github.com/mikyll/ROQuiz-test/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/mikyll/ROQuiz-test/compare/v2.0.1...v2.0.2
