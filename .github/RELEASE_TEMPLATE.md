@@ -25,14 +25,16 @@ Elenco completo dei commit: [`v{{PREV_VERSION}}...v{{VERSION}}`](https://github.
 | --- | --- |
 | 🪟 Windows x64 | [`roquiz_v{{VERSION}}_windows-x64.zip`](https://github.com/{{REPO}}/releases/download/v{{VERSION}}/roquiz_v{{VERSION}}_windows-x64.zip) |
 | 🐧 Linux x64 | [`roquiz_v{{VERSION}}_linux-x64.tar.gz`](https://github.com/{{REPO}}/releases/download/v{{VERSION}}/roquiz_v{{VERSION}}_linux-x64.tar.gz) |
+| 🤖 Android (tutti i dispositivi) | [`roquiz_v{{VERSION}}_universal.apk`](https://github.com/{{REPO}}/releases/download/v{{VERSION}}/roquiz_v{{VERSION}}_universal.apk) |
 | 🤖 Android arm64-v8a | [`roquiz_v{{VERSION}}_arm64-v8a.apk`](https://github.com/{{REPO}}/releases/download/v{{VERSION}}/roquiz_v{{VERSION}}_arm64-v8a.apk) |
 | 🤖 Android armeabi-v7a | [`roquiz_v{{VERSION}}_armeabi-v7a.apk`](https://github.com/{{REPO}}/releases/download/v{{VERSION}}/roquiz_v{{VERSION}}_armeabi-v7a.apk) |
 | 🤖 Android x86_64 | [`roquiz_v{{VERSION}}_x86_64.apk`](https://github.com/{{REPO}}/releases/download/v{{VERSION}}/roquiz_v{{VERSION}}_x86_64.apk) |
 
 > [!TIP]
-> Non sai quale APK scaricare? Praticamente tutti i telefoni Android in uso oggi
-> sono **arm64-v8a**. `armeabi-v7a` serve solo a dispositivi molto vecchi,
-> `x86_64` agli emulatori.
+> Nel dubbio, scaricare la APK **universale**: funziona su qualsiasi dispositivo.
+> Le altre sono più leggere ma vincolate all'architettura: `arm64-v8a` copre
+> praticamente tutti i telefoni in uso oggi, `armeabi-v7a` solo dispositivi molto
+> vecchi, `x86_64` gli emulatori.
 
 ### Installazione
 
