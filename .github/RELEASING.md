@@ -7,12 +7,14 @@ diversa. Senza i secret qui sotto Gradle ripiegherebbe su una debug keystore
 usa-e-getta, diversa a ogni run, e nessun aggiornamento funzionerebbe: per
 questo il workflow fallisce se i secret mancano.
 
-1. Generare la keystore (una sola volta, in locale). I parametri sono quelli
-   che il Play Store pretende, così la stessa chiave resta valida se un domani
-   si pubblica lì:
+1. Generare la keystore (una sola volta, in locale). Il percorso è assoluto e
+   **fuori dal repo**: una chiave committata su un repo pubblico è bruciata per
+   sempre. I parametri sono quelli che il Play Store pretende, così la stessa
+   chiave resta valida se un domani si pubblica lì:
 
    ```sh
-   keytool -genkeypair -v -keystore roquiz-release.jks \
+   mkdir -p ~/.keys
+   keytool -genkeypair -v -keystore ~/.keys/roquiz-release.jks \
      -alias roquiz -keyalg RSA -keysize 2048 -validity 10000
    ```
 
@@ -25,10 +27,17 @@ questo il workflow fallisce se i secret mancano.
 
    | Secret | Valore |
    | --- | --- |
-   | `ANDROID_KEYSTORE_BASE64` | `base64 -w0 roquiz-release.jks` |
+   | `ANDROID_KEYSTORE_BASE64` | `base64 -w0 ~/.keys/roquiz-release.jks` |
    | `ANDROID_KEYSTORE_PASSWORD` | password della keystore |
    | `ANDROID_KEY_ALIAS` | `roquiz` |
    | `ANDROID_KEY_PASSWORD` | password della chiave |
+
+   Per non lasciare la chiave in chiaro nello scrollback del terminale conviene
+   mandare il base64 dritto negli appunti:
+
+   ```sh
+   base64 -w0 ~/.keys/roquiz-release.jks | xclip -selection clipboard
+   ```
 
 Il `versionCode` non si tocca: il workflow lo deriva dalla versione
 (`major*10000 + minor*100 + patch`, quindi `2.0.3` → `20003`), così cresce
