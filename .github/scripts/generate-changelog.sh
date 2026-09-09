@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Regenerate CHANGELOG.md from the git history: one line per commit, newest
-# first, grouped by tag.
+# Regenerate CHANGELOG.md from the git history: one line per commit, grouped by
+# tag and, inside a tag, by day.
 #
 #   .github/scripts/generate-changelog.sh [next-version]
 #
@@ -37,11 +37,19 @@ if [ -n "$next" ] && printf '%s\n' ${tags[@]+"${tags[@]}"} | grep -qx "v$next"; 
   exit 1
 fi
 
-# Newest first, to match the order of the sections. Swap --date-order for
-# --reverse to read a release bottom-up instead.
+# Newest first, to match the order of the sections, split into '### <day>'
+# groups. The stable sort on the date guarantees a day gets a single heading
+# even when author dates are out of order (rebases, cherry-picks).
 log_range() {
-  git log --no-merges --date-order \
-    --pretty=format:"- %s ([\`%h\`]($base/commit/%H))" "$1"
+  local tab
+  tab="$(printf '\t')"
+  git log --no-merges --date-order --date=short \
+    --pretty=format:"%ad${tab}- %s ([\`%h\`]($base/commit/%H))" "$1" \
+  | sort -t "$tab" -k1,1r -s \
+  | awk -F"$tab" '
+      $1 != day { if (day != "") printf "\n"; day = $1; printf "### %s\n\n", day }
+      { print $2 }
+    '
 }
 
 section() { # section <heading> <date> <range>
@@ -112,7 +120,8 @@ toc() {
   cat <<'HEADER'
 # Changelog
 
-Tutte le modifiche a ROQuiz, un commit per riga, raggruppate per versione.
+Tutte le modifiche a ROQuiz, un commit per riga, raggruppate per versione e
+per giorno.
 
 <!--
 QUESTO FILE È GENERATO: non modificarlo a mano, le modifiche verrebbero perse
