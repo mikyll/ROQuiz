@@ -57,7 +57,56 @@ section() { # section <heading> <date> <range>
 }
 
 out="$(mktemp)"
-trap 'rm -f "$out"' EXIT
+body="$(mktemp)"
+trap 'rm -f "$out" "$body"' EXIT
+
+latest="${tags[0]:-}"
+{
+  if [ -n "$next" ]; then
+    printf '## [Unreleased]\n\n'
+    if ! section "$next" "$(date +%F)" "${latest:+$latest..}HEAD"; then
+      echo "error: no commits since ${latest:-the start of the history}: nothing to release as $next" >&2
+      exit 1
+    fi
+  else
+    section "Unreleased" "" "${latest:+$latest..}HEAD" || printf '## [Unreleased]\n\n'
+  fi
+
+  # A tag pointing at an already-tagged commit has an empty range: skip it
+  # rather than emit a section the release renderer would reject as empty.
+  for i in "${!tags[@]}"; do
+    tag="${tags[$i]}"
+    prev="${tags[$((i + 1))]:-}"
+    section "${tag#v}" "$(git log -1 --format=%ad --date=short "$tag")" \
+      "${prev:+$prev..}$tag" || true
+  done
+} > "$body"
+
+# Table of contents, built from the sections that made it into the file so it
+# can't link to one that was skipped. The anchors reproduce how GitHub slugifies
+# a heading: lowercase, drop everything but letters, digits, spaces, - and _,
+# then spaces to hyphens ('## [2.0.3] - 2026-09-03' -> '#203---2026-09-03').
+toc() {
+  awk '
+    function slug(s,   t) {
+      t = tolower(s)
+      gsub(/[^a-z0-9 _-]/, "", t)
+      gsub(/ /, "-", t)
+      return t
+    }
+    function label(h,   a, b) {
+      a = index(h, "["); b = index(h, "]")
+      return substr(h, a + 1, b - a - 1)
+    }
+    function flush() {
+      if (heading != "" && filled)
+        printf "- [%s](#%s)\n", label(heading), slug(substr(heading, 4))
+    }
+    /^## / { flush(); heading = $0; filled = 0; next }
+    /^- /  { filled = 1 }
+    END    { flush() }
+  ' "$1"
+}
 
 {
   cat <<'HEADER'
@@ -84,25 +133,11 @@ merge.
 
 HEADER
 
-  latest="${tags[0]:-}"
-  if [ -n "$next" ]; then
-    printf '## [Unreleased]\n\n'
-    if ! section "$next" "$(date +%F)" "${latest:+$latest..}HEAD"; then
-      echo "error: no commits since ${latest:-the start of the history}: nothing to release as $next" >&2
-      exit 1
-    fi
-  else
-    section "Unreleased" "" "${latest:+$latest..}HEAD" || printf '## [Unreleased]\n\n'
-  fi
+  printf '## Versioni\n\n'
+  toc "$body"
+  printf '\n'
 
-  # A tag pointing at an already-tagged commit has an empty range: skip it
-  # rather than emit a section the release renderer would reject as empty.
-  for i in "${!tags[@]}"; do
-    tag="${tags[$i]}"
-    prev="${tags[$((i + 1))]:-}"
-    section "${tag#v}" "$(git log -1 --format=%ad --date=short "$tag")" \
-      "${prev:+$prev..}$tag" || true
-  done
+  cat "$body"
 
   # Link definitions, in the same order as the sections above.
   if [ -n "$next" ]; then
