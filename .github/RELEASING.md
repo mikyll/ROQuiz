@@ -30,7 +30,12 @@ questo il workflow fallisce se i secret mancano.
    | `ANDROID_KEYSTORE_BASE64` | `base64 -w0 ~/.keys/roquiz-release.jks` |
    | `ANDROID_KEYSTORE_PASSWORD` | password della keystore |
    | `ANDROID_KEY_ALIAS` | `roquiz` |
-   | `ANDROID_KEY_PASSWORD` | password della chiave |
+   | `ANDROID_KEY_PASSWORD` | la stessa password della keystore (vedi sotto) |
+
+   Le keystore create da un JDK recente sono in formato PKCS12, che non prevede
+   una password separata per la chiave: `keytool` scarta l'eventuale `-keypass`
+   con un warning e la chiave si apre con la password della keystore. Gli ultimi
+   due secret vanno quindi valorizzati uguali.
 
    Per non lasciare la chiave in chiaro nello scrollback del terminale conviene
    mandare il base64 dritto negli appunti:
