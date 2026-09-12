@@ -1,4 +1,4 @@
-name: Validazione File Domande
+name: Validazione Domande
 on:
   # push:
   #   branches:
@@ -10,7 +10,7 @@ defaults:
     shell: bash
 
 jobs:
-  Validazione-File-Domande:
+  Validazione-Domande:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
