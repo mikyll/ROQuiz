@@ -48,13 +48,72 @@ if [ ! -s "$section" ]; then
   exit 1
 fi
 
-body="$(awk -v repo="$repo" -v version="$version" -v prev="$prev" -v secfile="$section" '
+# The release page groups the commits by kind, not by day as CHANGELOG.md does:
+# on a long list "what changed" is what a reader looks for, and the dates of
+# individual commits mean nothing to them. The conventional-commit type picks
+# the bucket and is then dropped from the line, since the heading already says
+# it; the scope, where present, survives as a bold lead.
+grouped="$(mktemp)"
+trap 'rm -f "$section" "$grouped"' EXIT
+awk '
+  BEGIN { n_brk = n_feat = n_fix = n_perf = n_other = 0; printed = 0 }
+  function emit(title, arr, n,   i) {
+    if (n == 0) return
+    if (printed) print ""
+    printed = 1
+    print "### " title
+    print ""
+    for (i = 1; i <= n; i++) print arr[i]
+  }
+  /^### / { next }
+  /^[[:space:]]*$/ { next }
+  {
+    entry = $0
+    breaking = 0
+    if ($0 ~ /^- /) {
+      s = substr($0, 3)
+      type = "other"
+      scope = ""
+      if (match(s, /^[a-z]+(\([^)]+\))?!?:[[:space:]]/)) {
+        head = substr(s, 1, RLENGTH)
+        rest = substr(s, RLENGTH + 1)
+        sub(/:[[:space:]]*$/, "", head)
+        breaking = (head ~ /!$/)
+        sub(/!$/, "", head)
+        if (match(head, /\([^)]+\)$/)) {
+          scope = substr(head, RSTART + 1, RLENGTH - 2)
+          type = substr(head, 1, RSTART - 1)
+        } else {
+          type = head
+        }
+        entry = "- " (scope != "" ? "**" scope "**: " : "") rest
+      }
+    }
+    if (breaking)            brk[++n_brk] = entry
+    else if (type == "feat") feat[++n_feat] = entry
+    else if (type == "fix")  fix[++n_fix] = entry
+    else if (type == "perf") perf[++n_perf] = entry
+    else                     other[++n_other] = entry
+  }
+  END {
+    emit("Modifiche incompatibili", brk, n_brk)
+    emit("Novità", feat, n_feat)
+    emit("Correzioni", fix, n_fix)
+    emit("Prestazioni", perf, n_perf)
+    emit("Altro", other, n_other)
+  }
+' "$section" > "$grouped"
+
+pages_url="https://${repo%%/*}.github.io/${repo##*/}/"
+
+body="$(awk -v repo="$repo" -v pages="$pages_url" -v version="$version" -v prev="$prev" -v secfile="$grouped" '
   NR == 1 && /^<!--/ { in_header = 1 }
   in_header { if (/-->/) in_header = 0; next }
   in_header == 0 && !started && /^[[:space:]]*$/ { next }
   { started = 1
     line = $0
     gsub(/\{\{REPO\}\}/, repo, line)
+    gsub(/\{\{PAGES_URL\}\}/, pages, line)
     gsub(/\{\{VERSION\}\}/, version, line)
     gsub(/\{\{PREV_VERSION\}\}/, prev, line)
     if (index(line, "{{CHANGELOG}}") > 0) {

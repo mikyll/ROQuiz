@@ -5,19 +5,14 @@ Segnaposto da sostituire (tutti, nessuno escluso):
   {{REPO}}          owner/repo, es. mikyll/ROQuiz
   {{VERSION}}       versione senza la v iniziale, es. 2.0.0
   {{PREV_VERSION}}  versione della release precedente, es. 1.11.5
-  {{CHANGELOG}}     sezione di CHANGELOG.md relativa a {{VERSION}}
+  {{CHANGELOG}}     modifiche di {{VERSION}}, raggruppate per tipo di commit
+  {{PAGES_URL}}     URL del sito GitHub Pages del repository
 
 Gli asset elencati sotto sono quelli prodotti da .github/workflows/release.yml.
 Se cambiano i nomi dei file, questo template va aggiornato di conseguenza.
 -->
 
 ![Downloads v{{VERSION}}](https://img.shields.io/github/downloads/{{REPO}}/v{{VERSION}}/total)
-
-## Novità
-
-{{CHANGELOG}}
-
-Elenco completo dei commit: [`v{{PREV_VERSION}}...v{{VERSION}}`](https://github.com/{{REPO}}/compare/v{{PREV_VERSION}}...v{{VERSION}})
 
 ## Download
 
@@ -44,7 +39,7 @@ Elenco completo dei commit: [`v{{PREV_VERSION}}...v{{VERSION}}`](https://github.
 
 ## Web
 
-Nessuna installazione necessaria: [mikyll.github.io/ROQuiz/](https://mikyll.github.io/ROQuiz/)
+Nessuna installazione necessaria: [{{PAGES_URL}}]({{PAGES_URL}})
 
 ## Verifica dei file
 
@@ -57,3 +52,9 @@ sha256sum -c SHA256SUMS.txt --ignore-missing
 ## Note
 
 La versione Java non è più supportata: l'[ultima release Java](https://github.com/{{REPO}}/releases/tag/v1.5) resta scaricabile e continua a controllare e scaricare le domande aggiornate, ma non riceverà nuove funzionalità.
+
+## Modifiche
+
+Confronto completo: [`v{{PREV_VERSION}}...v{{VERSION}}`](https://github.com/{{REPO}}/compare/v{{PREV_VERSION}}...v{{VERSION}})
+
+{{CHANGELOG}}
