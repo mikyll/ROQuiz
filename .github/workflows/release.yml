@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Release version, e.g. 2.0.0-beta or 2.0.1 (no leading v)"
+        description: "Release version, e.g. 1.0.0-beta or 1.0.1 (no leading v)"
         required: true
         type: string
       prerelease:
@@ -46,7 +46,7 @@ jobs:
           # X.Y.Z with an optional prerelease suffix, no leading v and no build
           # metadata: the value goes into the tag, the asset names and --build-name.
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
-            echo "::error::invalid version '$VERSION' (expected e.g. 2.0.1 or 2.0.0-beta, without a leading v)"
+            echo "::error::invalid version '$VERSION' (expected e.g. 1.0.1 or 1.0.0-beta, without a leading v)"
             exit 1
           fi
           echo "Version $VERSION looks well-formed."
