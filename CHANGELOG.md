@@ -20,7 +20,7 @@ merge.
 
 ## Versioni
 
-- [Unreleased](#unreleased)
+- [2.0.0](#200---2026-09-12)
 - [1.11.5](#1115---2025-07-23)
 - [1.11.4](#1114---2025-07-02)
 - [1.10.1](#1101---2024-01-18)
@@ -39,8 +39,13 @@ merge.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-09-12
+
 ### 2026-09-12
 
+- fix(questions): keep offering a declined update to an explicit check ([`3878532`](https://github.com/mikyll/ROQuiz/commit/38785328bb43d8ddc4e613929c27d002bcf28137))
+- fix(contributors): cap the detail card width like the rest of the app ([`a70a3e3`](https://github.com/mikyll/ROQuiz/commit/a70a3e3455a791f7a9780c326f4e1db25d26c259))
+- docs: update CHANGELOG for the automated flow ([`c67e328`](https://github.com/mikyll/ROQuiz/commit/c67e328807ec00bb07fa89ea5beace92aed94886))
 - docs: document the automated changelog flow ([`591063d`](https://github.com/mikyll/ROQuiz/commit/591063d98aace70b8507a7af376ceb84cdb97840))
 - ci(release): generate and commit the changelog during the release ([`8dddcf7`](https://github.com/mikyll/ROQuiz/commit/8dddcf7df947a0f070df0ec352fae024de7c1533))
 - chore(changelog): ignore the workflow's own changelog commits ([`8f110e3`](https://github.com/mikyll/ROQuiz/commit/8f110e3bbba9bf9116a06c5d81c244acff685a54))
@@ -1615,7 +1620,8 @@ merge.
 - Update README.md ([`d314f3f`](https://github.com/mikyll/ROQuiz/commit/d314f3f00a4773ddef1c2c9ffd4862c790931a74))
 - Initial commit ([`c1d8200`](https://github.com/mikyll/ROQuiz/commit/c1d82008ef094e8a3f837cff1cb335f8c8ed93a3))
 
-[Unreleased]: https://github.com/mikyll/ROQuiz/compare/v1.11.5...HEAD
+[Unreleased]: https://github.com/mikyll/ROQuiz/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/mikyll/ROQuiz/compare/v1.11.5...v2.0.0
 [1.11.5]: https://github.com/mikyll/ROQuiz/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/mikyll/ROQuiz/compare/v1.10.1...v1.11.4
 [1.10.1]: https://github.com/mikyll/ROQuiz/compare/v1.10.0...v1.10.1
