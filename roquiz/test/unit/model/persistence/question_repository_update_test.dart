@@ -204,14 +204,22 @@ void main() {
       final reloaded = QuestionRepository(client: mockRemote(newer));
       await reloaded.init();
       expect(reloaded.source, QuestionSource.asset);
-      expect((await reloaded.peekRemoteUpdate()).isNewer, isFalse);
+      final seen = await reloaded.peekRemoteUpdate();
+      expect(seen.isUnseen, isFalse, reason: "startup must stay quiet");
+      expect(
+        seen.isNewer,
+        isTrue,
+        reason: "the file is still out of date: an explicit check must say so",
+      );
 
       // A still-newer commit is flagged anew.
       final evenNewer = QuestionRepository(
         client: mockRemote(newer.add(const Duration(days: 1))),
       );
       await evenNewer.init();
-      expect((await evenNewer.peekRemoteUpdate()).isNewer, isTrue);
+      final again = await evenNewer.peekRemoteUpdate();
+      expect(again.isNewer, isTrue);
+      expect(again.isUnseen, isTrue);
     });
   });
 

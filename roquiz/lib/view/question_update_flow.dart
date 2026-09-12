@@ -15,6 +15,11 @@ import 'package:roquiz/model/utils/time.dart';
 ///     the official set (the only in-app way back off a custom set);
 ///   - non-manual (silent startup check): stays quiet unless there is genuinely a
 ///     newer official file to offer, and swallows network errors.
+///
+/// Declining an update records the commit as seen, which silences the startup
+/// check but not this one: an explicit check always reports a newer file, even
+/// one already refused, otherwise saying "not now" once would make the update
+/// unreachable from the button meant to find it.
 Future<void> runQuestionsUpdateFlow(
   BuildContext context,
   QuestionRepository repository, {
@@ -36,8 +41,11 @@ Future<void> runQuestionsUpdateFlow(
     return;
   }
 
+  // A refused commit stays offered to whoever asks for it explicitly.
+  final bool offer = info.isNewer && (manual || info.isUnseen);
+
   if (repository.isCustom) {
-    if (info.isNewer) {
+    if (offer) {
       // A newer official set exists: offer it (declining records it as seen so
       // the background check stops nagging about this commit).
       await _confirmReplaceCustom(
@@ -63,7 +71,7 @@ Future<void> runQuestionsUpdateFlow(
 
   // Non-custom (asset/remote): only act when the remote is strictly newer, and
   // confirm before replacing.
-  if (info.isNewer) {
+  if (offer) {
     await _confirmUpdateNonCustom(
       context,
       repository,

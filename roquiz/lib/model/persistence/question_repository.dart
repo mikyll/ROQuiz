@@ -21,8 +21,8 @@ import 'package:roquiz/model/quiz/question.dart';
 enum QuestionSource { asset, remote, custom }
 
 /// The outcome of a side-effect-free remote-update check ([peekRemoteUpdate]):
-/// the latest remote commit datetime and whether it is newer than what the
-/// repository currently reflects.
+/// the latest remote commit datetime, whether it is newer than what the
+/// repository currently reflects, and whether it has already been declined.
 class RemoteQuestionsInfo {
   /// Datetime of the latest remote commit that touched the questions file.
   final DateTime remoteDate;
@@ -31,7 +31,19 @@ class RemoteQuestionsInfo {
   /// (for a custom set, newer than the last official commit the user has seen).
   final bool isNewer;
 
-  const RemoteQuestionsInfo({required this.remoteDate, required this.isNewer});
+  /// True when [remoteDate] hasn't already been declined via [markRemoteSeen].
+  ///
+  /// Kept apart from [isNewer] on purpose: the silent startup check needs both,
+  /// so it stops nagging about a refused commit, while an explicit check only
+  /// needs [isNewer] — having said "not now" once must not hide a pending
+  /// update from someone who goes and asks for it.
+  final bool isUnseen;
+
+  const RemoteQuestionsInfo({
+    required this.remoteDate,
+    required this.isNewer,
+    required this.isUnseen,
+  });
 }
 
 /// Outcome of loading the saved copy from the box — distinguishes a fresh
@@ -105,8 +117,7 @@ class QuestionRepository {
   /// update logic without real network access.
   final http.Client _client;
 
-  QuestionRepository({http.Client? client})
-    : _client = client ?? http.Client();
+  QuestionRepository({http.Client? client}) : _client = client ?? http.Client();
 
   /// Provenance of the currently loaded questions file.
   QuestionSource get source => _source;
@@ -239,7 +250,8 @@ class QuestionRepository {
     // The asset content isn't persisted, so [_loadFromBox] won't restore the
     // "last seen remote commit" on the next launch — read it directly here so a
     // previously-dismissed update isn't offered again after a restart.
-    _lastKnownRemoteDate = _readDate(_box?.get(_lastKnownRemoteDateKey)) ?? _epoch;
+    _lastKnownRemoteDate =
+        _readDate(_box?.get(_lastKnownRemoteDateKey)) ?? _epoch;
   }
 
   /// Parses the bundled asset. Always available; used as the fallback source.
@@ -310,11 +322,12 @@ class QuestionRepository {
   /// Checks the remote for a newer questions file WITHOUT downloading or mutating
   /// any state — the caller decides what to do with the result (the interactive
   /// flow confirms with the user before replacing anything). "Newer" is measured
-  /// against the last official commit the user has seen for a custom set (whose
-  /// own file datetime is unrelated to the remote), and against the later of the
-  /// loaded file's datetime and that last-seen commit otherwise — so declining an
-  /// update (recorded via [markRemoteSeen]) stops it being offered on every
-  /// launch. Network/parse errors propagate to the caller.
+  /// against the loaded file's datetime, or against the last official commit the
+  /// user has seen for a custom set, whose own file datetime is the moment the
+  /// user saved their edits and says nothing about the remote. Whether the
+  /// commit was already declined is reported separately, as
+  /// [RemoteQuestionsInfo.isUnseen]. Network/parse errors propagate to the
+  /// caller.
   ///
   /// Apply the update with [downloadFromRemote] (which switches to a
   /// [QuestionSource.remote] copy, discarding any custom set); decline it with
@@ -323,12 +336,11 @@ class QuestionRepository {
     final remoteDate = await getLatestQuestionsFileDatetime();
     final reference = _source == QuestionSource.custom
         ? _lastKnownRemoteDate
-        : (_currentFileDate.isAfter(_lastKnownRemoteDate)
-              ? _currentFileDate
-              : _lastKnownRemoteDate);
+        : _currentFileDate;
     return RemoteQuestionsInfo(
       remoteDate: remoteDate,
       isNewer: remoteDate.isAfter(reference),
+      isUnseen: remoteDate.isAfter(_lastKnownRemoteDate),
     );
   }
 
