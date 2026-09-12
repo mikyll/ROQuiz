@@ -8,12 +8,10 @@ QUESTO FILE È GENERATO: non modificarlo a mano, le modifiche verrebbero perse
 alla rigenerazione successiva. Per aggiornarlo:
 
   .github/scripts/generate-changelog.sh            # commit nuovi -> [Unreleased]
-  .github/scripts/generate-changelog.sh 2.0.3      # commit nuovi -> [2.0.3]
+  .github/scripts/generate-changelog.sh X.Y.Z      # commit nuovi -> [X.Y.Z]
 
-Prima di lanciare il workflow di release, rigenerarlo con la versione che si sta
-per rilasciare e committarlo: il workflow legge da qui il corpo della pagina
-della release (.github/scripts/render-release-notes.sh) e si ferma subito se la
-sezione manca.
+Di norma non serve: lo rigenera e lo committa il workflow di release, dopo aver
+creato il tag. Vedere .github/RELEASING.md.
 
 Dato che le voci sono i messaggi di commit, la leggibilità di questo file
 dipende da quanto sono descrittivi: conviene curarli, o fare squash prima del
@@ -43,6 +41,11 @@ merge.
 
 ### 2026-09-12
 
+- docs: document the automated changelog flow ([`591063d`](https://github.com/mikyll/ROQuiz/commit/591063d98aace70b8507a7af376ceb84cdb97840))
+- ci(release): generate and commit the changelog during the release ([`8dddcf7`](https://github.com/mikyll/ROQuiz/commit/8dddcf7df947a0f070df0ec352fae024de7c1533))
+- chore(changelog): ignore the workflow's own changelog commits ([`8f110e3`](https://github.com/mikyll/ROQuiz/commit/8f110e3bbba9bf9116a06c5d81c244acff685a54))
+- ci(release): update version hint ([`9c038bd`](https://github.com/mikyll/ROQuiz/commit/9c038bd8ca5ba1c93ddce16ccc2860a1acf81b61))
+- docs: regenerate the changelog against this repository's history ([`6749810`](https://github.com/mikyll/ROQuiz/commit/6749810cb53e731f7a1528d27e08af9d71aa5708))
 - docs: changelog for 2.0.3 ([`539dceb`](https://github.com/mikyll/ROQuiz/commit/539dceb74e15b5a9c75ee735d0367939e7928354))
 - docs: clarify that the key password equals the keystore one ([`8a2165e`](https://github.com/mikyll/ROQuiz/commit/8a2165e5dad695044ae576aa660d2ff2d96f7f43))
 
