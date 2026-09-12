@@ -10,6 +10,11 @@ import 'package:roquiz/model/utils/navigation.dart';
 import 'package:roquiz/widget/constrained_appbar.dart';
 import 'package:roquiz/widget/custom_back_button.dart';
 
+/// Lateral bound shared with the app bar and with the content of the other
+/// views, so the detail card lines up with them instead of stretching across a
+/// wide window.
+const double _maxContentWidth = 500.0;
+
 /// Shows the project contributors (loaded from
 /// `assets/contributors/contributors.yaml`) as
 /// floating bubbles. Hovering a bubble (desktop/web) or tapping it (mobile)
@@ -36,7 +41,7 @@ class _ViewContributorsState extends State<ViewContributors> {
 
     return Scaffold(
       appBar: ConstrainedAppBar(
-        maxWidth: 500.0,
+        maxWidth: _maxContentWidth,
         title: const Text("Contributors"),
         leading: CustomBackButton(),
       ),
@@ -475,64 +480,76 @@ class _DetailCard extends StatelessWidget {
       left: 12,
       right: 12,
       bottom: 12,
-      child: MouseRegion(
-        onEnter: (_) => onHoverEnter(),
-        onExit: (_) => onHoverExit(),
-        // Absorb taps so clicking the card doesn't fall through to the
-        // background dismiss handler.
-        child: GestureDetector(
-          onTap: () {},
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 180),
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SizeTransition(sizeFactor: animation, child: child),
-            ),
-            child: c == null
-                ? const SizedBox.shrink()
-                : Card(
-                    key: ValueKey(c.name),
-                    elevation: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(c.name, style: theme.textTheme.titleLarge),
-                          const SizedBox(height: 8),
-                          ..._buildContributionLines(c).map(
-                            (line) => Padding(
-                              padding: const EdgeInsets.only(bottom: 2.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("•  "),
-                                  Expanded(
-                                    child: Text(
-                                      line,
-                                      style: theme.textTheme.bodyMedium,
-                                    ),
+      // Capped and centred like the rest of the app. The MouseRegion sits
+      // inside the cap so that hovering beside the card, on a wide window,
+      // doesn't count as hovering it.
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+          child: MouseRegion(
+            onEnter: (_) => onHoverEnter(),
+            onExit: (_) => onHoverExit(),
+            // Absorb taps so clicking the card doesn't fall through to the
+            // background dismiss handler.
+            child: GestureDetector(
+              onTap: () {},
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: SizeTransition(sizeFactor: animation, child: child),
+                ),
+                child: c == null
+                    ? const SizedBox.shrink()
+                    : Card(
+                        key: ValueKey(c.name),
+                        elevation: 6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(c.name, style: theme.textTheme.titleLarge),
+                              const SizedBox(height: 8),
+                              ..._buildContributionLines(c).map(
+                                (line) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 2.0),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("•  "),
+                                      Expanded(
+                                        child: Text(
+                                          line,
+                                          style: theme.textTheme.bodyMedium,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                              if (c.url != null) ...[
+                                const SizedBox(height: 8),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton.icon(
+                                    onPressed: () => openUrl(c.url!),
+                                    icon: const Icon(
+                                      Icons.open_in_new,
+                                      size: 18,
+                                    ),
+                                    label: const Text("Apri profilo"),
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
-                          if (c.url != null) ...[
-                            const SizedBox(height: 8),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton.icon(
-                                onPressed: () => openUrl(c.url!),
-                                icon: const Icon(Icons.open_in_new, size: 18),
-                                label: const Text("Apri profilo"),
-                              ),
-                            ),
-                          ],
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
+              ),
+            ),
           ),
         ),
       ),
