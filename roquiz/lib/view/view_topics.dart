@@ -1,0 +1,368 @@
+import 'package:flutter/material.dart';
+import 'package:roquiz/model/quiz/question.dart';
+import 'package:roquiz/model/style/theme_extensions.dart';
+import 'package:roquiz/view/view_questions.dart';
+import 'package:roquiz/widget/constrained_appbar.dart';
+import 'package:roquiz/widget/custom_back_button.dart';
+
+class ViewTopics extends StatefulWidget {
+  final int questionsNum;
+  final Map<String, List<Question>> questionsPerTopic;
+  final Map<String, bool> selectedTopics;
+  final Function(Map<String, bool>) toggleTopic;
+
+  const ViewTopics({
+    super.key,
+    required this.questionsNum,
+    required this.questionsPerTopic,
+    required this.selectedTopics,
+    required this.toggleTopic,
+  });
+
+  @override
+  State<StatefulWidget> createState() => ViewTopicsState();
+}
+
+class ViewTopicsState extends State<ViewTopics> {
+  late int _totQuestions;
+  late Map<String, bool> _selectedTopics;
+
+  // Check if selected topics have default values (used to enable/disable "Reset" button)
+  bool _isDefault() {
+    for (String topic in _selectedTopics.keys) {
+      if (!_selectedTopics[topic]!) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Reset selected topics to default values (all selected)
+  void _resetSelectedTopics() {
+    setState(() {
+      for (String topic in _selectedTopics.keys) {
+        _selectedTopics[topic] = true;
+      }
+    });
+  }
+
+  List<Question> _selectedQuestions() {
+    List<Question> result = [];
+
+    for (String topic in _selectedTopics.keys) {
+      if ((_selectedTopics[topic] ?? false) &&
+          widget.questionsPerTopic[topic] != null) {
+        result.addAll(widget.questionsPerTopic[topic]!);
+      }
+    }
+
+    return result;
+  }
+
+  bool _isEnabled(String topic) {
+    if (!_selectedTopics.keys.contains(topic)) {
+      return false;
+    }
+
+    // Topic is disabled only if:
+    // - the current topic is not deselected
+    // - deselecting the topic would still leave enough questions for the quiz pool
+    int numCurrent = _selectedQuestions().length;
+    int numDeselecting = widget.questionsPerTopic[topic]!.length;
+
+    return !_selectedTopics[topic]! ||
+        (numCurrent - numDeselecting) >= widget.questionsNum;
+  }
+
+  int _calculateStartId(String topic) {
+    int startId = 0;
+    for (String t in widget.questionsPerTopic.keys) {
+      if (t == topic) {
+        break;
+      }
+      startId += widget.questionsPerTopic[t]!.length;
+    }
+    return startId;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      _selectedTopics = widget.selectedTopics;
+    });
+    _totQuestions = 0;
+    for (List<Question> qList in widget.questionsPerTopic.values) {
+      _totQuestions += qList.length;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (_) {
+        // todo
+      },
+      child: Scaffold(
+        appBar: ConstrainedAppBar(
+          maxWidth: 500.0,
+          title: const Text("Argomenti"),
+          leading: CustomBackButton(),
+        ),
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 500.0),
+                child: Column(
+                  spacing: 25.0,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            side: BorderSide(width: 2.0, color: Colors.grey),
+                          ),
+                          elevation: 0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: 300.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 10.0,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          "Selezionate: ",
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
+                                      ),
+                                      Text(
+                                        "${_selectedQuestions().length}/$_totQuestions",
+                                        style: TextStyle(fontSize: 20.0),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          "Domande quiz: ",
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
+                                      ),
+                                      Text(
+                                        "${widget.questionsNum}/${_selectedQuestions().length}",
+                                        style: TextStyle(fontSize: 20.0),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned.fill(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ViewQuestions(
+                                            questions: _selectedQuestions(),
+                                            title: "Pool Corrente",
+                                            editable: false,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: widget.questionsPerTopic.length,
+                        itemBuilder: (_, index) {
+                          String topic = _selectedTopics.keys.elementAt(index);
+                          return _TopicTile(
+                            topic: topic,
+                            isSelected: _selectedTopics[topic]!,
+                            onTap: _isEnabled(topic)
+                                ? (value) {
+                                    setState(() {
+                                      _selectedTopics[topic] = value ?? true;
+                                      widget.toggleTopic(_selectedTopics);
+                                    });
+                                  }
+                                : null,
+                            onIconTap: widget.questionsPerTopic[topic] == null
+                                ? null
+                                : () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ViewQuestions(
+                                            questions: widget
+                                                .questionsPerTopic[topic]!,
+                                            title: topic,
+                                            editable: false,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                            questionNum:
+                                widget.questionsPerTopic[topic]?.length ?? -1,
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 70.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Align(
+          heightFactor: 1,
+          alignment: Alignment.center,
+          child: SizedBox(
+            height: 50,
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.refresh, size: 40.0),
+              onPressed: _isDefault()
+                  ? null
+                  : () {
+                      _resetSelectedTopics();
+                      // _resetTopics();
+                      // _updatePool();
+                      // _updateEnabledTopics();
+                    },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+              ),
+              label: const Text(
+                "Ripristina",
+                maxLines: 1,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TopicTile extends StatelessWidget {
+  final String topic;
+  final int questionNum;
+  final bool isSelected;
+  final Function(bool?)? onTap;
+  final Function()? onIconTap;
+
+  const _TopicTile({
+    required this.topic,
+    required this.questionNum,
+    required this.isSelected,
+    required this.onTap,
+    required this.onIconTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final clearButtonTheme = Theme.of(context).extension<ClearButtonTheme>()!;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: InkWell(
+        onTap: onTap != null
+            ? () {
+                onTap!(!isSelected);
+              }
+            : null,
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  topic,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    color: onTap == null ? Colors.grey : null,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              color: null,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "($questionNum)",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    color: onTap == null ? Colors.grey : null,
+                  ),
+                ),
+              ),
+            ),
+            Transform.scale(
+              scale: 1.5,
+              child: Checkbox(
+                value: isSelected,
+                onChanged: onTap,
+                splashRadius: 15.0,
+              ),
+            ),
+            IconButton(
+              onPressed: onIconTap,
+              icon: Icon(Icons.arrow_forward_ios_rounded),
+              style: ButtonStyle(
+                iconColor: WidgetStatePropertyAll(clearButtonTheme.iconColor),
+                overlayColor: WidgetStatePropertyAll(
+                  clearButtonTheme.overlayColor,
+                ),
+                backgroundColor: WidgetStatePropertyAll(
+                  clearButtonTheme.backgroundColor,
+                ),
+                iconSize: WidgetStatePropertyAll(clearButtonTheme.iconSize),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

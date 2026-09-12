@@ -1,0 +1,505 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, e.g. 1.0.0-beta or 1.0.1 (no leading v)"
+        required: true
+        type: string
+      prerelease:
+        description: "Mark as prerelease (default: auto — true for -alpha/-beta/-rc)"
+        required: false
+        type: choice
+        default: "auto"
+        options:
+          - "auto"
+          - "true"
+          - "false"
+      ref:
+        description: "Commit SHA, branch or tag to build and tag (empty = current HEAD)"
+        required: false
+        type: string
+
+env:
+  FLUTTER_VERSION: "3.44.5"
+
+jobs:
+  # Releases are immutable: refuse to run if v<version> is already taken, before
+  # spending ~15 minutes on the builds.
+  check-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Validate the version input
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          # X.Y.Z with an optional prerelease suffix, no leading v and no build
+          # metadata: the value goes into the tag, the asset names and --build-name.
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::invalid version '$VERSION' (expected e.g. 1.0.1 or 1.0.0-beta, without a leading v)"
+            exit 1
+          fi
+          echo "Version $VERSION looks well-formed."
+
+      - name: Fail if the tag or release already exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          taken=0
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::release $TAG already exists"
+            taken=1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1; then
+            echo "::error::tag $TAG already exists"
+            taken=1
+          fi
+          if [ "$taken" -ne 0 ]; then
+            echo "::error::bump the version, or delete the existing tag/release first"
+            exit 1
+          fi
+          echo "$TAG is free."
+
+      # Build the section and render the notes now, throwing both away: an empty
+      # commit range or a broken template must fail here, not after ~15 minutes
+      # of builds. The real file is written again, and committed, by the release
+      # job.
+      - name: Check the release notes can be produced
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          .github/scripts/generate-changelog.sh "$VERSION"
+          .github/scripts/render-release-notes.sh "$VERSION" > /dev/null
+
+  test:
+    runs-on: ubuntu-latest
+    needs: check-version
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
+        run: flutter pub get
+
+      # pubspec.yaml declares assets/contributors/, which is gitignored and
+      # generated: without this step the asset bundle fails to build.
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
+      - name: Run tests
+        working-directory: ./roquiz
+        run: flutter test
+
+  build-android:
+    runs-on: ubuntu-latest
+    needs: [check-version, test]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
+        run: flutter pub get
+
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
+      # Every release has to be signed with the same key or Android refuses to
+      # install it over the previous one. Without these secrets Gradle silently
+      # falls back to a throwaway debug keystore, so fail loudly instead.
+      - name: Decode the release keystore
+        working-directory: ./roquiz/android
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD \
+                      ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::secret $name is not set; see .github/RELEASING.md"
+              exit 1
+            fi
+          done
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 -d > app/upload-keystore.jks
+          # printf rather than a heredoc: passwords may contain backslashes or
+          # backticks, which a heredoc would eat.
+          {
+            printf 'storeFile=upload-keystore.jks\n'
+            printf 'storePassword=%s\n' "$ANDROID_KEYSTORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$ANDROID_KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$ANDROID_KEY_PASSWORD"
+          } > key.properties
+
+      # Android rejects an install whose versionCode is lower than the installed
+      # one, and github.run_number restarts from 1 whenever the workflow file is
+      # renamed. Deriving it from the version keeps it monotonic by construction.
+      - name: Compute the Android versionCode
+        id: versioncode
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          IFS=. read -r major minor patch <<< "${VERSION%%-*}"
+          if [ "$minor" -ge 100 ] || [ "$patch" -ge 100 ]; then
+            echo "::error::minor and patch must stay below 100 (versionCode = major*10000 + minor*100 + patch)"
+            exit 1
+          fi
+          code=$(( major * 10000 + minor * 100 + patch ))
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "versionCode for $VERSION is $code"
+
+      - name: Build APKs (split per ABI)
+        working-directory: ./roquiz
+        run: >-
+          flutter build apk --release --split-per-abi
+          --build-name=${{ inputs.version }}
+          --build-number=${{ steps.versioncode.outputs.code }}
+
+      # Rename before the next build: both builds write into the same directory.
+      - name: Rename APKs to roquiz_v<version>_<abi>.apk
+        working-directory: ./roquiz/build/app/outputs/flutter-apk
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          for abi in armeabi-v7a arm64-v8a x86_64; do
+            src="app-${abi}-release.apk"
+            [ -f "$src" ] || { echo "::error::missing $src"; exit 1; }
+            mv "$src" "roquiz_v${VERSION}_${abi}.apk"
+          done
+
+      # Sideloading has no store to pick the ABI for the user, so ship a
+      # universal APK too: ~2x the size, but always the right answer.
+      - name: Build the universal APK
+        working-directory: ./roquiz
+        run: >-
+          flutter build apk --release
+          --build-name=${{ inputs.version }}
+          --build-number=${{ steps.versioncode.outputs.code }}
+
+      - name: Rename the universal APK
+        working-directory: ./roquiz/build/app/outputs/flutter-apk
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          [ -f app-release.apk ] || { echo "::error::missing app-release.apk"; exit 1; }
+          mv app-release.apk "roquiz_v${VERSION}_universal.apk"
+          ls -1 roquiz_v*.apk
+
+      # A debug-signed release installs fine and then blocks every future
+      # update, so make it a build failure instead of a surprise months later.
+      - name: Verify the APKs are release-signed
+        working-directory: ./roquiz/build/app/outputs/flutter-apk
+        run: |
+          set -euo pipefail
+          apksigner="$(ls -d "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -n1)"
+          for apk in roquiz_v*.apk; do
+            certs="$("$apksigner" verify --print-certs "$apk")"
+            echo "$apk"
+            echo "$certs" | grep -E 'certificate DN|SHA-256 digest' || true
+            if echo "$certs" | grep -q 'CN=Android Debug'; then
+              echo "::error::$apk is debug-signed"
+              exit 1
+            fi
+          done
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-apks
+          path: roquiz/build/app/outputs/flutter-apk/roquiz_v*.apk
+          if-no-files-found: error
+
+  build-linux:
+    runs-on: ubuntu-latest
+    needs: [check-version, test]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
+        run: flutter pub get
+
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
+      - name: Build Linux (x64)
+        working-directory: ./roquiz
+        run: >-
+          flutter build linux --release
+          --build-name=${{ inputs.version }}
+          --build-number=${{ github.run_number }}
+
+      - name: Package tarball
+        run: >-
+          tar -czf roquiz_v${{ inputs.version }}_linux-x64.tar.gz
+          -C roquiz/build/linux/x64/release/bundle .
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-x64
+          path: roquiz_v${{ inputs.version }}_linux-x64.tar.gz
+          if-no-files-found: error
+
+  build-windows:
+    runs-on: windows-latest
+    needs: [check-version, test]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
+        run: flutter pub get
+
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
+      - name: Build Windows (x64)
+        working-directory: ./roquiz
+        run: >-
+          flutter build windows --release
+          --build-name=${{ inputs.version }}
+          --build-number=${{ github.run_number }}
+
+      # Windows users get a .zip, as in every previous release; the Linux build
+      # stays a tarball.
+      - name: Package zip
+        shell: pwsh
+        env:
+          VERSION: ${{ inputs.version }}
+        run: >-
+          Compress-Archive
+          -Path roquiz/build/windows/x64/runner/Release/*
+          -DestinationPath "roquiz_v${env:VERSION}_windows-x64.zip"
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-x64
+          path: roquiz_v${{ inputs.version }}_windows-x64.zip
+          if-no-files-found: error
+
+  build-web:
+    runs-on: ubuntu-latest
+    needs: [check-version, test]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
+        run: flutter pub get
+
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
+      - name: Build web
+        working-directory: ./roquiz
+        run: >-
+          flutter build web --release --base-href /${{ github.event.repository.name }}/
+          --build-name=${{ inputs.version }}
+          --build-number=${{ github.run_number }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: roquiz/build/web
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build-android, build-linux, build-windows]
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+
+      - name: Collect release files and checksums
+        run: |
+          mkdir -p release-files
+          find artifacts -type f \( -name '*.apk' -o -name '*.tar.gz' -o -name '*.zip' \) -exec cp {} release-files/ \;
+          cd release-files
+          sha256sum * > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Resolve prerelease flag
+        id: prerelease
+        run: |
+          case "${{ inputs.prerelease }}" in
+            true)  echo "value=true"  >> "$GITHUB_OUTPUT" ;;
+            false) echo "value=false" >> "$GITHUB_OUTPUT" ;;
+            *)
+              if [[ "${{ inputs.version }}" =~ -(alpha|beta|rc) ]]; then
+                echo "value=true" >> "$GITHUB_OUTPUT"
+              else
+                echo "value=false" >> "$GITHUB_OUTPUT"
+              fi
+              ;;
+          esac
+
+      - name: Generate the changelog section and render the notes
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          # Must run before the release is created: the generator refuses to
+          # open a section for a version whose tag already exists.
+          .github/scripts/generate-changelog.sh "$VERSION"
+          .github/scripts/render-release-notes.sh "$VERSION" > release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          target_commitish: ${{ inputs.ref || github.sha }}
+          name: v${{ inputs.version }}
+          # The body comes from CHANGELOG.md via RELEASE_TEMPLATE.md; leaving
+          # generate_release_notes on would append GitHub's PR list underneath.
+          body_path: release-notes.md
+          generate_release_notes: false
+          prerelease: ${{ steps.prerelease.outputs.value }}
+          files: release-files/*
+
+      # After the release, deliberately: the tag then points at the commit that
+      # was actually built, and a failure here leaves the release intact. The
+      # changelog commit lands in the next release's range, where the generator
+      # filters it out by its message.
+      # Skipped when the run targets a specific commit or tag, since there would
+      # be no branch to push to.
+      - name: Commit the regenerated changelog
+        if: ${{ inputs.ref == '' }}
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "CHANGELOG.md is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "docs: update CHANGELOG for v$VERSION"
+          if ! git push origin "HEAD:$GITHUB_REF_NAME"; then
+            echo "::error::release v$VERSION is published, but pushing the changelog failed"
+            echo "::error::run .github/scripts/generate-changelog.sh locally and commit it"
+            exit 1
+          fi
+
+  deploy-web:
+    runs-on: ubuntu-latest
+    needs: build-web
+    permissions:
+      pages: write
+      id-token: write
+    # Shared with deploy_web.yaml: both publish to the same Pages site, so they
+    # must never deploy at once.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

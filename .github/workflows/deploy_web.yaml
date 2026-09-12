@@ -1,0 +1,73 @@
+name: Deploy to GitHub Pages
+
+# Manually publishes the current (unreleased) state of the app to GitHub Pages.
+# The site hosts a single version, so this REPLACES whatever release.yml last
+# deployed; re-run the release workflow to put the released build back.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Commit SHA, branch or tag to build (empty = current HEAD)"
+        required: false
+        type: string
+
+env:
+  FLUTTER_VERSION: "3.44.5"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: ./roquiz
+        run: flutter pub get
+
+      - name: Generate contributors assets
+        working-directory: ./roquiz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dart run bin/fetch_contributors.dart --avatars
+
+      - name: Build web
+        working-directory: ./roquiz
+        run: >-
+          flutter build web --release
+          --base-href /${{ github.event.repository.name }}/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: roquiz/build/web
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    # Shared with release.yml: both publish to the same Pages site, so they must
+    # never deploy at once.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

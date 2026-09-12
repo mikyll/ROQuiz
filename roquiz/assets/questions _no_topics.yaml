@@ -1,0 +1,99 @@
+- body: |
+    Dato un insieme F, un intorno è
+  answers:
+    - "L'insieme di tutti i sottoinsiemi di F"
+    - "L'insieme dei punti di F a distanza minore di epsilon da un punto x di F"
+    - "Una funzione N: F -> 2^F"
+    - "Una combinazione convessa di due punti x e y di F"
+    - "Nessuna di queste"
+  correct_answer: 2
+
+- body: |
+    Si consideri un problema di ottimizzazione (F,d) ed un intorno N. La proprietà che se un punto f di F è localmente ottimo rispetto ad N allora f è l'ottimo assoluto implica
+  answers:
+    - "Che N è un intorno esatto"
+    - "Che N è un intorno euclideo"
+    - "Che N è un intorno non euclideo"
+    - "Nessuna di queste caratterizzazioni"
+    - "Che N è un intorno convesso"
+  correct_answer: 0
+
+- body: |
+    Facendo variare lambda fra 0 e 1, la combinazione convessa di due punti x ed y descrive
+  answers:
+    - "Tutti i punti della semiretta che origina in x e passa per y"
+    - "Tutti i punti della retta passante per x ed y"
+    - "Tutti i punti del segmento [x,y]"
+    - "Il punto centrale del segmento [x,y]"
+    - "Tutti i punti della semiretta che origina in y e passa per x"
+  correct_answer: 2
+
+- body: |
+    Data una funzione f convessa su un insieme S convesso, la corda che unisce due punti della funzione:
+  answers:
+    - "Coincide con un flesso della funzione."
+    - "Sta al di sotto della funzione ma non coincide mai con essa."
+    - "Sta al di sopra della funzione ma non coincide mai con essa."
+    - "Sta al di sopra della funzione o è con essa coincidente."
+    - "Sta al di sotto della funzione o è con essa coincidente."
+  correct_answer: 3
+
+- body: |
+    Una variabile libera in segno può essere sostituita equivalentemente da:
+  answers:
+    - "La differenza fra una variabile non positiva ed una non negativa."
+    - "La differenza fra due variabili non negative."
+    - "La somma di due variabili non positive."
+    - "La somma di due variabili non negative."
+    - "La differenza fra una variabile non negativa e una non positiva."
+  correct_answer: 1
+
+- body: |
+    Un vincolo espresso come Ax = b in forma standard equivale, in forma canonica, a
+  answers:
+    - "Ax <=b, Ax >=b"
+    - "Ax < b"
+    - "Ax > b"
+    - "Ax >= b, Ax < b"
+    - "Nessuna di queste"
+  correct_answer: 0
+
+- body: |
+    Dati un vettore di parametri a ed un vettore di incognite x, una disequazione della forma a'x <= b è equivalente a
+  answers:
+    - "a'x <= b, a'x + s = b, s >= 0."
+    - "a'x - s = b, s >= 0"
+    - "a'x + s = b, s <= 0."
+    - "a'x + s = b, s >= 0."
+    - "Nessuna di queste."
+  correct_answer: 3
+
+- body: |
+    Cosa contiene il tableau a qualunque iterazione?
+  answers:
+    - "Rappresentazione compatta dei coefficienti del sistema AX = b."
+    - "Informazioni sui costi e valori delle soluzioni di base ammissibili."
+    - "Rappresentazione compatta dei vincoli di un problema di LP."
+    - "Rappresentazione compatta dei valori delle soluzioni."
+    - "Nessuna di queste."
+  correct_answer: 0
+
+- body: |
+    Quale colonna conviene far entrare in base in un cambiamento di base?
+  answers:
+    - "Colonna con tutti elementi positivi."
+    - "Colonna con costo relativo positivo."
+    - "Colonna con costo relativo negativo."
+    - "Colonna con tutti elementi negativi."
+    - "Nessuna di queste."
+  correct_answer: 2
+
+- body: |
+    In un tableau del simplesso primale, gli elementi della riga 0 (colonne da 1 a n):
+  answers:
+    - "Sono tutti nulli."
+    - "Possono avere segno qualunque."
+    - "Sono tutti non negativi."
+    - "Sono tutti positivi o nulli."
+    - "Nessuna di queste."
+  correct_answer: 1
