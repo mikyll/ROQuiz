@@ -404,8 +404,8 @@ Per compilarlo, lanciare uno dei comandi seguenti, in base all'output desiderato
 [contributors-url]: https://github.com/mikyll/ROQuiz/graphs/contributors
 [domande-shield]: https://img.shields.io/static/v1?label=domande&message=115&color=green
 [domande-url]: https://github.com/mikyll/ROQuiz/blob/main/Domande.txt
-[validazione-shield]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml/badge.svg
-[validazione-url]: https://github.com/mikyll/ROQuiz/actions/workflows/check_file_domande.yml
+[validazione-shield]: https://github.com/mikyll/ROQuiz/actions/workflows/questions_validate.yaml/badge.svg
+[validazione-url]: https://github.com/mikyll/ROQuiz/actions/workflows/questions_validate.yaml
 [forks-shield]: https://img.shields.io/github/forks/mikyll/ROQuiz
 [forks-url]: https://github.com/mikyll/ROQuiz/network/members
 [repo-size-shield]: https://img.shields.io/github/repo-size/mikyll/ROQuiz
