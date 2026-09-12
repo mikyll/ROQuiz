@@ -45,26 +45,38 @@ questo il workflow fallisce se i secret mancano.
    ```
 
 Il `versionCode` non si tocca: il workflow lo deriva dalla versione
-(`major*10000 + minor*100 + patch`, quindi `2.0.3` → `20003`), così cresce
+(`major*10000 + minor*100 + patch`, quindi `2.0.0` → `20000`), così cresce
 sempre. Come conseguenza `minor` e `patch` devono restare sotto 100.
 
 ## A ogni release
 
+Non c'è niente da preparare: Actions → **Release** → *Run workflow*, con
+`version` uguale alla versione da rilasciare (senza la `v`), `prerelease` =
+`auto` e `ref` vuoto.
+
+Il job `check-version` fa da filtro in una trentina di secondi: rifiuta le
+versioni malformate, quelle il cui tag o release esiste già, e quelle senza
+nemmeno un commit da elencare, prima che parta qualsiasi build. Se passa, gira
+tutto il resto: test, quattro build (Android, Linux, Windows, web), la release
+con le note generate da `CHANGELOG.md` via `.github/RELEASE_TEMPLATE.md`, e il
+deploy su GitHub Pages.
+
+Il `CHANGELOG.md` lo scrive la CI. L'ordine è voluto: prima la release, con il
+tag che punta al commit effettivamente compilato, e solo dopo il commit del
+changelog rigenerato. Così il tag corrisponde all'albero da cui escono gli
+artefatti, e se la push del changelog fallisce la release resta valida. Quel
+commit finisce nel range della release successiva, dove il generatore lo scarta
+riconoscendolo dal messaggio (`docs: update CHANGELOG for v…`).
+
+Resta il caso in cui si rilascia da un commit o da un tag invece che dalla punta
+di un branch, indicando `ref`: lì non c'è un branch su cui pushare, quindi la CI
+salta il commit del changelog e il file va aggiornato a mano:
+
 ```sh
 git fetch --tags
-.github/scripts/generate-changelog.sh 2.0.3   # la versione che stai per rilasciare
-git add CHANGELOG.md && git commit -m "docs: changelog for 2.0.3"
-git push
+.github/scripts/generate-changelog.sh
+git add CHANGELOG.md && git commit -m "docs: update CHANGELOG for vX.Y.Z"
 ```
-
-Poi Actions → **Release** → *Run workflow*, con `version` = `2.0.3` (senza la
-`v`), `prerelease` = `auto`, `ref` vuoto.
-
-Il job `check-version` fa da filtro in ~30 secondi: rifiuta le versioni
-malformate, i tag già esistenti e i CHANGELOG senza la sezione della versione,
-prima che parta qualsiasi build. Se passa, gira tutto il resto: test, quattro
-build (Android, Linux, Windows, web), la release con le note generate da
-`CHANGELOG.md` via `.github/RELEASE_TEMPLATE.md`, e il deploy su GitHub Pages.
 
 ## Verificare che l'aggiornamento funzioni
 
