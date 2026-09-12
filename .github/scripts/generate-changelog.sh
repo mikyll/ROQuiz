@@ -7,8 +7,12 @@
 #
 # Without arguments the commits made after the latest tag land under
 # '## [Unreleased]'. With <next-version> they land in a new '## [<version>]'
-# section instead: run it that way right before dispatching the release
-# workflow, which reads that section to build the release page.
+# section instead, which is the form the release page is built from.
+#
+# The release workflow runs this itself, so there is normally nothing to do by
+# hand; run it manually only to preview the file, or to update it after a
+# release cut from a specific commit or tag, where the workflow has no branch to
+# push to.
 #
 # The whole file is rewritten every time, so don't hand-edit it. Run
 # `git fetch --tags` first: a tag the workflow created on GitHub but that the
@@ -37,6 +41,11 @@ if [ -n "$next" ] && printf '%s\n' ${tags[@]+"${tags[@]}"} | grep -qx "v$next"; 
   exit 1
 fi
 
+# The release workflow commits the regenerated file after tagging, so that
+# commit falls into the next release's range: drop it, it documents the
+# changelog rather than the app.
+AUTO_COMMIT_RE='^docs: update CHANGELOG for v'
+
 # Newest first, to match the order of the sections, split into '### <day>'
 # groups. The stable sort on the date guarantees a day gets a single heading
 # even when author dates are out of order (rebases, cherry-picks).
@@ -44,6 +53,7 @@ log_range() {
   local tab
   tab="$(printf '\t')"
   git log --no-merges --date-order --date=short \
+    --invert-grep --grep="$AUTO_COMMIT_RE" \
     --pretty=format:"%ad${tab}- %s ([\`%h\`]($base/commit/%H))" "$1" \
   | sort -t "$tab" -k1,1r -s \
   | awk -F"$tab" '
@@ -128,12 +138,10 @@ QUESTO FILE È GENERATO: non modificarlo a mano, le modifiche verrebbero perse
 alla rigenerazione successiva. Per aggiornarlo:
 
   .github/scripts/generate-changelog.sh            # commit nuovi -> [Unreleased]
-  .github/scripts/generate-changelog.sh 2.0.3      # commit nuovi -> [2.0.3]
+  .github/scripts/generate-changelog.sh X.Y.Z      # commit nuovi -> [X.Y.Z]
 
-Prima di lanciare il workflow di release, rigenerarlo con la versione che si sta
-per rilasciare e committarlo: il workflow legge da qui il corpo della pagina
-della release (.github/scripts/render-release-notes.sh) e si ferma subito se la
-sezione manca.
+Di norma non serve: lo rigenera e lo committa il workflow di release, dopo aver
+creato il tag. Vedere .github/RELEASING.md.
 
 Dato che le voci sono i messaggi di commit, la leggibilità di questo file
 dipende da quanto sono descrittivi: conviene curarli, o fare squash prima del
