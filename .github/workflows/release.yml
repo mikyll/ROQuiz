@@ -72,10 +72,17 @@ jobs:
           fi
           echo "$TAG is free."
 
-      # Render the notes now and throw them away: a missing CHANGELOG.md section
-      # must fail here, not after ~15 minutes of builds.
-      - name: Check the release notes can be rendered
-        run: .github/scripts/render-release-notes.sh "${{ inputs.version }}" > /dev/null
+      # Build the section and render the notes now, throwing both away: an empty
+      # commit range or a broken template must fail here, not after ~15 minutes
+      # of builds. The real file is written again, and committed, by the release
+      # job.
+      - name: Check the release notes can be produced
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          .github/scripts/generate-changelog.sh "$VERSION"
+          .github/scripts/render-release-notes.sh "$VERSION" > /dev/null
 
   test:
     runs-on: ubuntu-latest
@@ -429,8 +436,15 @@ jobs:
               ;;
           esac
 
-      - name: Render release notes
-        run: .github/scripts/render-release-notes.sh "${{ inputs.version }}" > release-notes.md
+      - name: Generate the changelog section and render the notes
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          # Must run before the release is created: the generator refuses to
+          # open a section for a version whose tag already exists.
+          .github/scripts/generate-changelog.sh "$VERSION"
+          .github/scripts/render-release-notes.sh "$VERSION" > release-notes.md
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -444,6 +458,32 @@ jobs:
           generate_release_notes: false
           prerelease: ${{ steps.prerelease.outputs.value }}
           files: release-files/*
+
+      # After the release, deliberately: the tag then points at the commit that
+      # was actually built, and a failure here leaves the release intact. The
+      # changelog commit lands in the next release's range, where the generator
+      # filters it out by its message.
+      # Skipped when the run targets a specific commit or tag, since there would
+      # be no branch to push to.
+      - name: Commit the regenerated changelog
+        if: ${{ inputs.ref == '' }}
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "CHANGELOG.md is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "docs: update CHANGELOG for v$VERSION"
+          if ! git push origin "HEAD:$GITHUB_REF_NAME"; then
+            echo "::error::release v$VERSION is published, but pushing the changelog failed"
+            echo "::error::run .github/scripts/generate-changelog.sh locally and commit it"
+            exit 1
+          fi
 
   deploy-web:
     runs-on: ubuntu-latest
