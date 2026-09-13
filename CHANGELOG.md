@@ -20,7 +20,8 @@ merge.
 
 ## Versioni
 
-- [2.0.0](#200---2026-09-13)
+- [2.0.1](#201---2026-09-13)
+- [2.0.0](#200---2026-09-12)
 - [1.11.5](#1115---2025-07-23)
 - [1.11.4](#1114---2025-07-02)
 - [1.10.1](#1101---2024-01-18)
@@ -39,7 +40,15 @@ merge.
 
 ## [Unreleased]
 
-## [2.0.0] - 2026-09-13
+## [2.0.1] - 2026-09-13
+
+### 2026-09-13
+
+- perf(settings): save once on release instead of on every stepper step ([`a22828c`](https://github.com/mikyll/ROQuiz/commit/a22828cf5dcf732e67855663c064ff2fea1c4188))
+- fix(press-and-hold): separate the hold threshold from the repeat rate ([`01eafdb`](https://github.com/mikyll/ROQuiz/commit/01eafdbf6b2f636e88a92eac10bd024b63d6fb8c))
+- fix(bottom-bar): keep the buttons clear of the Android navigation bar ([`45e3d1c`](https://github.com/mikyll/ROQuiz/commit/45e3d1c8a31adbd48f4af9037eb671153b83ca87))
+
+## [2.0.0] - 2026-09-12
 
 ### 2026-09-12
 
@@ -1623,7 +1632,8 @@ merge.
 - Update README.md ([`d314f3f`](https://github.com/mikyll/ROQuiz/commit/d314f3f00a4773ddef1c2c9ffd4862c790931a74))
 - Initial commit ([`c1d8200`](https://github.com/mikyll/ROQuiz/commit/c1d82008ef094e8a3f837cff1cb335f8c8ed93a3))
 
-[Unreleased]: https://github.com/mikyll/ROQuiz/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/mikyll/ROQuiz/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/mikyll/ROQuiz/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/mikyll/ROQuiz/compare/v1.11.5...v2.0.0
 [1.11.5]: https://github.com/mikyll/ROQuiz/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/mikyll/ROQuiz/compare/v1.10.1...v1.11.4
