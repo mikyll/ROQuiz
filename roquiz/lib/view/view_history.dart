@@ -390,68 +390,74 @@ class ViewHistoryState extends State<ViewHistory> {
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor.withAlpha(70),
           ),
-          child: SizedBox(
-            width: double.infinity,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 10.0,
-                  children: [
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: _selection.hasSelection
-                          ? "Elimina selezionati"
-                          : "Svuota",
-                      child: IconButton(
-                        onPressed: _quizList.isEmpty
-                            ? null
-                            : (_selection.hasSelection
-                                  ? _confirmDeleteSelected
-                                  : _confirmClearHistory),
-                        icon: Icon(
-                          _selection.hasSelection
-                              ? Icons.delete
-                              : Icons.delete_sweep,
+          child: SafeArea(
+            // The Scaffold doesn't inset this slot: without SafeArea the
+            // buttons sit under the Android navigation bar. The tint stays
+            // outside it, so the bar still reaches the screen edge.
+            top: false,
+            child: SizedBox(
+              width: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 10.0,
+                    children: [
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: _selection.hasSelection
+                            ? "Elimina selezionati"
+                            : "Svuota",
+                        child: IconButton(
+                          onPressed: _quizList.isEmpty
+                              ? null
+                              : (_selection.hasSelection
+                                    ? _confirmDeleteSelected
+                                    : _confirmClearHistory),
+                          icon: Icon(
+                            _selection.hasSelection
+                                ? Icons.delete
+                                : Icons.delete_sweep,
+                          ),
+                          iconSize: 35,
                         ),
-                        iconSize: 35,
                       ),
-                    ),
-                    // File I/O cluster, set off from the destructive action above
-                    // by an extra gap (adds to the row's own spacing). Kept on the
-                    // right to match view_questions.
-                    const SizedBox(width: 8),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Importa",
-                      child: IconButton(
-                        // Import replaces the whole history, so it is only
-                        // available when there is no active selection to act on.
-                        onPressed: _selection.hasSelection
-                            ? null
-                            : _importHistory,
-                        icon: Icon(Icons.file_upload),
-                        iconSize: 35,
+                      // File I/O cluster, set off from the destructive action above
+                      // by an extra gap (adds to the row's own spacing). Kept on the
+                      // right to match view_questions.
+                      const SizedBox(width: 8),
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Importa",
+                        child: IconButton(
+                          // Import replaces the whole history, so it is only
+                          // available when there is no active selection to act on.
+                          onPressed: _selection.hasSelection
+                              ? null
+                              : _importHistory,
+                          icon: Icon(Icons.file_upload),
+                          iconSize: 35,
+                        ),
                       ),
-                    ),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: _selection.hasSelection
-                          ? "Esporta selezionati"
-                          : "Esporta",
-                      child: IconButton(
-                        onPressed: _quizList.isEmpty
-                            ? null
-                            : (_selection.hasSelection
-                                  ? _exportSelected
-                                  : () => _exportQuizzes()),
-                        icon: Icon(Icons.file_download),
-                        iconSize: 35,
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: _selection.hasSelection
+                            ? "Esporta selezionati"
+                            : "Esporta",
+                        child: IconButton(
+                          onPressed: _quizList.isEmpty
+                              ? null
+                              : (_selection.hasSelection
+                                    ? _exportSelected
+                                    : () => _exportQuizzes()),
+                          icon: Icon(Icons.file_download),
+                          iconSize: 35,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

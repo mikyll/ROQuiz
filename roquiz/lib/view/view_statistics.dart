@@ -120,10 +120,7 @@ class ViewStatistics extends StatelessWidget {
       children: [
         _StatTile(
           label: "Quiz svolti",
-          value: Text(
-            "${stats.quizCount}",
-            style: _valueStyle(context),
-          ),
+          value: Text("${stats.quizCount}", style: _valueStyle(context)),
         ),
         _StatTile(
           label: "Voto quiz medio",
@@ -156,10 +153,7 @@ class ViewStatistics extends StatelessWidget {
         ),
         _StatTile(
           label: "Quiz perfetti",
-          value: Text(
-            "${stats.perfectCount}",
-            style: _valueStyle(context),
-          ),
+          value: Text("${stats.perfectCount}", style: _valueStyle(context)),
         ),
         _StatTile(
           label: "Tempo totale",
@@ -194,8 +188,7 @@ class ViewStatistics extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ViewSettings(maxQuizPool: maxQuizPool),
+                  builder: (context) => ViewSettings(maxQuizPool: maxQuizPool),
                 ),
               );
             },
@@ -236,7 +229,10 @@ class ViewStatistics extends StatelessWidget {
                 style: _valueStyle(context),
               ),
               const SizedBox(height: 6.0),
-              Text("Medio", style: TextStyle(color: Theme.of(context).hintColor)),
+              Text(
+                "Medio",
+                style: TextStyle(color: Theme.of(context).hintColor),
+              ),
             ],
           ),
           Column(

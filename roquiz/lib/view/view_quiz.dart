@@ -674,68 +674,75 @@ class _ViewQuizState extends State<ViewQuiz> {
               // longer fit — does FittedBox scale everything down. MainAxisSize.min
               // lets the row report its own minimum width, so no breakpoint is
               // hardcoded.
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final double targetWidth = (constraints.maxWidth - 16.0)
-                      .clamp(0.0, 500.0 - 16.0)
-                      .toDouble();
-                  return FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(minWidth: targetWidth),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          // Minimum gap kept between the arrows and the action
-                          // button: spaceBetween grows it on wider screens, but
-                          // it never drops below this even when fully collapsed.
-                          spacing: 16.0,
-                          children: [
-                            Row(
-                              spacing: 20.0,
-                              children: [
-                                _buildNavArrow(
-                                  icon: Icons.arrow_back_ios_rounded,
-                                  enabled: _iQuestion > 0,
-                                  onUpdate: _previousQuestion,
-                                ),
-                                _buildNavArrow(
-                                  icon: Icons.arrow_forward_ios_rounded,
-                                  enabled: _iQuestion < widget.questionNum - 1,
-                                  onUpdate: _nextQuestion,
-                                ),
-                              ],
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (_isQuizOver) {
-                                  _startQuiz();
-                                } else {
-                                  _handleTerminate(settings);
-                                }
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 50.0,
-                                width: 100.0,
-                                child: Text(
-                                  !_isQuizOver ? "Termina" : "Riavvia",
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
+              child: SafeArea(
+                // The Scaffold doesn't inset this slot: without SafeArea the
+                // buttons sit under the Android navigation bar. The tint stays
+                // outside it, so the bar still reaches the screen edge.
+                top: false,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final double targetWidth = (constraints.maxWidth - 16.0)
+                        .clamp(0.0, 500.0 - 16.0)
+                        .toDouble();
+                    return FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minWidth: targetWidth),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // Minimum gap kept between the arrows and the action
+                            // button: spaceBetween grows it on wider screens, but
+                            // it never drops below this even when fully collapsed.
+                            spacing: 16.0,
+                            children: [
+                              Row(
+                                spacing: 20.0,
+                                children: [
+                                  _buildNavArrow(
+                                    icon: Icons.arrow_back_ios_rounded,
+                                    enabled: _iQuestion > 0,
+                                    onUpdate: _previousQuestion,
+                                  ),
+                                  _buildNavArrow(
+                                    icon: Icons.arrow_forward_ios_rounded,
+                                    enabled:
+                                        _iQuestion < widget.questionNum - 1,
+                                    onUpdate: _nextQuestion,
+                                  ),
+                                ],
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (_isQuizOver) {
+                                    _startQuiz();
+                                  } else {
+                                    _handleTerminate(settings);
+                                  }
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 50.0,
+                                  width: 100.0,
+                                  child: Text(
+                                    !_isQuizOver ? "Termina" : "Riavvia",
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),

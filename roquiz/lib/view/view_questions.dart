@@ -257,7 +257,8 @@ class ViewQuestionsState extends State<ViewQuestions> {
   // does it leave the screen. Wired into CustomBackButton (whose Esc handler
   // calls onPressed), so both the button and Esc share this behavior.
   void _handleBack() {
-    if (_searchBarOpen && (_searchBarKey.currentState?.closeSearch() ?? false)) {
+    if (_searchBarOpen &&
+        (_searchBarKey.currentState?.closeSearch() ?? false)) {
       return;
     }
     Navigator.pop(context);
@@ -410,171 +411,179 @@ class ViewQuestionsState extends State<ViewQuestions> {
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor.withAlpha(70),
           ),
-          child: SizedBox(
-            width: double.infinity,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 15.0,
-                  children: [
-                    // Show/Hide correct answers
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Mostra/nascondi le risposte corrette",
-                      child: IconButton(
-                        onPressed: () {
-                          _toggleShowAnswers(settings);
-                        },
-                        icon: Icon(
-                          settings.hideCorrectAnswersInEditMode
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        iconSize: 35,
-                      ),
-                    ),
-                    // Check if there are new questions
-                    if (widget.editable)
+          child: SafeArea(
+            // The Scaffold doesn't inset this slot: without SafeArea the
+            // buttons sit under the Android navigation bar. The tint stays
+            // outside it, so the bar still reaches the screen edge.
+            top: false,
+            child: SizedBox(
+              width: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 15.0,
+                    children: [
+                      // Show/Hide correct answers
                       Tooltip(
                         waitDuration: Duration(milliseconds: 500),
-                        message: "Controlla se ci sono nuove domande",
+                        message: "Mostra/nascondi le risposte corrette",
                         child: IconButton(
-                          onPressed: widget.repository == null || _checkingUpdates
-                              ? null
-                              : _checkUpdates,
-                          icon: _checkingUpdates
-                              ? const SizedBox(
-                                  width: 35,
-                                  height: 35,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 3,
-                                    ),
-                                  ),
-                                )
-                              : const Icon(Icons.sync_rounded),
-                          iconSize: 35,
-                        ),
-                      ),
-
-                    // Edit mode
-                    if (widget.editable)
-                      Tooltip(
-                        waitDuration: Duration(milliseconds: 500),
-                        message: "Modifica",
-                        child: IconButton(
-                          onPressed: () async {
-                            final bool? changed = await Navigator.push<bool>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  // Always edit the full set, not the current
-                                  // search results — otherwise saving would
-                                  // persist only the filtered subset.
-                                  final List<String> topics = getTopicsList(
-                                    _allQuestions,
-                                  );
-
-                                  return ViewQuestionsEdit(
-                                    questions: _allQuestions,
-                                    topics: topics,
-                                    hideAnswers:
-                                        settings.hideCorrectAnswersInEditMode,
-                                    repository: widget.repository,
-                                  );
-                                },
-                              ),
-                            );
-                            // Edits were auto-saved to the repository; refresh
-                            // the list (and drop any active search) to show them.
-                            if (changed == true && mounted) {
-                              _refreshFromRepository();
-                            }
-                            // TODO: change animation?
-                            // Navigator.push(
-                            //   context,
-                            //   PageRouteBuilder(
-                            //     pageBuilder: (_, __, ___) {
-                            //       return ViewQuestionsEdit(
-                            //         questions: _questions,
-                            //         hideAnswers:
-                            //             settings.hideCorrectAnswersInEditMode,
-                            //       );
-                            //     },
-                            //     transitionDuration: Duration.zero,
-                            //     // transitionDuration: Duration(milliseconds: 300),
-                            //     // transitionsBuilder: (_, animation, __, c) {
-                            //     //   const begin = Offset(1.0, 0.0);
-                            //     //   const end = Offset.zero;
-                            //     //   var tween = Tween(
-                            //     //     begin: begin,
-                            //     //     end: end,
-                            //     //   ).chain(CurveTween(curve: Curves.easeOut));
-                            //     //   return SlideTransition(
-                            //     //     position: animation.drive(tween),
-                            //     //     child: c,
-                            //     //   );
-                            //     // },
-                            //   ),
-                            // );
+                          onPressed: () {
+                            _toggleShowAnswers(settings);
                           },
-                          icon: Icon(Icons.edit),
+                          icon: Icon(
+                            settings.hideCorrectAnswersInEditMode
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
                           iconSize: 35,
                         ),
                       ),
-
-                    // Edit mode (file) — debug-only and not implemented yet, so
-                    // it's hidden in release (kDebugMode) and shown disabled in
-                    // debug. Re-enable (wire `onPressed` to push
-                    // `ViewQuestionsEditFile`) once the file editor is ready.
-                    if (widget.editable)
-                      if (kDebugMode)
+                      // Check if there are new questions
+                      if (widget.editable)
                         Tooltip(
                           waitDuration: Duration(milliseconds: 500),
-                          message: "Modifica File (non ancora disponibile)",
+                          message: "Controlla se ci sono nuove domande",
                           child: IconButton(
-                            onPressed: null,
-                            icon: Icon(Icons.edit_document),
+                            onPressed:
+                                widget.repository == null || _checkingUpdates
+                                ? null
+                                : _checkUpdates,
+                            icon: _checkingUpdates
+                                ? const SizedBox(
+                                    width: 35,
+                                    height: 35,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3,
+                                      ),
+                                    ),
+                                  )
+                                : const Icon(Icons.sync_rounded),
                             iconSize: 35,
                           ),
                         ),
 
-                    // File I/O cluster, set off from the content actions above by
-                    // an extra gap (adds to the row's own spacing). Mirrors the
-                    // right-hand import/export group in view_history.
-                    if (widget.editable) const SizedBox(width: 8),
-                    // Import questions from file
-                    if (widget.editable)
-                      Tooltip(
-                        waitDuration: Duration(milliseconds: 500),
-                        message: "Importa",
-                        child: IconButton(
-                          onPressed: widget.repository == null
-                              ? null
-                              : () => _importFromFile(settings),
-                          icon: Icon(Icons.file_upload),
-                          iconSize: 35,
+                      // Edit mode
+                      if (widget.editable)
+                        Tooltip(
+                          waitDuration: Duration(milliseconds: 500),
+                          message: "Modifica",
+                          child: IconButton(
+                            onPressed: () async {
+                              final bool? changed = await Navigator.push<bool>(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    // Always edit the full set, not the current
+                                    // search results — otherwise saving would
+                                    // persist only the filtered subset.
+                                    final List<String> topics = getTopicsList(
+                                      _allQuestions,
+                                    );
+
+                                    return ViewQuestionsEdit(
+                                      questions: _allQuestions,
+                                      topics: topics,
+                                      hideAnswers:
+                                          settings.hideCorrectAnswersInEditMode,
+                                      repository: widget.repository,
+                                    );
+                                  },
+                                ),
+                              );
+                              // Edits were auto-saved to the repository; refresh
+                              // the list (and drop any active search) to show them.
+                              if (changed == true && mounted) {
+                                _refreshFromRepository();
+                              }
+                              // TODO: change animation?
+                              // Navigator.push(
+                              //   context,
+                              //   PageRouteBuilder(
+                              //     pageBuilder: (_, __, ___) {
+                              //       return ViewQuestionsEdit(
+                              //         questions: _questions,
+                              //         hideAnswers:
+                              //             settings.hideCorrectAnswersInEditMode,
+                              //       );
+                              //     },
+                              //     transitionDuration: Duration.zero,
+                              //     // transitionDuration: Duration(milliseconds: 300),
+                              //     // transitionsBuilder: (_, animation, __, c) {
+                              //     //   const begin = Offset(1.0, 0.0);
+                              //     //   const end = Offset.zero;
+                              //     //   var tween = Tween(
+                              //     //     begin: begin,
+                              //     //     end: end,
+                              //     //   ).chain(CurveTween(curve: Curves.easeOut));
+                              //     //   return SlideTransition(
+                              //     //     position: animation.drive(tween),
+                              //     //     child: c,
+                              //     //   );
+                              //     // },
+                              //   ),
+                              // );
+                            },
+                            icon: Icon(Icons.edit),
+                            iconSize: 35,
+                          ),
                         ),
-                      ),
-                    // Export questions to file
-                    if (widget.editable)
-                      Tooltip(
-                        waitDuration: Duration(milliseconds: 500),
-                        message: "Esporta",
-                        child: IconButton(
-                          onPressed:
-                              widget.repository == null || _allQuestions.isEmpty
-                              ? null
-                              : _exportToFile,
-                          icon: Icon(Icons.file_download),
-                          iconSize: 35,
+
+                      // Edit mode (file) — debug-only and not implemented yet, so
+                      // it's hidden in release (kDebugMode) and shown disabled in
+                      // debug. Re-enable (wire `onPressed` to push
+                      // `ViewQuestionsEditFile`) once the file editor is ready.
+                      if (widget.editable)
+                        if (kDebugMode)
+                          Tooltip(
+                            waitDuration: Duration(milliseconds: 500),
+                            message: "Modifica File (non ancora disponibile)",
+                            child: IconButton(
+                              onPressed: null,
+                              icon: Icon(Icons.edit_document),
+                              iconSize: 35,
+                            ),
+                          ),
+
+                      // File I/O cluster, set off from the content actions above by
+                      // an extra gap (adds to the row's own spacing). Mirrors the
+                      // right-hand import/export group in view_history.
+                      if (widget.editable) const SizedBox(width: 8),
+                      // Import questions from file
+                      if (widget.editable)
+                        Tooltip(
+                          waitDuration: Duration(milliseconds: 500),
+                          message: "Importa",
+                          child: IconButton(
+                            onPressed: widget.repository == null
+                                ? null
+                                : () => _importFromFile(settings),
+                            icon: Icon(Icons.file_upload),
+                            iconSize: 35,
+                          ),
                         ),
-                      ),
-                  ],
+                      // Export questions to file
+                      if (widget.editable)
+                        Tooltip(
+                          waitDuration: Duration(milliseconds: 500),
+                          message: "Esporta",
+                          child: IconButton(
+                            onPressed:
+                                widget.repository == null ||
+                                    _allQuestions.isEmpty
+                                ? null
+                                : _exportToFile,
+                            icon: Icon(Icons.file_download),
+                            iconSize: 35,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),

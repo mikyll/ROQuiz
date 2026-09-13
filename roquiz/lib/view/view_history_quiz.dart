@@ -163,66 +163,75 @@ class _ViewHistoryQuizState extends State<ViewHistoryQuiz> {
                     // no longer fit — does FittedBox scale everything down.
                     // MainAxisSize.min lets the row report its own minimum
                     // width, so no breakpoint is hardcoded.
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final double targetWidth = (constraints.maxWidth - 16.0)
-                            .clamp(0.0, 500.0 - 16.0)
-                            .toDouble();
-                        return FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(minWidth: targetWidth),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                // Minimum gap kept between the arrows and the
-                                // grade: spaceBetween grows it on wider screens,
-                                // but it never drops below this even when fully
-                                // collapsed.
-                                spacing: 16.0,
-                                children: [
-                                  Row(
-                                    spacing: 20.0,
-                                    children: [
-                                      IconButton(
-                                        onPressed: _iQuestion <= 0
-                                            ? null
-                                            : _previousQuestion,
-                                        icon: Icon(
-                                          Icons.arrow_back_ios_rounded,
+                    child: SafeArea(
+                      // The Scaffold doesn't inset this slot: without SafeArea the
+                      // buttons sit under the Android navigation bar. The tint stays
+                      // outside it, so the bar still reaches the screen edge.
+                      top: false,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final double targetWidth =
+                              (constraints.maxWidth - 16.0)
+                                  .clamp(0.0, 500.0 - 16.0)
+                                  .toDouble();
+                          return FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minWidth: targetWidth,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // Minimum gap kept between the arrows and the
+                                  // grade: spaceBetween grows it on wider screens,
+                                  // but it never drops below this even when fully
+                                  // collapsed.
+                                  spacing: 16.0,
+                                  children: [
+                                    Row(
+                                      spacing: 20.0,
+                                      children: [
+                                        IconButton(
+                                          onPressed: _iQuestion <= 0
+                                              ? null
+                                              : _previousQuestion,
+                                          icon: Icon(
+                                            Icons.arrow_back_ios_rounded,
+                                          ),
+                                          iconSize: 35,
                                         ),
-                                        iconSize: 35,
-                                      ),
-                                      IconButton(
-                                        onPressed:
-                                            _iQuestion >= totalQuestions - 1
-                                            ? null
-                                            : _nextQuestion,
-                                        icon: Icon(
-                                          Icons.arrow_forward_ios_rounded,
+                                        IconButton(
+                                          onPressed:
+                                              _iQuestion >= totalQuestions - 1
+                                              ? null
+                                              : _nextQuestion,
+                                          icon: Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                          ),
+                                          iconSize: 35,
                                         ),
-                                        iconSize: 35,
-                                      ),
-                                    ],
-                                  ),
-                                  GradeBadge(
-                                    grade: quiz.gradeWith(writtenGrade),
-                                    gradeBase: writtenGrade != null
-                                        ? 30.0
-                                        : 32.0,
-                                    size: 56.0,
-                                    desaturated: writtenGrade == null,
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                    GradeBadge(
+                                      grade: quiz.gradeWith(writtenGrade),
+                                      gradeBase: writtenGrade != null
+                                          ? 30.0
+                                          : 32.0,
+                                      size: 56.0,
+                                      desaturated: writtenGrade == null,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
           ),

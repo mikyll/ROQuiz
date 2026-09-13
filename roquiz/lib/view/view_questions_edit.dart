@@ -434,7 +434,9 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
                     // Tag the just-added question so _scrollToQuestion can bring
                     // it into view.
                     return KeyedSubtree(
-                      key: index == _scrollTargetIndex ? _scrollTargetKey : null,
+                      key: index == _scrollTargetIndex
+                          ? _scrollTargetKey
+                          : null,
                       child: item,
                     );
                   },
@@ -451,103 +453,109 @@ class ViewQuestionsEditState extends State<ViewQuestionsEdit> {
             //   top: BorderSide(color: Theme.of(context).disabledColor),
             // ),
           ),
-          child: SizedBox(
-            width: double.infinity,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 15.0,
-                  children: [
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Aggiungi una nuova domanda",
-                      child: IconButton(
-                        onPressed: !_selection.hasSelection
-                            ? () {
-                                _commandAddNewQuestion();
-                              }
-                            : null,
-                        icon: Icon(Icons.add),
-                        iconSize: 35,
-                      ),
-                    ),
-                    if (kDebugMode)
+          child: SafeArea(
+            // The Scaffold doesn't inset this slot: without SafeArea the
+            // buttons sit under the Android navigation bar. The tint stays
+            // outside it, so the bar still reaches the screen edge.
+            top: false,
+            child: SizedBox(
+              width: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 15.0,
+                    children: [
                       Tooltip(
                         waitDuration: Duration(milliseconds: 500),
-                        message: "Modifica",
+                        message: "Aggiungi una nuova domanda",
                         child: IconButton(
-                          onPressed: _selection.count == 1
+                          onPressed: !_selection.hasSelection
                               ? () {
-                                  _commandEditQuestion();
+                                  _commandAddNewQuestion();
                                 }
                               : null,
-                          icon: Icon(Icons.edit_note),
+                          icon: Icon(Icons.add),
                           iconSize: 35,
                         ),
                       ),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Rimuovi",
-                      child: IconButton(
-                        onPressed: _selection.hasSelection
-                            ? () {
-                                _commandRemoveQuestions();
-                              }
-                            : null,
-                        icon: Icon(Icons.delete),
-                        iconSize: 35,
+                      if (kDebugMode)
+                        Tooltip(
+                          waitDuration: Duration(milliseconds: 500),
+                          message: "Modifica",
+                          child: IconButton(
+                            onPressed: _selection.count == 1
+                                ? () {
+                                    _commandEditQuestion();
+                                  }
+                                : null,
+                            icon: Icon(Icons.edit_note),
+                            iconSize: 35,
+                          ),
+                        ),
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Rimuovi",
+                        child: IconButton(
+                          onPressed: _selection.hasSelection
+                              ? () {
+                                  _commandRemoveQuestions();
+                                }
+                              : null,
+                          icon: Icon(Icons.delete),
+                          iconSize: 35,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10.0),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Annulla tutte le modifiche",
-                      child: IconButton(
-                        onPressed: _hasChanges()
-                            ? () {
-                                setState(() {
-                                  _commandRestore();
-                                });
-                              }
-                            : null,
-                        icon: Icon(Icons.restore),
-                        iconSize: 35,
+                      SizedBox(width: 10.0),
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Annulla tutte le modifiche",
+                        child: IconButton(
+                          onPressed: _hasChanges()
+                              ? () {
+                                  setState(() {
+                                    _commandRestore();
+                                  });
+                                }
+                              : null,
+                          icon: Icon(Icons.restore),
+                          iconSize: 35,
+                        ),
                       ),
-                    ),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Annulla l'ultima azione",
-                      child: IconButtonAcceleration(
-                        onUpdate: _commandExecutor.canUndo()
-                            ? () {
-                                setState(() {
-                                  _commandExecutor.undoCommand();
-                                });
-                              }
-                            : null,
-                        icon: Icon(Icons.undo),
-                        iconSize: 35,
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Annulla l'ultima azione",
+                        child: IconButtonAcceleration(
+                          onUpdate: _commandExecutor.canUndo()
+                              ? () {
+                                  setState(() {
+                                    _commandExecutor.undoCommand();
+                                  });
+                                }
+                              : null,
+                          icon: Icon(Icons.undo),
+                          iconSize: 35,
+                        ),
                       ),
-                    ),
-                    Tooltip(
-                      waitDuration: Duration(milliseconds: 500),
-                      message: "Ripeti l'ultima azione",
-                      child: IconButtonAcceleration(
-                        onUpdate: _commandExecutor.canRedo()
-                            ? () {
-                                setState(() {
-                                  _commandExecutor.redoCommand();
-                                });
-                              }
-                            : null,
-                        icon: Icon(Icons.redo),
-                        iconSize: 35,
+                      Tooltip(
+                        waitDuration: Duration(milliseconds: 500),
+                        message: "Ripeti l'ultima azione",
+                        child: IconButtonAcceleration(
+                          onUpdate: _commandExecutor.canRedo()
+                              ? () {
+                                  setState(() {
+                                    _commandExecutor.redoCommand();
+                                  });
+                                }
+                              : null,
+                          icon: Icon(Icons.redo),
+                          iconSize: 35,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
