@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 
 class IconButtonAcceleration extends StatefulWidget {
-  // Acceleration stuff
+  // Press-and-hold timing. The first update fires on press. [holdDelay] then
+  // decides whether this is a hold at all — a press shorter than it yields
+  // exactly one update — and only afterwards do the repeats start, at
+  // [initialDelay] and shrinking by an equal amount each time until they reach
+  // [minDelay] after [delaySteps] of them.
+  //
+  // Keeping the two apart is what lets the repeats start quickly without a slow
+  // tap counting twice: [holdDelay] guards against that on its own, so
+  // [initialDelay] is free to be short.
+  //
+  // The defaults: one update on press, the second 0.3s later, full speed about
+  // 0.8s in, capped at 200 updates per second. That cap is far finer than the
+  // screen refreshes, so the value outruns what's drawn and the display
+  // coalesces — intended, since what matters is where it lands on release.
+  // Note the cap is a ceiling, not a promise: the loop waits [minDelay] *plus*
+  // however long [onUpdate] takes, so an expensive callback sets the real rate.
+  final int holdDelay;
   final int minDelay;
   final int initialDelay;
   final int delaySteps;
@@ -35,9 +51,10 @@ class IconButtonAcceleration extends StatefulWidget {
   const IconButtonAcceleration({
     super.key,
     // Acceleration stuff
-    this.minDelay = 15,
-    this.initialDelay = 200,
-    this.delaySteps = 3,
+    this.holdDelay = 300,
+    this.minDelay = 5,
+    this.initialDelay = 140,
+    this.delaySteps = 6,
     this.onUpdate,
     // Default parameters
     this.iconSize,
@@ -91,16 +108,23 @@ class IconButtonAccelerationState extends State<IconButtonAcceleration> {
       _holding = true;
     });
 
+    final onUpdate = widget.onUpdate;
+    if (onUpdate == null) {
+      return;
+    }
+
+    // One update for the press itself, then wait out [holdDelay] before
+    // repeating: a plain tap ends here, having counted once.
+    onUpdate();
+    await Future.delayed(Duration(milliseconds: widget.holdDelay));
+
     // Calculate the delay decrease per step
     final step =
         (widget.initialDelay - widget.minDelay).toDouble() / widget.delaySteps;
     var delay = widget.initialDelay.toDouble();
 
-    while (_holding &&
-        session == _holdSession &&
-        mounted &&
-        widget.onUpdate != null) {
-      widget.onUpdate!();
+    while (_holding && session == _holdSession && mounted) {
+      onUpdate();
       await Future.delayed(Duration(milliseconds: delay.round()));
       if (delay > widget.minDelay) {
         delay -= step;
