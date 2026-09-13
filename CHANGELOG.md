@@ -20,7 +20,7 @@ merge.
 
 ## Versioni
 
-- [2.0.0](#200---2026-09-12)
+- [2.0.0](#200---2026-09-13)
 - [1.11.5](#1115---2025-07-23)
 - [1.11.4](#1114---2025-07-02)
 - [1.10.1](#1101---2024-01-18)
@@ -39,10 +39,13 @@ merge.
 
 ## [Unreleased]
 
-## [2.0.0] - 2026-09-12
+## [2.0.0] - 2026-09-13
 
 ### 2026-09-12
 
+- ci(release): group the notes by kind and move them to the bottom ([`f0efaec`](https://github.com/mikyll/ROQuiz/commit/f0efaecbd0417d36bb22dfee03d96684a72b8a5d))
+- ci(questions_validate): rename workflow ([`d9f1bec`](https://github.com/mikyll/ROQuiz/commit/d9f1bec2534c337d9e7418b4b40ba2222d82ffb8))
+- docs: update README ([`d58255f`](https://github.com/mikyll/ROQuiz/commit/d58255f719d119d3b6ed7aa617a94c8b77a06e26))
 - fix(questions): keep offering a declined update to an explicit check ([`3878532`](https://github.com/mikyll/ROQuiz/commit/38785328bb43d8ddc4e613929c27d002bcf28137))
 - fix(contributors): cap the detail card width like the rest of the app ([`a70a3e3`](https://github.com/mikyll/ROQuiz/commit/a70a3e3455a791f7a9780c326f4e1db25d26c259))
 - docs: update CHANGELOG for the automated flow ([`c67e328`](https://github.com/mikyll/ROQuiz/commit/c67e328807ec00bb07fa89ea5beace92aed94886))
