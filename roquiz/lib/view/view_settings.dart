@@ -204,22 +204,40 @@ class ViewSettingsState extends State<ViewSettings> {
   /// syncing the field, the model and storage. Used by the +/- steppers and on
   /// submit; the live [TextFormField.onChanged] only updates the model so it
   /// doesn't move the caret while typing.
-  void _setQuizQuestions(int value) {
+  ///
+  /// [persist] false keeps the write out of the loop while a stepper is held
+  /// down — every save encodes the whole settings object and crosses the
+  /// platform channel, which at the repeat rate would throttle the stepper
+  /// itself. [_persistSettings] then writes once, on release.
+  void _setQuizQuestions(int value, {bool persist = true}) {
     final settings = context.read<Settings>();
     final int clamped = value.clamp(_minQuizQuestions, _maxQuizQuestions);
     settings.quizQuestions = clamped;
     quizQuestionsController.text = clamped.toString();
-    SettingsManager.save(settings);
+    if (persist) {
+      SettingsManager.save(settings);
+    } else {
+      // Save notifies on its own; without it the rest of the screen would go
+      // stale until release.
+      settings.notifyListeners();
+    }
   }
 
   /// Quiz-time counterpart of [_setQuizQuestions].
-  void _setQuizTime(int value) {
+  void _setQuizTime(int value, {bool persist = true}) {
     final settings = context.read<Settings>();
     final int clamped = value.clamp(_minQuizTime, _maxQuizTime);
     settings.quizTime = clamped;
     quizTimeController.text = clamped.toString();
-    SettingsManager.save(settings);
+    if (persist) {
+      SettingsManager.save(settings);
+    } else {
+      settings.notifyListeners();
+    }
   }
+
+  /// Writes the settings that the steppers have been changing in memory.
+  void _persistSettings() => SettingsManager.save(context.read<Settings>());
 
   /// Restores every setting to its default after a confirmation. Syncs the
   /// stepper/grade controllers so the visible fields reflect the reset (the
@@ -258,6 +276,7 @@ class ViewSettingsState extends State<ViewSettings> {
   Widget _stepperButton(IconData icon, void Function() onUpdate) {
     return IconButtonAcceleration(
       onUpdate: onUpdate,
+      onReleased: _persistSettings,
       icon: Icon(icon),
       visualDensity: VisualDensity.compact,
       padding: EdgeInsets.zero,
@@ -600,7 +619,10 @@ class ViewSettingsState extends State<ViewSettings> {
                         children: [
                           _stepperButton(
                             Icons.remove,
-                            () => _setQuizQuestions(settings.quizQuestions - 1),
+                            () => _setQuizQuestions(
+                              settings.quizQuestions - 1,
+                              persist: false,
+                            ),
                           ),
                           SizedBox(
                             width: _numberFieldWidth(),
@@ -645,7 +667,10 @@ class ViewSettingsState extends State<ViewSettings> {
                           ),
                           _stepperButton(
                             Icons.add,
-                            () => _setQuizQuestions(settings.quizQuestions + 1),
+                            () => _setQuizQuestions(
+                              settings.quizQuestions + 1,
+                              persist: false,
+                            ),
                           ),
                         ],
                       ),
@@ -664,7 +689,10 @@ class ViewSettingsState extends State<ViewSettings> {
                         children: [
                           _stepperButton(
                             Icons.remove,
-                            () => _setQuizTime(settings.quizTime - 1),
+                            () => _setQuizTime(
+                              settings.quizTime - 1,
+                              persist: false,
+                            ),
                           ),
                           SizedBox(
                             width: _numberFieldWidth(),
@@ -709,7 +737,10 @@ class ViewSettingsState extends State<ViewSettings> {
                           ),
                           _stepperButton(
                             Icons.add,
-                            () => _setQuizTime(settings.quizTime + 1),
+                            () => _setQuizTime(
+                              settings.quizTime + 1,
+                              persist: false,
+                            ),
                           ),
                         ],
                       ),

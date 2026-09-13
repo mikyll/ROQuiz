@@ -23,6 +23,11 @@ class IconButtonAcceleration extends StatefulWidget {
   final int delaySteps;
   final void Function()? onUpdate;
 
+  /// Fires once when the press ends, after the last [onUpdate] — for a tap as
+  /// much as for a hold. Lets a caller do the expensive part of the work once
+  /// (persisting, say) instead of on every repeat.
+  final void Function()? onReleased;
+
   // Default properties
   final double? iconSize;
   final VisualDensity? visualDensity;
@@ -56,6 +61,7 @@ class IconButtonAcceleration extends StatefulWidget {
     this.initialDelay = 140,
     this.delaySteps = 6,
     this.onUpdate,
+    this.onReleased,
     // Default parameters
     this.iconSize,
     this.visualDensity,
@@ -140,6 +146,7 @@ class IconButtonAccelerationState extends State<IconButtonAcceleration> {
     setState(() {
       _holding = false;
     });
+    widget.onReleased?.call();
   }
 
   @override
