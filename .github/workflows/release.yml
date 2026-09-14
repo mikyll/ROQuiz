@@ -31,6 +31,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    outputs:
+      code: ${{ steps.versioncode.outputs.code }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
@@ -50,6 +52,25 @@ jobs:
             exit 1
           fi
           echo "Version $VERSION looks well-formed."
+
+      # One build number for every platform, derived from the version so it is
+      # monotonic by construction: Android refuses to install over a higher
+      # versionCode, and github.run_number restarts whenever the workflow file
+      # is renamed. Computed here so a bad minor/patch fails before the builds.
+      - name: Compute the build number
+        id: versioncode
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          IFS=. read -r major minor patch <<< "${VERSION%%-*}"
+          if [ "$minor" -ge 100 ] || [ "$patch" -ge 100 ]; then
+            echo "::error::minor and patch must stay below 100 (versionCode = major*10000 + minor*100 + patch)"
+            exit 1
+          fi
+          code=$(( major * 10000 + minor * 100 + patch ))
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "versionCode for $VERSION is $code"
 
       - name: Fail if the tag or release already exists
         env:
@@ -134,6 +155,20 @@ jobs:
           channel: stable
           cache: true
 
+      # `flutter build linux` drops --build-name when writing version.json, the
+      # file the app reads its version from on Linux, and falls back to
+      # pubspec.yaml; the Linux release would report the pubspec version. Stamp
+      # the real one there so every platform agrees. Never committed.
+      - name: Stamp the release version into pubspec.yaml
+        working-directory: ./roquiz
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          CODE: ${{ needs.check-version.outputs.code }}
+        run: |
+          set -euo pipefail
+          sed -i -E "s/^version:.*/version: ${VERSION}+${CODE}/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml
       - name: Install dependencies
         working-directory: ./roquiz
         run: flutter pub get
@@ -173,30 +208,13 @@ jobs:
             printf 'keyPassword=%s\n' "$ANDROID_KEY_PASSWORD"
           } > key.properties
 
-      # Android rejects an install whose versionCode is lower than the installed
-      # one, and github.run_number restarts from 1 whenever the workflow file is
-      # renamed. Deriving it from the version keeps it monotonic by construction.
-      - name: Compute the Android versionCode
-        id: versioncode
-        env:
-          VERSION: ${{ inputs.version }}
-        run: |
-          set -euo pipefail
-          IFS=. read -r major minor patch <<< "${VERSION%%-*}"
-          if [ "$minor" -ge 100 ] || [ "$patch" -ge 100 ]; then
-            echo "::error::minor and patch must stay below 100 (versionCode = major*10000 + minor*100 + patch)"
-            exit 1
-          fi
-          code=$(( major * 10000 + minor * 100 + patch ))
-          echo "code=$code" >> "$GITHUB_OUTPUT"
-          echo "versionCode for $VERSION is $code"
 
       - name: Build APKs (split per ABI)
         working-directory: ./roquiz
         run: >-
           flutter build apk --release --split-per-abi
           --build-name=${{ inputs.version }}
-          --build-number=${{ steps.versioncode.outputs.code }}
+          --build-number=${{ needs.check-version.outputs.code }}
 
       # Rename before the next build: both builds write into the same directory.
       - name: Rename APKs to roquiz_v<version>_<abi>.apk
@@ -218,7 +236,7 @@ jobs:
         run: >-
           flutter build apk --release
           --build-name=${{ inputs.version }}
-          --build-number=${{ steps.versioncode.outputs.code }}
+          --build-number=${{ needs.check-version.outputs.code }}
 
       - name: Rename the universal APK
         working-directory: ./roquiz/build/app/outputs/flutter-apk
@@ -276,6 +294,20 @@ jobs:
           channel: stable
           cache: true
 
+      # `flutter build linux` drops --build-name when writing version.json, the
+      # file the app reads its version from on Linux, and falls back to
+      # pubspec.yaml; the Linux release would report the pubspec version. Stamp
+      # the real one there so every platform agrees. Never committed.
+      - name: Stamp the release version into pubspec.yaml
+        working-directory: ./roquiz
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          CODE: ${{ needs.check-version.outputs.code }}
+        run: |
+          set -euo pipefail
+          sed -i -E "s/^version:.*/version: ${VERSION}+${CODE}/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml
       - name: Install dependencies
         working-directory: ./roquiz
         run: flutter pub get
@@ -291,7 +323,7 @@ jobs:
         run: >-
           flutter build linux --release
           --build-name=${{ inputs.version }}
-          --build-number=${{ github.run_number }}
+          --build-number=${{ needs.check-version.outputs.code }}
 
       - name: Package tarball
         run: >-
@@ -322,6 +354,20 @@ jobs:
           channel: stable
           cache: true
 
+      # `flutter build linux` drops --build-name when writing version.json, the
+      # file the app reads its version from on Linux, and falls back to
+      # pubspec.yaml; the Linux release would report the pubspec version. Stamp
+      # the real one there so every platform agrees. Never committed.
+      - name: Stamp the release version into pubspec.yaml
+        working-directory: ./roquiz
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          CODE: ${{ needs.check-version.outputs.code }}
+        run: |
+          set -euo pipefail
+          sed -i -E "s/^version:.*/version: ${VERSION}+${CODE}/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml
       - name: Install dependencies
         working-directory: ./roquiz
         run: flutter pub get
@@ -337,7 +383,7 @@ jobs:
         run: >-
           flutter build windows --release
           --build-name=${{ inputs.version }}
-          --build-number=${{ github.run_number }}
+          --build-number=${{ needs.check-version.outputs.code }}
 
       # Windows users get a .zip, as in every previous release; the Linux build
       # stays a tarball.
@@ -374,6 +420,20 @@ jobs:
           channel: stable
           cache: true
 
+      # `flutter build linux` drops --build-name when writing version.json, the
+      # file the app reads its version from on Linux, and falls back to
+      # pubspec.yaml; the Linux release would report the pubspec version. Stamp
+      # the real one there so every platform agrees. Never committed.
+      - name: Stamp the release version into pubspec.yaml
+        working-directory: ./roquiz
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          CODE: ${{ needs.check-version.outputs.code }}
+        run: |
+          set -euo pipefail
+          sed -i -E "s/^version:.*/version: ${VERSION}+${CODE}/" pubspec.yaml
+          grep -n '^version:' pubspec.yaml
       - name: Install dependencies
         working-directory: ./roquiz
         run: flutter pub get
@@ -389,7 +449,7 @@ jobs:
         run: >-
           flutter build web --release --base-href /${{ github.event.repository.name }}/
           --build-name=${{ inputs.version }}
-          --build-number=${{ github.run_number }}
+          --build-number=${{ needs.check-version.outputs.code }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
