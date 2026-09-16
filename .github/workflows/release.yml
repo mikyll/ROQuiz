@@ -511,7 +511,10 @@ jobs:
         with:
           tag_name: v${{ inputs.version }}
           target_commitish: ${{ inputs.ref || github.sha }}
-          name: v${{ inputs.version }}
+          # Titled like the releases published so far: "ROQuiz v2.0.2". The name
+          # comes from the repository so a fork or a sandbox copy titles its own
+          # releases correctly, the way base-href and the Pages link already do.
+          name: "${{ github.event.repository.name }} v${{ inputs.version }}"
           # The body comes from CHANGELOG.md via RELEASE_TEMPLATE.md; leaving
           # generate_release_notes on would append GitHub's PR list underneath.
           body_path: release-notes.md
