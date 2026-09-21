@@ -20,6 +20,7 @@ merge.
 
 ## Versioni
 
+- [2.0.2](#202---2026-09-21)
 - [2.0.1](#201---2026-09-13)
 - [2.0.0](#200---2026-09-12)
 - [1.11.5](#1115---2025-07-23)
@@ -39,6 +40,16 @@ merge.
 - [1.0](#10---2021-07-10)
 
 ## [Unreleased]
+
+## [2.0.2] - 2026-09-21
+
+### 2026-09-17
+
+- ci(release): title releases with the app name ([`fcdd5b6`](https://github.com/mikyll/ROQuiz/commit/fcdd5b66ab44f860edd6819ebc11b9cf2be35a0e))
+
+### 2026-09-14
+
+- ci(release): stamp the release version into pubspec for every build ([`0b17aa7`](https://github.com/mikyll/ROQuiz/commit/0b17aa7df4d7c2e55204a36e4335105c96077688))
 
 ## [2.0.1] - 2026-09-13
 
@@ -1632,7 +1643,8 @@ merge.
 - Update README.md ([`d314f3f`](https://github.com/mikyll/ROQuiz/commit/d314f3f00a4773ddef1c2c9ffd4862c790931a74))
 - Initial commit ([`c1d8200`](https://github.com/mikyll/ROQuiz/commit/c1d82008ef094e8a3f837cff1cb335f8c8ed93a3))
 
-[Unreleased]: https://github.com/mikyll/ROQuiz/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/mikyll/ROQuiz/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/mikyll/ROQuiz/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/mikyll/ROQuiz/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/mikyll/ROQuiz/compare/v1.11.5...v2.0.0
 [1.11.5]: https://github.com/mikyll/ROQuiz/compare/v1.11.4...v1.11.5
